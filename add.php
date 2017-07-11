@@ -121,7 +121,7 @@ if ($_FILES['userfile']['tmp_name'])
 	<br>
 	<br>
 	<div class="button-bar">
-		<a href="index.html" class="hand-drawn">Go Home</a>
+		<a href="/" class="hand-drawn">Go Home</a>
 	</div>
 <?php
 	include("footer.php");
