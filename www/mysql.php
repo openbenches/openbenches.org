@@ -167,7 +167,7 @@ function get_all_benches()
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => $benchInscription,
+				'popupContent' => nl2br($benchInscription),
 			),
 		);
 		# Add feature arrays to feature collection array
