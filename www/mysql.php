@@ -14,6 +14,8 @@ if (!$mysqli->set_charset("utf8")) {
 
 function insert_bench($lat, $long, $inscription, $userID)
 {
+	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
+
 	global $mysqli;
 	$insert_bench = $mysqli->prepare(
 		"INSERT INTO `benches`
