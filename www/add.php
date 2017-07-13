@@ -114,8 +114,7 @@ if ($_FILES['userfile']['tmp_name'])
 		<input type="submit" value="Share Bench" />
 		<br>
 		By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
-		<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CCBY-SA 4.0) license</a>
-		and any other data under the <a href="https://opendatacommons.org/licenses/dbcl/">DbCL</a>.
+		<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CCBY-SA 4.0) license</a>.
 
 	</form>
 	<br>
