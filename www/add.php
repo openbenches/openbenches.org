@@ -102,7 +102,9 @@ if ($_FILES['userfile']['tmp_name'])
 				move_uploaded_file($_FILES['userfile']['tmp_name'], $photo_path.$sha1.".jpg");
 				echo "Added! {$benchID} at ". $location["lat"] . "," . $location["lng"] .
 						" and media {$mediaID} with sha1 {$sha1} from twitter/{$id_str}";
-				echo "<br><img width='480' src=\"" . $photo_path.$sha1.".jpg" . "\" />";
+				echo "<br><img width='480' src=\"" . $photo_full_path . "\" />";
+
+				mail(NOTIFICATION_EMAIL, "Bench {$benchID}", "{$inscription} https://openbenches.org/{$photo_full_path}");
 			}
 		}
 

@@ -6,3 +6,5 @@ define('DB_IP',   '');
 define('DB_USER', '');
 define('DB_PASS', '');
 define('DB_TABLE','');
+
+define('NOTIFICATION_EMAIL','');
