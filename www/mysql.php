@@ -176,3 +176,87 @@ function get_all_benches()
 	return $geojson;
 	// return json_encode($geojson, JSON_NUMERIC_CHECK);
 }
+
+function get_image($benchID)
+{
+	global $mysqli;
+
+	$get_media = $mysqli->prepare(
+		"SELECT sha1, userID, importURL, licence FROM media
+		WHERE benchID = ?
+		LIMIT 0 , 1");
+
+	$get_media->bind_param('i',  $benchID );
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($sha1, $userID, $importURL, $licence);
+
+	$html = "";
+
+	# Loop through rows to build feature arrays
+	while($get_media->fetch()) {
+		$get_media->close();
+		$userString = get_user($userID);
+		if(null != $importURL) {
+			$userString = "<a href='{$importURL}'>{$userString}</a>";
+		}
+		$licenceHTML = get_licence($licence);
+		$html .= "<img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/><br>uploaded by {$userString} {$licenceHTML}";
+		break;
+	}
+
+	return $html;
+}
+
+
+function get_user($userID)
+{
+	global $mysqli;
+	$get_user = $mysqli->prepare(
+		"SELECT provider, providerID, name FROM users
+		WHERE userID = ?
+		LIMIT 0 , 1");
+
+
+	$get_user->bind_param('i',  $userID);
+	$get_user->execute();
+	/* bind result variables */
+	$get_user->bind_result($provider, $providerID, $name);
+
+	$userString = "";
+
+	# Loop through rows to build feature arrays
+	while($get_user->fetch()) {
+		$userString .= "{$provider}/{$providerID} {$name}";
+	}
+	$get_user->close();
+	return htmlspecialchars($userString);
+}
+
+function get_licence($licenceID)
+{
+	global $mysqli;
+
+	$get_licence = $mysqli->prepare(
+		"SELECT longName, url FROM licences
+		WHERE shortName = ?
+		LIMIT 0 , 1");
+
+	$get_licence->bind_param('s',  $licenceID );
+	$get_licence->execute();
+	/* bind result variables */
+	$get_licence->bind_result($longName, $url);
+
+	$html = "";
+
+	# Loop through rows to build feature arrays
+	while($get_licence->fetch()) {
+		$get_licence->close();
+		$longName = htmlspecialchars($longName);
+		$licenceID = htmlspecialchars($licenceID);
+		$html .= "<a href='{$url}' title='{$longName}'>{$licenceID}</a>";
+		break;
+	}
+
+	return $html;
+}
