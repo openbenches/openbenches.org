@@ -10,39 +10,39 @@ require_once ('codebird.php');
 $cb = \Codebird\Codebird::getInstance();
 
 if (! isset($_SESSION['oauth_token'])) {
-  // get the request token
-  $reply = $cb->oauth_requestToken([
-    'oauth_callback' => 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
-  ]);
+	// get the request token
+	$reply = $cb->oauth_requestToken([
+		'oauth_callback' => 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+	]);
 
-  // store the token
-  $cb->setToken($reply->oauth_token, $reply->oauth_token_secret);
-  $_SESSION['oauth_token'] = $reply->oauth_token;
-  $_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
-  $_SESSION['oauth_verify'] = true;
+	// store the token
+	$cb->setToken($reply->oauth_token, $reply->oauth_token_secret);
+	$_SESSION['oauth_token'] = $reply->oauth_token;
+	$_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
+	$_SESSION['oauth_verify'] = true;
 
-  // redirect to auth website
-  $auth_url = $cb->oauth_authorize();
-  header('Location: ' . $auth_url);
-  die();
+	// redirect to auth website
+	$auth_url = $cb->oauth_authorize();
+	header('Location: ' . $auth_url);
+	die();
 
 } elseif (isset($_GET['oauth_verifier']) && isset($_SESSION['oauth_verify'])) {
-  // verify the token
-  $cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
-  unset($_SESSION['oauth_verify']);
+	// verify the token
+	$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+	unset($_SESSION['oauth_verify']);
 
-  // get the access token
-  $reply = $cb->oauth_accessToken([
-    'oauth_verifier' => $_GET['oauth_verifier']
-  ]);
+	// get the access token
+	$reply = $cb->oauth_accessToken([
+		'oauth_verifier' => $_GET['oauth_verifier']
+	]);
 
-  // store the token (which is different from the request token!)
-  $_SESSION['oauth_token'] = $reply->oauth_token;
-  $_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
+	// store the token (which is different from the request token!)
+	$_SESSION['oauth_token'] = $reply->oauth_token;
+	$_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
 
-  // send to same URL, without oauth GET parameters
-  header('Location: ' . basename(__FILE__));
-  die();
+	// send to same URL, without oauth GET parameters
+	header('Location: ' . basename(__FILE__));
+	die();
 }
 
 // assign access token on each page load
@@ -50,13 +50,27 @@ $cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 
 $reply = (array) $cb->account_verifyCredentials();
 
+//	If the authorization hasn't worked, clear the session variables and start again
+if($reply["errors"]) {
+	$_SESSION['oauth_token'] = null;
+	$_SESSION['oauth_token'] = null;
+	$_SESSION['oauth_token_secret'] = null;
+	$_SESSION['oauth_verify'] = null;
+	// send to same URL, without oauth GET parameters
+	header('Location: ' . basename(__FILE__));
+	die();
+}
+
+//	Get the user's ID & name
 $id_str = $reply["id_str"];
 $screen_name = $reply["screen_name"];
 
+//	Add the user to the database
 $userID = insert_user("twitter", $id_str, $screen_name);
 
+//	Start the normal page
 include("header.php");
-?><?php
+//	Has a photo been posted?
 if ($_FILES['userfile']['tmp_name'])
 {
 	$inscription = $_POST['inscription'];
@@ -80,14 +94,16 @@ if ($_FILES['userfile']['tmp_name'])
 			}
 
 			$benchID = insert_bench($location["lat"],$location["lng"], $inscription, $userID);
-			$mediaID = insert_media($benchID, $userID, $sha1);
 
-			move_uploaded_file($_FILES['userfile']['tmp_name'], $photo_path.$sha1.".jpg");
-
-			echo "Added! {$benchID} at ". $location["lat"] . "," . $location["lng"] .
-				  " and media {$mediaID} with sha1 {$sha1} from twitter/{$id_str}";
-
-			echo "<br><img width='480' src=\"" . $photo_path.$sha1.".jpg" . "\" />";
+			if (null != $benchID){
+				$mediaID = insert_media($benchID, $userID, $sha1);
+			}
+			if (null != $mediaID){
+				move_uploaded_file($_FILES['userfile']['tmp_name'], $photo_path.$sha1.".jpg");
+				echo "Added! {$benchID} at ". $location["lat"] . "," . $location["lng"] .
+						" and media {$mediaID} with sha1 {$sha1} from twitter/{$id_str}";
+				echo "<br><img width='480' src=\"" . $photo_path.$sha1.".jpg" . "\" />";
+			}
 		}
 
 
