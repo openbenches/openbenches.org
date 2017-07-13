@@ -24,48 +24,77 @@ L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/
 	id: 'mapbox.light'
 }).addTo(map);
 
+var markers = L.markerClusterGroup({
+	maxClusterRadius: 30
+});
 
-function onEachFeature(feature, layer) {
-	var popupContent = "";
-
-	if (feature.properties && feature.properties.popupContent) {
-		popupContent += feature.properties.popupContent;
-	}
-
-	layer.bindPopup(popupContent);
-	layer.on('popupopen', function(){
-		var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-		xhr.open('get', 'benchimage.php?benchID='+feature.id, true);
-		xhr.onreadystatechange = function() {
-			if (xhr.readyState == 4 && xhr.status == 200) {
-				document.getElementById("benchImage").innerHTML = xhr.responseText;
-			}
+markers.on('click', function (bench) {
+	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+	xhr.open('get', 'benchimage.php?benchID='+bench.layer["options"]["benchID"], true);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			document.getElementById("benchImage").innerHTML = xhr.responseText;
 		}
-		xhr.send();
-	});
+	}
+	xhr.send();
+});
+
+for (var i = 0; i < benches.features.length; i++) {
+	var bench = benches.features[i];
+	var title = bench.properties.popupContent;
+	var lat = bench.geometry.coordinates[1];
+	var longt = bench.geometry.coordinates[0];
+	var benchID = bench.id;
+	// console.log('bench ' + benchID);
+	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID });
+
+	marker.bindPopup(title);
+	markers.addLayer(marker);
 }
 
+map.addLayer(markers);
+
+// function onEachFeature(feature, layer) {
+// 	var popupContent = "";
+//
+// 	if (feature.properties && feature.properties.popupContent) {
+// 		popupContent += feature.properties.popupContent;
+// 	}
+//
+// 	layer.bindPopup(popupContent);
+// 	layer.on('popupopen', function(){
+// 		var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+// 		xhr.open('get', 'benchimage.php?benchID='+feature.id, true);
+// 		xhr.onreadystatechange = function() {
+// 			if (xhr.readyState == 4 && xhr.status == 200) {
+// 				document.getElementById("benchImage").innerHTML = xhr.responseText;
+// 			}
+// 		}
+// 		xhr.send();
+// 	});
+// }
 
 
-L.geoJSON(benches, {
 
-	style: function (feature) {
-		return feature.properties && feature.properties.style;
-	},
-
-	onEachFeature: onEachFeature,
-
-	pointToLayer: function (feature, latlng) {
-		return L.circleMarker(latlng, {
-			radius: 7,
-			fillColor: "#ff7800",
-			color: "#000",
-			weight: 1,
-			opacity: 1,
-			fillOpacity: 0.8
-		});
-	}
-}).addTo(map);
+// L.geoJSON(benches, {
+//
+// 	style: function (feature) {
+// 		return feature.properties && feature.properties.style;
+// 	},
+//
+// 	onEachFeature: onEachFeature,
+//
+// 	pointToLayer: function (feature, latlng) {
+// 		return L.circleMarker(latlng, {
+// 			radius: 5,
+// 			fillColor: "#ff7800",
+// 			color: "#000",
+// 			weight: 1,
+// 			opacity: 1,
+// 			fillOpacity: 0.8
+// 		});
+// 	}
+// }).addTo(map);
 </script>
 <?php
 	include("footer.php");
