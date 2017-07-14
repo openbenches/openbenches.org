@@ -105,6 +105,9 @@ if ($_FILES['userfile']['tmp_name'])
 				echo "<br><img width='480' src=\"" . $photo_full_path . "\" />";
 
 				mail(NOTIFICATION_EMAIL, "Bench {$benchID}", "{$inscription} https://openbenches.org/{$photo_full_path}");
+
+				header("Location: bench.php?benchID={$benchID}");
+				die();
 			}
 		}
 

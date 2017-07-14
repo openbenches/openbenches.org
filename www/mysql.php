@@ -136,15 +136,27 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 	return json_encode($geojson, JSON_NUMERIC_CHECK);
 }
 
-function get_all_benches()
+function get_bench($benchID){
+	return get_all_benches($benchID);
+}
+
+function get_all_benches($id = 0)
 {
 	global $mysqli;
+
+	if(0==$id){
+		$benchQuery = ">";
+	} else {
+		$benchQuery = "=";
+	}
 
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		WHERE published = true
+		AND benchID {$benchQuery} ?
 		LIMIT 0 , 256");
 
+	$get_benches->bind_param('i', $id);
 	$get_benches->execute();
 
 	/* bind result variables */
@@ -198,16 +210,35 @@ function get_image($benchID)
 		$get_media->close();
 		$userString = get_user($userID);
 		if(null != $importURL) {
-			$userString = "<a href='{$importURL}'>{$userString}</a>";
+			$source = "<a href='{$importURL}'>Source</a>";
 		}
 		$licenceHTML = get_licence($licence);
-		$html .= "<img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/><br>uploaded by {$userString} {$licenceHTML}";
+		$html .= "<a href='/bench.php?benchID={$benchID}'><img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
 	return $html;
 }
 
+function get_user_from_bench($benchID) {
+	global $mysqli;
+	$get_user_from_bench = $mysqli->prepare(
+		"SELECT userID FROM benches
+		WHERE benchID = ?
+		LIMIT 0 , 1");
+
+	$get_user_from_bench->bind_param('i',  $benchID);
+	$get_user_from_bench->execute();
+	/* bind result variables */
+	$get_user_from_bench->bind_result($userID);
+
+	# Loop through rows to build feature arrays
+	while($get_user_from_bench->fetch()) {
+		$get_user_from_bench->close();
+		return get_user($userID);
+		die();
+	}
+}
 
 function get_user($userID)
 {
@@ -227,10 +258,11 @@ function get_user($userID)
 
 	# Loop through rows to build feature arrays
 	while($get_user->fetch()) {
-		$userString .= "{$provider}/{$providerID} {$name}";
+		$name = htmlspecialchars($name);
+		$userString .= " From <img src='/images/{$provider}.svg' width='50' /> {$name}";
 	}
 	$get_user->close();
-	return htmlspecialchars($userString);
+	return $userString;
 }
 
 function get_licence($licenceID)

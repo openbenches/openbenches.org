@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+require_once ('config.php');
+require_once ('mysql.php')
+?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />

@@ -17,3 +17,4 @@ This is a *dirty* alpha - thrown together to test whether things work.
 * Twitter integration by [CodeBird](https://github.com/jublonet/codebird-php) [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 * Maps by [Leaflet](https://github.com/Leaflet/Leaflet) [BSD 2-clause "Simplified" License](https://opensource.org/licenses/BSD-2-Clause).
 * Map tiles by [MapBox](https://www.mapbox.com/).
+* Social Media logos by [Agata](https://www.iconfinder.com/iconsets/social-hand-drawn-icons)
