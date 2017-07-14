@@ -6,7 +6,7 @@
 
 	<div id="row1">
 		<div id="benchInscription"></div>
-		<div id='benchImage'><?php echo get_image($benchID); echo get_user_from_bench($benchID); ?></div>
+		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
 		<div id='map' class="hand-drawn" ></div>
 	</div>
 	<div class="button-bar">

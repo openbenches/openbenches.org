@@ -189,7 +189,7 @@ function get_all_benches($id = 0)
 	// return json_encode($geojson, JSON_NUMERIC_CHECK);
 }
 
-function get_image($benchID)
+function get_image($benchID, $full = false)
 {
 	global $mysqli;
 
@@ -213,7 +213,16 @@ function get_image($benchID)
 			$source = "<a href='{$importURL}'>Source</a>";
 		}
 		$licenceHTML = get_licence($licence);
-		$html .= "<a href='/bench.php?benchID={$benchID}'><img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
+
+		if ($full) {
+			$directory = substr($sha1,0,1);
+			$subdirectory = substr($sha1,1,1);
+			$photo_path = "/photos/".$directory."/".$subdirectory."/";
+			$imageLink = $photo_path.$sha1.".jpg";
+		} else {
+			$imageLink = "/bench.php?benchID={$benchID}";
+		}
+		$html .= "<a href='{$imageLink}'><img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
