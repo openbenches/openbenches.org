@@ -31,15 +31,16 @@ function insert_bench($lat, $long, $inscription, $userID)
 	}
 }
 
-function insert_media($benchID, $userID, $sha1)
+function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $import=null)
 {
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
-		       (`mediaID`,`benchID`,`userID`,`sha1`)
-		VALUES (NULL,      ?,        ?,       ?    );');
+		       (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`)
+		VALUES (NULL,      ?,        ?,       ?,      ?,         ?         );'
+	);
 
-	$insert_media->bind_param('iis', $benchID, $userID, $sha1);
+	$insert_media->bind_param('iisss', $benchID, $userID, $sha1, $licence, $import);
 	$insert_media->execute();
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
@@ -154,7 +155,7 @@ function get_all_benches($id = 0)
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		WHERE published = true
 		AND benchID {$benchQuery} ?
-		LIMIT 0 , 256");
+		LIMIT 0 , 1024");
 
 	$get_benches->bind_param('i', $id);
 	$get_benches->execute();
