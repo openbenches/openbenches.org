@@ -1,14 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 4.4.10
--- http://www.phpmyadmin.net
-
--- Generation Time: Jul 11, 2017 at 10:58 AM
--- Server version: 5.7.17
--- PHP Version: 5.3.3
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,13 +7,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 
--- --------------------------------------------------------
-
---
--- Table structure for table `benches`
---
-
-CREATE TABLE IF NOT EXISTS `benches` (
+CREATE TABLE `benches` (
   `benchID` bigint(20) NOT NULL,
   `latitude` float(10,6) NOT NULL,
   `longitude` float(10,6) NOT NULL,
@@ -34,86 +19,58 @@ CREATE TABLE IF NOT EXISTS `benches` (
   `userID` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+CREATE TABLE `licences` (
+  `shortName` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CC BY-SA 4.0',
+  `longName` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Creative Commons Attribution-ShareAlike 4.0 International',
+  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'https://creativecommons.org/licenses/by-sa/4.0/'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Table structure for table `media`
---
-
-CREATE TABLE IF NOT EXISTS `media` (
+CREATE TABLE `media` (
   `mediaID` bigint(20) NOT NULL,
   `benchID` bigint(20) NOT NULL,
   `userID` bigint(20) NOT NULL,
-  `sha1` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
+  `sha1` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `importURL` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `licence` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT 'CC BY-SA 4.0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `userID` bigint(20) NOT NULL,
   `provider` varchar(64) NOT NULL,
   `providerID` varchar(64) NOT NULL,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Indexes for table `benches`
---
 ALTER TABLE `benches`
   ADD PRIMARY KEY (`benchID`),
   ADD KEY `contributor` (`userID`);
 
---
--- Indexes for table `media`
---
+ALTER TABLE `licences`
+  ADD PRIMARY KEY (`shortName`);
+
 ALTER TABLE `media`
   ADD PRIMARY KEY (`mediaID`),
-  ADD KEY `contributorID` (`userID`);
+  ADD KEY `contributorID` (`userID`),
+  ADD KEY `licence` (`licence`);
 
---
--- Indexes for table `users`
---
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userID`);
 
---
--- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `benches`
---
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `media`
---
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=305;
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `users`
---
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
---
--- Constraints for dumped tables
---
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
---
--- Constraints for table `benches`
---
 ALTER TABLE `benches`
   ADD CONSTRAINT `benches_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
 
---
--- Constraints for table `media`
---
 ALTER TABLE `media`
-  ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
+  ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
+  ADD CONSTRAINT `media_ibfk_2` FOREIGN KEY (`licence`) REFERENCES `licences` (`shortName`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
