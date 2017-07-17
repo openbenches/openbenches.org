@@ -3,6 +3,7 @@ session_start();
 require_once ('config.php');
 require_once ("mysql.php");
 require_once ("functions.php");
+require_once ('codebird.php');
 
 //	Start the normal page
 include("header.php");
@@ -51,6 +52,30 @@ if ($_FILES['userfile']['tmp_name'])
 					"Bench {$benchID}",
 					"{$inscription} https://openbenches.org/bench.php?benchID={$benchID} from " . $_SERVER['REMOTE_ADDR']);
 
+				//	Send Tweet
+				\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET); // static, see README
+				$cb = \Codebird\Codebird::getInstance();
+				$cb->setToken(OAUTH_ACCESS_TOKEN, OAUTH_TOKEN_SECRET);
+
+
+				$reply = $cb->media_upload(['media' => "https://openbenches.org/image.php?id={$sha1}"]);
+
+				// and collect their IDs
+				$media_ids[] = $reply->media_id_string;
+				$media_ids = implode(',', $media_ids);
+
+				$tweet_inscription = substr($inscription, 0, 100);
+				if (strlen($inscription) > 100) {
+					$tweet_inscription .= "…";
+				}
+
+				$params = [
+					'status'    => "New bench!\nhttps://openbenches.org/bench.php?benchID={$benchID}\n{$tweet_inscription}",
+					'lat'       => $location["lat"],
+					'long'      => $location["lng"],
+					'media_ids' => $media_ids
+				];
+				$reply = $cb->statuses_update($params);
 				//	Send the user to the bench's page
 				header("Location: bench.php?benchID={$benchID}");
 				die();
