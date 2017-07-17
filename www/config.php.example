@@ -1,6 +1,8 @@
 <?php
 define('OAUTH_CONSUMER_KEY',    '');
 define('OAUTH_CONSUMER_SECRET', '');
+define('OAUTH_ACCESS_TOKEN',    '');
+define('OAUTH_TOKEN_SECRET',    '')
 
 define('DB_IP',   '');
 define('DB_USER', '');

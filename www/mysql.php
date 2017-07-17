@@ -54,27 +54,17 @@ function insert_user($provider, $providerID, $name)
 {
 	global $mysqli;
 
-	$search_user = $mysqli->prepare("SELECT `userID` FROM `users` WHERE `provider` LIKE ? AND `providerID` LIKE ?");
-
-	$search_user->bind_param('ss', $provider, $providerID);
-	$search_user->execute();
-	$search_user->bind_result($userID);
-	# Loop through rows to build feature arrays
-	while($search_user->fetch()) {
-		if ($userID){
-			return $userID;
-		}
-	}
-
 	$insert_user = $mysqli->prepare("INSERT INTO `users`
 		       (`userID`, `provider`, `providerID`, `name`)
-		VALUES (NULL,     ?, ?, ?);");
+		VALUES (NULL,     ?,           ?,            ?);"
+	);
 
 	$insert_user->bind_param('sss', $provider, $providerID, $name);
 
 	$insert_user->execute();
 
 	$resultID = $insert_user->insert_id;
+	$insert_user->close();
 	if ($resultID) {
 		return $resultID;
 	} else {
@@ -268,8 +258,12 @@ function get_user($userID)
 
 	# Loop through rows to build feature arrays
 	while($get_user->fetch()) {
-		$name = htmlspecialchars($name);
-		$userString .= " From <img src='/images/{$provider}.svg' width='50' /> {$name}";
+		if ("anon" != $provider){
+			$name = htmlspecialchars($name);
+			$userString .= " From <img src='/images/{$provider}.svg' width='50' /> {$name}";
+		} else {
+			$userString = "";
+		}
 	}
 	$get_user->close();
 	return $userString;
