@@ -201,7 +201,7 @@ function get_image($benchID, $full = false)
 		$get_media->close();
 		$userString = get_user($userID);
 		if(null != $importURL) {
-			$source = "<a href='{$importURL}'>Source</a>";
+			$source = "<a href='{$importURL}'>Image Source</a>";
 		}
 		$licenceHTML = get_licence($licence);
 
