@@ -1,39 +1,18 @@
 <?php
 	include("header.php");
-	if ($_GET["benchID"]) {
-		$benchID = $_GET["benchID"];
-	} else {
-		$benchID = $params[2];
-	}
-
 ?>
-
-
 	<div id="row1">
-		<div id="benchInscription"></div>
-		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
 		<div id='map' class="hand-drawn" ></div>
+		<div id='benchImage' ></div>
 	</div>
 	<div class="button-bar">
-		<a href="/add" class="hand-drawn">Add a new bench</a>
+		<a href="add.php" class="hand-drawn">Add a new bench</a>
 	</div>
-<script src="/geojson/<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="geojson.php?cache=<?php echo rand(); ?>" type="text/javascript"></script>
 
 <script>
-var bench = benches.features[0];
-var newLat = bench.geometry.coordinates[1];
-var newLong = bench.geometry.coordinates[0];
-var title = bench.properties.popupContent;
-
-var description = document.getElementById('benchInscription');
-description.style.display = 'block';
-description.innerHTML  = title;
-// description.innerHTML += '<br>Longitude: ' + newLong;
-// description.innerHTML += '<br>Latitude: ' + newLat;
-
-
-var map = L.map('map').setView([newLat,newLong], 16);
-
+var map = L.map('map').setView([51.386115477613764,-2.349201108417759], 6);
+// L.tileLayer.provider('Stamen.Watercolor').addTo(map);
 L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
 	minZoom: 4,
 	maxZoom: 18,
@@ -47,18 +26,32 @@ var markers = L.markerClusterGroup({
 	maxClusterRadius: 30
 });
 
+markers.on('click', function (bench) {
+	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+	xhr.open('get', 'benchimage/'+bench.layer["options"]["benchID"], true);
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			document.getElementById("benchImage").innerHTML = xhr.responseText;
+		}
+	}
+	xhr.send();
+});
+
 for (var i = 0; i < benches.features.length; i++) {
 	var bench = benches.features[i];
+	var title = bench.properties.popupContent;
 	var lat = bench.geometry.coordinates[1];
 	var longt = bench.geometry.coordinates[0];
 	var benchID = bench.id;
-	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: false });
+	// console.log('bench ' + benchID);
+	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID });
 
 	marker.bindPopup(title);
 	markers.addLayer(marker);
 }
 
 map.addLayer(markers);
+
 </script>
 <?php
 	include("footer.php");

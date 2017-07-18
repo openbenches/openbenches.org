@@ -50,7 +50,7 @@ if ($_FILES['userfile']['tmp_name'])
 				//	Drop us an email
 				mail(NOTIFICATION_EMAIL,
 					"Bench {$benchID}",
-					"{$inscription} https://openbenches.org/bench.php?benchID={$benchID} from " . $_SERVER['REMOTE_ADDR']);
+					"{$inscription} https://openbenches.org/bench/{$benchID} from " . $_SERVER['REMOTE_ADDR']);
 
 				//	Send Tweet
 				\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET); // static, see README
@@ -58,7 +58,7 @@ if ($_FILES['userfile']['tmp_name'])
 				$cb->setToken(OAUTH_ACCESS_TOKEN, OAUTH_TOKEN_SECRET);
 
 
-				$reply = $cb->media_upload(['media' => "https://openbenches.org/image.php?id={$sha1}"]);
+				$reply = $cb->media_upload(['media' => "https://openbenches.org/image/{$sha1}/2048"]);
 
 				// and collect their IDs
 				$media_ids[] = $reply->media_id_string;
@@ -70,14 +70,14 @@ if ($_FILES['userfile']['tmp_name'])
 				}
 
 				$params = [
-					'status'    => "New bench!\nhttps://openbenches.org/bench.php?benchID={$benchID}\n{$tweet_inscription}",
+					'status'    => "{$tweet_inscription}\nhttps://openbenches.org/bench/{$benchID}",
 					'lat'       => $location["lat"],
 					'long'      => $location["lng"],
 					'media_ids' => $media_ids
 				];
 				$reply = $cb->statuses_update($params);
 				//	Send the user to the bench's page
-				header("Location: bench.php?benchID={$benchID}");
+				header("Location: bench/{$benchID}");
 				die();
 			}
 		}

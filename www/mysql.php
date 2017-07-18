@@ -206,14 +206,11 @@ function get_image($benchID, $full = false)
 		$licenceHTML = get_licence($licence);
 
 		if ($full) {
-			$directory = substr($sha1,0,1);
-			$subdirectory = substr($sha1,1,1);
-			$photo_path = "/photos/".$directory."/".$subdirectory."/";
-			$imageLink = $photo_path.$sha1.".jpg";
+			$imageLink = "/image/{$sha1}";
 		} else {
-			$imageLink = "/bench.php?benchID={$benchID}";
+			$imageLink = "/bench/{$benchID}";
 		}
-		$html .= "<a href='{$imageLink}'><img src='image.php?id={$sha1}' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
+		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/640' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 

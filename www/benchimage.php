@@ -2,5 +2,5 @@
 require_once ('config.php');
 require_once ('mysql.php');
 
-$benchID = $_GET["benchID"];
+$benchID = $params[2];
 echo get_image($benchID);

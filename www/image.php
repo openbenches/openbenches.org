@@ -1,8 +1,8 @@
 <?php
 require_once ('config.php');
 
-$sha1 = $_GET["id"];
-$size = $_GET["size"];
+$sha1 = $params[2];
+$size = $params[3];
 
 $directory = substr($sha1,0,1);
 $subdirectory = substr($sha1,1,1);
@@ -15,24 +15,23 @@ function imagecreatefromjpegexif($filename)
 		 $exif = exif_read_data($filename);
 		 if ($img && $exif && isset($exif['Orientation']))
 		 {
-			  $ort = $exif['Orientation'];
+			$ort = $exif['Orientation'];
 
-			  if ($ort == 6 || $ort == 5)
-					$img = imagerotate($img, 270, null);
-			  if ($ort == 3 || $ort == 4)
-					$img = imagerotate($img, 180, null);
-			  if ($ort == 8 || $ort == 7)
-					$img = imagerotate($img, 90, null);
-
-			  if ($ort == 5 || $ort == 4 || $ort == 7)
-					imageflip($img, IMG_FLIP_HORIZONTAL);
+			if ($ort == 6 || $ort == 5)
+				$img = imagerotate($img, 270, null);
+			if ($ort == 3 || $ort == 4)
+				$img = imagerotate($img, 180, null);
+			if ($ort == 8 || $ort == 7)
+				$img = imagerotate($img, 90, null);
+			if ($ort == 5 || $ort == 4 || $ort == 7)
+				imageflip($img, IMG_FLIP_HORIZONTAL);
 		 }
 		 return $img;
 	}
 
 $image = imagecreatefromjpegexif($photo_full_path);
-if("original" != $size){
-	$image = imagescale($image,640);
+if(null != $size){
+	$image = imagescale($image,$size);
 }
 header("Content-Type: image/jpg");
 imagejpeg($image);
