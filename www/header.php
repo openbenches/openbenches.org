@@ -1,6 +1,9 @@
 <?php
 require_once ('config.php');
-require_once ('mysql.php')
+require_once ('mysql.php');
+
+$benchID = $params[2];
+
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -9,12 +12,18 @@ require_once ('mysql.php')
 
 	<title>OpenBenches ALPHA - by @edent &amp; @summerbeth</title>
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/manifest.json">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="apple-touch-icon"      sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16"   href="/favicon-16x16.png">
+	<link rel="manifest"                              href="/manifest.json">
+	<link rel="mask-icon" color="#5bbad5"             href="/safari-pinned-tab.svg">
 	<meta name="theme-color" content="#ffffff">
+
+	<meta name="twitter:card"                            content="summary_large_image">
+	<meta name="twitter:site"                            content="@openbenches">
+	<meta name="twitter:title"       property="og:title" content="OpenBenches">
+	<meta name="twitter:description" property="og:url"   content="https://openbenches.org/bench/<?php echo $benchID; ?>">
+	<meta name="twitter:image"       property="og:image" content="https://openbenches.org<?php echo get_image_url($benchID); ?>/640">
 
 	<link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
 	<link rel="stylesheet" href="/style.css?cache=<?php echo rand(); ?>"/>

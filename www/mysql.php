@@ -217,6 +217,32 @@ function get_image($benchID, $full = false)
 	return $html;
 }
 
+function get_image_url($benchID)
+{
+	global $mysqli;
+
+	$get_media = $mysqli->prepare(
+		"SELECT sha1 FROM media
+		WHERE benchID = ?
+		LIMIT 0 , 1");
+
+	$get_media->bind_param('i',  $benchID );
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($sha1);
+
+	$url = "";
+
+	# Loop through rows to build feature arrays
+	while($get_media->fetch()) {
+		$url = "/image/{$sha1}";
+		$get_media->close();
+		break;
+	}
+
+	return $url;
+}
+
 function get_user_from_bench($benchID) {
 	global $mysqli;
 	$get_user_from_bench = $mysqli->prepare(
