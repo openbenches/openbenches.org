@@ -1,16 +1,23 @@
 <?php
 session_start();
-require_once ('config.php');
+require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
 //	Start the normal page
 include("header.php");
 
+//	Get the inscription, either to add to database, or recover in case of error
+$inscription = $_POST['inscription'];
+$error_message = "";
+
+if (null == $inscription) {
+	$error_message .= "<h3>Please type in the text of the inscription.</h3>";
+}
+
 //	Has a photo been posted?
 if ($_FILES['userfile']['tmp_name'])
 {
-	$inscription = $_POST['inscription'];
 	$filename = $_FILES['userfile']['tmp_name'];
 	$sha1 = sha1_file ($filename);
 
@@ -26,7 +33,7 @@ if ($_FILES['userfile']['tmp_name'])
 
 		//	Does this photo already exit?
 		if(file_exists($photo_full_path)){
-			echo "<h2>That photo already exists in the database</h2>";
+			$error_message .= "<h3>That photo already exists in the database</h3>";
 		}	else {
 			if (!is_dir($photo_path)) {
 				mkdir($photo_path, 0777, true);
@@ -60,8 +67,11 @@ if ($_FILES['userfile']['tmp_name'])
 			}
 		}
 	} else {
-		echo "<h2>No location metadata found in image</h2>";
+		$error_message .= "<h3>No location metadata found in image</h3>";
 	}
+} else if (null != $inscription) {
+	//	If a photo hasn't been posted, recover the inscription and show an error
+	$error_message .= "<h3>Ooops! Looks like you didn't add a photo.</h3>";
 }
 ?>
 	<br>
@@ -69,6 +79,9 @@ if ($_FILES['userfile']['tmp_name'])
 		<h2>Add A Bench</h2>
 		All you need to do is type in what is written on the bench and add a photo.
 		The photo <em>must</em> have GPS information included.
+		<?php
+			echo $error_message;
+		?>
 		<div>
 			<label for="inscription">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
