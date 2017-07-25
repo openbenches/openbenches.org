@@ -54,9 +54,12 @@ if ($_FILES['userfile']['tmp_name'])
 			if (null != $mediaID){
 				move_uploaded_file($_FILES['userfile']['tmp_name'], $photo_path.$sha1.".jpg");
 				//	Drop us an email
+				$key = urlencode(get_edit_key($benchID));
 				mail(NOTIFICATION_EMAIL,
 					"Bench {$benchID}",
-					"{$inscription} https://openbenches.org/bench/{$benchID} from " . $_SERVER['REMOTE_ADDR']);
+					"{$inscription} https://openbenches.org/bench/{$benchID} from " . $_SERVER['REMOTE_ADDR'] .
+					" - edit https://openbenches.org/edit/{$benchID}/{$key}"
+				);
 
 				//	Tweet the bench
 	 			tweet_bench($benchID, $sha1, $inscription, $location["lat"], $location["lng"], "CC BY-SA 4.0");

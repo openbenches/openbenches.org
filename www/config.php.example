@@ -16,3 +16,6 @@ define('NOTIFICATION_EMAIL','');
 
 //	flickr
 define('FLICKR_API_KEY', '');
+
+//	Unique link for editing
+define('EDIT_SALT', '');
