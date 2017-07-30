@@ -1,5 +1,12 @@
 <?php
-require_once ('codebird.php');
+require_once ("codebird.php");
+require_once ("config.php");
+
+function get_edit_key($benchID){
+	$hash = crypt($benchID,EDIT_SALT);
+	$key = explode("$",$hash)[3];
+	return $key;
+}
 
 function get_image_location($file)
 {

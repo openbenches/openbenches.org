@@ -31,6 +31,24 @@ function insert_bench($lat, $long, $inscription, $userID)
 	}
 }
 
+function edit_bench($lat, $long, $inscription, $benchID)
+{
+	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
+
+	global $mysqli;
+	$edit_bench = $mysqli->prepare(
+		"UPDATE `benches`
+		    SET `latitude` =    ?,
+		        `longitude` =   ?,
+		        `inscription` = ?
+		  WHERE `benches`.`benchID` = ?");
+	$edit_bench->bind_param('ddsi', $lat, $long, $inscription, $benchID);
+	$edit_bench->execute();
+	$edit_bench->close();
+
+	return true;
+}
+
 function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $import=null)
 {
 	global $mysqli;
