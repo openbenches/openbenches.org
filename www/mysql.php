@@ -31,7 +31,7 @@ function insert_bench($lat, $long, $inscription, $userID)
 	}
 }
 
-function edit_bench($lat, $long, $inscription, $benchID)
+function edit_bench($lat, $long, $inscription, $benchID, $published=true)
 {
 	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
 
@@ -40,9 +40,10 @@ function edit_bench($lat, $long, $inscription, $benchID)
 		"UPDATE `benches`
 		    SET `latitude` =    ?,
 		        `longitude` =   ?,
-		        `inscription` = ?
+		        `inscription` = ?,
+		        `published` =   ?
 		  WHERE `benches`.`benchID` = ?");
-	$edit_bench->bind_param('ddsi', $lat, $long, $inscription, $benchID);
+	$edit_bench->bind_param('ddsii', $lat, $long, $inscription, $published, $benchID);
 	$edit_bench->execute();
 	$edit_bench->close();
 
@@ -196,6 +197,26 @@ function get_all_benches($id = 0)
 	}
 	return $geojson;
 	// return json_encode($geojson, JSON_NUMERIC_CHECK);
+}
+
+function get_bench_details($benchID){
+	global $mysqli;
+
+	$get_bench = $mysqli->prepare(
+		"SELECT benchID, latitude, longitude, inscription, published
+		 FROM benches
+		 WHERE benchID = ?"
+	);
+
+	$get_bench->bind_param('i', $benchID);
+	$get_bench->execute();
+
+	/* bind result variables */
+	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published);
+
+	while($get_bench->fetch()) {
+		return array ($benchID, $benchLat, $benchLong, $benchInscription, $published);
+	}
 }
 
 function get_image($benchID, $full = false)

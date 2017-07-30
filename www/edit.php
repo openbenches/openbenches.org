@@ -19,11 +19,12 @@ if (null != $params[3]) {
 	$inscription = $_POST['inscription'];
 	$latitude =    $_POST['newLatitude'];
 	$longitude =   $_POST['newLongitude'];
+	$published =   $_POST['published'];
 
 	$valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
 
 	if ($valid) {
-		edit_bench($latitude, $longitude, $inscription, $benchID);
+		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true");
 		//	Send the user to the bench's page
 		header("Location: /bench/{$benchID}");
 	}
@@ -34,6 +35,8 @@ $valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
 
 if (!$valid) {
 	$error_message .= "<h2>Invalid Hash</h2>";
+} else {
+	list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
 }
 
 ?>
@@ -48,7 +51,7 @@ if (!$valid) {
 		</a>
 		<div>
 			<label for="inscription">Change Inscription?</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
+			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
 		</div>
 
 		<div style="clear:both;">
@@ -57,13 +60,19 @@ if (!$valid) {
 		</div>
 
 		<div style="clear:both;">
-			<input type="text" disabled="true" id="coordinates" value="0,0"/>
-			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $longitude; ?>"/>
-			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $latitude;  ?>"/>
+			<input type="text"   id="coordinates"  value="<?php echo $benchLat; ?>,<?php echo $benchLong; ?>" disabled="true" />
+			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $benchLong; ?>"/>
+			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $benchLat;  ?>"/>
 		</div>
 
 		<br>
+		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
+			<label for="publishedTrue">Published</label>
+		<br>
+		<input type="radio" id="publishedFalse" name="published" value="false">
+			<label for="publishedFalse">Delete</label>
 		<input type="hidden" name="key" value="<?php echo $key; ?>"/>
+		<br>
 		<input type="submit" value="Submit Edits" />
 
 	</form>
@@ -84,9 +93,9 @@ var coordinates = document.getElementById('coordinates');
 var longitude = document.getElementById('newLongitude');
 var latitude = document.getElementById('newLatitude');
 
-coordinates.value = newLat + ',' + newLong;
-longitude.value = newLong;
-latitude.value =  newLat;
+// coordinates.value = newLat + ',' + newLong;
+// longitude.value = newLong;
+// latitude.value =  newLat;
 
 var inscription = document.getElementById('inscription');
 // Remove the <br>
@@ -96,7 +105,7 @@ var dom = parser.parseFromString(
     'text/html');
 var decodedString = dom.body.textContent;
 // inscription.value = bench.properties.popupContent.replace(/<br\s*\/?>/mg,"");
-inscription.value = decodedString;
+// inscription.value = decodedString;
 
 var map = L.map('map').setView([newLat,newLong], 16);
 

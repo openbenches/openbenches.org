@@ -6,11 +6,13 @@
 		$benchID = $params[2];
 	}
 
+	list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
+
 ?>
 
 
 	<div id="row1">
-		<div id="benchInscription"></div>
+		<div id="benchInscription"><?php echo $benchInscription; ?></div>
 		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
 		<div id='map' class="hand-drawn" ></div>
 	</div>
@@ -20,14 +22,14 @@
 <script src="/geojson/<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <script>
-var bench = benches.features[0];
-var newLat = bench.geometry.coordinates[1];
+var bench   = benches.features[0];
+var newLat  = bench.geometry.coordinates[1];
 var newLong = bench.geometry.coordinates[0];
 var title = bench.properties.popupContent;
 
-var description = document.getElementById('benchInscription');
-description.style.display = 'block';
-description.innerHTML  = title;
+// var description = document.getElementById('benchInscription');
+// description.style.display = 'block';
+// description.innerHTML  = title;
 // description.innerHTML += '<br>Longitude: ' + newLong;
 // description.innerHTML += '<br>Latitude: ' + newLat;
 
