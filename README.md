@@ -7,6 +7,13 @@ https://OpenBenches.org/ - an open data repository for memorial benches.
 OMG! This code is horrible. Looking at it will make you weep.
 This is a *dirty* alpha - thrown together to test whether things work.
 
+## Contributing
+
+All contributions are welcome.  Before making a pull request, please:
+
+1. Raise a new issue describing the problem and how you intend to fix it.
+2. Submit a Pull Request referencing the Issue.
+
 ## Licenses
 
 * OpenBenches data are made available under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
