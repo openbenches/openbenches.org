@@ -337,3 +337,27 @@ function get_licence($licenceID)
 
 	return $html;
 }
+
+function get_admin_list()
+{
+	global $mysqli;
+
+	$get_list = $mysqli->prepare("SELECT `benchID`, `inscription` FROM `benches` ORDER BY `benchID` DESC LIMIT 0 , 512");
+
+	$get_list->execute();
+	/* bind result variables */
+	$get_list->bind_result($benchID, $inscription);
+
+	$html = "<ul>";
+
+	# Loop through rows to build feature arrays
+	while($get_list->fetch()) {
+		//get_edit_key
+		$bench   = $benchID;
+		$key     = urlencode(get_edit_key($bench));
+		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, UTF-8, false));
+		$html   .= "<li>{$bench} <a href='/edit/{$bench}/{$key}'>{$inscrib}</a></li>";
+	}
+
+	return $html .= "</ul>";
+}

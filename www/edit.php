@@ -43,7 +43,14 @@ if (!$valid) {
 		<?php
 			echo $error_message;
 		?>
-		<img src="<?php echo $image_url; ?>/512" width="512" />
+		<a href="<?php echo $image_url; ?>">
+			<img src="<?php echo $image_url; ?>/512" width="512" />
+		</a>
+		<div>
+			<label for="inscription">Change Inscription?</label><br>
+			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
+		</div>
+
 		<div style="clear:both;">
 			<h3>Drag pin to change bench location</h3>
 			<div id='map' class="hand-drawn" ></div>
@@ -53,11 +60,6 @@ if (!$valid) {
 			<input type="text" disabled="true" id="coordinates" value="0,0"/>
 			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $longitude; ?>"/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $latitude;  ?>"/>
-		</div>
-
-		<div>
-			<label for="inscription">Change Inscription?</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
 		</div>
 
 		<br>
@@ -88,9 +90,13 @@ latitude.value =  newLat;
 
 var inscription = document.getElementById('inscription');
 // Remove the <br>
-inscription.value = bench.properties.popupContent.replace(/<br\s*\/?>/mg,"");
-
-
+var parser = new DOMParser;
+var dom = parser.parseFromString(
+    '<!doctype html><body>' + bench.properties.popupContent,
+    'text/html');
+var decodedString = dom.body.textContent;
+// inscription.value = bench.properties.popupContent.replace(/<br\s*\/?>/mg,"");
+inscription.value = decodedString;
 
 var map = L.map('map').setView([newLat,newLong], 16);
 
@@ -108,10 +114,10 @@ var markers = L.markerClusterGroup({
 });
 
 for (var i = 0; i < benches.features.length; i++) {
-	var bench = benches.features[i];
-	var title = bench.properties.popupContent;
-	var lat = bench.geometry.coordinates[1];
-	var longt = bench.geometry.coordinates[0];
+	var bench   = benches.features[i];
+	var title   = bench.properties.popupContent;
+	var lat     = bench.geometry.coordinates[1];
+	var longt   = bench.geometry.coordinates[0];
 	var benchID = bench.id;
 	// console.log('bench ' + benchID);
 	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: true });
