@@ -12,7 +12,7 @@
 
 
 	<div id="row1">
-		<div id="benchInscription"><?php echo $benchInscription; ?></div>
+		<div id="benchInscription"><?php echo nl2br($benchInscription); ?></div>
 		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
 		<div id='map' class="hand-drawn" ></div>
 	</div>
