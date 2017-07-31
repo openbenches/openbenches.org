@@ -50,6 +50,9 @@ if (!$valid) {
 			<img src="<?php echo $image_url; ?>/512" width="512" />
 		</a>
 		<div>
+			<?php echo get_media_types_html(); ?>
+		</div>
+		<div>
 			<label for="inscription">Change Inscription?</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
 		</div>

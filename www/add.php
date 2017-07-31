@@ -20,6 +20,7 @@ if ($_FILES['userfile']['tmp_name'])
 {
 	$filename = $_FILES['userfile']['tmp_name'];
 	$sha1 = sha1_file ($filename);
+	$media_type = $_POST['media_type'];
 
 	$location = get_image_location($filename);
 
@@ -47,7 +48,7 @@ if ($_FILES['userfile']['tmp_name'])
 
 			//	Add the media to the database
 			if (null != $benchID){
-				$mediaID = insert_media($benchID, $userID, $sha1);
+				$mediaID = insert_media($benchID, $userID, $sha1, null, null, $media_type);
 			}
 
 			//	Move media to the correct location
@@ -92,6 +93,12 @@ if ($_FILES['userfile']['tmp_name'])
 		<div>
 			<label for="photo">Geotagged Photo:</label>
 			<input id="photo" name="userfile" type="file" accept="image/jpg,image/jpeg" />
+		</div>
+		<div>
+			<label for="media_type">This photo is a:</label>
+			<?php
+				echo get_media_types_html();
+			?>
 		</div>
 		<br>
 		<input type="submit" value="Share Bench" />

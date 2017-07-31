@@ -50,16 +50,16 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true)
 	return true;
 }
 
-function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $import=null)
+function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $import=null, $media_type=null)
 {
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
-		       (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`)
-		VALUES (NULL,      ?,        ?,       ?,      ?,         ?         );'
+		       (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`)
+		VALUES (NULL,      ?,        ?,       ?,      ?,         ?         ,  ?);'
 	);
 
-	$insert_media->bind_param('iisss', $benchID, $userID, $sha1, $licence, $import);
+	$insert_media->bind_param('iissss', $benchID, $userID, $sha1, $licence, $import, $media_type);
 	$insert_media->execute();
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
@@ -67,6 +67,19 @@ function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $impo
 	} else {
 		return null;
 	}
+}
+
+function edit_media_type($mediaID, $media_type) {
+	global $mysqli;
+	$edit_media = $mysqli->prepare(
+		"UPDATE `media`
+		    SET `media_type` =    ?
+		  WHERE `media`.`media_type` = ?");
+	$edit_media->bind_param('ss', $media_type, $mediaID);
+	$edit_media->execute();
+	$edit_media->close();
+
+	return true;
 }
 
 function insert_user($provider, $providerID, $name)
@@ -381,4 +394,23 @@ function get_admin_list()
 	}
 
 	return $html .= "</ul>";
+}
+
+function get_media_types_html() {
+	global $mysqli;
+
+	$get_media = $mysqli->prepare("SELECT `shortName`, `longName` FROM `media_types` ORDER BY `displayOrder` ASC");
+
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($shortName, $longName);
+
+	$html = "<select name='media_type'>";
+
+	# Loop through rows to build feature arrays
+	while($get_media->fetch()) {
+		$html .= "<option value='{$shortName}'>{$longName}</option>";
+	}
+
+	return $html .= "</select>";
 }
