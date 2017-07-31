@@ -1,9 +1,13 @@
 <?php
-//	Twitter
+//	Share to Twitter
 define('OAUTH_CONSUMER_KEY',    '');
 define('OAUTH_CONSUMER_SECRET', '');
 define('OAUTH_ACCESS_TOKEN',    '');
 define('OAUTH_TOKEN_SECRET',    '');
+
+//	Admin login via Twitter
+define('ADMIN_CONSUMER_KEY',    '');
+define('ADMIN_CONSUMER_SECRET', '');
 
 //	Database
 define('DB_IP',   '');
@@ -18,4 +22,5 @@ define('NOTIFICATION_EMAIL','');
 define('FLICKR_API_KEY', '');
 
 //	Unique link for editing
+//	https://secure.php.net/manual/en/function.crypt.php
 define('EDIT_SALT', '');
