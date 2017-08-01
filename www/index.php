@@ -10,7 +10,7 @@
 	$image_url = "https://openbenches.org" . get_image_url($benchID);
 
 	//	Available pages
-	$pages = array("bench", "add", "image", "geojson", "benchimage", "flickr", "edit", "admin");
+	$pages = array("bench", "add", "image", "geojson", "benchimage", "flickr", "edit", "admin", "search");
 
 	if(in_array($params[1], $pages)) {
 		include($params[1].".php");

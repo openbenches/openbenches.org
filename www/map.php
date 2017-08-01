@@ -5,6 +5,17 @@
 		<div id='map' class="hand-drawn" ></div>
 		<div id='benchImage' ></div>
 	</div>
+	<br>
+	<form action="/search/" enctype="multipart/form-data" method="get">
+		<?php
+			echo $error_message;
+		?>
+		<h2>Search for an inscription</h2>
+		<div>
+			<input type="search" id="inscription" name="search" value="<?php echo htmlspecialchars($query); ?>"><input type="submit" value="Search inscriptions" />
+		</div>
+		<br>
+	</form>
 	<div class="button-bar">
 		<a href="add.php" class="hand-drawn">Add a new bench</a>
 	</div>

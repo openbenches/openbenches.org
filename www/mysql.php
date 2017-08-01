@@ -414,3 +414,30 @@ function get_media_types_html() {
 
 	return $html .= "</select>";
 }
+
+function get_search_results($q) {
+	global $mysqli;
+
+	$searchLike =  "%".$q."%";
+	$search = $mysqli->prepare(
+		"SELECT `benchID`, `inscription`
+		 FROM   `benches`
+		 WHERE  `inscription`
+		 LIKE   ?
+		 AND    `published` = 1
+		 LIMIT 0 , 10");
+
+	$search->bind_param('s',$searchLike);
+
+	$search->execute();
+	/* bind result variables */
+	$search->bind_result($benchID, $inscription);
+
+	$results = array();
+	# Loop through rows to build feature arrays
+	while($search->fetch()) {
+		$results[$benchID] = $inscription;
+	}
+
+	return $results;
+}
