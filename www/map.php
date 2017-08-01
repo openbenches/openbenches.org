@@ -22,7 +22,7 @@
 <script src="geojson.php?cache=<?php echo rand(); ?>" type="text/javascript"></script>
 
 <script>
-var map = L.map('map').setView([51.386115477613764,-2.349201108417759], 6);
+var map = L.map('map').setView([54.5,-4], 5);
 // L.tileLayer.provider('Stamen.Watercolor').addTo(map);
 L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
 	minZoom: 4,
