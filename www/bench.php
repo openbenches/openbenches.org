@@ -16,6 +16,15 @@
 		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
 		<div id='map' class="hand-drawn" ></div>
 	</div>
+	<div id="comments">
+		<script>
+		var idcomments_acct = '2c821c4a265bb30b50b1127cf2b99934';
+		var idcomments_post_id;
+		var idcomments_post_url;
+		</script>
+		<span id="IDCommentsPostTitle" style="display:none"></span>
+		<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+	</div>
 	<div class="button-bar">
 		<a href="/add" class="hand-drawn">Add a new bench</a>
 	</div>
