@@ -1,46 +1,50 @@
-html, body {
-	font-family: 'Architects Daughter', cursive;
+body {
+	font-family: 'Varela Round', sans-serif;
 	font-size: 1.25em;
+	margin: 1em;
+	background-color: #F1F3F4;
+	color: #191E20;
+	text-align: center;
+}
+
+#map{
+	width: 600px;
+	height: 400px;
+	max-width: 100%;
+	z-index: 1;
+	margin-left: auto;
+	margin-right: auto;
+	border: 0.1em solid #191E20;
 }
 
 .hand-drawn {
-	align-self: center;
-	background: transparent;
-	padding: 0.5em 0.5em;
-	/*margin: 0 1em;*/
-	transition: all .5s ease;
-	color: #41403E;
-	/*font-size: 2em;*/
-	/*letter-spacing: 1px;*/
-	outline: none;
-	box-shadow: 20px 38px 34px -26px rgba(0, 0, 0, 0.2);
-	border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-	box-sizing: border-box;
-	border: solid 2px #41403E;
+	color: #F0F3F4;
+	background-color:#107895;
+	padding: 0.5em;
+	border-radius: .75em;
 }
 
 .button-bar {
-	padding-bottom: 1em;
-	padding-top: 1em;
-	clear: both;
+	margin-bottom: 1em;
+}
+
+#search-results {
+	text-align: left;
 }
 
 #proxy-image {
-	max-width: 90%;
-	padding: 0em;
+	max-width: 100%;
 }
 
-h1, h2 {
-	margin: 0;
+ol {
+	padding-left: 0px;
 }
 
+textarea {
+	max-width: 95%;
+}
 
-	#map{
-		float:left;
-		width: 600px;
-		height: 400px;
-		max-width: 90%;
-		z-index: 1;
-	}
-	#benchImage{
-	}
+h2 {
+	margin-top: 0;
+	margin-bottom: 0;
+}

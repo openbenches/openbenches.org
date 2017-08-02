@@ -86,32 +86,23 @@ if ($_FILES['userfile']['tmp_name'])
 		<?php
 			echo $error_message;
 		?>
-		<div>
-			<label for="inscription">Inscription:</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
-		</div>
-		<div>
-			<label for="photo">Geotagged Photo:</label>
-			<input id="photo" name="userfile" type="file" accept="image/jpg,image/jpeg" />
-		</div>
-		<div>
-			<label for="media_type">This photo is a:</label>
-			<?php
-				echo get_media_types_html();
-			?>
-		</div>
-		<br>
+		<label for="inscription">Inscription:</label><br>
+		<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
+		<br>&nbsp;<br>&nbsp;
+		<label for="photo">Geotagged Photo:</label>
+		<input id="photo" name="userfile" type="file" accept="image/jpg,image/jpeg" />
+		<br>&nbsp;<br>&nbsp;
+		<label for="media_type">This photo is a:</label>
+		<?php
+			echo get_media_types_html();
+		?>
+		<br>&nbsp;<br>&nbsp;
 		<input type="submit" value="Share Bench" />
-		<br>
-		By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
-		<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CCBY-SA 4.0) license</a>.
-		<br>
-		This means other people can use the photo without having to ask permission. Thanks!
 	</form>
+	<br>&nbsp;
+	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
+	<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
 	<br>
-	<br>
-	<div class="button-bar">
-		<a href="/" class="hand-drawn">Go Home</a>
-	</div>
+	This means other people can use the photo and its data without having to ask permission. Thanks!</small>
 <?php
 	include("footer.php");

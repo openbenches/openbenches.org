@@ -262,7 +262,7 @@ function get_image($benchID, $full = false)
 		} else {
 			$imageLink = "/bench/{$benchID}";
 		}
-		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/640' id='proxy-image' class='hand-drawn'/></a><br>{$licenceHTML} {$source}";
+		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
@@ -365,7 +365,7 @@ function get_licence($licenceID)
 		$get_licence->close();
 		$longName = htmlspecialchars($longName);
 		$licenceID = htmlspecialchars($licenceID);
-		$html .= "<a href='{$url}' title='{$longName}'>{$licenceID}</a>";
+		$html .= "<small><a href='{$url}' title='{$longName}'>{$licenceID}</a></small>";
 		break;
 	}
 

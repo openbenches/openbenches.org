@@ -2,7 +2,7 @@
 	include("header.php");
 ?>
 	<div id="row1">
-		<div id='map' class="hand-drawn" ></div>
+		<div id='map'></div>
 		<div id='benchImage' ></div>
 	</div>
 	<br>
@@ -24,7 +24,7 @@
 <script>
 var map = L.map('map').setView([54.5,-4], 5);
 // L.tileLayer.provider('Stamen.Watercolor').addTo(map);
-L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
 	minZoom: 4,
 	maxZoom: 18,
 	attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +

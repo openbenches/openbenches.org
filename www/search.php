@@ -41,7 +41,7 @@ if ("<ul></ul>" == $resultsHTML) {
 			<input type="submit" value="Search inscriptions" />
 		</div>
 	</form>
-	<div>
+	<div id="search-results">
 		<?php echo $resultsHTML; ?>
 	</div>
 <?php

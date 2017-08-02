@@ -1,8 +1,10 @@
 <footer>
+	<hr>
 	<br>
-	<a href="/blog/" class="hand-drawn">Blog</a>	<a href="/blog/about/" class="hand-drawn">About</a>
+	<a href="/" class="hand-drawn">Map</a>	<a href="/blog/about/" class="hand-drawn">About</a>	<a href="https://github.com/edent/openbenches" class="hand-drawn">GitHub</a>
 	<br><br>
-	Made with 💖 in Oxford by <a href="https://shkspr.mobi/blog">Terence Eden</a> and <a href="http://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
+	Made with 💖 in Oxford by<br>
+	<a href="https://shkspr.mobi/blog">Terence Eden</a> and <a href="http://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
 </footer>
 </body>
 </html>

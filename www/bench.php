@@ -14,7 +14,7 @@
 	<div id="row1">
 		<div id="benchInscription"><?php echo nl2br($benchInscription); ?></div>
 		<div id='benchImage'><?php echo get_image($benchID, true); echo get_user_from_bench($benchID); ?></div>
-		<div id='map' class="hand-drawn" ></div>
+		<div id='map'></div>
 	</div>
 	<div id="comments">
 		<script>
@@ -45,7 +45,7 @@ var title = bench.properties.popupContent;
 
 var map = L.map('map').setView([newLat,newLong], 16);
 
-L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
 	minZoom: 4,
 	maxZoom: 18,
 	attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
