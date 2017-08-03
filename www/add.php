@@ -48,7 +48,7 @@ if ($_FILES['userfile']['tmp_name'])
 
 			//	Add the media to the database
 			if (null != $benchID){
-				$mediaID = insert_media($benchID, $userID, $sha1, null, null, $media_type);
+				$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
 			}
 
 			//	Move media to the correct location

@@ -50,7 +50,7 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true)
 	return true;
 }
 
-function insert_media($benchID, $userID, $sha1, $licence = "CC BY-SA 4.0", $import=null, $media_type=null)
+function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null)
 {
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
@@ -264,6 +264,44 @@ function get_image($benchID, $full = false)
 		}
 		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
+	}
+
+	return $html;
+}
+
+function get_image_html($benchID)
+{
+	global $mysqli;
+
+	$get_media = $mysqli->prepare(
+		"SELECT sha1, userID, importURL, licence, media_type FROM media
+		WHERE benchID = ?");
+
+	$get_media->bind_param('i',  $benchID );
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($sha1, $userID, $importURL, $licence, $media_type);
+
+	$html = "";
+
+	# Loop through rows to build the HTML
+	while($get_media->fetch()) {
+
+		//	Was this imported from an external source?
+		if(null != $importURL) {
+			$source = "<a href='{$importURL}'>{$licence}</a>";
+		}
+
+		$full = "/image/{$sha1}";
+
+		if("360" == $media_type) {
+			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen style=\"border: 0.1em solid #191E20;\" src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
+		} else {
+			$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' /></a><br><small>{$source}</small><br>";
+		}
+
+		// break;
 	}
 
 	return $html;
