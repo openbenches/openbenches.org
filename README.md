@@ -2,10 +2,10 @@
 
 https://OpenBenches.org/ - an open data repository for memorial benches.
 
-# ALPHA
+# BETA
 
-OMG! This code is horrible. Looking at it will make you weep.
-This is a *dirty* alpha - thrown together to test whether things work.
+OMG! This code is still a bit horrible. Looking at it will make you a bit sad.
+This is a *slightly grubby* beta - thrown together to test whether things work, but now we are sharing the blame with all the folks who have contributed so far.
 
 ## Contributing
 
