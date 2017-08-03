@@ -17,6 +17,10 @@ body {
 	border: 0.1em solid #191E20;
 }
 
+iframe{
+	max-width: 100%;
+}
+
 .hand-drawn {
 	color: #F0F3F4;
 	background-color:#107895;

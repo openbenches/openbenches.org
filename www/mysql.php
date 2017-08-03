@@ -292,7 +292,7 @@ function get_image_html($benchID)
 			$source = "<a href='{$importURL}'>{$licence}</a>";
 		}
 
-		$full = "/image/{$sha1}";
+		$full = "/image/{$sha1}/3192";
 
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
