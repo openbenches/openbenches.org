@@ -21,6 +21,10 @@ iframe{
 	max-width: 100%;
 }
 
+fieldset {
+	display: contents;
+}
+
 .hand-drawn {
 	color: #F0F3F4;
 	background-color:#107895;
@@ -36,7 +40,7 @@ iframe{
 	text-align: left;
 }
 
-#proxy-image {
+.proxy-image {
 	max-width: 100%;
 }
 

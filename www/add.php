@@ -7,6 +7,34 @@ require_once ("functions.php");
 //	Start the normal page
 include("header.php");
 
+function save_image($filename, $media_type, $benchID, $userID) {
+	$sha1 = sha1_file ($filename);
+
+	$directory = substr($sha1,0,1);
+	$subdirectory = substr($sha1,1,1);
+	$photo_path = "photos/".$directory."/".$subdirectory."/";
+	$photo_full_path = $photo_path.$sha1.".jpg";
+
+	//	Does this photo already exit?
+	if(file_exists($photo_full_path)){
+		$error_message .= "<h3>That photo already exists in the database</h3>";
+	} else {
+		if (!is_dir($photo_path)) {
+			mkdir($photo_path, 0777, true);
+		}
+
+		//	Add the media to the database
+		if (null != $benchID){
+			$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
+		}
+
+		//	Move media to the correct location
+		if (null != $mediaID){
+			move_uploaded_file($filename, $photo_path.$sha1.".jpg");
+		}
+	}
+}
+
 //	Get the inscription, either to add to database, or recover in case of error
 $inscription = $_POST['inscription'];
 $error_message = "";
@@ -16,60 +44,54 @@ if (null == $inscription) {
 }
 
 //	Has a photo been posted?
-if ($_FILES['userfile']['tmp_name'])
+if ($_FILES['userfile1']['tmp_name'])
 {
-	$filename = $_FILES['userfile']['tmp_name'];
+	$filename = $_FILES['userfile1']['tmp_name'];
 	$sha1 = sha1_file ($filename);
-	$media_type = $_POST['media_type'];
+	$media_type = $_POST['media_type1'];
 
 	$location = get_image_location($filename);
 
 	//	If there is a GPS tag on the photo
 	if (false != $location)
 	{
-		$directory = substr($sha1,0,1);
-		$subdirectory = substr($sha1,1,1);
-		$photo_path = "photos/".$directory."/".$subdirectory."/";
-		$photo_full_path = $photo_path.$sha1.".jpg";
+		//	Add the user to the database
+		$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 
-		//	Does this photo already exit?
-		if(file_exists($photo_full_path)){
-			$error_message .= "<h3>That photo already exists in the database</h3>";
-		}	else {
-			if (!is_dir($photo_path)) {
-				mkdir($photo_path, 0777, true);
-			}
+		//	Insert Bench
+		$benchID = insert_bench($location["lat"],$location["lng"], $inscription, $userID);
 
-			//	Add the user to the database
-			$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
+		//	Save the Image
+		save_image($filename, $media_type, $benchID, $userID);
 
-			//	Insert Bench
-			$benchID = insert_bench($location["lat"],$location["lng"], $inscription, $userID);
-
-			//	Add the media to the database
-			if (null != $benchID){
-				$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
-			}
-
-			//	Move media to the correct location
-			if (null != $mediaID){
-				move_uploaded_file($_FILES['userfile']['tmp_name'], $photo_path.$sha1.".jpg");
-				//	Drop us an email
-				$key = urlencode(get_edit_key($benchID));
-				mail(NOTIFICATION_EMAIL,
-					"Bench {$benchID}",
-					"{$inscription} https://openbenches.org/bench/{$benchID} from " . $_SERVER['REMOTE_ADDR'] .
-					" - edit https://openbenches.org/edit/{$benchID}/{$key}"
-				);
-
-				//	Tweet the bench
-	 			tweet_bench($benchID, $sha1, $inscription, $location["lat"], $location["lng"], "CC BY-SA 4.0");
-
-				//	Send the user to the bench's page
-				header("Location: bench/{$benchID}");
-				die();
-			}
+		//	Save other images
+		if ($_FILES['userfile2']['tmp_name'])
+		{
+			save_image($_FILES['userfile2']['tmp_name'], $_POST['media_type2'], $benchID, $userID);
 		}
+		if ($_FILES['userfile3']['tmp_name'])
+		{
+			save_image($_FILES['userfile3']['tmp_name'], $_POST['media_type3'], $benchID, $userID);
+		}
+		if ($_FILES['userfile4']['tmp_name'])
+		{
+			save_image($_FILES['userfile4']['tmp_name'], $_POST['media_type4'], $benchID, $userID);
+		}
+
+		//	Drop us an email
+		$key = urlencode(get_edit_key($benchID));
+		mail(NOTIFICATION_EMAIL,
+			"Bench {$benchID}",
+			"{$inscription} https://openbenches.org/bench/{$benchID} from " . $_SERVER['REMOTE_ADDR'] .
+			" - edit https://openbenches.org/edit/{$benchID}/{$key}/"
+		);
+
+		//	Tweet the bench
+		tweet_bench($benchID, $sha1, $inscription, $location["lat"], $location["lng"], "CC BY-SA 4.0");
+
+		//	Send the user to the bench's page
+		header("Location: /edit/{$benchID}/{$key}/");
+		die();
 	} else {
 		$error_message .= "<h3>No location metadata found in image</h3>";
 	}
@@ -89,14 +111,52 @@ if ($_FILES['userfile']['tmp_name'])
 		<label for="inscription">Inscription:</label><br>
 		<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
 		<br>&nbsp;<br>&nbsp;
-		<label for="photo">Geotagged Photo:</label>
-		<input id="photo" name="userfile" type="file" accept="image/jpg,image/jpeg" />
-		<br>&nbsp;<br>&nbsp;
-		<label for="media_type">This photo is a:</label>
-		<?php
-			echo get_media_types_html();
-		?>
-		<br>&nbsp;<br>&nbsp;
+
+		<div id="photo1" style="display: block;">
+			<fieldset>
+				<legend>Geotagged Photo</legend>
+				<input id="photoFile1" name="userfile1" type="file" accept="image/jpg, image/jpeg" />
+				<br>&nbsp;<br>&nbsp;
+				<label for="media_type1">This photo is a:</label>
+				<?php
+					echo get_media_types_html("1");
+				?>
+			</fieldset>
+		</div><br>&nbsp;
+		<div id="photo2" style="display: none;">
+			<fieldset>
+				<legend>Optional Photo</legend>
+				<input id="photoFile2" name="userfile2" type="file" accept="image/jpg, image/jpeg" />
+				<br>&nbsp;<br>&nbsp;
+				<label for="media_type2">This photo is a:</label>
+				<?php
+					echo get_media_types_html("2");
+				?>
+			</fieldset>
+		</div><br>&nbsp;
+		<div id="photo3" style="display: none;">
+			<fieldset>
+				<legend>Optional Photo</legend>
+				<input id="photoFile3" name="userfile3" type="file" accept="image/jpg, image/jpeg" />
+				<br>&nbsp;<br>&nbsp;
+				<label for="media_type3">This photo is a:</label>
+				<?php
+					echo get_media_types_html("3");
+				?>
+			</fieldset>
+		</div><br>&nbsp;
+		<div id="photo4" style="display: none;">
+			<fieldset>
+				<legend>Optional Photo</legend>
+				<input id="photoFile4" name="userfile4" type="file" accept="image/jpg, image/jpeg" />
+				<br>&nbsp;<br>&nbsp;
+				<label for="media_type4">This photo is a:</label>
+				<?php
+					echo get_media_types_html("4");
+				?>
+			</fieldset>
+		</div>
+		<br>&nbsp;
 		<input type="submit" value="Share Bench" />
 	</form>
 	<br>&nbsp;
@@ -104,5 +164,10 @@ if ($_FILES['userfile']['tmp_name'])
 	<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
 	<br>
 	This means other people can use the photo and its data without having to ask permission. Thanks!</small>
+	<script type="text/javascript">
+		document.getElementById('photoFile1').onchange = function() { document.getElementById('photo2').style.display = "block";}
+		document.getElementById('photoFile2').onchange = function() { document.getElementById('photo3').style.display = "block";}
+		document.getElementById('photoFile3').onchange = function() { document.getElementById('photo4').style.display = "block";}
+	</script>
 <?php
 	include("footer.php");

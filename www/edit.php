@@ -30,7 +30,6 @@ if (null != $params[3]) {
 	}
 }
 
-
 $valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
 
 if (!$valid) {
@@ -43,20 +42,12 @@ if (!$valid) {
 	<br>
 	<form action="/edit/<?php echo $benchID; ?>" enctype="multipart/form-data" method="post">
 		<h2>Edit A Bench</h2>
+		Your bench has been added! <a href="/bench/<?php echo $benchID; ?>">View your bench</a>.
+		<br>
+		You can edit the inscription or location if you need to.
 		<?php
 			echo $error_message;
 		?>
-		<a href="<?php echo $image_url; ?>">
-			<img src="<?php echo $image_url; ?>/512" width="512" />
-		</a>
-		<div>
-			<?php echo get_media_types_html(); ?>
-		</div>
-		<div>
-			<label for="inscription">Change Inscription?</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
-		</div>
-
 		<div style="clear:both;">
 			<h3>Drag pin to change bench location</h3>
 			<div id='map' class="hand-drawn" ></div>
@@ -68,22 +59,28 @@ if (!$valid) {
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $benchLat;  ?>"/>
 		</div>
 
+		<div id='benchImage'>
+			<?php echo get_image_html($benchID); ?>
+		</div>
+
+		<div>
+			<label for="inscription">Change Inscription?</label><br>
+			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
+		</div>
+
 		<br>
 		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
 			<label for="publishedTrue">Published</label>
 		<br>
 		<input type="radio" id="publishedFalse" name="published" value="false">
 			<label for="publishedFalse">Delete</label>
+
 		<input type="hidden" name="key" value="<?php echo $key; ?>"/>
-		<br>
+		<br>&nbsp;
+		<br>&nbsp;
 		<input type="submit" value="Submit Edits" />
 
 	</form>
-	<br>
-	<br>
-	<div class="button-bar">
-		<a href="/" class="hand-drawn">Go Home</a>
-	</div>
 
 <script src="/geojson/<?php echo $benchID; ?>" type="text/javascript"></script>
 
@@ -96,19 +93,13 @@ var coordinates = document.getElementById('coordinates');
 var longitude = document.getElementById('newLongitude');
 var latitude = document.getElementById('newLatitude');
 
-// coordinates.value = newLat + ',' + newLong;
-// longitude.value = newLong;
-// latitude.value =  newLat;
-
 var inscription = document.getElementById('inscription');
 // Remove the <br>
 var parser = new DOMParser;
 var dom = parser.parseFromString(
-    '<!doctype html><body>' + bench.properties.popupContent,
-    'text/html');
+	'<!doctype html><body>' + bench.properties.popupContent,
+	'text/html');
 var decodedString = dom.body.textContent;
-// inscription.value = bench.properties.popupContent.replace(/<br\s*\/?>/mg,"");
-// inscription.value = decodedString;
 
 var map = L.map('map').setView([newLat,newLong], 16);
 

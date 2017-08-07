@@ -274,8 +274,9 @@ function get_image_html($benchID)
 	global $mysqli;
 
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, userID, importURL, licence, media_type FROM media
-		WHERE benchID = ?");
+		"SELECT sha1, userID, importURL, licence, media_type
+		 FROM media
+		 WHERE benchID = ?");
 
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
@@ -298,7 +299,7 @@ function get_image_html($benchID)
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen style=\"border: 0.1em solid #191E20;\" src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
 		} else {
-			$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' /></a><br><small>{$source}</small><br>";
+			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' /></a><br><small>{$source}</small><br>";
 		}
 
 		// break;
@@ -434,7 +435,7 @@ function get_admin_list()
 	return $html .= "</ul>";
 }
 
-function get_media_types_html() {
+function get_media_types_html($name = "") {
 	global $mysqli;
 
 	$get_media = $mysqli->prepare("SELECT `shortName`, `longName` FROM `media_types` ORDER BY `displayOrder` ASC");
@@ -443,7 +444,7 @@ function get_media_types_html() {
 	/* bind result variables */
 	$get_media->bind_result($shortName, $longName);
 
-	$html = "<select name='media_type'>";
+	$html = "<select name='media_type{$name}'>";
 
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
