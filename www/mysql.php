@@ -479,3 +479,11 @@ function get_search_results($q) {
 
 	return $results;
 }
+
+function get_bench_count() {
+	global $mysqli;
+
+	$result = $mysqli->query("SELECT COUNT(*) FROM `benches`");
+	$row = $result->fetch_row();
+	return $row[0];
+}
