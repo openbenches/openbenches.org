@@ -12,11 +12,12 @@ $benchID = $params[2];
 
 	<title>OpenBenches - by @edent &amp; @summerbeth</title>
 
-	<link rel="apple-touch-icon"      sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16"   href="/favicon-16x16.png">
-	<link rel="manifest"                              href="/manifest.json">
-	<link rel="mask-icon" color="#5bbad5"             href="/safari-pinned-tab.svg">
+	<link rel="apple-touch-icon"      sizes="180x180" href="/apple-touch-icon.png?cache=2017-08-08">
+	<link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32x32.png?cache=2017-08-08">
+	<link rel="icon" type="image/png" sizes="16x16"   href="/favicon-16x16.png?cache=2017-08-08">
+	<link rel="manifest"                              href="/manifest.json?cache=2017-08-08">
+	<link rel="mask-icon"             color="#5bbad5" href="/safari-pinned-tab.svg?cache=2017-08-08">
+	<link rel="shortcut icon"                         href="/favicon.ico?cache=2017-08-08">
 	<meta name="theme-color" content="#ffffff">
 
 	<meta name="twitter:card"                            content="summary_large_image">
@@ -37,7 +38,7 @@ $benchID = $params[2];
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.Default.css">
 </head>
 <body>
-	<h1><img src="/noun_1130095_cc.png" width="50px"> OpenBenches</h1>
+	<h1><img src="/images/openbencheslogo.svg" id="header-image"> OpenBenches</h1>
 	<div class="button-bar">
 		<a href="/" class="hand-drawn">Map View</a>
 		<a href="/add" class="hand-drawn">New Bench</a>

@@ -40,6 +40,11 @@ fieldset {
 	text-align: left;
 }
 
+#header-image {
+	width: 1.5em;
+	vertical-align: text-bottom;
+}
+
 .proxy-image {
 	max-width: 100%;
 }
