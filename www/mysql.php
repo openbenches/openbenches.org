@@ -262,7 +262,7 @@ function get_image($benchID, $full = false)
 		} else {
 			$imageLink = "/bench/{$benchID}";
 		}
-		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' /></a><br>{$licenceHTML} {$source}";
+		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
