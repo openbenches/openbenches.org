@@ -1,7 +1,7 @@
 <?php
 	include("header.php");
 
-	echo "<h2>" . get_bench_count() . " benches added</h2>";
+	echo "<h2>" . number_format(get_bench_count()) . " benches added</h2>";
 ?>
 	<div id="row1">
 		<div id='map'></div>
