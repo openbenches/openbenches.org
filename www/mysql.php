@@ -293,11 +293,14 @@ function get_image_html($benchID)
 			$source = "<a href='{$importURL}'>{$licence}</a>";
 		}
 
-		$full = "/image/{$sha1}/3192";
+		$full = "/image/{$sha1}/3396";
 
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen style=\"border: 0.1em solid #191E20;\" src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
+		} else if("pano" == $media_type){
+			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
 		} else {
 			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' /></a><br><small>{$source}</small><br>";
 		}

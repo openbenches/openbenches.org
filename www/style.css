@@ -19,6 +19,7 @@ body {
 
 iframe{
 	max-width: 100%;
+	border: 0.1em solid #191E20;
 }
 
 fieldset {

@@ -23,6 +23,14 @@ function save_image($filename, $media_type, $benchID, $userID) {
 			mkdir($photo_path, 0777, true);
 		}
 
+		//	Check to see if this has the right EXIF tags for a photosphere
+		if (is_photosphere($filename)) {
+			$media_type = "360";
+		} else if ("360" == $media_type){
+			//	If it has been miscategorised, remove the media type
+			$media_type = null;
+		}
+
 		//	Add the media to the database
 		if (null != $benchID){
 			$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);

@@ -8,6 +8,18 @@ function get_edit_key($benchID){
 	return $key;
 }
 
+function is_photosphere($filename) {
+	//	As per https://stackoverflow.com/a/1578326/1127699
+	$file = file_get_contents($filename);
+	if (strpos($file, 'UsePanoramaViewer="True"') > 0 ) {
+		return true;
+	}
+	if (strpos($file, 'ProjectionType="equirectangular"') > 0) {
+		return true;
+	}
+	return false;
+}
+
 function get_image_location($file)
 {
 	if (is_file($file)) {
