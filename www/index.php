@@ -16,5 +16,5 @@
 		include($params[1].".php");
 		die();
 	} else {
-		include("map.php");
+		include("front.php");
 	}

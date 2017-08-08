@@ -92,3 +92,47 @@ function tweet_bench($benchID, $sha1=null, $inscription=null, $latitude=null, $l
 	];
 	$reply = $cb->statuses_update($params);
 }
+
+function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
+	$mapJavaScript = <<<EOT
+<script>
+	var attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+		'Imagery © <a href="https://mapbox.com">Mapbox</a>';
+
+	var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+		minZoom: 2,
+		maxZoom: 18,
+		attribution: attribution,
+		id: 'mapbox.light'
+	});
+
+	var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+			minZoom: 2,
+			maxZoom: 18,
+			attribution: attribution,
+			id: 'mapbox.satellite'
+		});
+
+	var map = L.map('map', {
+		center: [{$lat},{$long}],
+		zoom: {$zoom},
+	});
+
+	var baseMaps = {
+		"Map View": grayscale,
+		"Satellite View": satellite
+	};
+
+	grayscale.addTo(map);
+
+	L.control.layers(baseMaps).addTo(map);
+
+	var markers = L.markerClusterGroup({
+		maxClusterRadius: 30
+	});
+</script>
+EOT;
+
+	echo $mapJavaScript;
+}

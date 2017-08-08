@@ -84,6 +84,8 @@ if (!$valid) {
 
 <script src="/geojson/<?php echo $benchID; ?>" type="text/javascript"></script>
 
+<?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
+
 <script>
 var bench = benches.features[0];
 var newLat = bench.geometry.coordinates[1];
@@ -100,21 +102,6 @@ var dom = parser.parseFromString(
 	'<!doctype html><body>' + bench.properties.popupContent,
 	'text/html');
 var decodedString = dom.body.textContent;
-
-var map = L.map('map').setView([newLat,newLong], 16);
-
-L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
-	minZoom: 4,
-	maxZoom: 18,
-	attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-		'Imagery © <a href="https://mapbox.com">Mapbox</a>',
-	id: 'mapbox.light'
-}).addTo(map);
-
-var markers = L.markerClusterGroup({
-	maxClusterRadius: 30
-});
 
 for (var i = 0; i < benches.features.length; i++) {
 	var bench   = benches.features[i];

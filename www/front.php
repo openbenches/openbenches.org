@@ -23,22 +23,9 @@
 	</div>
 <script src="geojson.php?cache=<?php echo rand(); ?>" type="text/javascript"></script>
 
+<?php echo get_map_javascript(); ?>
+
 <script>
-var map = L.map('map').setView([54.5,-4], 5);
-// L.tileLayer.provider('Stamen.Watercolor').addTo(map);
-L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
-	minZoom: 4,
-	maxZoom: 18,
-	attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-		'Imagery © <a href="https://mapbox.com">Mapbox</a>',
-	id: 'mapbox.light'
-}).addTo(map);
-
-var markers = L.markerClusterGroup({
-	maxClusterRadius: 30
-});
-
 markers.on('click', function (bench) {
 	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 	xhr.open('get', 'benchimage/'+bench.layer["options"]["benchID"], true);

@@ -62,3 +62,7 @@ h2 {
 	margin-top: 0;
 	margin-bottom: 0;
 }
+
+.leaflet-control-layers-base{
+	text-align: left;
+}
