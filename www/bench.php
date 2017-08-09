@@ -1,13 +1,23 @@
 <?php
-	include("header.php");
-	if ($_GET["benchID"]) {
-		$benchID = $_GET["benchID"];
-	} else {
-		$benchID = $params[2];
-	}
+require_once ('config.php');
+require_once ('mysql.php');
+require_once ('functions.php');
 
-	list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
+if ($_GET["benchID"]) {
+	$benchID = $_GET["benchID"];
+} else {
+	$benchID = $params[2];
+}
 
+list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
+
+if(!$published) {
+	header("HTTP/1.1 404 Not Found");
+	include("404.php");
+	die();
+}
+
+include("header.php");
 ?>
 
 
