@@ -35,7 +35,7 @@ $valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
 if (!$valid) {
 	$error_message .= "<h2>Invalid Hash</h2>";
 } else {
-	list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
+	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
 }
 
 ?>

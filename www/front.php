@@ -3,7 +3,7 @@
 
 	echo "<h2>" . number_format(get_bench_count()) . " benches added</h2>";
 ?>
-	<div id="row1">
+	<div>
 		<div id='map'></div>
 		<div id='benchImage' ></div>
 	</div>

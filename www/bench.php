@@ -9,7 +9,11 @@ if ($_GET["benchID"]) {
 	$benchID = $params[2];
 }
 
-list ($benchID, $benchLat, $benchLong, $benchInscription, $published) = get_bench_details($benchID);
+list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
+
+if ($benchAddress == null){
+	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
+}
 
 if(!$published) {
 	header("HTTP/1.1 404 Not Found");
@@ -19,12 +23,13 @@ if(!$published) {
 
 include("header.php");
 ?>
-
-
-	<div id="row1">
+	<div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+		<meta itemprop="latitude" content="<?php  echo $benchLat;  ?>" />
+		<meta itemprop="longitude" content="<?php echo $benchLong; ?>" />
 		<div id="benchInscription"><?php echo nl2br($benchInscription); ?></div>
-		<div id='benchImage'><?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?></div>
-		<div id='map'></div>
+		<div id="benchImage"><?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?></div>
+		<div id="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?php echo $benchAddress; ?></div>
+		<div id="map"></div>
 	</div>
 	<div id="comments">
 		<script>

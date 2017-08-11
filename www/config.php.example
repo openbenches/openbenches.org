@@ -24,3 +24,7 @@ define('FLICKR_API_KEY', '');
 //	Unique link for editing
 //	https://secure.php.net/manual/en/function.crypt.php
 define('EDIT_SALT', '');
+
+//	Reverse Geocoding
+//	https://geocoder.opencagedata.com/api
+define('OPENCAGE_API_KEY', '');

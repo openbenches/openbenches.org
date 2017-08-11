@@ -17,12 +17,14 @@ function insert_bench($lat, $long, $inscription, $userID)
 {
 	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
 
+	$address = get_place_name($lat, $long);
+
 	global $mysqli;
 	$insert_bench = $mysqli->prepare(
 		"INSERT INTO `benches`
-		       (`benchID`,`latitude`,`longitude`,`inscription`,`description`,`present`,`published`, `added`,  `userID`)
-		VALUES (NULL,      ?,        ?,           ?,           '',           '1'  ,    '1', CURRENT_TIMESTAMP, ?      )");
-	$insert_bench->bind_param('ddsi', $lat, $long, $inscription, $userID);
+		       (`benchID`,`latitude`,`longitude`,`address`, `inscription`,`description`,`present`,`published`, `added`,  `userID`)
+		VALUES (NULL,      ?,        ?,          ?,          ?,           '',           '1'  ,    '1', CURRENT_TIMESTAMP, ?      )");
+	$insert_bench->bind_param('ddssi', $lat, $long, $address, $inscription, $userID);
 	$insert_bench->execute();
 	$resultID = $insert_bench->insert_id;
 	if ($resultID) {
@@ -35,21 +37,38 @@ function insert_bench($lat, $long, $inscription, $userID)
 function edit_bench($lat, $long, $inscription, $benchID, $published=true)
 {
 	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
+	$address = get_place_name($lat, $long);
 
 	global $mysqli;
 	$edit_bench = $mysqli->prepare(
 		"UPDATE `benches`
 		    SET `latitude` =    ?,
 		        `longitude` =   ?,
+		        `address` =     ?,
 		        `inscription` = ?,
 		        `published` =   ?
 		  WHERE `benches`.`benchID` = ?");
-	$edit_bench->bind_param('ddsii', $lat, $long, $inscription, $published, $benchID);
+	$edit_bench->bind_param('ddssii', $lat, $long, $address, $inscription, $published, $benchID);
 	$edit_bench->execute();
 	$edit_bench->close();
 
 	return true;
 }
+
+function update_bench_address($benchID, $benchLat, $benchLong) {
+	$address = get_place_name($benchLat, $benchLong);
+	global $mysqli;
+	$edit_bench = $mysqli->prepare(
+		"UPDATE `benches`
+		    SET `address` = ?
+		  WHERE `benches`.`benchID` = ?");
+	$edit_bench->bind_param('si', $address, $benchID);
+	$edit_bench->execute();
+	$edit_bench->close();
+
+	return $address;
+}
+
 
 function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null)
 {
@@ -217,7 +236,7 @@ function get_bench_details($benchID){
 	global $mysqli;
 
 	$get_bench = $mysqli->prepare(
-		"SELECT benchID, latitude, longitude, inscription, published
+		"SELECT benchID, latitude, longitude, address, inscription, published
 		 FROM benches
 		 WHERE benchID = ?"
 	);
@@ -226,10 +245,10 @@ function get_bench_details($benchID){
 	$get_bench->execute();
 
 	/* bind result variables */
-	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published);
+	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 
 	while($get_bench->fetch()) {
-		return array ($benchID, $benchLat, $benchLong, $benchInscription, $published);
+		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 	}
 }
 
@@ -463,7 +482,7 @@ function get_search_results($q) {
 
 	$searchLike =  "%".$q."%";
 	$search = $mysqli->prepare(
-		"SELECT `benchID`, `inscription`
+		"SELECT `benchID`, `inscription`, `address`
 		 FROM   `benches`
 		 WHERE  `inscription`
 		 LIKE   ?
@@ -474,11 +493,14 @@ function get_search_results($q) {
 
 	$search->execute();
 	/* bind result variables */
-	$search->bind_result($benchID, $inscription);
+	$search->bind_result($benchID, $inscription, $address);
 
 	$results = array();
 	# Loop through rows to build feature arrays
 	while($search->fetch()) {
+		if($address != null){
+			$inscription .= " ({$address})";
+		}
 		$results[$benchID] = $inscription;
 	}
 

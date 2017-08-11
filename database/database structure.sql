@@ -11,6 +11,7 @@ CREATE TABLE `benches` (
   `benchID` bigint(20) NOT NULL,
   `latitude` float(10,6) NOT NULL,
   `longitude` float(10,6) NOT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
   `inscription` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `present` tinyint(1) NOT NULL,
@@ -86,11 +87,11 @@ ALTER TABLE `users`
 
 
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=887;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=746;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=592;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `benches`
   ADD CONSTRAINT `benches_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
