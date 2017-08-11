@@ -4,10 +4,7 @@ require_once ('config.php');
 $sha1 = $params[2];
 $size = $params[3];
 
-$directory = substr($sha1,0,1);
-$subdirectory = substr($sha1,1,1);
-$photo_path = "photos/".$directory."/".$subdirectory."/";
-$photo_full_path = $photo_path.$sha1.".jpg";
+$photo_full_path = get_path_from_hash($sha1);
 
 function imagecreatefromjpegexif($filename)
 {

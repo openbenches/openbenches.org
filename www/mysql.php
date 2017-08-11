@@ -1,5 +1,6 @@
 <?php
 require_once ('config.php');
+require_once ('functions.php');
 
 //	Set up the database connection
 $mysqli = new mysqli(DB_IP, DB_USER, DB_PASS, DB_TABLE);
@@ -305,7 +306,7 @@ function get_image_html($benchID)
 			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' /></a><br><small>{$source}</small><br>";
 		}
 
-		// break;
+		$html .= get_exif_html(get_path_from_hash($sha1));
 	}
 
 	return $html;

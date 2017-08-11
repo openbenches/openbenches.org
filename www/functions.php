@@ -136,3 +136,42 @@ EOT;
 
 	echo $mapJavaScript;
 }
+
+function get_exif_html($filename) {
+	$exif_data = exif_read_data($filename,0,true);
+
+	$exif = $exif_data["EXIF"];
+
+	if (array_key_exists("DateTime", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["DateTime"]);
+	} else if (array_key_exists("DateTimeOriginal", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["DateTimeOriginal"]);
+	} else if (array_key_exists("DateTimeDigitized", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["DateTimeDigitized"]);
+	} else if (array_key_exists("GPSDateStamp", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
+	}
+
+	$exifHTML = "<p id='exif'>Photo taken on {$dateHTML}.</p>";
+
+	return $exifHTML;
+}
+
+function exif_date_to_timestamp($date) {
+	//	Take the first 10 characters e.g. 2017:08:25 and turn it into a date
+	$datestring = ( substr( str_replace(":", "-", $date) ,0, 10 ));
+	$datetime = new DateTime($datestring);
+	$time = $datetime->format('c');
+	$human = $datetime->format('jS') . " " . $datetime->format('F') . " " . $datetime->format('Y');
+	$dateHTML = "<time datetime=\"{$time}\">{$human}</time>";
+	return $dateHTML;
+}
+
+function get_path_from_hash($sha1) {
+	$directory = substr($sha1,0,1);
+	$subdirectory = substr($sha1,1,1);
+	$photo_path = "photos/".$directory."/".$subdirectory."/";
+	$photo_full_path = $photo_path.$sha1.".jpg";
+
+	return $photo_full_path;
+}
