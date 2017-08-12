@@ -109,7 +109,7 @@ if ($_FILES['userfile1']['tmp_name'])
 }
 ?>
 	<br>
-	<form action="add.php" enctype="multipart/form-data" method="post">
+	<form action="add.php" enctype="multipart/form-data" method="post" onsubmit="submitButton.disabled = true; return true;">
 		<h2>Add A Bench</h2>
 		All you need to do is type in what is written on the bench and add a photo.
 		The photo <em>must</em> have GPS information included.
@@ -165,7 +165,7 @@ if ($_FILES['userfile1']['tmp_name'])
 			</fieldset>
 		</div>
 		<br>&nbsp;
-		<input type="submit" value="Share Bench" />
+		<input type="submit" name="submitButton" value="Share Bench" />
 	</form>
 	<br>&nbsp;
 	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
