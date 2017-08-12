@@ -40,8 +40,4 @@ $benchID = $params[2];
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.Default.css">
 </head>
 <body>
-	<h1><img src="/images/openbencheslogo.svg" id="header-image"> OpenBenches</h1>
-	<div class="button-bar">
-		<a href="/" class="hand-drawn">Map View</a>
-		<a href="/add" class="hand-drawn">New Bench</a>
-	</div>
+	<h1><a href="/"><img src="/images/openbencheslogo.svg" id="header-image">OpenBenches</a></h1>

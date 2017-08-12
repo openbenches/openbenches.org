@@ -3,8 +3,14 @@
 
 	echo "<h2>" . number_format(get_bench_count()) . " benches added</h2>";
 ?>
+<div class="button-bar">
+	<form action="/add/" class="button-form">
+		<input  class="hand-drawn" type="submit" value="New Bench" />
+	</form>
+	<button class="hand-drawn" onclick="geoFindMe()" id="gpsButton">Show benches near me</button>
+</div>
+
 	<div>
-		<div><p><button onclick="geoFindMe()" id="gpsButton" class="hand-drawn">Show benches near me</button><p></div>
 		<div id='map'></div>
 		<div id='benchImage' ></div>
 	</div>

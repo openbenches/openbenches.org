@@ -35,7 +35,11 @@ fieldset {
 }
 
 .button-bar {
-	margin-bottom: 1em;
+	margin-bottom: 0.5em;
+}
+
+.button-form {
+	display: inline;
 }
 
 .search {
@@ -66,6 +70,14 @@ textarea {
 h2 {
 	margin-top: 0;
 	margin-bottom: 0;
+}
+
+a {
+	color: #191E20;
+}
+
+hr {
+	margin: 1em;
 }
 
 .leaflet-control-layers-base{

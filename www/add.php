@@ -164,8 +164,7 @@ if ($_FILES['userfile1']['tmp_name'])
 				?>
 			</fieldset>
 		</div>
-		<br>&nbsp;
-		<input type="submit" name="submitButton" value="Share Bench" />
+		<input class="hand-drawn" type="submit" name="submitButton" value="Share Bench" />
 	</form>
 	<br>&nbsp;
 	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
