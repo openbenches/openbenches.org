@@ -31,10 +31,15 @@ fieldset {
 	background-color:#107895;
 	padding: 0.5em;
 	border-radius: .75em;
+	text-decoration: none;
 }
 
 .button-bar {
 	margin-bottom: 1em;
+}
+
+.search {
+	margin-bottom: 0.5em;
 }
 
 #search-results {

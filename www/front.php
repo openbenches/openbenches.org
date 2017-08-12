@@ -4,6 +4,7 @@
 	echo "<h2>" . number_format(get_bench_count()) . " benches added</h2>";
 ?>
 	<div>
+		<div><p><button onclick="geoFindMe()" id="gpsButton" class="hand-drawn">Show benches near me</button><p></div>
 		<div id='map'></div>
 		<div id='benchImage' ></div>
 	</div>
@@ -14,7 +15,8 @@
 		?>
 		<h2>Search for an inscription</h2>
 		<div>
-			<input type="search" id="inscription" name="search" value="<?php echo htmlspecialchars($query); ?>"><input type="submit" value="Search inscriptions" />
+			<input type="search" class="search" id="inscription" name="search" value="<?php echo htmlspecialchars($query); ?>">
+			<input type="submit" class="hand-drawn" value="Search inscriptions" />
 		</div>
 		<br>
 	</form>
@@ -34,7 +36,6 @@ map.on("moveend", function () {
 		map.getZoom().toString()
 	);
 });
-
 
 markers.on('click', function (bench) {
 	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
@@ -61,7 +62,38 @@ for (var i = 0; i < benches.features.length; i++) {
 }
 
 map.addLayer(markers);
+</script>
+<script>
+function geoFindMe() {
+	var output = document.getElementById("gpsButton");
 
+	var gpsIcon = L.icon({
+		iconUrl: '/images/gps.png',
+		iconSize: [200, 200],
+	});
+
+	if (!navigator.geolocation){
+		output.innerHTML = "GPS is not supported by your device";
+		return;
+	}
+
+	function success(position) {
+		var latitude  = position.coords.latitude;
+		var longitude = position.coords.longitude;
+
+		output.innerHTML = 'Update my location';
+		L.marker([latitude, longitude], {opacity:0.5, icon: gpsIcon}).addTo(map);
+		map.setView([latitude, longitude], 10);
+	}
+
+	function error() {
+		output.innerHTML = "Unable to retrieve your location";
+	}
+
+	output.innerHTML = "Locating…";
+
+	navigator.geolocation.getCurrentPosition(success, error);
+}
 </script>
 <?php
 	include("footer.php");

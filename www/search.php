@@ -31,18 +31,18 @@ if ("<ul></ul>" == $resultsHTML) {
 
 ?>
 	<br>
+	<div id="search-results">
+		<?php echo $resultsHTML; ?>
+	</div>
 	<form action="/search/" enctype="multipart/form-data" method="get">
 		<?php
 			echo $error_message;
 		?>
 		<h2>Search for an inscription</h2>
 		<div>
-			<input type="search" id="inscription" name="search" value="<?php echo htmlspecialchars($query); ?>">
-			<input type="submit" value="Search inscriptions" />
+			<input type="search" id="inscription" name="search" class="search" value="<?php echo htmlspecialchars($query); ?>">
+			<input type="submit" class="hand-drawn" value="Search inscriptions" />
 		</div>
 	</form>
-	<div id="search-results">
-		<?php echo $resultsHTML; ?>
-	</div>
 <?php
 	include("footer.php");
