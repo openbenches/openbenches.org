@@ -103,4 +103,5 @@ Everything we do builds on someone else's hard work.
 * Maps by [Leaflet](https://github.com/Leaflet/Leaflet) [BSD 2-clause "Simplified" License](https://opensource.org/licenses/BSD-2-Clause).
 * Map tiles by [MapBox](https://www.mapbox.com/).
 * Social Media logos by [Agata](https://www.iconfinder.com/iconsets/social-hand-drawn-icons).
+* GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
