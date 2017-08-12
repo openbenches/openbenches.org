@@ -6,32 +6,18 @@ $size = $params[3];
 
 $photo_full_path = get_path_from_hash($sha1);
 
-function imagecreatefromjpegexif($filename)
+function show_scaled_image($imagePath, $size)
 {
-	 $img = imagecreatefromjpeg($filename);
-	 $exif = exif_read_data($filename);
-	 if ($img && $exif && isset($exif['Orientation']))
-	 {
-		$ort = $exif['Orientation'];
-
-		if ($ort == 6 || $ort == 5)
-			$img = imagerotate($img, 270, null);
-		if ($ort == 3 || $ort == 4)
-			$img = imagerotate($img, 180, null);
-		if ($ort == 8 || $ort == 7)
-			$img = imagerotate($img, 90, null);
-		if ($ort == 5 || $ort == 4 || $ort == 7)
-			imageflip($img, IMG_FLIP_HORIZONTAL);
-	 }
-	 return $img;
+	$imagick = new \Imagick(realpath($imagePath));
+	$imagick->resizeImage($size, null, Imagick::FILTER_CATROM,1);
+	header("Content-Type: image/jpeg");
+	echo $imagick->getImageBlob();
+	die();
 }
 
 if(null != $size){
-	$image = imagecreatefromjpegexif($photo_full_path);
-	$image = imagescale($image, $size);
-	header("Content-Type: image/jpeg");
-	imagejpeg($image);
-	imagedestroy($image);
+	$image = show_scaled_image($photo_full_path, $size);
+	die();
 } else {
 	//	Return the full image (preserves EXIF)
 	header('Content-type: image/jpeg');

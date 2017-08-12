@@ -22,6 +22,7 @@ This is a simple PHP and MySQL website. No need for node, complicated deploys, o
 
 * PHP 7 or greater.
 * MySQL 5.5 or greater with innodb.
+* ImageMagick 6.9.4-10 or greater.
 
 ### External APIs
 
@@ -30,6 +31,8 @@ You will need to sign up to some external API providers:
 * Reverse Geocoding requires an [OpenCage API key](https://geocoder.opencagedata.com/)
 * Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
 * Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
+
+Add them to `config.php.example` - rename that to `config.php`
 
 ### Database Structure
 
