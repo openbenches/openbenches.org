@@ -28,6 +28,10 @@ function show_scaled_image($imagePath, $size)
 		break;
 	}
 
+	//	Set the orientation - otherwise it will appear rotated on some browsers
+	$imagick->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
+
+	//	Resize the image
 	$imagick->resizeImage($size, null, Imagick::FILTER_CATROM,1);
 	header("Content-Type: image/jpeg");
 	echo $imagick->getImageBlob();
