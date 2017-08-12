@@ -114,10 +114,19 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 			id: 'mapbox.satellite'
 		});
 
-	var map = L.map('map', {
-		center: [{$lat},{$long}],
-		zoom: {$zoom},
+	var map = L.map('map');
+
+	map.on("load", function () {
+		if (window.location.hash != "") {
+			var hashArray = window.location.hash.substr(1).split("/");
+			var hashLat = hashArray[0];
+			var hashLng = hashArray[1];
+			var hashZoom = hashArray[2];
+			map.setView([hashLat, hashLng], hashZoom);
+		}
 	});
+
+	map.setView([{$lat}, {$long}], {$zoom});
 
 	var baseMaps = {
 		"Map View": grayscale,

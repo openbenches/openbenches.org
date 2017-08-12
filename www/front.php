@@ -26,6 +26,16 @@
 <?php echo get_map_javascript(); ?>
 
 <script>
+map.on("moveend", function () {
+	var stateObj = { x: "y" };
+	history.pushState(stateObj, "Open Benches", "/#" +
+		map.getCenter().lat.toPrecision(7) + "/" +
+		map.getCenter().lng.toPrecision(7) + "/" +
+		map.getZoom().toString()
+	);
+});
+
+
 markers.on('click', function (bench) {
 	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 	xhr.open('get', 'benchimage/'+bench.layer["options"]["benchID"], true);
