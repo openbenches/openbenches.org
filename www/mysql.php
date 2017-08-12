@@ -197,7 +197,7 @@ function get_all_benches($id = 0)
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		WHERE published = true
 		AND benchID {$benchQuery} ?
-		LIMIT 0 , 1024");
+		LIMIT 0 , 2048");
 
 	$get_benches->bind_param('i', $id);
 	$get_benches->execute();
