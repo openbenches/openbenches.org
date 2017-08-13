@@ -64,4 +64,4 @@ if($benchID != null){
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.Default.css">
 </head>
 <body>
-	<h1><a href="/"><img src="/images/openbencheslogo.svg" id="header-image">OpenBenches</a></h1>
+	<h1><a href="/"><img src="/images/openbencheslogo.svg" id="header-image" alt="[logo]: a bird flies above a bench">OpenBenches</a></h1>

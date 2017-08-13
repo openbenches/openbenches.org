@@ -322,7 +322,7 @@ function get_image_html($benchID)
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
 		} else {
-			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' /></a><br><small>{$source}</small><br>";
+			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='Photograph of a bench' /></a><br><small>{$source}</small><br>";
 		}
 
 		$html .= get_exif_html(get_path_from_hash($sha1));

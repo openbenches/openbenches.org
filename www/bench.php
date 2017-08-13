@@ -15,13 +15,17 @@ if(!$published) {
 	die();
 }
 ?>
-	<div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-		<meta itemprop="latitude" content="<?php  echo $benchLat;  ?>" />
-		<meta itemprop="longitude" content="<?php echo $benchLong; ?>" />
-		<div id="benchInscription"><?php echo nl2br($benchInscription); ?></div>
-		<div id="benchImage"><?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?></div>
-		<div id="address" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?php echo $benchAddress; ?></div>
-		<div id="map"></div>
+	<div itemscope itemtype="http://schema.org/Place">
+		<div id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></div>
+		<div id="benchImage"       itemprop="photo">
+			<?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?>
+		</div>
+		<div itemprop="geo"                           itemscope itemtype="http://schema.org/GeoCoordinates">
+			<div id="address"       itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?php echo $benchAddress; ?></div>
+			<div id="map"></div>
+			<meta                   itemprop="latitude"  content="<?php echo $benchLat;  ?>" />
+			<meta                   itemprop="longitude" content="<?php echo $benchLong; ?>" />
+		</div>
 	</div>
 	<div id="comments">
 		<script>
