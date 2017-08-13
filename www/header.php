@@ -15,7 +15,7 @@ if($benchID != null){
 
 ?><!DOCTYPE html>
 <html>
-<head>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# place: http://ogp.me/ns/place#">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -41,7 +41,7 @@ if($benchID != null){
 	<meta                            property="og:image:alt"   content="A photo of a bench with a memorial inscription on it.">
 
 	<!-- Pinterest Specific https://developers.pinterest.com/docs/rich-pins/articles/? -->
-	<meta                            property="og:type"         content="article">
+	<meta                            property="og:type"         content="place">
 	<meta name="twitter:description" property="og:description"  content="<?php echo $benchInscription; ?>">
 
 	<!-- Facebook Specific Metadata https://developers.facebook.com/docs/sharing/opengraph/object-properties -->
