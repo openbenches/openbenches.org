@@ -27,6 +27,9 @@ $benchID = $params[2];
 	<meta name="twitter:title"       property="og:title" content="OpenBenches">
 	<meta name="twitter:description" property="og:url"   content="https://openbenches.org/bench/<?php echo $benchID; ?>">
 	<meta name="twitter:image"       property="og:image" content="https://openbenches.org<?php echo get_image_url($benchID); ?>/640">
+	<!-- The properties og:type and og:description have been added to enabe Rich Pins https://developers.pinterest.com/docs/rich-pins/articles/? -->	
+	<meta                            property="og:type"  content="article">
+	<meta                            property="og:description"  content="Check out this bench!">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
 
