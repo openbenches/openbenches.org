@@ -5,6 +5,7 @@ body {
 	background-color: #F1F3F4;
 	color: #191E20;
 	text-align: center;
+	word-wrap: break-word;
 }
 
 #map{
