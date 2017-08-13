@@ -291,6 +291,9 @@ function get_image($benchID, $full = false)
 
 function get_image_html($benchID)
 {
+
+	$media_types_array = get_media_types_array();
+
 	global $mysqli;
 
 	$get_media = $mysqli->prepare(
@@ -315,6 +318,14 @@ function get_image_html($benchID)
 
 		$full = "/image/{$sha1}/3396";
 
+		//	Generate alt tag
+
+		if (array_key_exists($media_type, $media_types_array)){
+			$alt = $media_types_array[$media_type];
+		} else {
+			$alt = "Photograph of a bench";
+		}
+
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
@@ -322,7 +333,7 @@ function get_image_html($benchID)
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
 		} else {
-			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='Photograph of a bench' /></a><br><small>{$source}</small><br>";
+			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' /></a><br><small>{$source}</small><br>";
 		}
 
 		$html .= get_exif_html(get_path_from_hash($sha1));
@@ -474,7 +485,30 @@ function get_media_types_html($name = "") {
 		$html .= "<option value='{$shortName}'>{$longName}</option>";
 	}
 
+	$get_media->close();
+
 	return $html .= "</select>";
+}
+
+function get_media_types_array() {
+	global $mysqli;
+
+	$get_media_types = $mysqli->prepare("SELECT `shortName`, `longName` FROM `media_types` ORDER BY `displayOrder` ASC");
+
+	$get_media_types->execute();
+	/* bind result variables */
+	$get_media_types->bind_result($shortName, $longName);
+
+	$media_types_array = array();
+
+	# Loop through rows to build feature arrays
+	while($get_media_types->fetch()) {
+		$media_types_array[$shortName] = $longName;
+	}
+
+	$get_media_types->close();
+
+	return $media_types_array;
 }
 
 function get_search_results($q) {
@@ -504,6 +538,7 @@ function get_search_results($q) {
 		$results[$benchID] = $inscription;
 	}
 
+	$search->close();
 	return $results;
 }
 
