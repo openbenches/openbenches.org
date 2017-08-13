@@ -42,7 +42,7 @@ if($benchID != null){
 
 	<!-- Pinterest Specific https://developers.pinterest.com/docs/rich-pins/articles/? -->
 	<meta                            property="og:type"         content="place">
-	<meta name="twitter:description" property="og:description"  content="<?php echo $benchInscription; ?>">
+	<meta name="twitter:description" property="og:description"  content="<?php echo htmlspecialchars($benchInscription); ?>">
 
 	<!-- Facebook Specific Metadata https://developers.facebook.com/docs/sharing/opengraph/object-properties -->
 	<meta                            property="place:location:latitude"  content="<?php echo $benchLat;  ?>">
