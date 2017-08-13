@@ -312,9 +312,12 @@ function get_image_html($benchID)
 	while($get_media->fetch()) {
 
 		//	Was this imported from an external source?
+		$source="";
 		if(null != $importURL) {
 			$source = "<a href='{$importURL}'>{$licence}</a>";
 		}
+
+		$exif_date = get_exif_html(get_path_from_hash($sha1));
 
 		$full = "/image/{$sha1}/3396";
 
@@ -328,15 +331,13 @@ function get_image_html($benchID)
 
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$exif_date} {$licence} {$source}</small><br><br>";
 		} else if("pano" == $media_type){
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$licence}</small> {$source}<br>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$exif_date} {$licence} {$source}</small><br>";
 		} else {
-			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' /></a><br><small>{$source}</small><br>";
+			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' /></a><br><small>{$exif_date} {$licence} {$source}</small><br><br>";
 		}
-
-		$html .= get_exif_html(get_path_from_hash($sha1));
 	}
 
 	return $html;
