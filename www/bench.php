@@ -3,13 +3,7 @@ require_once ('config.php');
 require_once ('mysql.php');
 require_once ('functions.php');
 
-if ($_GET["benchID"]) {
-	$benchID = $_GET["benchID"];
-} else {
-	$benchID = $params[2];
-}
-
-list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
+include("header.php");
 
 if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
@@ -20,8 +14,6 @@ if(!$published) {
 	include("404.php");
 	die();
 }
-
-include("header.php");
 ?>
 	<div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
 		<meta itemprop="latitude" content="<?php  echo $benchLat;  ?>" />

@@ -32,6 +32,7 @@ fieldset {
 	padding: 0.5em;
 	border-radius: .75em;
 	text-decoration: none;
+	line-height: 2.5em;
 }
 
 .button-bar {
@@ -40,6 +41,10 @@ fieldset {
 
 .button-form {
 	display: inline;
+}
+
+button, input {
+	line-height: 1em !important;
 }
 
 .search {
