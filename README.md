@@ -21,7 +21,7 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 * All Data
 	* `https://openbenches.org/data.json/`
 * Specific Bench
-	* `https://openbenches.org/data.json/?bench=6123`
+	* `https://openbenches.org/data.json/?bench=123`
 	* That last `/` is *required*.
 * Geographic Area (Haversine)
 	* `https://openbenches.org/data.json/?latitude=51.234&longitude=-1.234&radius=20`
