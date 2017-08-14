@@ -14,6 +14,28 @@ All contributions are welcome.  Before making a pull request, please:
 1. Raise a new issue describing the problem and how you intend to fix it.
 2. Submit a Pull Request referencing the Issue.
 
+## Open Data API
+
+You can get all the data, or partial data, from the API.  Data is returned in [geoJSON](http://geojson.org/) format.
+
+* All Data
+	* `https://openbenches.org/data.json/`
+* Specific Bench
+	* `https://openbenches.org/data.json/?bench=6123`
+	* That last `/` is *required*.
+* Geographic Area (Haversine)
+	* `https://openbenches.org/data.json/?latitude=51.234&longitude=-1.234&radius=20`
+	* `latitude` and `longitude` in [WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System).
+	* `radius` in Kilometres.
+	* A maximum of 20 results are returned.
+	* That last `/` is *required*.
+* Formats
+	* By default, the JSON starts with `var benches = `
+	* To get pure JSON, append `format=raw`
+	* `https://openbenches.org/data.json/?bench=123&format=raw`
+* Images
+	* The API doesn't return images. Yet.
+
 ## Running Locally
 
 This is a simple PHP and MySQL website. No need for node, complicated deploys, or spinning up containerised virtual machines in the cloud.

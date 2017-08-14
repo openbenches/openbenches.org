@@ -29,7 +29,7 @@
 	<div class="button-bar">
 		<a href="add.php" class="hand-drawn">Add a new bench</a>
 	</div>
-<script src="geojson.php?cache=<?php echo rand(); ?>" type="text/javascript"></script>
+<script src=/data.json/" type="text/javascript"></script>
 
 <?php echo get_map_javascript(); ?>
 

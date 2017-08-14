@@ -39,7 +39,7 @@ if(!$published) {
 	<div class="button-bar">
 		<a href="/add" class="hand-drawn">Add a new bench</a>
 	</div>
-<script src="/geojson/<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 

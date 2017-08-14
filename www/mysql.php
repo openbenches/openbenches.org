@@ -176,7 +176,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 		array_push($geojson['features'], $feature);
 	}
 
-	return json_encode($geojson, JSON_NUMERIC_CHECK);
+	return $geojson;
 }
 
 function get_bench($benchID){
