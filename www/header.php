@@ -50,22 +50,22 @@ if($benchID != null){
 	<meta                            property="og:rich_attachment"       content="true">
 
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+	<link rel="stylesheet" href="/libs/normalize.7.0.0/normalize.min.css">
 
 	<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
 
-	<link rel="stylesheet" href="/style.css?cache=<?php echo rand(); ?>"/>
+	<link rel="stylesheet" href="/style.css"/>
 
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin=""/>
-	<script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.1.0/leaflet.css" />
+	<script src="/libs/leaflet.1.1.0/leaflet.js"></script>
 
 	<script src="https://unpkg.com/leaflet.markercluster@1.0.6/dist/leaflet.markercluster.js" crossorigin=""></script>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.css">
-	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.6/dist/MarkerCluster.Default.css">
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.css">
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.Default.css">
 </head>
 <body>
 	<h1>
 		<a href="/">
 			<img src="/images/openbencheslogo.svg"
-			     id="header-image" 
+			     id="header-image"
 			     alt="[logo]: a bird flies above a bench">Open<wbr>Benches</a></h1>
