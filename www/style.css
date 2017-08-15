@@ -1,5 +1,13 @@
+@font-face {
+	font-family: 'varela_roundregular';
+	src: url('/fonts/varelaround-regular-webfont.woff2') format('woff2'),
+	     url('/fonts/varelaround-regular-webfont.woff')  format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
 body {
-	font-family: 'Varela Round', sans-serif;
+	font-family: 'varela_roundregular', sans-serif;
 	font-size: 1.25em;
 	margin: 1em;
 	background-color: #F1F3F4;

@@ -52,14 +52,12 @@ if($benchID != null){
 
 	<link rel="stylesheet" href="/libs/normalize.7.0.0/normalize.min.css">
 
-	<link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-
 	<link rel="stylesheet" href="/style.css"/>
 
 	<link rel="stylesheet" href="/libs/leaflet.1.1.0/leaflet.css" />
 	<script src="/libs/leaflet.1.1.0/leaflet.js"></script>
 
-	<script src="https://unpkg.com/leaflet.markercluster@1.0.6/dist/leaflet.markercluster.js" crossorigin=""></script>
+	<script src="/libs/leaflet.markercluster.1.0.6/leaflet.markercluster.js"></script>
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.css">
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.Default.css">
 </head>
