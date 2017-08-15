@@ -82,7 +82,7 @@ if (!$valid) {
 
 	</form>
 
-<script src="/data.json/bench=<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 
@@ -109,13 +109,11 @@ for (var i = 0; i < benches.features.length; i++) {
 	var lat     = bench.geometry.coordinates[1];
 	var longt   = bench.geometry.coordinates[0];
 	var benchID = bench.id;
-	// console.log('bench ' + benchID);
 	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: true });
 
 	marker.bindPopup(title);
 
 	marker.on('dragend', function(event){
-		console.log(event);
 		newLat =  event.target._latlng.lat.toPrecision(7);
 		newLong = event.target._latlng.lng.toPrecision(7);
 		coordinates.value = newLat + ',' + newLong;
