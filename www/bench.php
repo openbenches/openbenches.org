@@ -16,7 +16,7 @@ if(!$published) {
 }
 ?>
 	<div itemscope itemtype="http://schema.org/Place">
-		<div id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></div>
+		<h2  id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></h2>
 		<div id="benchImage"       itemprop="photo">
 			<?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?>
 		</div>
