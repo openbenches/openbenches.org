@@ -17,9 +17,7 @@ if(!$published) {
 ?>
 	<div itemscope itemtype="http://schema.org/Place">
 		<h2  id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></h2>
-		<div id="benchImage"       itemprop="photo">
-			<?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?>
-		</div>
+		<?php echo get_image_html($benchID); echo get_user_from_bench($benchID); ?>
 		<div itemprop="geo"                           itemscope itemtype="http://schema.org/GeoCoordinates">
 			<div id="address"       itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><?php echo $benchAddress; ?></div>
 			<div id="map"></div>

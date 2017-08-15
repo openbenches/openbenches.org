@@ -91,3 +91,18 @@ hr {
 .leaflet-control-layers-base{
 	text-align: left;
 }
+
+.benchImage{
+	position: relative;
+}
+
+.caption {
+	left: 28%;
+	right: 28%;
+	position: absolute;
+	bottom: 1em;
+	color: white;
+	background: rgba(0, 0, 0, 0.5);
+	padding: 0.4em;
+	font-size: 0.5em;
+}

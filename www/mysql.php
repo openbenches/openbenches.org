@@ -306,7 +306,7 @@ function get_image_html($benchID)
 	/* bind result variables */
 	$get_media->bind_result($sha1, $userID, $importURL, $licence, $media_type);
 
-	$html = "";
+	$html = '';
 
 	# Loop through rows to build the HTML
 	while($get_media->fetch()) {
@@ -314,11 +314,14 @@ function get_image_html($benchID)
 		//	Was this imported from an external source?
 		$source="";
 		if(null != $importURL) {
-			$source = "<a href='{$importURL}'>{$licence}</a>";
+			$source = "<a href='{$importURL}' rel='license'>{$licence}</a>";
+		} else {
+			$source = $licence;
 		}
 
 		$exif_date = get_exif_html(get_path_from_hash($sha1));
 
+		//	Pannellum can't take full width images. This size should be quick to compute
 		$full = "/image/{$sha1}/3396";
 
 		//	Generate alt tag
@@ -328,17 +331,28 @@ function get_image_html($benchID)
 		} else {
 			$alt = "Photograph of a bench";
 		}
+		$html .= '<div itemprop="photo" class="benchImage">';
+
 
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$exif_date} {$licence} {$source}</small><br><br>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
+						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
 		} else if("pano" == $media_type){
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe><br><small>{$exif_date} {$licence} {$source}</small><br>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
+						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
 		} else {
-			$html .= "<a href='/image/{$sha1}'><img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' /></a><br><small>{$exif_date} {$licence} {$source}</small><br><br>";
+			$html .= "<a href='/image/{$sha1}'>
+			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
+						</a>
+						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
 		}
+
+		$html .= "</div>";
+
 	}
+
 
 	return $html;
 }

@@ -161,7 +161,7 @@ function get_exif_html($filename) {
 		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
 	}
 
-	$exifHTML = "Photo taken on {$dateHTML}.";
+	$exifHTML = "{$dateHTML}";
 
 	return $exifHTML;
 }
