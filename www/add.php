@@ -117,7 +117,11 @@ if ($_FILES['userfile1']['tmp_name'])
 			echo $error_message;
 		?>
 		<label for="inscription">Inscription:</label><br>
-		<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $inscription; ?></textarea>
+		<textarea id="inscription" name="inscription" cols="40" rows="6"
+	    placeholder="In loving memory of 
+Buffy Anne Summers 
+She saved the world 
+A lot... "><?php echo $inscription; ?></textarea>
 		<br>&nbsp;<br>&nbsp;
 
 		<div id="photo1" style="display: block;">
