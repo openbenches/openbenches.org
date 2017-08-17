@@ -48,7 +48,7 @@ $inscription = $_POST['inscription'];
 $error_message = "";
 
 if (null == $inscription) {
-	$error_message .= "<h3>Please type in the text of the inscription.</h3>";
+	// $error_message .= "<h3>Please type in the text of the inscription.</h3>";
 }
 
 //	Has a photo been posted?
@@ -108,7 +108,6 @@ if ($_FILES['userfile1']['tmp_name'])
 	$error_message .= "<h3>Ooops! Looks like you didn't add a photo.</h3>";
 }
 ?>
-	<br>
 	<form action="add.php" enctype="multipart/form-data" method="post" onsubmit="submitButton.disabled = true; return true;">
 		<h2>Add A Bench</h2>
 		All you need to do is type in what is written on the bench and add a photo.
@@ -116,15 +115,15 @@ if ($_FILES['userfile1']['tmp_name'])
 		<?php
 			echo $error_message;
 		?>
-		<label for="inscription">Inscription:</label><br>
+		<br><br>
+		<label for="inscription">Please type in the text of the inscription:</label><br>
 		<textarea id="inscription" name="inscription" cols="40" rows="6"
 	    placeholder="In loving memory of 
 Buffy Anne Summers 
 She saved the world 
 A lot... "><?php echo $inscription; ?></textarea>
-		<br>&nbsp;<br>&nbsp;
 
-		<div id="photo1" style="display: block;">
+		<div id="photo1" class="photo-group" style="display: block;">
 			<fieldset>
 				<legend>Geotagged Photo</legend>
 				<input id="photoFile1" name="userfile1" type="file" accept="image/jpg, image/jpeg" />
@@ -134,8 +133,8 @@ A lot... "><?php echo $inscription; ?></textarea>
 					echo get_media_types_html("1");
 				?>
 			</fieldset>
-		</div><br>&nbsp;
-		<div id="photo2" style="display: none;">
+		</div>&nbsp;
+		<div id="photo2" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile2" name="userfile2" type="file" accept="image/jpg, image/jpeg" />
@@ -145,8 +144,8 @@ A lot... "><?php echo $inscription; ?></textarea>
 					echo get_media_types_html("2");
 				?>
 			</fieldset>
-		</div><br>&nbsp;
-		<div id="photo3" style="display: none;">
+		</div>&nbsp;
+		<div id="photo3" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile3" name="userfile3" type="file" accept="image/jpg, image/jpeg" />
@@ -156,8 +155,8 @@ A lot... "><?php echo $inscription; ?></textarea>
 					echo get_media_types_html("3");
 				?>
 			</fieldset>
-		</div><br>&nbsp;
-		<div id="photo4" style="display: none;">
+		</div>
+		<div id="photo4" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile4" name="userfile4" type="file" accept="image/jpg, image/jpeg" />
@@ -168,6 +167,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 				?>
 			</fieldset>
 		</div>
+		<br>
 		<input class="hand-drawn" type="submit" name="submitButton" value="Share Bench" />
 	</form>
 	<br>&nbsp;

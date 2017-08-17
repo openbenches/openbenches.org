@@ -32,7 +32,9 @@ iframe{
 }
 
 fieldset {
-	display: contents;
+	width: 0;
+	text-align: left;
+	margin: auto;
 }
 
 .hand-drawn {
@@ -117,4 +119,16 @@ hr {
 
 .caption a {
 	color: white;
+}
+
+input[type="file"] {
+	font-size: 1rem;
+}
+
+.photo-group {
+	overflow-x: auto;
+}
+
+small {
+	font-size: 0.8rem;
 }

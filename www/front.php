@@ -27,7 +27,7 @@
 		<br>
 	</form>
 	<div class="button-bar">
-		<a href="add.php" class="hand-drawn">Add a new bench</a>
+		<a href="/add/" class="hand-drawn">Add a new bench</a>
 	</div>
 <script src="/data.json/" type="text/javascript"></script>
 
