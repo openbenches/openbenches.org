@@ -56,10 +56,11 @@ markers.on('click', function (bench) {
 
 for (var i = 0; i < benches.features.length; i++) {
 	var bench = benches.features[i];
-	var title = bench.properties.popupContent;
 	var lat = bench.geometry.coordinates[1];
 	var longt = bench.geometry.coordinates[0];
 	var benchID = bench.id;
+	var title = bench.properties.popupContent + "<br><a href='/bench/"+bench.id+"/'>View details</a>";
+
 	// console.log('bench ' + benchID);
 	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID });
 
