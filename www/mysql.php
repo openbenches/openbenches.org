@@ -289,8 +289,10 @@ function get_image($benchID, $full = false)
 	return $html;
 }
 
-function get_image_html($benchID)
+function get_image_html($benchID, $full = true)
 {
+	//	Which bench? Should this link to the full image?
+	//	If it's not linking to the full image, link to the details page.
 
 	$media_types_array = get_media_types_array();
 
@@ -319,35 +321,43 @@ function get_image_html($benchID)
 			$source = $licence;
 		}
 
+		//	When was the photo taken?
 		$exif_date = get_exif_html(get_path_from_hash($sha1));
-
 		if ("" != $exif_date) {
 			$exif_date = " - " . $exif_date;
 		}
 
 		//	Pannellum can't take full width images. This size should be quick to compute
-		$full = "/image/{$sha1}/3396";
+		$panorama_image = "/image/{$sha1}/3396";
 
 		//	Generate alt tag
-
 		if (array_key_exists($media_type, $media_types_array)){
 			$alt = $media_types_array[$media_type];
 		} else {
 			$alt = "Photograph of a bench";
 		}
+
+		//	Where to link the image to
+		if($full) {
+			$link = "/image/{$sha1}";
+		} else {
+			$link = "/bench/{$benchID}";
+		}
+
+		//	Start the container
 		$html .= '<div itemprop="photo" class="benchImage">';
 
-
+		//	What sort of image is it?
 		if("360" == $media_type) {
-			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
+			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
 						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
 		} else if("pano" == $media_type){
-			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
+			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
 						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
 		} else {
-			$html .= "<a href='/image/{$sha1}'>
+			$html .= "<a href='{$link}'>
 			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
 						</a>
 						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
@@ -355,8 +365,13 @@ function get_image_html($benchID)
 
 		$html .= "</div>";
 
+		//	If this is the front page, link to the details page
+		if(!$full){
+			$html .= "<br><a href='{$link}'>View more about this bench</a>";
+			//	Only one image is needed.
+			break;
+		}
 	}
-
 
 	return $html;
 }
