@@ -106,11 +106,15 @@ hr {
 	position: relative;
 }
 
-.caption {
-	left: 28%;
-	right: 28%;
+.caption-heading {
 	position: absolute;
-	bottom: 1em;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+
+.caption {
 	color: white;
 	background: rgba(0, 0, 0, 0.5);
 	padding: 0.4em;

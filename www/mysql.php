@@ -321,6 +321,10 @@ function get_image_html($benchID)
 
 		$exif_date = get_exif_html(get_path_from_hash($sha1));
 
+		if ("" != $exif_date) {
+			$exif_date = " - " . $exif_date;
+		}
+
 		//	Pannellum can't take full width images. This size should be quick to compute
 		$full = "/image/{$sha1}/3396";
 
@@ -337,16 +341,16 @@ function get_image_html($benchID)
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
+						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
 		} else if("pano" == $media_type){
 			$panorama = "/pannellum/pannellum.htm#panorama={$full}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
+						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
 		} else {
 			$html .= "<a href='/image/{$sha1}'>
 			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
 						</a>
-						<h3><span class='caption'>{$source} - {$exif_date}<span></h3>";
+						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
 		}
 
 		$html .= "</div>";
