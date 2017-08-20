@@ -45,6 +45,8 @@ if (!$valid) {
 		Your bench has been added! <a href="/bench/<?php echo $benchID; ?>">View your bench</a>.
 		<br>
 		You can edit the inscription or location if you need to.
+		<br>
+		Or <a href="/add/">Add a new bench</a>
 		<?php
 			echo $error_message;
 		?>
