@@ -142,7 +142,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 			<fieldset>
 				<legend>Geotagged Photo</legend>
 				<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
-				<img   id="photoPreview1" src="#" alt="Your 1st photo" style="display: none;"/>
+				<div id="photoPreview1" style="display: none;"></div>
 				<label for="media_type1">This photo is a:</label>
 				<?php
 					echo get_media_types_html("1");
@@ -153,7 +153,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile2" name="userfile2" type="file" accept="image/jpeg" />
-				<img   id="photoPreview2" src="#" alt="Your 2nd photo" style="display: none;" />
+				<div id="photoPreview2" style="display: none;"></div>
 				<label for="media_type2">This photo is a:</label>
 				<?php
 					echo get_media_types_html("2");
@@ -164,7 +164,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile3" name="userfile3" type="file" accept="image/jpeg" />
-				<img   id="photoPreview3" src="#" alt="Your 3rd photo" style="display: none;" />
+				<div id="photoPreview3" style="display: none;"></div>
 				<label for="media_type3">This photo is a:</label>
 				<?php
 					echo get_media_types_html("3");
@@ -175,7 +175,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 			<fieldset>
 				<legend>Optional Photo</legend>
 				<input id="photoFile4" name="userfile4" type="file" accept="image/jpeg" />
-				<img   id="photoPreview4" src="#" alt="Your last photo" style="display: none;" />
+				<div id="photoPreview4" style="display: none;"></div>
 				<label for="media_type4">This photo is a:</label>
 				<?php
 					echo get_media_types_html("4");
@@ -190,78 +190,96 @@ A lot... "><?php echo $inscription; ?></textarea>
 	<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
 	<br>
 	This means other people can use the photo and its data without having to ask permission. Thanks!</small>
-	<script src="/libs/exifjs/exif.min.js"></script>
+	<script src="/libs/load-image/load-image.all.min.js"></script>
 	<script type="text/javascript">
-		var previewWidth = 200;
+		var previewWidth = 400;
 
-		document.getElementById("photoFile1").onchange = function (e) {
-			var reader = new FileReader();
+		document.getElementById('photoFile1').onchange = function (e) {
 			var preview1 = document.getElementById("photoPreview1");
-			//	Remove any existing image
-			preview1.style.display = "none";
-			reader.onload = function (e) {
-				// get loaded data and render thumbnail.
-				preview1.style.display = "block";
-				preview1.src = e.target.result;
-				preview1.width = previewWidth;
-			};
-			// read the image file as a data URL.
-			reader.readAsDataURL(this.files[0]);
-			//	Check if GPS Tag exists. First photo only.
-			EXIF.getData(e.target.files[0], function() {
-				if( (EXIF.getTag(this, "GPSLongitude") == null)) {
-					alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+			//	If a photo was added already, remove it.
+			while (preview1.hasChildNodes()) {
+				preview1.removeChild(preview1.lastChild);
+			}
+			//	Display the element
+			preview1.style.display = "block";
+			//	Add a quick canvas to the screen showing the image
+			var loadingImage = loadImage(
+				e.target.files[0],
+				function (img) { preview1.appendChild(img); },
+				{ maxWidth: previewWidth, canvas: true}
+			);
+			if (!loadingImage) {}
+
+			//	Check for GPS data
+			var exifdata = loadImage.parseMetaData(
+				e.target.files[0],
+				function (data) {
+					if (!data.imageHead) {
+						return;
+					}
+					if ( typeof data.exif == 'undefined' ) {
+						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+					} else if (data.exif.get("GPSLongitude") == null) {
+						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+					}
 				}
-			});
-			//	Show the next upload box
+			);
 			document.getElementById('photo2').style.display = "block";
-		}
+		};
 		
-		document.getElementById("photoFile2").onchange = function () {
-			var reader = new FileReader();
+		document.getElementById("photoFile2").onchange = function (e) {
 			var preview2 = document.getElementById("photoPreview2");
-			preview2.style.display = "none";
-			reader.onload = function (e) {
-				// get loaded data and render thumbnail.
-				preview2.style.display = "block";
-				preview2.src = e.target.result;
-				preview2.width = previewWidth;
-			};
-			// read the image file as a data URL.
-			reader.readAsDataURL(this.files[0]);
+			//	If a photo was added already, remove it.
+			while (preview2.hasChildNodes()) {
+				preview2.removeChild(preview2.lastChild);
+			}
+			//	Display the element
+			preview2.style.display = "block";
+			//	Add a quick canvas to the screen showing the image
+			var loadingImage = loadImage(
+				e.target.files[0],
+				function (img) { preview2.appendChild(img); },
+				{ maxWidth: previewWidth, canvas: true}
+			);
+			if (!loadingImage) {}
 			//	Show the next upload box
 			document.getElementById('photo3').style.display = "block";
 		}
 		
-		document.getElementById("photoFile3").onchange = function () {
-			var reader = new FileReader();
+		document.getElementById("photoFile3").onchange = function (e) {
 			var preview3 = document.getElementById("photoPreview3");
-			preview3.style.display = "none";
-			
-			reader.onload = function (e) {
-				// get loaded data and render thumbnail.
-				preview3.style.display = "block";
-				preview3.src = e.target.result;
-				preview3.width = previewWidth;
-			};
-			// read the image file as a data URL.
-			reader.readAsDataURL(this.files[0]);
+			//	If a photo was added already, remove it.
+			while (preview3.hasChildNodes()) {
+				preview3.removeChild(preview3.lastChild);
+			}
+			//	Display the element
+			preview3.style.display = "block";
+			//	Add a quick canvas to the screen showing the image
+			var loadingImage = loadImage(
+				e.target.files[0],
+				function (img) { preview3.appendChild(img); },
+				{ maxWidth: previewWidth, canvas: true}
+			);
+			if (!loadingImage) {}
 			//	Show the next upload box
 			document.getElementById('photo4').style.display = "block";
 		}
 		
-		document.getElementById("photoFile4").onchange = function () {
-			var reader = new FileReader();
+		document.getElementById("photoFile4").onchange = function (e) {
 			var preview4 = document.getElementById("photoPreview4");
-			preview4.style.display = "none";
-			reader.onload = function (e) {
-				// get loaded data and render thumbnail.
-				preview4.style.display = "block";
-				preview4.src = e.target.result;
-				preview4.width = previewWidth;
-			};
-			// read the image file as a data URL.
-			reader.readAsDataURL(this.files[0]);
+			//	If a photo was added already, remove it.
+			while (preview4.hasChildNodes()) {
+				preview4.removeChild(preview4.lastChild);
+			}
+			//	Display the element
+			preview4.style.display = "block";
+			//	Add a quick canvas to the screen showing the image
+			var loadingImage = loadImage(
+				e.target.files[0],
+				function (img) { preview4.appendChild(img); },
+				{ maxWidth: previewWidth, canvas: true}
+			);
+			if (!loadingImage) {}
 		}
 	</script>
 <?php

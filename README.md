@@ -127,4 +127,4 @@ Everything we do builds on someone else's hard work.
 * Map tiles by [MapBox](https://www.mapbox.com/).
 * GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
-* JS EXIF reader by [EXIF-JS](https://github.com/exif-js/exif-js) [MIT](https://github.com/exif-js/exif-js/blob/master/LICENSE.md).
+* JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) [MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt).
