@@ -118,12 +118,13 @@ Everything we do builds on someone else's hard work.
 
 * OpenBenches data are made available under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
 * The code powering the website is [MIT](https://opensource.org/licenses/MIT).
-* All photos uploaded are [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+* All photos uploaded by users are [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 * [Benches from Bath](https://github.com/BathHacked/banes-geographic-data/blob/master/banes_park_seats_and_benches.geojson) are [OGL](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) and Powered by [Bath: Hacked](https://www.bathhacked.org/).
 * Logo template by [Creative Mania](https://thenounproject.com/term/park/923893/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Twitter integration by [CodeBird](https://github.com/jublonet/codebird-php) [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 * Maps by [Leaflet](https://github.com/Leaflet/Leaflet) [BSD 2-clause "Simplified" License](https://opensource.org/licenses/BSD-2-Clause).
+* Cluster library by [Leaflet](https://github.com/Leaflet/Leaflet.markercluster) [MIT](https://github.com/Leaflet/Leaflet.markercluster/blob/master/MIT-LICENCE.txt).
 * Map tiles by [MapBox](https://www.mapbox.com/).
-* Social Media logos by [Agata](https://www.iconfinder.com/iconsets/social-hand-drawn-icons).
 * GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
+* JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) [MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt).

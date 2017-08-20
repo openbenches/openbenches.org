@@ -176,13 +176,16 @@ function exif_date_to_timestamp($date) {
 	return $dateHTML;
 }
 
-function get_path_from_hash($sha1) {
+function get_path_from_hash($sha1, $full = true) {
 	$directory = substr($sha1,0,1);
 	$subdirectory = substr($sha1,1,1);
 	$photo_path = "photos/".$directory."/".$subdirectory."/";
-	$photo_full_path = $photo_path.$sha1.".jpg";
-
-	return $photo_full_path;
+	
+	if($full) {
+		return $photo_path.$sha1.".jpg";
+	}
+	
+	return $photo_path;
 }
 
 function get_place_name($latitude, $longitude) {
