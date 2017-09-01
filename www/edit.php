@@ -51,7 +51,7 @@ if (!$valid) {
 			echo $error_message;
 		?>
 		<div style="clear:both;">
-			<h3>Drag pin to change bench location</h3>
+			<h3>Drag pin to change bench location, then press "Save Changes"</h3>
 			<div id='map' class="hand-drawn" ></div>
 		</div>
 
@@ -59,6 +59,7 @@ if (!$valid) {
 			<input type="text"   id="coordinates"  value="<?php echo $benchLat; ?>,<?php echo $benchLong; ?>" disabled="true" />
 			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $benchLong; ?>"/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $benchLat;  ?>"/>
+			<input type="submit" value="Save Changes" />
 		</div>
 
 		<div id='benchImage'>
@@ -80,7 +81,7 @@ if (!$valid) {
 		<input type="hidden" name="key" value="<?php echo $key; ?>"/>
 		<br>&nbsp;
 		<br>&nbsp;
-		<input type="submit" value="Submit Edits" />
+		<input type="submit" value="Save Changes" />
 
 	</form>
 
