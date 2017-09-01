@@ -514,9 +514,16 @@ function get_media_types_html($name = "") {
 
 	$html = "<select name='media_type{$name}'>";
 
+	$count = 1;
+
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
-		$html .= "<option value='{$shortName}'>{$longName}</option>";
+		if ($count == $name) {
+			$html .= "<option value='{$shortName}' selected>{$longName}</option>";			
+		} else {
+			$html .= "<option value='{$shortName}'>{$longName}</option>";
+		}
+		$count++;
 	}
 
 	$get_media->close();
