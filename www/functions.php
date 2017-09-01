@@ -79,7 +79,7 @@ function tweet_bench($benchID, $sha1=null, $inscription=null, $latitude=null, $l
 		$media_ids = null;
 	}
 
-	$tweet_inscription = substr($inscription, 0, 100);
+	$tweet_inscription = mb_substr($inscription, 0, 100);
 	if (strlen($inscription) > 100) {
 		$tweet_inscription .= "…";
 	}
