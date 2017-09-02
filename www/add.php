@@ -58,6 +58,12 @@ if (null == $inscription) {
 {	//	Has a photo been posted?
 	$filename = $_FILES['userfile1']['tmp_name'];
 	$sha1 = sha1_file ($filename);	//	For tweeting
+	
+	$domain = $_SERVER['SERVER_NAME'];
+
+	$mediaURLs = array();
+	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
+	
 
 	if (duplicate_file($filename))
 	{
@@ -83,34 +89,42 @@ if (null == $inscription) {
 			//	Save other images
 			if ($_FILES['userfile2']['tmp_name'])
 			{
+				$sha1 = sha1_file($_FILES['userfile2']['tmp_name']);
 				save_image($_FILES['userfile2']['tmp_name'], $_POST['media_type2'], $benchID, $userID);
+				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 			if ($_FILES['userfile3']['tmp_name'])
 			{
+				$sha1 = sha1_file($_FILES['userfile3']['tmp_name']);
 				save_image($_FILES['userfile3']['tmp_name'], $_POST['media_type3'], $benchID, $userID);
+				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 			if ($_FILES['userfile4']['tmp_name'])
 			{
+				$sha1 = sha1_file($_FILES['userfile4']['tmp_name']);
 				save_image($_FILES['userfile4']['tmp_name'], $_POST['media_type4'], $benchID, $userID);
+				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
 			mail(NOTIFICATION_EMAIL,
 				"Bench {$benchID}",
-				"{$inscription}\nhttps://openbenches.org/bench/{$benchID}\n\n" .
-				"Edit: https://openbenches.org/edit/{$benchID}/{$key}/"
+				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
+				"Edit: https://{$domain}/edit/{$benchID}/{$key}/"
 			);
-
-			//	Tweet the bench
-			try {
-				tweet_bench($benchID, $sha1, $inscription, $location["lat"], $location["lng"], "CC BY-SA 4.0");
-			} catch (Exception $e) {
-			}
-			
 
 			//	Send the user to the bench's page
 			header("Location: /edit/{$benchID}/{$key}/");
+			
+			//	Tweet the bench
+			try {
+				tweet_bench($benchID, $mediaURLs, $inscription, $location["lat"], $location["lng"], "CC BY-SA 4.0");
+			} catch (Exception $e) {
+				var_export($e);
+				die();
+			}
+			
 			die();
 		} else {
 			$error_message .= "<h3>No location metadata found in image</h3>";
@@ -133,7 +147,7 @@ include("header.php");
 		?>
 		<label for="inscription">Inscription:</label><br>
 		<textarea id="inscription" name="inscription" cols="40" rows="6"
-	    placeholder="In loving memory of 
+			placeholder="In loving memory of 
 Buffy Anne Summers 
 She saved the world 
 A lot... "><?php echo $inscription; ?></textarea>

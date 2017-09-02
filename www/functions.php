@@ -64,28 +64,35 @@ function get_image_location($file)
 	return false;
 }
 
-function tweet_bench($benchID, $sha1=null, $inscription=null, $latitude=null, $longitude=null, $license=null){
+function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=null, $longitude=null, $license=null){
 	//	Send Tweet
 	\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();
 	$cb->setToken(OAUTH_ACCESS_TOKEN, OAUTH_TOKEN_SECRET);
 
 	//	Add the image
-	if(null!=$sha1){
-		$reply = $cb->media_upload(['media' => "https://openbenches.org/image/{$sha1}/2048"]);
-		$media_ids[] = $reply->media_id_string;
+	if(null!=$mediaURLs){
+		
+		$media_ids = array();
+		
+		foreach ($mediaURLs as $file) {
+			// upload all media files
+			$reply = $cb->media_upload(['media' => $file]);
+			// and collect their IDs
+			$media_ids[] = $reply->media_id_string;
+		}
 		$media_ids = implode(',', $media_ids);
-	} else {
-		$media_ids = null;
 	}
 
 	$tweet_inscription = mb_substr($inscription, 0, 100);
-	if (strlen($inscription) > 100) {
+	if (mb_strlen($inscription) > 100) {
 		$tweet_inscription .= "…";
 	}
 
+	$domain = $_SERVER['SERVER_NAME'];
+
 	$params = [
-		'status'    => "{$tweet_inscription}\nhttps://openbenches.org/bench/{$benchID}\n{$license}",
+		'status'    => "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}",
 		'lat'       => $latitude,
 		'long'      => $longitude,
 		'media_ids' => $media_ids
