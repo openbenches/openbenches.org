@@ -46,7 +46,7 @@ if (!$valid) {
 		<br>
 		You can edit the inscription or location if you need to.
 		<br>
-		Or <a href="/add/">Add a new bench</a>
+		Or <a href="/add/">Add bench</a>
 		<?php
 			echo $error_message;
 		?>
