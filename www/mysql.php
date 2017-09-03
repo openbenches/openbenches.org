@@ -496,7 +496,7 @@ function get_admin_list()
 		//get_edit_key
 		$bench   = $benchID;
 		$key     = urlencode(get_edit_key($bench));
-		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, UTF-8, false));
+		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, "UTF-8", false));
 		$html   .= "<li>{$bench} <a href='/edit/{$bench}/{$key}'>{$inscrib}</a></li>";
 	}
 
