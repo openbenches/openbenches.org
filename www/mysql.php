@@ -180,10 +180,10 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 }
 
 function get_bench($benchID){
-	return get_all_benches($benchID);
+	return get_all_benches($benchID, false);
 }
 
-function get_all_benches($id = 0)
+function get_all_benches($id = 0, $only_published = true)
 {
 	global $mysqli;
 
@@ -193,10 +193,15 @@ function get_all_benches($id = 0)
 		$benchQuery = "=";
 	}
 
+	if ($only_published){
+		$where = "WHERE published = true AND benchID {$benchQuery} ?";
+	} else {
+		$where = "WHERE benchID {$benchQuery} ?";
+	}
+
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
-		WHERE published = true
-		AND benchID {$benchQuery} ?
+		{$where}
 		LIMIT 0 , 2048");
 
 	$get_benches->bind_param('i', $id);
