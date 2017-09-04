@@ -11,7 +11,7 @@
 
 	//	Available pages
 	$pages = array("bench", "add", "image", "benchimage", "flickr", "edit", "admin",
-	               "search", "sitemap.xml", "data.json");
+	               "search", "sitemap.xml", "data.json", "login");
 
 	if(in_array($params[1], $pages)) {
 		include($params[1].".php");

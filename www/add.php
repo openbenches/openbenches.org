@@ -4,6 +4,29 @@ require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
+require_once ('codebird.php');
+
+
+function get_twitter_details(){
+	// var_export($_SESSION);
+	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
+	$cb = \Codebird\Codebird::getInstance();
+	
+	if (isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret'])) {
+		// assign access token on each page load
+		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);	
+		$reply = (array) $cb->account_verifyCredentials();
+		// var_export($reply);
+		//	Get the user's ID & name
+		$id_str = $reply["id_str"];
+		$screen_name = $reply["screen_name"];
+		// echo "You are {$screen_name} with ID {$id_str}";
+		return array($id_str, $screen_name);;
+	}
+	return null;
+
+}
+
 function duplicate_file($filename) {
 	$sha1 = sha1_file($filename);
 	$photo_full_path = get_path_from_hash($sha1, true);
@@ -76,7 +99,13 @@ if (null == $inscription) {
 		if (false != $location)
 		{
 			//	Add the user to the database
-			$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
+			$twitter = get_twitter_details();
+			
+			if (null == $twitter) {
+				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
+			} else {
+				$userID = insert_user("twitter", $twitter[0], $twitter[1]);
+			}
 
 			$media_type = $_POST['media_type1'];
 
@@ -137,6 +166,15 @@ if (null == $inscription) {
 
 //	Start the normal page
 include("header.php");
+
+$twitter_name = get_twitter_details()[1];
+if(null == $twitter_name) {
+	$login_html = "You are not logged in. That's cool. You can post anonymously, or <a href='/login/'>sign in with Twitter</a>.";	
+} else {
+	$login_html = "You are logged in as @{$twitter_name}";
+}
+
+	echo "<p>{$login_html}</p>";
 ?>
 	<form action="/add.php" enctype="multipart/form-data" method="post" onsubmit="submitButton.disabled = true; return true;">
 		<h2>Add A Bench</h2>

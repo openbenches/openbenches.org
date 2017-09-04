@@ -105,7 +105,24 @@ function edit_media_type($mediaID, $media_type) {
 function insert_user($provider, $providerID, $name)
 {
 	global $mysqli;
-
+	
+	//	Does the user already exist?
+	//	Only applicable for Twitter
+	if ("twitter" == $provider) {
+		$search_user = $mysqli->prepare("SELECT `userID` FROM `users` 
+			WHERE `provider` LIKE ? AND `providerID` LIKE ? AND `name` LIKE ?");
+		$search_user->bind_param('sss', $provider, $providerID, $name);
+		$search_user->execute();
+		$search_user->bind_result($userID);
+		# Loop through rows to build feature arrays
+		while($search_user->fetch()) {
+			if ($userID){
+				return $userID;
+			}
+		}
+		$search_user->close();
+	}
+	
 	$insert_user = $mysqli->prepare("INSERT INTO `users`
 		       (`userID`, `provider`, `providerID`, `name`)
 		VALUES (NULL,     ?,           ?,            ?);"
