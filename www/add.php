@@ -201,9 +201,12 @@ A lot... "><?php echo $inscription; ?></textarea>
 	</form>
 	<br>&nbsp;
 	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
-	<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
-	<br>
-	This means other people can use the photo and its data without having to ask permission. Thanks!</small>
+		<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
+		<br>
+		This means other people can use the photo and its data without having to ask permission. Thanks!
+		<br>
+		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
+	</small>
 	<script src="/libs/load-image/load-image.all.min.js"></script>
 	<script type="text/javascript">
 		var previewWidth = 400;
