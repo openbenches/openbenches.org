@@ -167,8 +167,23 @@ function get_exif_html($filename) {
 	} else if (array_key_exists("GPSDateStamp", $exif)) {
 		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
 	}
+	
+	//	Get the make and model
+	$ifd0 = $exif_data["IFD0"];
+	$makeHTML = "";
+	if (array_key_exists("Make", $ifd0)) {
+		$makeHTML = ucwords($ifd0["Make"]);
+	} 
+	if (array_key_exists("Model", $ifd0)) {
+		$makeHTML .= " " . $ifd0["Model"];
+	}
 
-	$exifHTML = "{$dateHTML}";
+	//	Format the text
+	if ($makeHTML != "") {
+		$makeHTML = " - " . $makeHTML;
+	}
+
+	$exifHTML = "{$dateHTML} {$makeHTML}";
 
 	return $exifHTML;
 }
