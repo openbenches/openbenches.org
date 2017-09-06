@@ -180,7 +180,7 @@ function get_exif_html($filename) {
 
 	//	Format the text
 	if ($makeHTML != "") {
-		$makeHTML = " - " . $makeHTML;
+		$makeHTML = " | " . $makeHTML;
 	}
 
 	$exifHTML = "{$dateHTML} {$makeHTML}";

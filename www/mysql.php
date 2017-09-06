@@ -320,20 +320,32 @@ function get_image_html($benchID, $full = true)
 
 	global $mysqli;
 
+	// $get_media = $mysqli->prepare(
+	// 	"SELECT sha1, userID, importURL, licence, media_type
+	// 	 FROM media
+	// 	 WHERE benchID = ?");
+	
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, userID, importURL, licence, media_type
-		 FROM media
-		 WHERE benchID = ?");
+		"SELECT sha1, users.name, users.provider, importURL, licence, media_type
+		FROM media
+		INNER JOIN users ON media.userID = users.userID
+		WHERE benchID = ?");
 
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
 	/* bind result variables */
-	$get_media->bind_result($sha1, $userID, $importURL, $licence, $media_type);
+	$get_media->bind_result($sha1, $userName, $userProvider, $importURL, $licence, $media_type);
 
 	$html = '';
 
 	# Loop through rows to build the HTML
 	while($get_media->fetch()) {
+		
+		$userHTML = "";
+		//	Who uploaded this media
+		if($userProvider == "twitter") {
+			$userHTML = " | @{$userName}";
+		}
 
 		//	Was this imported from an external source?
 		$source="";
@@ -344,9 +356,9 @@ function get_image_html($benchID, $full = true)
 		}
 
 		//	When was the photo taken?
-		$exif_date = get_exif_html(get_path_from_hash($sha1));
-		if ("" != $exif_date) {
-			$exif_date = " - " . $exif_date;
+		$exif_html = get_exif_html(get_path_from_hash($sha1));
+		if ("" != $exif_html) {
+			$exif_html = " | " . $exif_html;
 		}
 
 		//	Pannellum can't take full width images. This size should be quick to compute
@@ -373,16 +385,18 @@ function get_image_html($benchID, $full = true)
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
+						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_html} {$userHTML}<span></h3>";
 		} else if("pano" == $media_type){
 			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
+						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_html} {$userHTML}<span></h3>";
 		} else {
 			$html .= "<a href='{$link}'>
 			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
 						</a>
-						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_date}<span></h3>";
+						<h3 class='caption-heading'>
+							<span class='caption'>{$source} {$exif_html} {$userHTML}<span>
+						</h3>";
 		}
 
 		$html .= "</div>";
@@ -464,7 +478,7 @@ function get_user($userID)
 	while($get_user->fetch()) {
 		if ("anon" != $provider){
 			$name = htmlspecialchars($name);
-			$userString .= " From <img src='/images/{$provider}.svg' width='50' /> {$name}";
+			$userString .= " @{$name}";
 		} else {
 			$userString = "";
 		}
