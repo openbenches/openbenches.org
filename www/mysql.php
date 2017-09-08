@@ -34,7 +34,7 @@ function insert_bench($lat, $long, $inscription, $userID)
 	}
 }
 
-function edit_bench($lat, $long, $inscription, $benchID, $published=true)
+function edit_bench($lat, $long, $inscription, $benchID, $published=true, $userID)
 {
 	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
 	$address = get_place_name($lat, $long);
@@ -46,9 +46,10 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true)
 		        `longitude` =   ?,
 		        `address` =     ?,
 		        `inscription` = ?,
-		        `published` =   ?
+		        `published` =   ?,
+				  `userID` =      ?
 		  WHERE `benches`.`benchID` = ?");
-	$edit_bench->bind_param('ddssii', $lat, $long, $address, $inscription, $published, $benchID);
+	$edit_bench->bind_param('ddssisi', $lat, $long, $address, $inscription, $published, $userID, $benchID);
 	$edit_bench->execute();
 	$edit_bench->close();
 
@@ -129,7 +130,6 @@ function insert_user($provider, $providerID, $name)
 	);
 
 	$insert_user->bind_param('sss', $provider, $providerID, $name);
-
 	$insert_user->execute();
 
 	$resultID = $insert_user->insert_id;

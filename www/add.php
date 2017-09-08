@@ -4,73 +4,6 @@ require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
-require_once ('codebird.php');
-
-
-function get_twitter_details(){
-	// var_export($_SESSION);
-	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
-	$cb = \Codebird\Codebird::getInstance();
-	
-	if (isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret'])) {
-		// assign access token on each page load
-		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);	
-		$reply = (array) $cb->account_verifyCredentials();
-		// var_export($reply);
-		//	Get the user's ID & name
-		$id_str = $reply["id_str"];
-		$screen_name = $reply["screen_name"];
-		// echo "You are {$screen_name} with ID {$id_str}";
-		return array($id_str, $screen_name);;
-	}
-	return null;
-
-}
-
-function duplicate_file($filename) {
-	$sha1 = sha1_file($filename);
-	$photo_full_path = get_path_from_hash($sha1, true);
-	
-	// echo "{$photo_path} and {$photo_full_path}";
-	// die();
-	
-	//	Does this photo already exit?
-	if(file_exists($photo_full_path)){
-		return true;
-	}
-	return false;
-}
-
-function save_image($filename, $media_type, $benchID, $userID) {
-	$sha1 = sha1_file($filename);
-	$photo_full_path = get_path_from_hash($sha1, true);
-	$photo_path      = get_path_from_hash($sha1, false);
-
-
-	//	Check to see if this has the right EXIF tags for a photosphere
-	if (is_photosphere($filename)) {
-		$media_type = "360";
-	} else if ("360" == $media_type){
-		//	If it has been miscategorised, remove the media type
-		$media_type = null;
-	}
-
-	//	Move media to the correct location
-	if (!is_dir($photo_path)) {
-		mkdir($photo_path, 0777, true);
-	}
-	$moved = move_uploaded_file($filename, $photo_full_path);
-
-	//	Add the media to the database
-	if ($moved){
-		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
-	} else {
-		echo "Unable to move {$filename} to {$photo_full_path} - bench {$benchID} user {$userID} media {$media_type}";
-		die();
-	}
-
-}
-
 //	Get the inscription, either to add to database, or recover in case of error
 $inscription = $_POST['inscription'];
 $error_message = "";
@@ -86,7 +19,6 @@ if (null == $inscription) {
 
 	$mediaURLs = array();
 	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-	
 
 	if (duplicate_file($filename))
 	{
@@ -101,7 +33,7 @@ if (null == $inscription) {
 			//	Add the user to the database
 			$twitter = get_twitter_details();
 			
-			if (null == $twitter) {
+			if (null == $twitter[1]) {
 				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 			} else {
 				$userID = insert_user("twitter", $twitter[0], $twitter[1]);
@@ -113,25 +45,25 @@ if (null == $inscription) {
 			$benchID = insert_bench($location["lat"],$location["lng"], $inscription, $userID);
 
 			//	Save the Image
-			save_image($filename, $media_type, $benchID, $userID);
+			save_image($_FILES['userfile1'], $media_type, $benchID, $userID);
 
 			//	Save other images
 			if ($_FILES['userfile2']['tmp_name'])
 			{
 				$sha1 = sha1_file($_FILES['userfile2']['tmp_name']);
-				save_image($_FILES['userfile2']['tmp_name'], $_POST['media_type2'], $benchID, $userID);
+				save_image($_FILES['userfile2'], $_POST['media_type2'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 			if ($_FILES['userfile3']['tmp_name'])
 			{
 				$sha1 = sha1_file($_FILES['userfile3']['tmp_name']);
-				save_image($_FILES['userfile3']['tmp_name'], $_POST['media_type3'], $benchID, $userID);
+				save_image($_FILES['userfile3'], $_POST['media_type3'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 			if ($_FILES['userfile4']['tmp_name'])
 			{
 				$sha1 = sha1_file($_FILES['userfile4']['tmp_name']);
-				save_image($_FILES['userfile4']['tmp_name'], $_POST['media_type4'], $benchID, $userID);
+				save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 			}
 

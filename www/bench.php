@@ -35,7 +35,8 @@ if(!$published) {
 		<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 	</div>
 	<div class="button-bar">
-		<a href="/add" class="hand-drawn">Add bench</a>
+		<a href="/add" class="hand-drawn">Add new bench</a>
+		<a href="/edit/<?php echo $benchID; ?>" class="hand-drawn">Edit this bench</a>
 	</div>
 <script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 

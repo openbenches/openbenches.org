@@ -2,6 +2,84 @@
 require_once ("codebird.php");
 require_once ("config.php");
 
+function get_twitter_details(){
+	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
+	$cb = \Codebird\Codebird::getInstance();
+	
+	if (isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret'])) {
+		// assign access token on each page load
+		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);	
+		$reply = (array) $cb->account_verifyCredentials();
+		// var_export($reply);
+		//	Get the user's ID & name
+		$id_str = $reply["id_str"];
+		$screen_name = $reply["screen_name"];
+		// echo "You are {$screen_name} with ID {$id_str}";
+		return array($id_str, $screen_name);;
+	}
+	return null;
+
+}
+
+function twitter_login() {
+	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
+	$cb = \Codebird\Codebird::getInstance();
+
+	if (! isset($_SESSION['oauth_token'])) {
+		//	If the user is not logged in, take them to Twitter
+		$reply = $cb->oauth_requestToken([
+			'oauth_callback' => 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+		]);
+
+		//	Set the token from Twitter
+		$cb->setToken($reply->oauth_token, $reply->oauth_token_secret);
+		$_SESSION['oauth_token'] = $reply->oauth_token;
+		$_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
+		$_SESSION['oauth_verify'] = true;
+
+		//	Go to the OAuth website
+		$auth_url = $cb->oauth_authorize();
+		header('Location: ' . $auth_url);
+		die();
+
+	} elseif (isset($_GET['oauth_verifier']) && isset($_SESSION['oauth_verify'])) {
+		//	A token has been set. Verify it.
+		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+		unset($_SESSION['oauth_verify']);
+
+		//	Get the access token
+		$reply = $cb->oauth_accessToken([
+			'oauth_verifier' => $_GET['oauth_verifier']
+		]);
+
+		//	Store the token (which is different from the request token!)
+		$_SESSION['oauth_token'] = $reply->oauth_token;
+		$_SESSION['oauth_token_secret'] = $reply->oauth_token_secret;
+
+		//	Redirect back here, without oauth GET parameters
+		header('Location: ' . basename(__FILE__));
+		die();
+	}
+
+	//	Assign access token on each page load
+	$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+
+	$reply = (array) $cb->account_verifyCredentials();
+
+	//	If the authorization hasn't worked, clear the session variables and start again
+	if($reply["errors"]) {
+		$_SESSION['oauth_token'] = null;
+		$_SESSION['oauth_token'] = null;
+		$_SESSION['oauth_token_secret'] = null;
+		$_SESSION['oauth_verify'] = null;
+		// send to same URL, without oauth GET parameters
+		header('Location: ' . basename(__FILE__));
+		die();
+	}
+	
+	return $reply;
+}
+
 function get_edit_key($benchID){
 	$hash = crypt($benchID,EDIT_SALT);
 	$key = explode("$",$hash)[3];
@@ -228,4 +306,55 @@ function get_place_name($latitude, $longitude) {
 	$address = $locationData->results[0]->formatted;
 
 	return htmlspecialchars($address, ENT_NOQUOTES);
+}
+
+function save_image($file, $media_type, $benchID, $userID) { 
+	$filename = $file['name'];
+	$file =     $file['tmp_name'];
+	
+	if (get_image_location($file) == false) {
+		return "<h3>No GPS tags in: {$filename}</h3>";
+	}
+	
+	if (duplicate_file($file)) {
+		return "<h3>Duplicate image: {$filename}</h3>";
+	}
+
+	//	Check to see if this has the right EXIF tags for a photosphere
+	if (is_photosphere($file)) {
+		$media_type = "360";
+	} else if ("360" == $media_type){
+		//	If it has been miscategorised, remove the media type
+		$media_type = null;
+	}
+	
+	$sha1 = sha1_file($file);
+	$photo_full_path = get_path_from_hash($sha1, true);
+	$photo_path      = get_path_from_hash($sha1, false);
+	
+	//	Move media to the correct location
+	if (!is_dir($photo_path)) {
+		mkdir($photo_path, 0777, true);
+	}
+	$moved = move_uploaded_file($file, $photo_full_path);
+
+	//	Add the media to the database
+	if ($moved){
+		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
+		return true;
+	} else {
+		return("<h3>Unable to move {$filename} to {$photo_full_path} - bench {$benchID} user {$userID} media {$media_type}</h3>");
+		die();
+	}
+}
+
+function duplicate_file($filename) {
+	$sha1 = sha1_file($filename);
+	$photo_full_path = get_path_from_hash($sha1, true);
+	
+	//	Does this photo already exit?
+	if(file_exists($photo_full_path)){
+		return true;
+	}
+	return false;
 }
