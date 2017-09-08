@@ -344,7 +344,7 @@ function get_image_html($benchID, $full = true)
 		$userHTML = "";
 		//	Who uploaded this media
 		if($userProvider == "twitter") {
-			$userHTML = " | @{$userName}";
+			$userHTML = "@{$userName}";
 		}
 
 		//	Was this imported from an external source?
@@ -352,14 +352,14 @@ function get_image_html($benchID, $full = true)
 		if(null != $importURL) {
 			$source = "<a href='{$importURL}' rel='license'>{$licence}</a>";
 		} else {
-			$source = $licence;
+			$source = '<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" /></a>';
 		}
 
 		//	When was the photo taken?
 		$exif_html = get_exif_html(get_path_from_hash($sha1));
-		if ("" != $exif_html) {
-			$exif_html = " | " . $exif_html;
-		}
+		// if ("" != $exif_html) {
+		// 	$exif_html = " | " . $exif_html;
+		// }
 
 		//	Pannellum can't take full width images. This size should be quick to compute
 		$panorama_image = "/image/{$sha1}/3396";
@@ -384,20 +384,19 @@ function get_image_html($benchID, $full = true)
 		//	What sort of image is it?
 		if("360" == $media_type) {
 			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_html} {$userHTML}<span></h3>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else if("pano" == $media_type){
 			$panorama = "/pannellum/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
-			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>
-						<h3 class='caption-heading'><span class='caption'>{$source} {$exif_html} {$userHTML}<span></h3>";
+			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
 			$html .= "<a href='{$link}'>
 			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
-						</a>
-						<h3 class='caption-heading'>
-							<span class='caption'>{$source} {$exif_html} {$userHTML}<span>
-						</h3>";
+						</a>";
 		}
+		
+		$html .= "<h3 class='caption-heading'>
+						<span class='caption'>{$source}&nbsp;{$exif_html}&nbsp;{$userHTML}</span>
+					</h3>";
 
 		$html .= "</div>";
 

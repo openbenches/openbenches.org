@@ -179,11 +179,11 @@ function get_exif_html($filename) {
 	}
 
 	//	Format the text
-	if ($makeHTML != "") {
-		$makeHTML = " | " . $makeHTML;
-	}
+	// if ($makeHTML != "") {
+	// 	$makeHTML = " | " . $makeHTML;
+	// }
 
-	$exifHTML = "{$dateHTML} {$makeHTML}";
+	$exifHTML = "{$dateHTML}&nbsp;{$makeHTML}";
 
 	return $exifHTML;
 }
