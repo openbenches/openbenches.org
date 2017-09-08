@@ -35,6 +35,7 @@ function show_scaled_image($imagePath, $size)
 	$imagick->resizeImage($size, null, Imagick::FILTER_CATROM,1);
 	header("Content-Type: image/jpeg");
 	echo $imagick->getImageBlob();
+	$imagick->clear();
 	die();
 }
 
