@@ -518,7 +518,7 @@ function get_admin_list()
 {
 	global $mysqli;
 
-	$get_list = $mysqli->prepare("SELECT `benchID`, `inscription` FROM `benches` ORDER BY `benchID` DESC LIMIT 0 , 2048");
+	$get_list = $mysqli->prepare("SELECT `benchID`, `inscription` FROM `benches` ORDER BY `benchID` DESC LIMIT 0 , 4096");
 
 	$get_list->execute();
 	/* bind result variables */
