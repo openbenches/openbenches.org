@@ -49,6 +49,19 @@ if($benchID != null){
 	<meta                            property="place:location:longitude" content="<?php echo $benchLong; ?>">
 	<meta                            property="og:rich_attachment"       content="true">
 
+	<!-- https://developers.google.com/search/docs/data-types/sitelinks-searchbox -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type":    "WebSite",
+		"url":      "https://openbenches.org/",
+		"potentialAction": {
+			"@type":       "SearchAction",
+			"target":      "https://openbenches.org/search/?search={search_term_string}",
+			"query-input": "required name=search_term_string"
+		}
+	}
+	</script>
 
 	<link rel="stylesheet" href="/libs/normalize.7.0.0/normalize.min.css">
 
