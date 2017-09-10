@@ -42,8 +42,12 @@ if(isset($_POST['key'])) {
 			$userID = insert_user("twitter", $id_str, $screen_name);
 		}
 		
-
 		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true", $userID);
+		
+		mail(NOTIFICATION_EMAIL,
+			"Edit to Bench {$benchID}",
+			"{$inscription}\nhttps://{$_SERVER['SERVER_NAME']}/bench/{$benchID}"
+		);
 		
 		//	Add photos
 		$image1 = $image2 = $image3 = $image4 = true;
