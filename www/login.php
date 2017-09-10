@@ -14,7 +14,7 @@ session_start();
 if (! isset($_SESSION['oauth_token'])) {
 	// get the request token
 	$reply = $cb->oauth_requestToken([
-		'oauth_callback' => 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+		'oauth_callback' => 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
 	]);
 
 
@@ -64,6 +64,16 @@ if($reply["errors"]) {
 	die();
 }
 
-//	Redirect to the Add page
+//	Cache buster
 $cache = time();
-header("Location: /add/?cache={$cache}");
+
+//	Is this an edit login?
+$benchID = $params[2];
+if(null != $benchID){
+	//	Redirect to the Add page
+	header("Location: /edit/{$benchID}/?cache={$cache}");
+} else {
+	//	Redirect to the Add page
+	header("Location: /add/?cache={$cache}");	
+}
+die();

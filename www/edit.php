@@ -15,24 +15,34 @@ $benchID = $params[2];
 if (null != $params[3]) {
 	$key = urldecode($params[3]);
 } else {
-	twitter_login();
+	
+	$twitter = get_twitter_details();
+	if(null == $twitter) {
+		header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
+		die();
+	}
+	$id_str     = $twitter[0];
+	$screen_name= $twitter[1];
 }
 
-$twitter = get_twitter_details();
-
 if(isset($_POST['key'])) {
-	$key =         $_POST['key'];
+	$key =         urldecode($_POST['key']);
 	$inscription = $_POST['inscription'];
 	$latitude =    $_POST['newLatitude'];
 	$longitude =   $_POST['newLongitude'];
 	$published =   $_POST['published'];
 
-	$valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
+	$valid = hash_equals($key, get_edit_key($benchID));
 
-	if ($valid && (null != $twitter)) {
+	if ($valid) {
 
-		$userID = insert_user("twitter", $twitter[0], $twitter[1]);
+		if (null == $twitter) {
+			$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
+		} else {
+			$userID = insert_user("twitter", $id_str, $screen_name);
+		}
 		
+
 		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true", $userID);
 		
 		//	Add photos
@@ -174,7 +184,7 @@ if($twitter[1] != null){
 		<input type="radio" id="publishedFalse" name="published" value="false">
 			<label for="publishedFalse">Delete</label>
 
-		<input type="hidden" name="key" value="<?php echo crypt($benchID,EDIT_SALT); ?>"/>
+		<input type="hidden" name="key" value="<?php echo urlencode(get_edit_key($benchID)); ?>"/>
 		<br>&nbsp;
 		<br>&nbsp;
 		<input type="submit" value="Save Changes" />
