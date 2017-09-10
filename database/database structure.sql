@@ -1,4 +1,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -18,6 +20,27 @@ CREATE TABLE `benches` (
   `published` tinyint(1) NOT NULL,
   `added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `userID` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DELIMITER $$
+CREATE TRIGGER `save_benches_history` BEFORE UPDATE ON `benches` FOR EACH ROW INSERT INTO benches_history
+SELECT *, NOW() 
+FROM benches 
+WHERE benchID = OLD.benchID
+$$
+DELIMITER ;
+
+CREATE TABLE `benches_history` (
+  `benchID` bigint(20) NOT NULL,
+  `latitude` float(10,6) NOT NULL,
+  `longitude` float(10,6) NOT NULL,
+  `inscription` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `present` tinyint(1) NOT NULL,
+  `published` tinyint(1) NOT NULL,
+  `added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userID` bigint(20) NOT NULL,
+  `changed` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `licences` (
@@ -70,6 +93,9 @@ ALTER TABLE `benches`
   ADD PRIMARY KEY (`benchID`),
   ADD KEY `contributor` (`userID`);
 
+ALTER TABLE `benches_history`
+  ADD PRIMARY KEY (`changed`);
+
 ALTER TABLE `licences`
   ADD PRIMARY KEY (`shortName`);
 
@@ -87,11 +113,11 @@ ALTER TABLE `users`
 
 
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2091;
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2785;
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1719;
 
 ALTER TABLE `benches`
   ADD CONSTRAINT `benches_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
@@ -100,6 +126,7 @@ ALTER TABLE `media`
   ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
   ADD CONSTRAINT `media_ibfk_2` FOREIGN KEY (`licence`) REFERENCES `licences` (`shortName`),
   ADD CONSTRAINT `media_ibfk_3` FOREIGN KEY (`media_type`) REFERENCES `media_types` (`shortName`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
