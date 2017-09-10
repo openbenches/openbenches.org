@@ -1,8 +1,9 @@
 <?php
 	include("header.php");
 
-	echo "<h2>" . number_format(get_bench_count()) . " benches added</h2>";
+	echo '<h2 itemprop="description">A map of ' . number_format(get_bench_count()) . " memorial benches - added by people like you</h2>";
 ?>
+</hgroup>
 <div class="button-bar">
 		<a href="/add/" class="hand-drawn">Add bench</a>
 	<span class="hand-drawn" onclick="geoFindMe()" id="gpsButton">Show benches near me</span>

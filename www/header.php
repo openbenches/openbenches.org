@@ -61,7 +61,7 @@ if($benchID != null){
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.css">
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.Default.css">
 </head>
-<body>
+<body itemscope itemtype="https://schema.org/WebPage">
 	<h1>
 		<a href="/">
 			<img src="/images/openbencheslogo.svg"

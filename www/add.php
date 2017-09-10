@@ -97,8 +97,9 @@ if (null == $inscription) {
 }
 
 //	Start the normal page
-include("header.php");
-
+include("header.php");?>
+</hgroup>
+<?php
 $twitter_name = get_twitter_details()[1];
 if(null == $twitter_name) {
 	$login_html = "You are not logged in. That's cool. You can post anonymously, or <a href='/login/'>sign in with Twitter</a>.";	

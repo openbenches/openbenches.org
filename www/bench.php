@@ -15,6 +15,7 @@ if(!$published) {
 	die();
 }
 ?>
+	</hgroup>
 	<div itemscope itemtype="http://schema.org/Place">
 		<h2  id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></h2>
 		<?php echo get_image_html($benchID); ?>

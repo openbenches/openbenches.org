@@ -103,6 +103,7 @@ if($twitter[1] != null){
 }
 
 ?>
+	</hgroup>
 	<br>
 	<form action="/edit/<?php echo $benchID . "/" . urlencode($key); ?>" enctype="multipart/form-data" method="post">
 		<h2>Edit A Bench</h2>
