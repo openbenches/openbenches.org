@@ -108,21 +108,12 @@ if(null == $twitter_name) {
 }
 
 	echo "<p>{$login_html}</p>";
+	echo $error_message;
 ?>
 	<form action="/add.php" enctype="multipart/form-data" method="post" onsubmit="submitButton.disabled = true; return true;">
 		<h2>Add A Bench</h2>
-		All you need to do is type in what is written on the bench and add a photo.
-		The photo <em>must</em> have GPS information included.
-		<?php
-			echo $error_message;
-		?>
-		<label for="inscription">Inscription:</label><br>
-		<textarea id="inscription" name="inscription" cols="40" rows="6"
-			placeholder="In loving memory of 
-Buffy Anne Summers 
-She saved the world 
-A lot... "><?php echo $inscription; ?></textarea>
-
+		Let's get started by adding a photo - you can add more photos later. Your photo <em>must</em> have GPS information included.
+				
 		<div id="photo1" class="photo-group" style="display: block;">
 			<fieldset>
 				<legend>Geotagged Photo</legend>
@@ -134,6 +125,19 @@ A lot... "><?php echo $inscription; ?></textarea>
 				?>
 			</fieldset>
 		</div>&nbsp;
+		
+		<div class="search-results" style="display: none;">
+			
+		</div>
+		
+		<label for="inscription">Inscription:</label><br>
+		<textarea id="inscription" name="inscription" cols="40" rows="6"
+			placeholder="In loving memory of 
+Buffy Anne Summers 
+She saved the world 
+A lot... "><?php echo $inscription; ?></textarea>
+
+
 		<div id="photo2" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional Photo</legend>
@@ -210,6 +214,22 @@ A lot... "><?php echo $inscription; ?></textarea>
 					} else if (data.exif.get("GPSLongitude") == null) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 					}
+					var imgLong = data.exif.get("GPSLongitude");
+					var imgLat  = data.exif.get("GPSLatitude");
+					var geoJSONURL = '/data.json/?latitude='+imgLat+'&longitude='+imgLong+'&radius=0.02&format=html';
+					console.log(imgLong + " " + imgLat);
+					console.log(geoJSONURL);
+					var resultDiv = document.querySelector('.search-results');
+					fetch(geoJSONURL).then(function(response) {
+						console.log("Fetched");
+						return response.text();
+					}).then(function(myHTML) {
+						console.log("Adding");
+						// var objectURL = URL.createObjectURL(myBlob);
+						resultDiv.innerHTML = myHTML;
+						resultDiv.style.display = "block";
+
+					});
 				}
 			);
 			document.getElementById('photo2').style.display = "block";

@@ -19,6 +19,16 @@ if (null != $latitude && null != $longitude && null != $radius) {
 if ("raw" == $format) {
 	header('Content-Type: application/json');
 	echo json_encode($geojson, JSON_NUMERIC_CHECK);
+} else if ("html" == $format) {
+	header('Content-Type: text/html');
+	echo "<ul>";
+	foreach ($geojson["features"] as $value) {
+		$benchID = $value["id"];
+		$img =  get_image_url($benchID) . "/200";
+		$inscription = $value["properties"]["popupContent"];
+		echo "<li><img src='{$img}'/> {$inscription}</li>";
+	}
+	echo "</ul>";
 } else {
 	header('Content-type: text/javascript');
 	echo "var benches = " . json_encode($geojson, JSON_NUMERIC_CHECK);
