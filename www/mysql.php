@@ -279,7 +279,7 @@ function get_random_bench(){
 
 	$get_bench = $mysqli->prepare(
 		"SELECT benchID, latitude, longitude, address, inscription, published
-		 FROM benches ORDER BY RAND() LIMIT 1;"
+		 FROM benches WHERE published = 1 ORDER BY RAND() LIMIT 1;"
 	);
 
 	$get_bench->execute();
