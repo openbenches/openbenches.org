@@ -7,7 +7,6 @@
 <div class="button-bar">
 	<a href="/add/" class="hand-drawn">Add bench</a>
 	<span class="hand-drawn" onclick="geoFindMe()" id="gpsButton">Show benches near me</span>
-    <a href="/bench?random=true" class="hand-drawn">Show me a random bench</a>
 </div>
 
 	<div>
@@ -27,6 +26,7 @@
 		<br>
 	</form>
 	<div class="button-bar">
+		<a href="/bench?random=true" class="hand-drawn">Show me a random bench</a>
 		<a href="/add/" class="hand-drawn">Add bench</a>
 	</div>
 <script src="/data.json/" type="text/javascript"></script>
