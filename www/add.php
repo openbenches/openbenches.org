@@ -127,7 +127,6 @@ if(null == $twitter_name) {
 		</div>&nbsp;
 		
 		<div class="search-results" style="display: none;">
-			
 		</div>
 		
 		<label for="inscription">Inscription:</label><br>
@@ -226,7 +225,7 @@ A lot... "><?php echo $inscription; ?></textarea>
 					}).then(function(myHTML) {
 						console.log("Adding");
 						// var objectURL = URL.createObjectURL(myBlob);
-						resultDiv.innerHTML = myHTML;
+						resultDiv.innerHTML = "<h3>Nearby Benches</h3>" + myHTML;
 						resultDiv.style.display = "block";
 
 					});
