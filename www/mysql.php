@@ -274,6 +274,24 @@ function get_bench_details($benchID){
 	}
 }
 
+function get_random_bench(){
+	global $mysqli;
+
+	$get_bench = $mysqli->prepare(
+		"SELECT benchID, latitude, longitude, address, inscription, published
+		 FROM benches WHERE published = 1 ORDER BY RAND() LIMIT 1;"
+	);
+
+	$get_bench->execute();
+
+	/* bind result variables */
+	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+
+	while($get_bench->fetch()) {
+		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+	}
+}
+
 function get_image($benchID, $full = false)
 {
 	global $mysqli;
