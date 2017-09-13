@@ -8,6 +8,9 @@ $benchID = $params[2];
 if($benchID != null){
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
 	$benchImage = get_image_url($benchID) . "/640";
+} else if ($_GET["random"]) {
+    list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_random_bench();
+    $benchImage = get_image_url($benchID) . "/640";
 } else {
 	$benchInscription = "Welcome to OpenBenches";
 	$benchImage = "/android-chrome-512x512.png";
