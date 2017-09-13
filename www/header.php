@@ -13,7 +13,7 @@ if($benchID != null){
 	header('Cache-Control: no-store, no-cache');
 	header('Pragma: no-cache');
 	header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}/",TRUE,303);
+	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}/",TRUE,302);
 } else {
 	$benchInscription = "Welcome to OpenBenches";
 	$benchImage = "/android-chrome-512x512.png";
