@@ -33,6 +33,14 @@ function show_scaled_image($imagePath, $size)
 
 	//	Resize the image
 	$imagick->resizeImage($size, null, Imagick::FILTER_CATROM,1);
+	
+	//	Set the quality
+	$imagick->setImageCompressionQuality(85);
+	
+	//	Progressive image for slower connections
+	$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+
+	//	Send the image to the browser
 	header("Content-Type: image/jpeg");
 	echo $imagick->getImageBlob();
 	$imagick->clear();
