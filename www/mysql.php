@@ -28,8 +28,10 @@ function insert_bench($lat, $long, $inscription, $userID)
 	$insert_bench->execute();
 	$resultID = $insert_bench->insert_id;
 	if ($resultID) {
+		$insert_bench->close();
 		return $resultID;
 	} else {
+		$insert_bench->close();
 		return null;
 	}
 }
@@ -84,8 +86,10 @@ function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import
 	$insert_media->execute();
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
+		$insert_media->close();
 		return $resultID;
 	} else {
+		$insert_media->close();
 		return null;
 	}
 }
@@ -118,6 +122,7 @@ function insert_user($provider, $providerID, $name)
 		# Loop through rows to build feature arrays
 		while($search_user->fetch()) {
 			if ($userID){
+				$search_user->close();
 				return $userID;
 			}
 		}
@@ -192,7 +197,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}
-
+	$get_benches->close();
 	return $geojson;
 }
 
@@ -250,8 +255,9 @@ function get_all_benches($id = 0, $only_published = true)
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}
+	
+	$get_benches->close();
 	return $geojson;
-	// return json_encode($geojson, JSON_NUMERIC_CHECK);
 }
 
 function get_bench_details($benchID){
@@ -270,6 +276,7 @@ function get_bench_details($benchID){
 	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 
 	while($get_bench->fetch()) {
+		$get_bench->close();
 		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 	}
 }
@@ -288,6 +295,7 @@ function get_random_bench(){
 	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 
 	while($get_bench->fetch()) {
+		$get_bench->close();
 		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 	}
 }
@@ -375,9 +383,6 @@ function get_image_html($benchID, $full = true)
 
 		//	When was the photo taken?
 		$exif_html = get_exif_html(get_path_from_hash($sha1));
-		// if ("" != $exif_html) {
-		// 	$exif_html = " | " . $exif_html;
-		// }
 
 		//	Pannellum can't take full width images. This size should be quick to compute
 		$panorama_image = "/image/{$sha1}/3396";
@@ -425,7 +430,8 @@ function get_image_html($benchID, $full = true)
 			break;
 		}
 	}
-
+	
+	$get_media->close();
 	return $html;
 }
 
@@ -553,6 +559,7 @@ function get_admin_list()
 		$html   .= "<li>{$bench} <a href='/edit/{$bench}/{$key}'>{$inscrib}</a></li>";
 	}
 
+	$get_list->close();
 	return $html .= "</ul>";
 }
 
@@ -580,7 +587,6 @@ function get_media_types_html($name = "") {
 	}
 
 	$get_media->close();
-
 	return $html .= "</select>";
 }
 
@@ -601,7 +607,6 @@ function get_media_types_array() {
 	}
 
 	$get_media_types->close();
-
 	return $media_types_array;
 }
 
@@ -641,5 +646,6 @@ function get_bench_count() {
 
 	$result = $mysqli->query("SELECT COUNT(*) FROM `benches`");
 	$row = $result->fetch_row();
+	$result->close();
 	return $row[0];
 }
