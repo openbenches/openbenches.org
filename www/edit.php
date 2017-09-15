@@ -42,31 +42,47 @@ if(isset($_POST['key'])) {
 			$userID = insert_user("twitter", $id_str, $screen_name);
 		}
 		
+		list ($oldBenchID, $oldBenchLat, $oldBenchLong, $oldBenchAddress, $oldBenchInscription, $oldPublished) = get_bench_details($benchID);
+		
 		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true", $userID);
 		
-		mail(NOTIFICATION_EMAIL,
-			"Edit to Bench {$benchID}",
-			"{$inscription}\nhttps://{$_SERVER['SERVER_NAME']}/bench/{$benchID}"
-		);
-		
+		$newImages = 0;
 		//	Add photos
 		$image1 = $image2 = $image3 = $image4 = true;
 		if ($_FILES['userfile1']['tmp_name'])
 		{	//	Has a photo been posted?
 			$image1 = save_image($_FILES['userfile1'], $_POST['media_type1'], $benchID, $userID);
+			$newImages++;
 		}
 		if ($_FILES['userfile2']['tmp_name'])
 		{
 			$image2 = save_image($_FILES['userfile2'], $_POST['media_type2'], $benchID, $userID);
+			$newImages++;
 		}
 		if ($_FILES['userfile3']['tmp_name'])
 		{
 			$image3 = save_image($_FILES['userfile3'], $_POST['media_type3'], $benchID, $userID);
+			$newImages++;
 		}
 		if ($_FILES['userfile4']['tmp_name'])
 		{
 			$image4 = save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
+			$newImages++;
 		}
+		
+		mail(NOTIFICATION_EMAIL,
+			"Edit to Bench {$benchID} by @{$screen_name}",
+			"New Images: {$newImages}\n".
+			"New: {$inscription}\n".
+			"Old: {$oldBenchInscription}\n".
+			"New: {$latitude},{$longitude}\n".
+			"Old: {$oldBenchLat},{$oldBenchLong}\n".
+			"New Published: {$published}\n".
+			"Old Published: {$oldPublished}\n".
+
+			"By https://twitter.com/{$screen_name}\n".
+			"https://{$_SERVER['SERVER_NAME']}/bench/{$benchID}"
+		);
 
 		if($image1 === true && $image2 === true && $image3 === true && $image4 === true){
 			//	All images were successfully added
