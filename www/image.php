@@ -8,7 +8,14 @@ $photo_full_path = get_path_from_hash($sha1);
 
 function show_scaled_image($imagePath, $size)
 {
-	$imagick = new \Imagick(realpath($imagePath));
+	
+	try {
+		$imagick = new \Imagick(realpath($imagePath));
+	} catch (Exception $e) {
+		$refer = $_SERVER["HTTP_REFERER"];
+		error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
+		die();
+	}
 
 	//	Some phones (mostly iPhones) have rotated images
 	//	Use the EXIF to correct
@@ -48,7 +55,7 @@ function show_scaled_image($imagePath, $size)
 }
 
 if(null != $size){
-	$image = show_scaled_image($photo_full_path, $size);
+	show_scaled_image($photo_full_path, $size);
 	die();
 } else {
 	//	Return the full image (preserves EXIF)
