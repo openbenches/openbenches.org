@@ -26,8 +26,11 @@
 		<br>
 	</form>
 	<div class="button-bar">
-		<a href="/bench?random=true" class="hand-drawn">Show me a random bench</a>
-		<a href="/add/" class="hand-drawn">Add bench</a>
+		<form action="/bench/" method="post">
+			<input id="random" name="random" value="random" type="hidden" />
+			<input type="submit" class="hand-drawn" value="Show me a random bench" />
+			<a href="/add/" class="hand-drawn">Add bench</a>
+		</form>
 	</div>
 <script src="/data.json/" type="text/javascript"></script>
 

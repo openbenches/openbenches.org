@@ -8,11 +8,10 @@ $benchID = $params[2];
 if($benchID != null){
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
 	$benchImage = get_image_url($benchID) . "/640";
-} else if ($_GET["random"]) {
+} else if ($_POST["random"]) {
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_random_bench();
-	header('Cache-Control: no-store, no-cache');
-	header('Pragma: no-cache');
-	header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+	header('Cache-Control: no-store, must-revalidate');
+	header('Expires: 0');
 	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}/",TRUE,302);
 } else {
 	$benchInscription = "Welcome to OpenBenches";
