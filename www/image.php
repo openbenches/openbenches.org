@@ -8,7 +8,6 @@ $photo_full_path = get_path_from_hash($sha1);
 
 function show_scaled_image($imagePath, $size)
 {
-	
 	try {
 		$imagick = new \Imagick(realpath($imagePath));
 	} catch (Exception $e) {
@@ -49,6 +48,7 @@ function show_scaled_image($imagePath, $size)
 
 	//	Send the image to the browser
 	header("Content-Type: image/jpeg");
+	ob_clean();	//	http://codeblog.vurdalakov.net/2013/01/solution-php-echo-function-or-print.html
 	echo $imagick->getImageBlob();
 	$imagick->clear();
 	die();
