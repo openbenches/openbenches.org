@@ -510,6 +510,28 @@ function get_user($userID)
 	return $userString;
 }
 
+function get_user_id($provider, $username) {
+	global $mysqli;
+	$get_user_id = $mysqli->prepare(
+		"SELECT userID FROM users
+		WHERE provider = ?
+		AND   name = ?
+		LIMIT 0 , 1");
+
+	$get_user_id->bind_param('ss', $provider, $username);
+	$get_user_id->execute();
+	/* bind result variables */
+	$get_user_id->bind_result($userID);
+
+	# Loop through rows to build feature arrays
+	while($get_user_id->fetch()) {
+		$get_user_id->close();
+		return $userID;
+		die();
+	}
+}
+
+
 function get_licence($licenceID)
 {
 	global $mysqli;
@@ -666,7 +688,7 @@ function get_leadboard_benches_html() {
 	$html = "<ul>";
 	while($get_leaderboard->fetch()) {
 		if("anon"!=$provider){
-			$html .= "<li>{$count} - <a href='/{$provider}/{$username}'>$username</a></li>";
+			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -677,11 +699,11 @@ function get_leadboard_media_html() {
 	global $mysqli;
 	
 	$get_leaderboard = $mysqli->prepare("
-	SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
-	FROM `media`
-	INNER JOIN users ON media.userID = users.userID
-	GROUP by users.userID
-	ORDER by USERCOUNT DESC");
+		SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
+		FROM `media`
+		INNER JOIN users ON media.userID = users.userID
+		GROUP by users.userID
+		ORDER by USERCOUNT DESC");
 		
 	$get_leaderboard->execute();
 	$get_leaderboard->bind_result($username, $provider, $count);
@@ -689,10 +711,35 @@ function get_leadboard_media_html() {
 	$html = "<ul>";
 	while($get_leaderboard->fetch()) {
 		if("anon"!=$provider){
-			$html .= "<li>{$count} - <a href='/{$provider}/{$username}'>$username</a></li>";
+			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
 		}
 	}
 	$get_leaderboard->close();
 	return $html .= "</ul>";
 }
 
+function get_user_bench_list_html($provider, $username)
+{
+	$userID = get_user_id($provider, $username);
+	
+	global $mysqli;
+	
+	$get_user_list = $mysqli->prepare(
+		"SELECT `benchID`, `inscription`
+		 FROM   `benches`
+		 WHERE  `userID` = ?
+		 AND    `published` = 1
+		 LIMIT 0 , 1024");
+	$get_user_list->bind_param('i',$userID);
+
+	$get_user_list->execute();
+	$get_user_list->bind_result($benchID, $inscription);
+
+	$html = "<ul>";
+	while($get_user_list->fetch()) {
+		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, "UTF-8", false));
+		$html .= "<li>{$count} - <a href='/bench/{$benchID}'>$inscrib</a></li>";
+	}
+	$get_user_list->close();
+	return $html .= "</ul>";
+}

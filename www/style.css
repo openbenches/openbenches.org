@@ -66,6 +66,7 @@ button, input {
 }
 
 #search-results {
+	display: inline-block;
 	text-align: left;
 }
 
