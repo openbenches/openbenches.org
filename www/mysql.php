@@ -649,3 +649,50 @@ function get_bench_count() {
 	$result->close();
 	return $row[0];
 }
+
+function get_leadboard_benches_html() {
+	global $mysqli;
+	
+	$get_leaderboard = $mysqli->prepare("
+		SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
+		FROM `benches`
+		INNER JOIN users ON benches.userID = users.userID
+		GROUP by users.userID
+		ORDER by USERCOUNT DESC");
+		
+	$get_leaderboard->execute();
+	$get_leaderboard->bind_result($username, $provider, $count);
+
+	$html = "<ul>";
+	while($get_leaderboard->fetch()) {
+		if("anon"!=$provider){
+			$html .= "<li>{$count} - <a href='/{$provider}/{$username}'>$username</a></li>";
+		}
+	}
+	$get_leaderboard->close();
+	return $html .= "</ul>";
+}
+
+function get_leadboard_media_html() {
+	global $mysqli;
+	
+	$get_leaderboard = $mysqli->prepare("
+	SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
+	FROM `media`
+	INNER JOIN users ON media.userID = users.userID
+	GROUP by users.userID
+	ORDER by USERCOUNT DESC");
+		
+	$get_leaderboard->execute();
+	$get_leaderboard->bind_result($username, $provider, $count);
+
+	$html = "<ul>";
+	while($get_leaderboard->fetch()) {
+		if("anon"!=$provider){
+			$html .= "<li>{$count} - <a href='/{$provider}/{$username}'>$username</a></li>";
+		}
+	}
+	$get_leaderboard->close();
+	return $html .= "</ul>";
+}
+

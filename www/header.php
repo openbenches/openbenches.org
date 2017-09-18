@@ -70,7 +70,7 @@ if($benchID != null){
 
 	<link rel="stylesheet" href="/libs/normalize.7.0.0/normalize.min.css">
 
-	<link rel="stylesheet" href="/style.css?cache=2017-09-08T00:20"/>
+	<link rel="stylesheet" href="/style.css?cache=2017-09-18T00:20"/>
 
 	<link rel="stylesheet" href="/libs/leaflet.1.1.0/leaflet.css" />
 	<script src="/libs/leaflet.1.1.0/leaflet.js"></script>

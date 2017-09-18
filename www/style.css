@@ -143,3 +143,8 @@ input[type="file"] {
 small {
 	font-size: 0.8rem;
 }
+
+#leaderboard-results {
+	display: inline-block;
+	text-align: left;
+}
