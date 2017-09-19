@@ -370,7 +370,7 @@ function get_image_html($benchID, $full = true)
 		$userHTML = "";
 		//	Who uploaded this media
 		if($userProvider == "twitter") {
-			$userHTML = "@{$userName}";
+			$userHTML = "@<a href='/user/twitter/{$userName}'>{$userName}</a>";
 		}
 
 		//	Was this imported from an external source?
@@ -687,7 +687,7 @@ function get_leadboard_benches_html() {
 
 	$html = "<ul>";
 	while($get_leaderboard->fetch()) {
-		if("anon"!=$provider){
+		if("twitter"==$provider){
 			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
 		}
 	}
@@ -710,7 +710,7 @@ function get_leadboard_media_html() {
 
 	$html = "<ul>";
 	while($get_leaderboard->fetch()) {
-		if("anon"!=$provider){
+		if("twitter"==$provider){
 			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
 		}
 	}
@@ -738,7 +738,7 @@ function get_user_bench_list_html($provider, $username)
 	$html = "<ul>";
 	while($get_user_list->fetch()) {
 		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, "UTF-8", false));
-		$html .= "<li>{$count} - <a href='/bench/{$benchID}'>$inscrib</a></li>";
+		$html .= "<li><a href='/bench/{$benchID}'>$inscrib</a></li>";
 	}
 	$get_user_list->close();
 	return $html .= "</ul>";
