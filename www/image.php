@@ -54,12 +54,19 @@ function show_scaled_image($imagePath, $size)
 	die();
 }
 
-if(null != $size){
+if ("exif" == $size){
+	$exif_data = exif_read_data($photo_full_path,0,true);
+	echo "<pre>";
+	echo var_export($exif_data);
+	echo "</pre>";
+	die();
+} else if(null != $size){
 	show_scaled_image($photo_full_path, $size);
 	die();
 } else {
 	//	Return the full image (preserves EXIF)
 	header('Content-type: image/jpeg');
+	ob_clean();
 	readfile($photo_full_path);
 }
 die();
