@@ -83,18 +83,15 @@ INSERT INTO `media_types` (`shortName`, `longName`, `displayOrder`) VALUES
 
 CREATE TABLE `users` (
   `userID` bigint(20) NOT NULL,
-  `provider` varchar(64) NOT NULL,
-  `providerID` varchar(64) NOT NULL,
-  `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `provider` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `providerID` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 ALTER TABLE `benches`
   ADD PRIMARY KEY (`benchID`),
   ADD KEY `contributor` (`userID`);
-
-ALTER TABLE `benches_history`
-  ADD PRIMARY KEY (`changed`);
 
 ALTER TABLE `licences`
   ADD PRIMARY KEY (`shortName`);
@@ -103,7 +100,8 @@ ALTER TABLE `media`
   ADD PRIMARY KEY (`mediaID`),
   ADD KEY `contributorID` (`userID`),
   ADD KEY `licence` (`licence`),
-  ADD KEY `media_type` (`media_type`);
+  ADD KEY `media_type` (`media_type`),
+  ADD KEY `benchID` (`benchID`);
 
 ALTER TABLE `media_types`
   ADD PRIMARY KEY (`shortName`);
@@ -113,11 +111,11 @@ ALTER TABLE `users`
 
 
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2091;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2785;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1719;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `benches`
   ADD CONSTRAINT `benches_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
@@ -125,7 +123,8 @@ ALTER TABLE `benches`
 ALTER TABLE `media`
   ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`),
   ADD CONSTRAINT `media_ibfk_2` FOREIGN KEY (`licence`) REFERENCES `licences` (`shortName`),
-  ADD CONSTRAINT `media_ibfk_3` FOREIGN KEY (`media_type`) REFERENCES `media_types` (`shortName`);
+  ADD CONSTRAINT `media_ibfk_3` FOREIGN KEY (`media_type`) REFERENCES `media_types` (`shortName`),
+  ADD CONSTRAINT `media_ibfk_4` FOREIGN KEY (`benchID`) REFERENCES `benches` (`benchID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
