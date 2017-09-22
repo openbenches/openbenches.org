@@ -654,7 +654,7 @@ function get_search_results($q) {
 	# Loop through rows to build feature arrays
 	while($search->fetch()) {
 		if($address != null){
-			$inscription .= " ({$address})";
+			$inscription .= "<br />[Location: {$address}]";
 		}
 		$results[$benchID] = $inscription;
 	}
