@@ -116,8 +116,19 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 		$media_ids = implode(',', $media_ids);
 	}
 
-	$tweet_inscription = mb_substr($inscription, 0, 100);
-	if (mb_strlen($inscription) > 100) {
+	//	Tweet length is now 280
+	$length = 280;
+	
+	//	Remove the length of the items and a newline character
+	$length = $length - mb_strlen($license) - 1;
+	//	Remove URL
+	$length = $length - 24 - 1;
+	//	One more for luck :-)
+	$length = $length - 1;
+	
+	
+	$tweet_inscription = mb_substr($inscription, 0, $length);
+	if (mb_strlen($inscription) > $length) {
 		$tweet_inscription .= "…";
 	}
 
@@ -127,7 +138,8 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 		'status'    => "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}",
 		'lat'       => $latitude,
 		'long'      => $longitude,
-		'media_ids' => $media_ids
+		'media_ids' => $media_ids,
+		'weighted_character_count' => 'true'
 	];
 	$reply = $cb->statuses_update($params);
 }
