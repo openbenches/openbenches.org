@@ -69,7 +69,7 @@ $cache = time();
 
 //	Is this an edit login?
 $benchID = $params[2];
-if(null != $benchID){
+if(is_numeric($benchID)){
 	//	Redirect to the Add page
 	header("Location: /edit/{$benchID}/?cache={$cache}");
 } else {
