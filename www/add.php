@@ -69,10 +69,15 @@ if (null == $inscription) {
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
+			$photos = "";
+			foreach($mediaURLs as $img){
+				$photos .= $img."\n";
+			}
 			mail(NOTIFICATION_EMAIL,
 				"Bench {$benchID}",
 				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
-				"Edit: https://{$domain}/edit/{$benchID}/{$key}/"
+				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
+				$photos
 			);
 
 			//	Send the user to the bench's page
