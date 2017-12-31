@@ -1,0 +1,2 @@
+// Replace with the key you created at https://cloud.google.com/console
+window.apiKey = '';

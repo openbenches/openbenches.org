@@ -53,6 +53,7 @@ You will need to sign up to some external API providers:
 * Reverse Geocoding requires an [OpenCage API key](https://geocoder.opencagedata.com/)
 * Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
 * Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
+* Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
 
 Add them to `config.php.example` - rename that to `config.php`
 

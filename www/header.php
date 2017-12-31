@@ -72,12 +72,12 @@ if($benchID != null){
 
 	<link rel="stylesheet" href="/style.css?cache=2017-09-25T19:20"/>
 
-	<link rel="stylesheet" href="/libs/leaflet.1.1.0/leaflet.css" />
-	<script src="/libs/leaflet.1.1.0/leaflet.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.2.0/leaflet.css" />
+	<script src="/libs/leaflet.1.2.0/leaflet.js"></script>
 
-	<script src="/libs/leaflet.markercluster.1.0.6/leaflet.markercluster.js"></script>
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.css">
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.0.6/MarkerCluster.Default.css">
+	<script src="/libs/leaflet.markercluster.1.2.0/leaflet.markercluster.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.2.0/MarkerCluster.css">
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.2.0/MarkerCluster.Default.css">
 </head>
 <body>
 	<hgroup itemscope itemtype="https://schema.org/WebPage">
