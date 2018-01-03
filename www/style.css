@@ -16,6 +16,10 @@ body {
 	word-wrap: break-word;
 }
 
+canvas {
+	width: 400px;
+}
+
 #map{
 	width: 600px;
 	height: 400px;

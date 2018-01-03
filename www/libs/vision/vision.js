@@ -10,6 +10,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+//	Modified 2018, Terence Eden
 
 'use strict';
 
@@ -28,22 +30,40 @@ $(function () {
 });
 
 
-
 /**
  * 'submit' event handler - reads the image bytes and sends it to the Cloud
  * Vision API.
  */
 function uploadFiles (event) {
-	// event.preventDefault(); // Prevent the default form post
-	
-	//	Hide the detect button
-	$('#textButtons').hide();
-
-	// Grab the file and asynchronously convert to base64.
 	var file = $('#fileform [name=userfile1]')[0].files[0];
-	var reader = new FileReader();
-	reader.onloadend = processFile;
-	reader.readAsDataURL(file);
+	// console.log(file.size);
+
+	if (file.size > 4000000) {
+		// alert("Photo is too large to run text detection. 4MB is the maximum file size. Please use a smaller photo or type the inscription manually.");
+		
+		//	Send the lower resolution canvas image instead
+		var canvases = document.getElementsByTagName("canvas");
+		var canvas = canvases[0];
+
+		canvas.toBlob(function(blob) { 
+			var reader = new window.FileReader();
+			reader.readAsDataURL(blob);
+			reader.onloadend = function() {
+				var base64data = reader.result;
+				sendFileToCloudVision(
+					base64data.replace('data:image/jpeg;base64,', '')
+				);
+			}	
+		}, 'image/jpeg', 0.75);
+		
+	} else {
+		//	Hide the detect button
+		$('#textButtons').hide();
+		
+		var reader = new FileReader();
+		reader.onloadend = processFile;
+		reader.readAsDataURL(file);
+	}
 }
 
 /**

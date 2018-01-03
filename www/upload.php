@@ -11,14 +11,11 @@ $lat = $_POST['newLatitude'];
 $lng = $_POST['newLongitude'];
 $error_message = "";
 
-if (null == $inscription) {
-	$error_message .= "<h3>Please type in the text of the inscription</h3>";
-} else if ($_FILES['userfile1']['tmp_name'])
+if ($_FILES['userfile1']['tmp_name'])
 {	//	Has a photo been posted?
 	$filename = $_FILES['userfile1']['tmp_name'];
 	$sha1 = sha1_file ($filename);	//	For tweeting
-	
-	$domain = $_SERVER['SERVER_NAME'];
+		$domain = $_SERVER['SERVER_NAME'];
 
 	$mediaURLs = array();
 	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
@@ -35,8 +32,7 @@ if (null == $inscription) {
 		{
 			//	Add the user to the database
 			$twitter = get_twitter_details();
-			
-			if (null == $twitter[1]) {
+						if (null == $twitter[1]) {
 				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 			} else {
 				$userID = insert_user("twitter", $twitter[0], $twitter[1]);
@@ -79,26 +75,23 @@ if (null == $inscription) {
 			mail(NOTIFICATION_EMAIL,
 				"Bench {$benchID}",
 				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
-				"Edit: https://{$domain}/bench/{$benchID}/\n\n" .
+				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
 				$photos
 			);
 
 			//	Send the user to the bench's page
-			header("Location: /edit/{$benchID}/{$key}/");
-			
-			//	Tweet the bench
+			header("Location: /bench/{$benchID}/");
+						//	Tweet the bench
 			try {
 				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0");
 			} catch (Exception $e) {
 				var_export($e);
 				die();
 			}
-			
-			die();
+						die();
 		} else {
 			$error_message .= "<h3>No location metadata found in image</h3>";
-		}		
-	}
+		}			}
 } else if (null != $inscription) {
 	//	If a photo hasn't been posted, recover the inscription and show an error
 	$error_message .= "<h3>Ooops! Looks like you didn't add a photo</h3>";
@@ -110,8 +103,7 @@ include("header.php");?>
 <?php
 $twitter_name = get_twitter_details()[1];
 if(null == $twitter_name) {
-	$login_html = "<a href='/login/'>Sign in with Twitter</a> - or be annonymous.";	
-} else {
+	$login_html = "<a href='/login/'>Sign in with Twitter</a> - or be annonymous.";	} else {
 	$login_html = "You are logged in as @{$twitter_name}";
 }
 
@@ -122,7 +114,7 @@ if(null == $twitter_name) {
 ?>
 	<form id="fileform" action="/upload.php" enctype="multipart/form-data" method="post" onsubmit="true;">
 		<h3>Add A Bench</h3>
-		<p>Select a photo of the bench's inscription and we'll auto-detect the text.<br>
+		<p>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
 		You can edit the text and add more photos before saving.<br>
 		The photo <em>must</em> have GPS information included.<br></p>
 
@@ -138,18 +130,15 @@ if(null == $twitter_name) {
 			</fieldset>
 		</div>&nbsp;
 		<br>
-		
-		<div id="textButtons">
+		<div id="textButtons" style="display: none;">
 			<a class="hand-drawn" name="detectButton" id="detectButton">Detect Text</a> or 
 			<a class="hand-drawn" name="typeButton"   id="typeButton">Type Inscription</a>
 		</div>
-		
 		<code style="white-space:pre" id="message"></code>
 		<div id="inscription-hidden" style="display: none;">
 			<label for="inscription">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
 		</div>
-		
 		<div id="map-hidden" style="clear:both;display: none;">
 			<h3>Drag pin if you need to adjust the bench's location</h3>
 			<div id='map' class="hand-drawn" ></div>
@@ -159,9 +148,7 @@ if(null == $twitter_name) {
 			<!-- <a href="#">Reset</a> -->
 			<input type="hidden" id="newLongitude" name="newLongitude" value=""/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value=""/>
-		</div>
-		
-		&nbsp;
+		</div>&nbsp;
 		<div id="photo2" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional photo of same bench</legend>
@@ -183,7 +170,7 @@ if(null == $twitter_name) {
 					echo get_media_types_html("3");
 				?>
 			</fieldset>
-		</div>
+		</div>&nbsp;
 		<div id="photo4" class="photo-group" style="display: none;">
 			<fieldset>
 				<legend>Optional photo of same bench</legend>
@@ -198,23 +185,18 @@ if(null == $twitter_name) {
 		<br>
 		<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
 	</form>
-	
-	<br>&nbsp;
-	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the
-		<a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.
-		<br>
-		This means other people can use the photo and its data without having to ask permission. Thanks!
-		<br>
+		<br>&nbsp;
+		<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
+		This means other people can use the photo and its data without having to ask permission. Thanks!<br>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
-	<script src="https://code.jquery.com/jquery-3.2.1.js"
-		integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-		crossorigin="anonymous"></script>
+	<script src="/libs/jquery.3.2.1/jquery-3.2.1.min.js"></script>
 	<script src="/libs/vision/key.js"></script>
 	<script src="/libs/vision/vision.js"></script>
 	<script src="/libs/load-image/load-image.all.min.js"></script>
 	<script type="text/javascript">
-		var previewWidth = 400;
+		var previewWidth = 800;
+		var map = null;
 
 		document.getElementById('photoFile1').onchange = function (e) {
 			var preview1 = document.getElementById("photoPreview1");
@@ -240,32 +222,36 @@ if(null == $twitter_name) {
 					if (!data.imageHead) {
 						return;
 					}
-					var exifLong = data.exif.get("GPSLongitude");
-					var exifLongRef = data.exif.get("GPSLongitudeRef");
-					var exifLat = data.exif.get("GPSLatitude"); 
-					var exifLatRef = data.exif.get("GPSLatitudeRef"); 
-					
-					if (exifLatRef == "S") {
-						var latitude = (exifLat[0]*-1) + (( (exifLat[1]*-60) + (exifLat[2]*-1) ) / 3600);						
-					} else {
-						var latitude = exifLat[0] + (( (exifLat[1]*60) + exifLat[2] ) / 3600);
-					}
-					console.log(latitude);
-
-					if (exifLongRef == "W") {
-						var longitude = (exifLong[0]*-1) + (( (exifLong[1]*-60) + (exifLong[2]*-1) ) / 3600);						
-					} else {
-						var longitude = exifLong[0] + (( (exifLong[1]*60) + exifLong[2] ) / 3600);
-					}
-					console.log(longitude);
-					
 
 					if ( typeof data.exif == 'undefined' ) {
 						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+						return;
 					} else if (data.exif.get("GPSLongitude") == null) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+						return;
 					}
 					
+					//	Show the detection buttons
+					$('#textButtons').show();
+					
+					var exifLong    = data.exif.get("GPSLongitude");
+					var exifLongRef = data.exif.get("GPSLongitudeRef");
+					var exifLat     = data.exif.get("GPSLatitude"); 
+					var exifLatRef  = data.exif.get("GPSLatitudeRef"); 
+					
+					//	Correct for negative values
+					if (exifLatRef == "S") {
+						var latitude = (exifLat[0]*-1) + (( (exifLat[1]*-60) + (exifLat[2]*-1) ) / 3600);
+					} else {
+						var latitude = exifLat[0] + (( (exifLat[1]*60) + exifLat[2] ) / 3600);
+					}
+					// console.log(latitude);
+
+					if (exifLongRef == "W") {
+						var longitude = (exifLong[0]*-1) + (( (exifLong[1]*-60) + (exifLong[2]*-1) ) / 3600);											} else {
+						var longitude = exifLong[0] + (( (exifLong[1]*60) + exifLong[2] ) / 3600);
+					}
+					// console.log(longitude); 
 					//	Show the map
 					$('#map-hidden').show();
 					$('#latlong-hidden').show();
@@ -288,7 +274,10 @@ if(null == $twitter_name) {
 							id: 'mapbox.satellite'
 						});
 
-					var map = L.map('map');
+					if (map != null){
+						map.remove();
+					}
+					map = L.map('map');
 					// Centre the map
 					map.setView([latitude, longitude], 18);
 					var baseMaps = {
@@ -308,8 +297,7 @@ if(null == $twitter_name) {
 					coordinates.value = latitude.toPrecision(7) + ',' + longitude.toPrecision(7);
 					newLongitude.value = longitude;
 					newLatitude.value =  latitude;
-					
-					marker.on('dragend', function(event){
+										marker.on('dragend', function(event){
 						newLat =  event.target._latlng.lat.toPrecision(7);
 						newLong = event.target._latlng.lng.toPrecision(7);
 						coordinates.value = newLat + ',' + newLong;
@@ -320,7 +308,6 @@ if(null == $twitter_name) {
 				}
 			);
 		};
-		
 		document.getElementById("photoFile2").onchange = function (e) {
 			var preview2 = document.getElementById("photoPreview2");
 			//	If a photo was added already, remove it.
@@ -339,7 +326,6 @@ if(null == $twitter_name) {
 			//	Show the next upload box
 			document.getElementById('photo3').style.display = "block";
 		}
-		
 		document.getElementById("photoFile3").onchange = function (e) {
 			var preview3 = document.getElementById("photoPreview3");
 			//	If a photo was added already, remove it.
@@ -358,7 +344,6 @@ if(null == $twitter_name) {
 			//	Show the next upload box
 			document.getElementById('photo4').style.display = "block";
 		}
-		
 		document.getElementById("photoFile4").onchange = function (e) {
 			var preview4 = document.getElementById("photoPreview4");
 			//	If a photo was added already, remove it.
