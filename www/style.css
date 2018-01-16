@@ -157,3 +157,22 @@ small {
 	display: inline-block;
 	text-align: left;
 }
+
+#sharing {
+	margin-top: 1em;
+	margin-bottom: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 600px;
+	max-width: 90%;
+	text-align: center;
+}
+
+.share {
+	width: 10%;
+	max-width: 3em;
+}
+
+#sharing a {
+	text-decoration: none;
+}
