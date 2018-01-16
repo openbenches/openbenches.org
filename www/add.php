@@ -193,7 +193,7 @@ if(null == $twitter_name) {
 	<script src="/libs/jquery.3.2.1/jquery-3.2.1.min.js"></script>
 	<script src="/libs/vision/key.js"></script>
 	<script src="/libs/vision/vision.js"></script>
-	<script src="/libs/load-image/load-image.all.min.js"></script>
+	<script src="/libs/load-image.2.17.1/load-image.all.min.js"></script>
 	<script type="text/javascript">
 		var previewWidth = 800;
 		var map = null;

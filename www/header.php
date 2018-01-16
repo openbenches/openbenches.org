@@ -72,8 +72,8 @@ if($benchID != null){
 
 	<link rel="stylesheet" href="/style.css?cache=2017-09-25T19:20"/>
 
-	<link rel="stylesheet" href="/libs/leaflet.1.2.0/leaflet.css" />
-	<script src="/libs/leaflet.1.2.0/leaflet.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.3.0/leaflet.css" />
+	<script src="/libs/leaflet.1.3.0/leaflet.js"></script>
 
 	<script src="/libs/leaflet.markercluster.1.2.0/leaflet.markercluster.js"></script>
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.2.0/MarkerCluster.css">
