@@ -14,35 +14,35 @@ $reddit    = "https://reddit.com/submit?url={$URL}";
 <fieldset id="sharing">
 	<legend>Share this bench</legend>
 	
-	<a href="<?php echo $facebook; ?>">
+	<a href="<?php echo $facebook; ?>" target="_blank">
 		<img src="/images/svg/facebook.svg" class="share" alt="Share on Facebook"/>
 	</a>
 	
-	<a href="<?php echo $twitter; ?>">
+	<a href="<?php echo $twitter; ?>" target="_blank">
 		<img src="/images/svg/twitter.svg" class="share" alt="Share on Twitter"/>
 	</a>
 	
-	<a href="<?php echo $pinterest; ?>">
+	<a href="<?php echo $pinterest; ?>" target="_blank">
 		<img src="/images/svg/pinterest.svg" class="share" alt="Share on Pinterest"/>
 	</a>
 
-	<a href="<?php echo $whatsapp; ?>">
+	<a href="<?php echo $whatsapp; ?>" target="_blank">
 		<img src="/images/svg/whatsapp.svg" class="share" alt="Share on Whatsapp"/>
 	</a>
 	
-	<a href="<?php echo $gplus; ?>">
+	<a href="<?php echo $gplus; ?>" target="_blank">
 		<img src="/images/svg/google_plus.svg" class="share" alt="Share on Google Plus"/>
 	</a>
 
-	<a href="<?php echo $email; ?>">
+	<a href="<?php echo $email; ?>" target="_blank">
 		<img src="/images/svg/gmail.svg" class="share" alt="Share on email"/>
 	</a>
 	
-	<a href="<?php echo $telegram; ?>">
+	<a href="<?php echo $telegram; ?>" target="_blank">
 		<img src="/images/svg/telegram.svg" class="share" alt="Share on Telegram"/>
 	</a>
 
-	<a href="<?php echo $reddit; ?>">
+	<a href="<?php echo $reddit; ?>" target="_blank">
 		<img src="/images/svg/reddit.svg" class="share" alt="Share on Reddit"/>
 	</a>
 
