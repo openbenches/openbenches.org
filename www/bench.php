@@ -31,6 +31,16 @@ if(!$published) {
 		include("sharing.php");
 	?>
 
+	<div id="comments">
+		<script>
+			var idcomments_acct = '2c821c4a265bb30b50b1127cf2b99934';
+			var idcomments_post_id;
+			var idcomments_post_url;
+		</script>
+		<span id="IDCommentsPostTitle" style="display:none"></span>
+		<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+	</div>
+
 	<div class="button-bar">
 		<a href="/add" class="hand-drawn">Add new bench</a>
 		<a href="/edit/<?php echo $benchID; ?>" class="hand-drawn">Edit this bench</a>
