@@ -91,25 +91,26 @@ function sendFileToCloudVision (content) {
 		}]
 	};
 
-	$('#message').text('Scanning for text...');
+	$('#message').text('Automatic text detection in progress…');
 	$.post({
 		url: CV_URL,
 		data: JSON.stringify(request),
 		contentType: 'application/json'
 	}).fail(function (jqXHR, textStatus, errorThrown) {
-		$('#message').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+		$('#message').text('Automatic text detection encountered an error:\n ' + textStatus + ' ' + errorThrown + '.\nSorry about that. Please enter the inscription yourself.');
 	 //	Unhide the inscription box
 	 $('#inscription-hidden').show();
 	 $('#submitButton').show();
 	}).done(displayJSON);
+	//setTimeout( function() { displayJSON(JSON.parse('{  "responses": [  { "fullTextAnnotation": { "text": "BUFFY ANNE SUMMERS\\n1981 - 2001\\nBELOVED SISTER\\nDEVOTED FRIEND\\nSHE SAVED THE WORLD\\nA LOT" } }] }')); }, 5000);
 }
 
 /**
  * Displays the results.
  */
 function displayJSON (data) {
-	//	Hide the scanning message
-	$('#message').hide();
+	//  Tell visitor the automatic text detection finished 
+	$('#message').text('Automatically detected text is shown below.\nPlease check and edit if needed.');
 	//	Unhide the inscription box
 	$('#inscription-hidden').show();
 	$('#submitButton').show();
