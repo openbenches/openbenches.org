@@ -102,6 +102,7 @@ function sendFileToCloudVision (content) {
 	 $('#inscription-hidden').show();
 	 $('#submitButton').show();
 	}).done(displayJSON);
+	// uncomment the line below if you're doing testing without a Google Vision API key and want to fake successful detection of text 
 	//setTimeout( function() { displayJSON(JSON.parse('{  "responses": [  { "fullTextAnnotation": { "text": "BUFFY ANNE SUMMERS\\n1981 - 2001\\nBELOVED SISTER\\nDEVOTED FRIEND\\nSHE SAVED THE WORLD\\nA LOT" } }] }')); }, 5000);
 }
 
