@@ -130,10 +130,6 @@ if(null == $twitter_name) {
 			</fieldset>
 		</div>&nbsp;
 		<br>
-		<div id="textButtons" style="display: none;">
-			<a class="hand-drawn" name="detectButton" id="detectButton">Detect Text</a> or 
-			<a class="hand-drawn" name="typeButton"   id="typeButton">Type Inscription</a>
-		</div>
 		<code style="white-space:pre" id="message"></code>
 		<div id="inscription-hidden" style="display: none;">
 			<label for="inscription">Inscription:</label><br>
@@ -230,10 +226,9 @@ if(null == $twitter_name) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
 					}
-					
-					//	Show the detection buttons
-					$('#textButtons').show();
-					
+                                        // upload the photo for text detection
+                                        uploadFiles(e);	
+
 					var exifLong    = data.exif.get("GPSLongitude");
 					var exifLongRef = data.exif.get("GPSLongitudeRef");
 					var exifLat     = data.exif.get("GPSLatitude"); 
