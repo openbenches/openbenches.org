@@ -21,8 +21,7 @@ $(function () {
 	// $('#fileform').on('submit', uploadFiles);
 	$('#detectButton').click(uploadFiles);
 	
-	$( "#typeButton" ).click(function() {
-		$('#textButtons').hide();
+	$("#typeButton" ).click(function() {
 		//	Unhide the inscription box
 		$('#inscription-hidden').show();
 		$('#submitButton').show();
@@ -36,30 +35,12 @@ $(function () {
  */
 function uploadFiles (event) {
 	var file = $('#fileform [name=userfile1]')[0].files[0];
-	// console.log(file.size);
 
 	if (file.size > 4000000) {
-		// alert("Photo is too large to run text detection. 4MB is the maximum file size. Please use a smaller photo or type the inscription manually.");
-		
-		//	Send the lower resolution canvas image instead
-		var canvases = document.getElementsByTagName("canvas");
-		var canvas = canvases[0];
-
-		canvas.toBlob(function(blob) { 
-			var reader = new window.FileReader();
-			reader.readAsDataURL(blob);
-			reader.onloadend = function() {
-				var base64data = reader.result;
-				sendFileToCloudVision(
-					base64data.replace('data:image/jpeg;base64,', '')
-				);
-			}	
-		}, 'image/jpeg', 0.75);
-		
-	} else {
-		//	Hide the detect button
-		$('#textButtons').hide();
-		
+		//	Large images can't be sent to Google Cloud Vision
+		//	Use the scaled image from the canvas
+		textFromCanvas();
+	} else {		
 		var reader = new FileReader();
 		reader.onloadend = processFile;
 		reader.readAsDataURL(file);
@@ -123,4 +104,29 @@ function displayJSON (data) {
 	var evt = new Event('results-displayed');
 	evt.results = contents;
 	document.dispatchEvent(evt);
+}
+
+//	Sleep function to prevent race condition on large images
+//	https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function textFromCanvas() {
+	console.log("Photo is over 4MB. Using canvas alternative. Sleeping.");
+	await sleep(2000);
+	//	Send the lower resolution canvas image instead
+	var canvases = document.getElementsByTagName("canvas");
+	var canvas = canvases[0];
+  console.log('Two second later');
+	canvas.toBlob(function(blob) { 
+		var reader = new window.FileReader();
+		reader.readAsDataURL(blob);
+		reader.onloadend = function() {
+			var base64data = reader.result;
+			sendFileToCloudVision(
+				base64data.replace('data:image/jpeg;base64,', '')
+			);
+		}	
+	}, 'image/jpeg', 0.75);
 }

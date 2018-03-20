@@ -130,7 +130,7 @@ if(null == $twitter_name) {
 			</fieldset>
 		</div>&nbsp;
 		<br>
-		<code style="white-space:pre" id="message"></code>
+		<code id="message"></code>
 		<div id="inscription-hidden" style="display: none;">
 			<label for="inscription">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
@@ -226,8 +226,8 @@ if(null == $twitter_name) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
 					}
-                                        // upload the photo for text detection
-                                        uploadFiles(e);	
+					// upload the photo for text detection
+					uploadFiles(e);	
 
 					var exifLong    = data.exif.get("GPSLongitude");
 					var exifLongRef = data.exif.get("GPSLongitudeRef");
