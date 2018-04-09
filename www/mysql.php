@@ -191,7 +191,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => $benchInscription,
+				'popupContent' => nl2br(mb_substr($benchInscription,0,128)),
 			),
 		);
 		# Add feature arrays to feature collection array
@@ -249,7 +249,7 @@ function get_all_benches($id = 0, $only_published = true)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => nl2br($benchInscription),
+				'popupContent' => nl2br(mb_substr($benchInscription,0,128)),
 			),
 		);
 		# Add feature arrays to feature collection array
