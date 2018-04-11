@@ -4,10 +4,6 @@ require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
-//	Start the normal page
-include("header.php");
-
-$error_message = "";
 
 //	edit/123/qwertyiop
 $benchID = $params[2];
@@ -24,6 +20,11 @@ if (null != $params[3]) {
 	$id_str     = $twitter[0];
 	$screen_name= $twitter[1];
 }
+
+//	Start the normal page
+include("header.php");
+
+$error_message = "";
 
 if(isset($_POST['key'])) {
 	$key =         urldecode($_POST['key']);
