@@ -20,4 +20,5 @@
 		die();
 	} else {
 		include("front.php");
+		die();
 	}

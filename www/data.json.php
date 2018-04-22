@@ -17,10 +17,10 @@ if (null != $latitude && null != $longitude && null != $radius) {
 
 
 if ("raw" == $format) {
-	header('Content-Type: application/json');
+	header('Content-Type: application/json; charset=utf-8');
 	echo json_encode($geojson, JSON_NUMERIC_CHECK);
 } else {
-	header('Content-type: text/javascript');
+	header('Content-type: text/javascript; charset=utf-8');
 	echo "var benches = " . json_encode($geojson, JSON_NUMERIC_CHECK);
 }
 

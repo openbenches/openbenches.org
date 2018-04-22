@@ -15,5 +15,12 @@
 	<a itemprop="creator" href="https://shkspr.mobi/blog">Terence Eden</a> and 
 	<a itemprop="creator" href="http://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
 </footer>
+<script>
+	if('serviceWorker' in navigator) {
+		navigator.serviceWorker
+			.register('/sw.js')
+			.then(function() { console.log("Service Worker Registered"); });
+	}
+</script>
 </body>
 </html>
