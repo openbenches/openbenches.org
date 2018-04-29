@@ -666,7 +666,7 @@ function get_search_results($q) {
 function get_bench_count() {
 	global $mysqli;
 
-	$result = $mysqli->query("SELECT COUNT(*) FROM `benches`");
+	$result = $mysqli->query("SELECT COUNT(*) FROM `benches` WHERE published = true");
 	$row = $result->fetch_row();
 	$result->close();
 	return $row[0];
