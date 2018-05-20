@@ -685,10 +685,10 @@ function get_leadboard_benches_html() {
 	$get_leaderboard->execute();
 	$get_leaderboard->bind_result($username, $provider, $count);
 
-	$html = "<ul>";
+	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
 		if("twitter"==$provider){
-			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
+			$html .= "<li><a href='/user/{$provider}/{$username}'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -708,10 +708,10 @@ function get_leadboard_media_html() {
 	$get_leaderboard->execute();
 	$get_leaderboard->bind_result($username, $provider, $count);
 
-	$html = "<ul>";
+	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
 		if("twitter"==$provider){
-			$html .= "<li>{$count} - <a href='/user/{$provider}/{$username}'>$username</a></li>";
+			$html .= "<li><a href='/user/{$provider}/{$username}'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
