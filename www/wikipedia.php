@@ -166,10 +166,10 @@ function displayJSON (data) {
 			rename($filename, $photo_full_path);
 
 			// Send email
-			// mail(NOTIFICATION_EMAIL, "Bench {$benchID}", "{$inscription} https://openbenches.org/{$photo_full_path}");
+			mail(NOTIFICATION_EMAIL, "Bench {$benchID}", "{$inscription} https://openbenches.org/{$photo_full_path}");
 
 			//	Tweet the bench
- 		// 	tweet_bench($benchID, $sha1, $inscription, $lat, $long, $license);
+ 			tweet_bench($benchID, $sha1, $inscription, $lat, $long, $license);
 
 			//	Send the user to the bench's page
 			header("Location: bench/{$benchID}");

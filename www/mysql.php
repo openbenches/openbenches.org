@@ -743,3 +743,23 @@ function get_user_bench_list_html($provider, $username)
 	$get_user_list->close();
 	return $html .= "</ul>";
 }
+
+function get_merged_bench($benchID) {
+	global $mysqli;
+	$get_merge_from_bench = $mysqli->prepare(
+		"SELECT mergedID FROM merged_benches
+		WHERE benchID = ?
+		LIMIT 0 , 1");
+
+	$get_merge_from_bench->bind_param('i',  $benchID);
+	$get_merge_from_bench->execute();
+	/* bind result variables */
+	$get_merge_from_bench->bind_result($mergedID);
+
+	# Loop through rows to build feature arrays
+	while($get_merge_from_bench->fetch()) {
+		$get_merge_from_bench->close();
+		return $mergedID;
+		die();
+	}
+}

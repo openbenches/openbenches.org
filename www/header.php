@@ -18,6 +18,20 @@ if($benchID != null){
 	$benchImage = "/android-chrome-512x512.png";
 }
 
+//	Unpublished benches
+if(!$published) {
+	//	Has it been merged?
+	$mergedID = get_merged_bench($benchID);
+	if (null == $mergedID) {
+		//	Nope! Just deleted.  Include 404 content at the end of this page.
+		header("HTTP/1.1 404 Not Found");
+	} else {
+		//	Yup! Where does it live now?
+		header("Location: /bench/{$mergedID}",TRUE,301);
+		die();
+	}
+}
+
 ?><!DOCTYPE html>
 <html lang="en-GB">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# place: http://ogp.me/ns/place#">
@@ -86,3 +100,9 @@ if($benchID != null){
 				<img src="/images/openbencheslogo.svg"
 				     id="header-image"
 				     alt="[logo]: a bird flies above a bench">Open<wbr>Benches</a></h1>
+<?php 
+//	Unpublished benches
+if(!$published) {
+	include("404.php");
+	die();
+}

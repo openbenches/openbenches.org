@@ -9,11 +9,21 @@ if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
 }
 
-if(!$published) {
-	header("HTTP/1.1 404 Not Found");
-	include("404.php");
-	die();
-}
+// //	Unpublished benches
+// if(!$published) {
+// 	//	Has it been merged?
+// 	$mergedID = get_merged_bench($benchID);
+// 	if (null == $mergedID) {
+// 		//	Nope! Just deleted.
+// 		header("HTTP/1.1 404 Not Found");
+// 		include("404.php");
+// 		die();
+// 	} else {
+// 		//	Yup! Where does it live now?
+// 		header("Location: /bench/{$mergedID}",TRUE,301);
+// 	}
+// 	die();
+// }
 ?>
 	</hgroup>
 	<div itemscope itemtype="http://schema.org/Place">
