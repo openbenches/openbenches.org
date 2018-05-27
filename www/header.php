@@ -19,7 +19,7 @@ if($benchID != null){
 }
 
 //	Unpublished benches
-if(!$published) {
+if($benchID != null && !$published) {
 	//	Has it been merged?
 	$mergedID = get_merged_bench($benchID);
 	if (null == $mergedID) {
@@ -102,7 +102,7 @@ if(!$published) {
 				     alt="[logo]: a bird flies above a bench">Open<wbr>Benches</a></h1>
 <?php 
 //	Unpublished benches
-if(!$published) {
+if($benchID != null && !$published) {
 	include("404.php");
 	die();
 }
