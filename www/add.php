@@ -103,7 +103,8 @@ include("header.php");?>
 <?php
 $twitter_name = get_twitter_details()[1];
 if(null == $twitter_name) {
-	$login_html = "<a href='/login/'>Sign in with Twitter</a> - or be anonymous.";	} else {
+	$login_html = "<a href='/login/'>Sign in with Twitter</a> - or be <strong>anonymous</strong>.";
+	} else {
 	$login_html = "You are logged in as @{$twitter_name}";
 }
 
