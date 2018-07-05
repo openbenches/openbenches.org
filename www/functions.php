@@ -284,9 +284,10 @@ function save_image($file, $media_type, $benchID, $userID) {
 	$filename = $file['name'];
 	$file =     $file['tmp_name'];
 	
-	if (get_image_location($file) == false) {
-		return "<h3>No GPS tags in: {$filename}</h3>";
-	}
+	//	Not needed. This is checked in add.php
+	// if (get_image_location($file) == false) {
+	// 	return "<h3>No GPS tags in: {$filename}</h3>";
+	// }
 	
 	if (duplicate_file($file)) {
 		return "<h3>Duplicate image: {$filename}</h3>";

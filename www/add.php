@@ -14,9 +14,10 @@ $error_message = "";
 if ($_FILES['userfile1']['tmp_name'])
 {	//	Has a photo been posted?
 	$filename = $_FILES['userfile1']['tmp_name'];
-	$sha1 = sha1_file ($filename);	//	For tweeting
-		$domain = $_SERVER['SERVER_NAME'];
-
+	$sha1 = sha1_file ($filename);
+	
+	//	For tweeting
+	$domain = $_SERVER['SERVER_NAME'];
 	$mediaURLs = array();
 	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 
@@ -25,6 +26,7 @@ if ($_FILES['userfile1']['tmp_name'])
 		$error_filename = $_FILES['userfile1']['name'];
 		$error_message .= "<h3>{$error_filename} already exists in the database</h3>";
 	} else {
+		//	Does the first file have a GPS location?
 		$location = get_image_location($filename);
 
 		//	If there is a GPS tag on the photo
@@ -32,7 +34,7 @@ if ($_FILES['userfile1']['tmp_name'])
 		{
 			//	Add the user to the database
 			$twitter = get_twitter_details();
-						if (null == $twitter[1]) {
+			if (null == $twitter[1]) {
 				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 			} else {
 				$userID = insert_user("twitter", $twitter[0], $twitter[1]);
@@ -81,24 +83,26 @@ if ($_FILES['userfile1']['tmp_name'])
 
 			//	Send the user to the bench's page
 			header("Location: /bench/{$benchID}/");
-						//	Tweet the bench
+			//	Tweet the bench
 			try {
 				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0");
 			} catch (Exception $e) {
 				var_export($e);
 				die();
 			}
-						die();
+			die();
 		} else {
-			$error_message .= "<h3>No location metadata found in image</h3>";
-		}			}
+			$error_message .= "<h3>No location metadata found in first image</h3>";
+		}
+	}
 } else if (null != $inscription) {
 	//	If a photo hasn't been posted, recover the inscription and show an error
 	$error_message .= "<h3>Ooops! Looks like you didn't add a photo</h3>";
 }
 
 //	Start the normal page
-include("header.php");?>
+include("header.php");
+?>
 </hgroup>
 <?php
 $twitter_name = get_twitter_details()[1];
