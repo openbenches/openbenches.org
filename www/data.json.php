@@ -1,4 +1,5 @@
 <?php
+ini_set( 'serialize_precision', -1 );	//	https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
 require_once ('mysql.php');
 
 $benchID   = $_GET["bench"];
