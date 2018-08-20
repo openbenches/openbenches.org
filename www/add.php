@@ -92,7 +92,7 @@ if ($_FILES['userfile1']['tmp_name'])
 			}
 			die();
 		} else {
-			$error_message .= "<h3>No location metadata found in first image</h3>";
+			$error_message .= "<h3>No location metadata found in image</h3>";
 		}
 	}
 } else if (null != $inscription) {

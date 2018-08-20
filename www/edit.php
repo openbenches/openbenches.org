@@ -14,6 +14,7 @@ if (null != $params[3]) {
 	
 	$twitter = get_twitter_details();
 	if(null == $twitter) {
+		$_SESSION['edit_bench_id'] = $benchID;
 		header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
 		die();
 	}

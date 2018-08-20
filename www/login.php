@@ -14,7 +14,7 @@ session_start();
 if (! isset($_SESSION['oauth_token'])) {
 	// get the request token
 	$reply = $cb->oauth_requestToken([
-		'oauth_callback' => 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']
+		'oauth_callback' => 'https://openbenches.org/login/'
 	]);
 
 
@@ -68,9 +68,9 @@ if($reply["errors"]) {
 $cache = time();
 
 //	Is this an edit login?
-$benchID = $params[2];
+$benchID = $_SESSION['edit_bench_id'];
 if(is_numeric($benchID)){
-	//	Redirect to the Add page
+	//	Redirect to the Edit page
 	header("Location: /edit/{$benchID}/?cache={$cache}");
 } else {
 	//	Redirect to the Add page
