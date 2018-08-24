@@ -14,6 +14,7 @@ if (null != $params[3]) {
 	
 	$twitter = get_twitter_details();
 	if(null == $twitter) {
+		$_SESSION['edit_bench_id'] = $benchID;
 		header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
 		die();
 	}
@@ -141,7 +142,12 @@ if($twitter[1] != null){
 			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $benchLong; ?>"/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $benchLat;  ?>"/>
 			<input type="submit" value="Save Changes" />
-		</div>
+		</div>&nbsp;
+
+		<div>
+			<label for="inscription">Change Inscription?</label><br>
+			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
+		</div>&nbsp;
 
 		<div id='benchImage'>
 			<?php echo get_image_html($benchID); ?>
@@ -193,11 +199,6 @@ if($twitter[1] != null){
 			</fieldset>
 		</div>
 		<br>
-
-		<div>
-			<label for="inscription">Change Inscription?</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
-		</div>
 
 		<br>
 		<input type="radio" id="publishedTrue"  name="published" value="true" checked>

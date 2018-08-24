@@ -224,7 +224,7 @@ function get_all_benches($id = 0, $only_published = true)
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		{$where}
-		LIMIT 0 , 8192");
+		LIMIT 0 , 10000");
 
 	$get_benches->bind_param('i', $id);
 	$get_benches->execute();
