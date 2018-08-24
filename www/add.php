@@ -21,6 +21,11 @@ if ($_FILES['userfile1']['tmp_name'])
 	$mediaURLs = array();
 	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 
+	//	Mastodon requires files to be uploaded
+	$mediaFiles = array();
+	$mediaFiles[] = get_path_from_hash($sha1,true);
+
+
 	if (duplicate_file($filename))
 	{
 		$error_filename = $_FILES['userfile1']['name'];
@@ -54,18 +59,21 @@ if ($_FILES['userfile1']['tmp_name'])
 				$sha1 = sha1_file($_FILES['userfile2']['tmp_name']);
 				save_image($_FILES['userfile2'], $_POST['media_type2'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
+				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 			if ($_FILES['userfile3']['tmp_name'])
 			{
 				$sha1 = sha1_file($_FILES['userfile3']['tmp_name']);
 				save_image($_FILES['userfile3'], $_POST['media_type3'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
+				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 			if ($_FILES['userfile4']['tmp_name'])
 			{
 				$sha1 = sha1_file($_FILES['userfile4']['tmp_name']);
 				save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
+				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 
 			//	Drop us an email
@@ -80,7 +88,7 @@ if ($_FILES['userfile1']['tmp_name'])
 				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
 				$photos
 			);
-
+			
 			//	Send the user to the bench's page
 			header("Location: /bench/{$benchID}/");
 			//	Tweet the bench
@@ -90,6 +98,15 @@ if ($_FILES['userfile1']['tmp_name'])
 				var_export($e);
 				die();
 			}
+			
+			//	Mastodon Toot the bench
+			try {
+				toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");
+			} catch (Exception $e) {
+				var_export($e);
+				die();
+			}
+
 			die();
 		} else {
 			$error_message .= "<h3>No location metadata found in image</h3>";
