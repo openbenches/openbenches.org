@@ -37,6 +37,9 @@ if ($benchAddress == null){
 		</div>
 	</div>
 
+  <p>
+    <a class="hand-drawn" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">Show other benches near this one</a>
+  </p>
 	<?php 
 		include("sharing.php");
 	?>
