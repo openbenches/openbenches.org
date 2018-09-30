@@ -100,12 +100,12 @@ if ($_FILES['userfile1']['tmp_name'])
 			}
 			
 			//	Mastodon Toot the bench
-			try {
-				toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");
-			} catch (Exception $e) {
-				var_export($e);
-				die();
-			}
+			// try {
+			// 	toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");
+			// } catch (Exception $e) {
+			// 	var_export($e);
+			// 	die();
+			// }
 
 			die();
 		} else {
