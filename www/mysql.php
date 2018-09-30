@@ -15,7 +15,7 @@ if (!$mysqli->set_charset("utf8mb4")) {
 
 function insert_bench($lat, $long, $inscription, $userID)
 {
-	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
+	$inscription = htmlspecialchars( rtrim($inscription), ENT_NOQUOTES);
 
 	$address = get_place_name($lat, $long);
 
