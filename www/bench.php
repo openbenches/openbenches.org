@@ -58,7 +58,7 @@ if ($benchAddress == null){
 		<a href="/add" class="hand-drawn">Add new bench</a>
 		<a href="/edit/<?php echo $benchID; ?>" class="hand-drawn">Edit this bench</a>
 	</div>
-<script src="/data.json/bench=<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 

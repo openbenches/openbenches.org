@@ -21,7 +21,6 @@ if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_bench($benchID,$truncated);
 } else {
 	$geojson = get_all_benches(0, true, $truncated);
-	
 }
 
 
