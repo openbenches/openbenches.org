@@ -146,7 +146,7 @@ function insert_user($provider, $providerID, $name)
 	}
 }
 
-function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
+function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $forMap = false)
 {
 	global $mysqli;
 
@@ -181,6 +181,21 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 	);
 	# Loop through rows to build feature arrays
 	while($get_benches->fetch()) {
+
+		# some inscriptions got stored with leading/trailing whitespace
+                $benchInscription=trim($benchInscription);
+
+                # if displaying on map need to truncate inscriptions longer than
+                # 128 chars and add in <br> elements
+                # N.B. this logic is also in get_all_benches()
+                if ($forMap) {
+                        $benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+			if ($benchInscriptionTruncate !== $benchInscription) {
+                                $benchInscription = $benchInscriptionTruncate . '…';
+                        }
+                        $benchInscription=nl2br($benchInscription);
+                }
+
 		$feature = array(
 			'id' => $benchID,
 			'type' => 'Feature',
@@ -191,7 +206,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => nl2br(mb_substr( rtrim($benchInscription),0,128) . "…"),
+				'popupContent' => $benchInscription
 			),
 		);
 		# Add feature arrays to feature collection array
@@ -201,11 +216,11 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20)
 	return $geojson;
 }
 
-function get_bench($benchID){
-	return get_all_benches($benchID, false);
+function get_bench($benchID, $forMap){
+	return get_all_benches($benchID, false, $forMap);
 }
 
-function get_all_benches($id = 0, $only_published = true)
+function get_all_benches($id = 0, $only_published = true, $forMap = false)
 {
 	global $mysqli;
 
@@ -239,6 +254,21 @@ function get_all_benches($id = 0, $only_published = true)
 	);
 	# Loop through rows to build feature arrays
 	while($get_benches->fetch()) {
+	
+		# some inscriptions got stored with leading/trailing whitespace
+		$benchInscription=trim($benchInscription);
+
+		# if displaying on map need to truncate inscriptions longer than
+		# 128 chars and add in <br> elements
+		# N.B. this logic is also in get_nearest_benches()
+		if ($forMap) {
+			$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+			if ($benchInscriptionTruncate !== $benchInscription) {
+				$benchInscription = $benchInscriptionTruncate . '…';
+			}
+			$benchInscription=nl2br($benchInscription);
+		}
+
 		$feature = array(
 			'id' => $benchID,
 			'type' => 'Feature',
@@ -249,7 +279,7 @@ function get_all_benches($id = 0, $only_published = true)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => nl2br(mb_substr( rtrim($benchInscription),0,128) . "…"),
+				'popupContent' => $benchInscription
 			),
 		);
 		# Add feature arrays to feature collection array
