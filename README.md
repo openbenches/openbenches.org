@@ -21,15 +21,18 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 
 * All Data
 	* `https://openbenches.org/data.json/`
+	* That last `/` is *required*.
 * Specific Bench
 	* `https://openbenches.org/data.json/?bench=123`
-	* That last `/` is *required*.
 * Geographic Area (Haversine)
 	* `https://openbenches.org/data.json/?latitude=51.234&longitude=-1.234&radius=20`
 	* `latitude` and `longitude` in [WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System).
 	* `radius` in Kilometres.
 	* A maximum of 20 results are returned.
-	* That last `/` is *required*.
+* Inscriptions
+	* By default, the inscriptions are truncated to 128 characters.
+	* To get the full inscriptions, append `truncated=false`
+	* `https://openbenches.org/data.json/?truncated=false`
 * Formats
 	* By default, the JSON starts with `var benches = `
 	* To get pure JSON, append `format=raw`

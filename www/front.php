@@ -32,7 +32,7 @@
 			<a href="/add/" class="hand-drawn">Add bench</a>
 		</form>
 	</div>
-<script src="/data.json/?forMap=true" type="text/javascript"></script>
+<script src="/data.json/?truncated=true" type="text/javascript"></script>
 
 <?php echo get_map_javascript(); ?>
 

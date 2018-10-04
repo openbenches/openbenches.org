@@ -7,20 +7,20 @@ $format    = $_GET["format"];
 $latitude  = $_GET["latitude"];
 $longitude = $_GET["longitude"];
 $radius    = $_GET["radius"];
-$forMap    = $_GET["forMap"];
+$truncated = $_GET["truncated"];
 
-if ( "true" == $forMap) {
-  $forMap = True;
+if ( "true" == $truncated or null == $truncated) {
+	$truncated = true;
 } else {
-  $forMap = False;
+	$truncated = false;
 }
 
 if (null != $latitude && null != $longitude && null != $radius) {
-	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $forMap);
+	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
 } else if (null != $benchID){
-	$geojson = get_bench($benchID,$forMap);
+	$geojson = get_bench($benchID,$truncated);
 } else {
-	$geojson = get_all_benches(0, true, $forMap);
+	$geojson = get_all_benches(0, true, $truncated);
 	
 }
 

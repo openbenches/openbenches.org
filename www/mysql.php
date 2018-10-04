@@ -22,8 +22,8 @@ function insert_bench($lat, $long, $inscription, $userID)
 	global $mysqli;
 	$insert_bench = $mysqli->prepare(
 		"INSERT INTO `benches`
-		       (`benchID`,`latitude`,`longitude`,`address`, `inscription`,`description`,`present`,`published`, `added`,  `userID`)
-		VALUES (NULL,      ?,        ?,          ?,          ?,           '',           '1'  ,    '1', CURRENT_TIMESTAMP, ?      )");
+				 (`benchID`,`latitude`,`longitude`,`address`, `inscription`,`description`,`present`,`published`, `added`,  `userID`)
+		VALUES (NULL,		?,		  ?,			 ?,			 ?,			  '',			  '1'  ,	 '1', CURRENT_TIMESTAMP, ?		)");
 	$insert_bench->bind_param('ddssi', $lat, $long, $address, $inscription, $userID);
 	$insert_bench->execute();
 	$resultID = $insert_bench->insert_id;
@@ -44,12 +44,12 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true, $userI
 	global $mysqli;
 	$edit_bench = $mysqli->prepare(
 		"UPDATE `benches`
-		    SET `latitude` =    ?,
-		        `longitude` =   ?,
-		        `address` =     ?,
-		        `inscription` = ?,
-		        `published` =   ?,
-				  `userID` =      ?
+			 SET `latitude` =	 ?,
+				  `longitude` =	?,
+				  `address` =	  ?,
+				  `inscription` = ?,
+				  `published` =	?,
+				  `userID` =		?
 		  WHERE `benches`.`benchID` = ?");
 	$edit_bench->bind_param('ddssisi', $lat, $long, $address, $inscription, $published, $userID, $benchID);
 	$edit_bench->execute();
@@ -63,7 +63,7 @@ function update_bench_address($benchID, $benchLat, $benchLong) {
 	global $mysqli;
 	$edit_bench = $mysqli->prepare(
 		"UPDATE `benches`
-		    SET `address` = ?
+			 SET `address` = ?
 		  WHERE `benches`.`benchID` = ?");
 	$edit_bench->bind_param('si', $address, $benchID);
 	$edit_bench->execute();
@@ -78,8 +78,8 @@ function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
-		       (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`)
-		VALUES (NULL,      ?,        ?,       ?,      ?,         ?         ,  ?);'
+				 (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`)
+		VALUES (NULL,		?,		  ?,		 ?,		?,			?			,  ?);'
 	);
 
 	$insert_media->bind_param('iissss', $benchID, $userID, $sha1, $licence, $import, $media_type);
@@ -98,7 +98,7 @@ function edit_media_type($mediaID, $media_type) {
 	global $mysqli;
 	$edit_media = $mysqli->prepare(
 		"UPDATE `media`
-		    SET `media_type` =    ?
+			 SET `media_type` =	 ?
 		  WHERE `media`.`media_type` = ?");
 	$edit_media->bind_param('ss', $media_type, $mediaID);
 	$edit_media->execute();
@@ -130,8 +130,8 @@ function insert_user($provider, $providerID, $name)
 	}
 	
 	$insert_user = $mysqli->prepare("INSERT INTO `users`
-		       (`userID`, `provider`, `providerID`, `name`)
-		VALUES (NULL,     ?,           ?,            ?);"
+				 (`userID`, `provider`, `providerID`, `name`)
+		VALUES (NULL,	  ?,			  ?,				?);"
 	);
 
 	$insert_user->bind_param('sss', $provider, $providerID, $name);
@@ -146,7 +146,7 @@ function insert_user($provider, $providerID, $name)
 	}
 }
 
-function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $forMap = false)
+function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated = false)
 {
 	global $mysqli;
 
@@ -176,25 +176,25 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $forMap = fa
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
-		'type'      => 'FeatureCollection',
+		'type'		=> 'FeatureCollection',
 		'features'  => array()
 	);
 	# Loop through rows to build feature arrays
 	while($get_benches->fetch()) {
 
 		# some inscriptions got stored with leading/trailing whitespace
-                $benchInscription=trim($benchInscription);
+		$benchInscription=trim($benchInscription);
 
-                # if displaying on map need to truncate inscriptions longer than
-                # 128 chars and add in <br> elements
-                # N.B. this logic is also in get_all_benches()
-                if ($forMap) {
-                        $benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+		# if displaying on map need to truncate inscriptions longer than
+		# 128 chars and add in <br> elements
+		# N.B. this logic is also in get_all_benches()
+		if ($truncated) {
+			$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
 			if ($benchInscriptionTruncate !== $benchInscription) {
-                                $benchInscription = $benchInscriptionTruncate . '…';
-                        }
-                        $benchInscription=nl2br($benchInscription);
-                }
+				$benchInscription = $benchInscriptionTruncate . '…';
+			}
+			$benchInscription=nl2br($benchInscription);
+		}
 
 		$feature = array(
 			'id' => $benchID,
@@ -216,11 +216,11 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $forMap = fa
 	return $geojson;
 }
 
-function get_bench($benchID, $forMap){
-	return get_all_benches($benchID, false, $forMap);
+function get_bench($benchID, $truncated){
+	return get_all_benches($benchID, false, $truncated);
 }
 
-function get_all_benches($id = 0, $only_published = true, $forMap = false)
+function get_all_benches($id = 0, $only_published = true, $truncated = false)
 {
 	global $mysqli;
 
@@ -249,7 +249,7 @@ function get_all_benches($id = 0, $only_published = true, $forMap = false)
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
-		'type'      => 'FeatureCollection',
+		'type'		=> 'FeatureCollection',
 		'features'  => array()
 	);
 	# Loop through rows to build feature arrays
@@ -261,7 +261,7 @@ function get_all_benches($id = 0, $only_published = true, $forMap = false)
 		# if displaying on map need to truncate inscriptions longer than
 		# 128 chars and add in <br> elements
 		# N.B. this logic is also in get_nearest_benches()
-		if ($forMap) {
+		if ($truncated) {
 			$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
 			if ($benchInscriptionTruncate !== $benchInscription) {
 				$benchInscription = $benchInscriptionTruncate . '…';
@@ -443,7 +443,7 @@ function get_image_html($benchID, $full = true)
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
 			$html .= "<a href='{$link}'>
-			          	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
+						 	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
 						</a>";
 		}
 		
@@ -545,7 +545,7 @@ function get_user_id($provider, $username) {
 	$get_user_id = $mysqli->prepare(
 		"SELECT userID FROM users
 		WHERE provider = ?
-		AND   name = ?
+		AND	name = ?
 		LIMIT 0 , 1");
 
 	$get_user_id->bind_param('ss', $provider, $username);
@@ -605,10 +605,10 @@ function get_admin_list()
 	# Loop through rows to build feature arrays
 	while($get_list->fetch()) {
 		//get_edit_key
-		$bench   = $benchID;
-		$key     = urlencode(get_edit_key($bench));
+		$bench	= $benchID;
+		$key	  = urlencode(get_edit_key($bench));
 		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, "UTF-8", false));
-		$html   .= "<li>{$bench} <a href='/edit/{$bench}/{$key}'>{$inscrib}</a></li>";
+		$html	.= "<li>{$bench} <a href='/edit/{$bench}/{$key}'>{$inscrib}</a></li>";
 	}
 
 	$get_list->close();
@@ -668,10 +668,10 @@ function get_search_results($q) {
 	$searchLike =  "%".$q."%";
 	$search = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
-		 FROM   `benches`
+		 FROM	`benches`
 		 WHERE  `inscription`
-		 LIKE   ?
-		 AND    `published` = 1
+		 LIKE	?
+		 AND	 `published` = 1
 		 LIMIT 0 , 10");
 
 	$search->bind_param('s',$searchLike);
@@ -756,9 +756,9 @@ function get_user_bench_list_html($provider, $username)
 	
 	$get_user_list = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`
-		 FROM   `benches`
+		 FROM	`benches`
 		 WHERE  `userID` = ?
-		 AND    `published` = 1
+		 AND	 `published` = 1
 		 LIMIT 0 , 1024");
 	$get_user_list->bind_param('i',$userID);
 
