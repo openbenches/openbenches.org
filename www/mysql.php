@@ -15,7 +15,8 @@ if (!$mysqli->set_charset("utf8mb4")) {
 
 function insert_bench($lat, $long, $inscription, $userID)
 {
-	$inscription = htmlspecialchars( rtrim($inscription), ENT_NOQUOTES);
+	//	Trim errant whitespace from the end before inserting
+	$inscription = rtrim($inscription);
 
 	$address = get_place_name($lat, $long);
 
@@ -193,7 +194,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			if ($benchInscriptionTruncate !== $benchInscription) {
 				$benchInscription = $benchInscriptionTruncate . '…';
 			}
-			$benchInscription=nl2br($benchInscription);
+			$benchInscription=nl2br(htmlspecialchars($benchInscription));
 		}
 
 		$feature = array(
@@ -266,7 +267,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false)
 			if ($benchInscriptionTruncate !== $benchInscription) {
 				$benchInscription = $benchInscriptionTruncate . '…';
 			}
-			$benchInscription=nl2br($benchInscription);
+			$benchInscription=nl2br(htmlspecialchars($benchInscription));
 		}
 
 		$feature = array(
@@ -307,7 +308,7 @@ function get_bench_details($benchID){
 
 	while($get_bench->fetch()) {
 		$get_bench->close();
-		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+		return array ($benchID, $benchLat, $benchLong, $benchAddress, htmlspecialchars($benchInscription), $published);
 	}
 }
 
