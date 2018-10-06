@@ -308,7 +308,7 @@ function get_bench_details($benchID){
 
 	while($get_bench->fetch()) {
 		$get_bench->close();
-		return array ($benchID, $benchLat, $benchLong, $benchAddress, htmlspecialchars($benchInscription), $published);
+		return array ($benchID, $benchLat, $benchLong, htmlspecialchars($benchAddress), htmlspecialchars($benchInscription), $published);
 	}
 }
 
@@ -665,17 +665,21 @@ function get_media_types_array() {
 
 function get_search_results($q) {
 	global $mysqli;
+	
+	//	Replace spaces in query with `[[:space:]]*`
+	$q = str_replace(" ","[[:space:]]*", $q);
 
-	$searchLike =  "%".$q."%";
+	//	Query will be like
+	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott' 
 	$search = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
 		 FROM	`benches`
 		 WHERE  `inscription`
-		 LIKE	?
+		 REGEXP	?
 		 AND	 `published` = 1
-		 LIMIT 0 , 10");
+		 LIMIT 0 , 20");
 
-	$search->bind_param('s',$searchLike);
+	$search->bind_param('s',$q);
 
 	$search->execute();
 	/* bind result variables */
@@ -685,7 +689,7 @@ function get_search_results($q) {
 	# Loop through rows to build feature arrays
 	while($search->fetch()) {
 		if($address != null){
-			$inscription .= "<br />[Location: {$address}]";
+			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
 		}
 		$results[$benchID] = $inscription;
 	}

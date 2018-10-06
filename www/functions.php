@@ -317,7 +317,7 @@ function get_place_name($latitude, $longitude) {
 	$locationData = json_decode($locationJSON);
 	$address = $locationData->results[0]->formatted;
 
-	return htmlspecialchars($address, ENT_NOQUOTES);
+	return $address;
 }
 
 function save_image($file, $media_type, $benchID, $userID) { 
