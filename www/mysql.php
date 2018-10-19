@@ -39,7 +39,7 @@ function insert_bench($lat, $long, $inscription, $userID)
 
 function edit_bench($lat, $long, $inscription, $benchID, $published=true, $userID)
 {
-	$inscription = htmlspecialchars($inscription, ENT_NOQUOTES);
+	$inscription = $inscription;
 	$address = get_place_name($lat, $long);
 
 	global $mysqli;
