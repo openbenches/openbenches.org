@@ -48,7 +48,7 @@ map.on("moveend", function () {
 
 markers.on('click', function (bench) {
 	var xhr = typeof XMLHttpRequest != 'undefined' ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-	xhr.open('get', 'benchimage/'+bench.layer["options"]["benchID"], true);
+	xhr.open('get', '/benchimage/'+bench.layer["options"]["benchID"], true);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			document.getElementById("benchImage").innerHTML = xhr.responseText;

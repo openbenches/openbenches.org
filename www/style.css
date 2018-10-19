@@ -21,7 +21,7 @@ canvas {
 }
 
 #map{
-	width: 600px;
+	width: 1024px;
 	height: 400px;
 	max-width: 100%;
 	z-index: 1;
@@ -117,6 +117,12 @@ hr {
 
 .benchImage{
 	position: relative;
+	text-align: center;
+}
+
+#benchImage{
+	position: relative;
+	text-align: center;
 }
 
 .caption-heading {

@@ -8,6 +8,8 @@ $latitude  = $_GET["latitude"];
 $longitude = $_GET["longitude"];
 $radius    = $_GET["radius"];
 $truncated = $_GET["truncated"];
+$user      = $_GET["user"];
+$provider  = $_GET["provider"];
 
 if ( "true" == $truncated or null == $truncated) {
 	$truncated = true;
@@ -15,7 +17,9 @@ if ( "true" == $truncated or null == $truncated) {
 	$truncated = false;
 }
 
-if (null != $latitude && null != $longitude && null != $radius) {
+if (null != $user && null != $provider) {
+	$geojson = get_user_map($user, $provider);
+} else if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
 } else if (null != $benchID){
 	$geojson = get_bench($benchID,$truncated);
