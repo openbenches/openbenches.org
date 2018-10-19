@@ -34,7 +34,7 @@
 	</div>
 <script src="/data.json/?truncated=true" type="text/javascript"></script>
 
-<?php echo get_map_javascript(); ?>
+<?php echo get_map_javascript(16.3, 0, "2"); ?>
 
 <script>
 map.on("moveend", function () {

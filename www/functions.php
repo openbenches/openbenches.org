@@ -184,6 +184,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 // 	$reply = $mastodon_api->post_statuses($params);
 // }
 
+//	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	$mapJavaScript = <<<EOT
 <script>
