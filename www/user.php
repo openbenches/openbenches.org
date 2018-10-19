@@ -39,7 +39,7 @@
 		<input type="submit" class="hand-drawn" value="Search inscriptions" />
 	</div>
 </form>
-<script src="/data.json/?provider=<?php echo $provider; ?>&amp;user=<?php echo $user; ?>" type="text/javascript"></script>
+<script src="/data.json/?provider=<?php echo $provider; ?>&amp;user=<?php echo $name; ?>" type="text/javascript"></script>
 
 <?php
 	//	Map shows most of the world

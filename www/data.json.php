@@ -18,7 +18,7 @@ if ( "true" == $truncated or null == $truncated) {
 }
 
 if (null != $user && null != $provider) {
-	$geojson = get_user_map($user, $provider);
+	$geojson = get_user_map($provider, $user);
 } else if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
 } else if (null != $benchID){
