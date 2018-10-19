@@ -778,6 +778,66 @@ function get_user_bench_list_html($provider, $username)
 	return $html .= "</ul>";
 }
 
+function get_user_map($provider, $username)
+{
+	$userID = get_user_id($provider, $username);
+	
+	global $mysqli;
+	
+	$where = "WHERE published = true AND userID = {$userID}";
+
+	$get_benches = $mysqli->prepare(
+		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
+		{$where}
+		LIMIT 0 , 10000");
+
+	$get_benches->bind_param('i', $id);
+	$get_benches->execute();
+
+	/* bind result variables */
+	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published);
+
+	# Build GeoJSON feature collection array
+	$geojson = array(
+		'type'		=> 'FeatureCollection',
+		'features'  => array()
+	);
+	# Loop through rows to build feature arrays
+	while($get_benches->fetch()) {
+	
+		# some inscriptions got stored with leading/trailing whitespace
+		$benchInscription=trim($benchInscription);
+
+		# if displaying on map need to truncate inscriptions longer than
+		# 128 chars and add in <br> elements
+		# N.B. this logic is also in get_nearest_benches()
+		$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+		if ($benchInscriptionTruncate !== $benchInscription) {
+			$benchInscription = $benchInscriptionTruncate . '…';
+		}
+		$benchInscription=nl2br(htmlspecialchars($benchInscription));
+
+		$feature = array(
+			'id' => $benchID,
+			'type' => 'Feature',
+			'geometry' => array(
+				'type' => 'Point',
+				# Pass Longitude and Latitude Columns here
+				'coordinates' => array($benchLong, $benchLat)
+			),
+			# Pass other attribute columns here
+			'properties' => array(
+				'popupContent' => $benchInscription
+			),
+		);
+		# Add feature arrays to feature collection array
+		array_push($geojson['features'], $feature);
+	}
+	
+	$get_benches->close();
+	return $geojson;
+}
+
 function get_merged_bench($benchID) {
 	global $mysqli;
 	$get_merge_from_bench = $mysqli->prepare(
