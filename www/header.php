@@ -82,16 +82,16 @@ if($benchID != null && !$published) {
 	}
 	</script>
 
-	<link rel="stylesheet" href="/libs/normalize.7.0.0/normalize.min.css">
+	<link rel="stylesheet" href="/libs/normalize.8.0.0/normalize.min.css">
 
-	<link rel="stylesheet" href="/style.css?cache=2018-05-20T14:20"/>
+	<link rel="stylesheet" href="/style.css?cache=2018-10-19T14:20"/>
 
-	<link rel="stylesheet" href="/libs/leaflet.1.3.0/leaflet.css" />
-	<script src="/libs/leaflet.1.3.0/leaflet.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.3.4/leaflet.css" />
+	<script src="/libs/leaflet.1.3.4/leaflet.js"></script>
 
-	<script src="/libs/leaflet.markercluster.1.2.0/leaflet.markercluster.js"></script>
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.2.0/MarkerCluster.css">
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.2.0/MarkerCluster.Default.css">
+	<script src="/libs/leaflet.markercluster.1.4.1/leaflet.markercluster.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.css">
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.Default.css">
 </head>
 <body>
 	<hgroup itemscope itemtype="https://schema.org/WebPage">

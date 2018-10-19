@@ -208,10 +208,10 @@ if(null == $twitter_name) {
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
-	<script src="/libs/jquery.3.2.1/jquery-3.2.1.min.js"></script>
+	<script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
 	<script src="/libs/vision/key.js"></script>
 	<script src="/libs/vision/vision.js"></script>
-	<script src="/libs/load-image.2.17.1/load-image.all.min.js"></script>
+	<script src="/libs/load-image.2.19.0/load-image.all.min.js"></script>
 	<script type="text/javascript">
 		var previewWidth = 800;
 		var map = null;

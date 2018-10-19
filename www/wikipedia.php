@@ -87,7 +87,7 @@ if ($_GET["wikiID"])
 	echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
 	echo "</form>";
 ?>
-<script src="/libs/jquery.3.2.1/jquery-3.2.1.min.js"></script>
+<script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
 <script src="/libs/vision/key.js"></script>
 <script>
 var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + window.apiKey;
