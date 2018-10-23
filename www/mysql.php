@@ -667,6 +667,8 @@ function get_search_results($q) {
 	
 	//	Replace spaces in query with `[[:space:]]*`
 	$q = str_replace(" ","[[:space:]]*", $q);
+	$quoteTranslation=array("\"" => "[\"“”]", "“" => "[\"“]", "”" => "[\"”]", "'" => "['‘’]", "‘" => "['‘]", "’" => "['’]");
+	$q = strtr($q,$quoteTranslation);
 
 	//	Query will be like
 	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott' 
