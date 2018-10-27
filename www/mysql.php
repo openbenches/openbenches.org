@@ -112,11 +112,11 @@ function insert_user($provider, $providerID, $name)
 	global $mysqli;
 	
 	//	Does the user already exist?
-	//	Only applicable for Twitter
-	if ("twitter" == $provider) {
+	//	Only applicable for Auth0 users
+	if ("anon" != $provider) {
 		$search_user = $mysqli->prepare("SELECT `userID` FROM `users` 
-			WHERE `provider` LIKE ? AND `providerID` LIKE ? AND `name` LIKE ?");
-		$search_user->bind_param('sss', $provider, $providerID, $name);
+			WHERE `provider` LIKE ? AND `providerID` LIKE ?");
+		$search_user->bind_param('ss', $provider, $providerID);
 		$search_user->execute();
 		$search_user->bind_result($userID);
 		# Loop through rows to build feature arrays
@@ -382,7 +382,7 @@ function get_image_html($benchID, $full = true)
 	// 	 WHERE benchID = ?");
 	
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, users.name, users.provider, importURL, licence, media_type
+		"SELECT sha1, users.name, users.provider, users.providerID, importURL, licence, media_type
 		FROM media
 		INNER JOIN users ON media.userID = users.userID
 		WHERE benchID = ?");
@@ -390,7 +390,7 @@ function get_image_html($benchID, $full = true)
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
 	/* bind result variables */
-	$get_media->bind_result($sha1, $userName, $userProvider, $importURL, $licence, $media_type);
+	$get_media->bind_result($sha1, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
 
 	$html = '';
 
@@ -399,8 +399,8 @@ function get_image_html($benchID, $full = true)
 		
 		$userHTML = "";
 		//	Who uploaded this media
-		if($userProvider == "twitter") {
-			$userHTML = "@<a href='/user/twitter/{$userName}'>{$userName}</a>";
+		if("anon" != $userProvider) {
+			$userHTML = "<a href='/user/{$userProvider}/{$userProviderID}'>{$userName}</a>";
 		}
 
 		//	Was this imported from an external source?

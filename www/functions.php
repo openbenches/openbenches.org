@@ -1,7 +1,9 @@
 <?php
 require_once ("codebird.php");
 require_once ("config.php");
-// require_once ("Mastodon_api.php");
+require_once (__DIR__ . '/vendor/autoload.php');
+use Auth0\SDK\Auth0;
+
 
 function get_twitter_details(){
 	session_start();
@@ -33,6 +35,46 @@ function get_twitter_details(){
 		return array($id_str, $screen_name);
 	}
 	return null;
+}
+
+function get_user_details($raw = true) {
+	$auth0 = new Auth0([
+		'domain' =>        AUTH0_DOMAIN,
+		'client_id' =>     AUTH0_CLIENT_ID,
+		'client_secret' => AUTH0_CLIENT_SECRET,
+		'redirect_uri' =>  AUTH0_CALLBACK,
+		'audience' =>      AUTH0_AUDIENCE,
+		'scope' =>        'openid profile',
+		'persist_id_token' =>      true,
+		'persist_access_token' =>  true,
+		'persist_refresh_token' => true,
+	]);
+	
+	
+	session_start();
+	$userInfo = $auth0->getUser();
+	if (!$userInfo) {
+		// We have no user info
+		return null;
+	} else {
+		// User is authenticated
+		$username = explode("|", $userInfo["sub"]);
+		
+		if ($raw) {
+			return array(
+								$username[0], 
+								$username[1], 
+								$userInfo['nickname']
+							);			
+		} else {
+			return array(
+								htmlspecialchars($username[0]), 
+								htmlspecialchars($username[1]), 
+								htmlspecialchars($userInfo['nickname'])
+							);
+		}
+
+	}
 }
 
 function get_edit_key($benchID){

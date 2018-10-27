@@ -38,12 +38,13 @@ if ($_FILES['userfile1']['tmp_name'])
 		if (false != $location)
 		{
 			//	Add the user to the database
-			$twitter = get_twitter_details();
-			if (null == $twitter[1]) {
+			[$user_provider, $user_providerID, $user_name] = get_user_details(true);
+			if (null == $user_provider) {
 				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 			} else {
-				$userID = insert_user("twitter", $twitter[0], $twitter[1]);
+				$userID = insert_user($user_provider, $user_providerID, $user_name);
 			}
+
 
 			$media_type = $_POST['media_type1'];
 
@@ -122,11 +123,12 @@ include("header.php");
 ?>
 </hgroup>
 <?php
-$twitter_name = get_twitter_details()[1];
-if(null == $twitter_name) {
-	$login_html = "<a href='/login/'>Sign in with Twitter</a> - or be <strong>anonymous</strong>.";
+[$user_provider, $user_providerID, $user_name] = get_user_details();
+
+if(null == $user_provider) {
+	$login_html = "<a href='/login/'>Sign in</a> - or be <strong>anonymous</strong>.";
 	} else {
-	$login_html = "You are logged in as @{$twitter_name}";
+	$login_html = "You are logged in as \"{$user_name}\" from " . ucfirst($user_provider);
 }
 
 	echo "<p>{$login_html}</p>";

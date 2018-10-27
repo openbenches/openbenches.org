@@ -11,15 +11,12 @@ $benchID = $params[2];
 if (null != $params[3]) {
 	$key = urldecode($params[3]);
 } else {
-	
-	$twitter = get_twitter_details();
-	if(null == $twitter) {
+	[$user_provider, $user_providerID, $user_name] = get_user_details(true);
+	if(null == $user_provider) {
 		$_SESSION['edit_bench_id'] = $benchID;
 		header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
-		die();
+	die();
 	}
-	$id_str     = $twitter[0];
-	$screen_name= $twitter[1];
 }
 
 //	Start the normal page
@@ -38,12 +35,12 @@ if(isset($_POST['key'])) {
 
 	if ($valid) {
 
-		if (null == $twitter) {
+		if (null == $user_provider) {
 			$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 		} else {
-			$userID = insert_user("twitter", $id_str, $screen_name);
+			$userID = insert_user($user_provider, $user_providerID, $user_name);
 		}
-		
+
 		list ($oldBenchID, $oldBenchLat, $oldBenchLong, $oldBenchAddress, $oldBenchInscription, $oldPublished) = get_bench_details($benchID);
 		
 		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true", $userID);
@@ -73,7 +70,7 @@ if(isset($_POST['key'])) {
 		}
 		
 		mail(NOTIFICATION_EMAIL,
-			"Edit to Bench {$benchID} by @{$screen_name}",
+			"Edit to Bench {$benchID} by {$user_name}",
 			"New Images: {$newImages}\n".
 			"New: {$inscription}\n".
 			"Old: {$oldBenchInscription}\n".
@@ -82,7 +79,7 @@ if(isset($_POST['key'])) {
 			"New Published: {$published}\n".
 			"Old Published: {$oldPublished}\n".
 
-			"By https://twitter.com/{$screen_name}\n".
+			"By {$user_provider} {$user_name}\n".
 			"https://{$_SERVER['SERVER_NAME']}/bench/{$benchID}"
 		);
 
@@ -101,22 +98,22 @@ if(isset($_POST['key'])) {
 }
 
 $valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
-if (!$valid && null == $twitter[1]) {
+if (!$valid && null == $user_providerID) {
 	$error_message .= "<h3>Invalid Edit URL</h3>";
 } else {
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
 }
 
 if ($valid) {
-	$info = "Your bench has been added! <a href='/bench/{$benchID}'>View your bench</a>.
+	$info = "Your bench has been changed! <a href='/bench/{$benchID}'>View your bench</a>.
 	<br>
 	You can edit your inscription, change location, or add more photos if you need to.
 	<br>
 	Or <a href='/add/'>Add a new bench</a>";
 }
 
-if($twitter[1] != null){
-	$info = "You are logged in as @{$twitter[1]}<br>
+if($user_provider != null){
+	$info = "You are logged in as \"{$user_name}\" from " . ucfirst($user_provider) ."<br>
 	You can edit this bench's inscription, change location, or add more photos.";
 }
 
