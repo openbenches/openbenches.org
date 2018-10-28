@@ -58,6 +58,7 @@ You will need to sign up to some external API providers:
 * Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
 * Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
 * Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
+* **Optional** Login requires a free [Auth0.com](https://auth0.com/) account.
 
 Add them to `config.php.example` - rename that to `config.php`
 
@@ -85,8 +86,8 @@ Hopefully, the tables are self explanatory:
 Originally we were going to force people to sign in with Twitter / Facebook / GitHub. But that discourages use - so users are now pseudo-anonymous. Hence this weird structure!
 
 * `userID`
-* `provider` could be Twitter, GitHub, etc.
-* `providerID` user's name on the provider's service.  Anonymous users stores their IP address.
+* `provider` could be Twitter, GitHub, Facebook etc.
+* `providerID` user ID number on the provider's service.  Anonymous users stores their IP address.
 * `name` their display name. Anonymous users stores the time they added a bench.
 
 #### Media
@@ -133,3 +134,5 @@ Everything we do builds on someone else's hard work.
 * GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
 * JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) [MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt).
+* Login services provided by [Auth0.com's PHP library](https://github.com/auth0/auth0-PHP) [MIT](https://github.com/auth0/auth0-PHP/blob/master/LICENSE.txt).
+)
