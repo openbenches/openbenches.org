@@ -84,7 +84,7 @@ if($benchID != null && !$published) {
 
 	<link rel="stylesheet" href="/libs/normalize.8.0.0/normalize.min.css">
 
-	<link rel="stylesheet" href="/style.css?cache=2018-10-21T08:30"/>
+	<link rel="stylesheet" href="/style.css?cache=2018-10-28T08:30"/>
 
 	<link rel="stylesheet" href="/libs/leaflet.1.3.4/leaflet.css" />
 	<script src="/libs/leaflet.1.3.4/leaflet.js"></script>

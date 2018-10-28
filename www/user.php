@@ -3,13 +3,47 @@
 
 	$provider = $params[2];
 	$username = $params[3];
-	$name = htmlspecialchars($username, ENT_HTML5, "UTF-8", false);
-	$nameURL = "https://".htmlspecialchars($provider, ENT_HTML5, "UTF-8", false) . ".com/{$name}";
+	$userHTML = "Benches added or edited by ";
+	if (is_numeric($provider)) {
+		$user = get_user($provider);
+		$userID     = $provider;
+		$username   = $user["name"];
+		$provider   = $user["provider"];
+		$providerID = $user["providerID"];
+		
+		if("twitter" == $provider && is_numeric($providerID)) {
+			$userURL = "https://twitter.com/intent/user?user_id=" . $providerID;
+			$userHTML .= "Twitter user <a href=\"{$userURL}\">{$username}</a>";
+		} else if("twitter" == $provider && !is_numeric($providerID)) {
+			$userURL = "https://twitter.com/" . $providerID;
+			$userHTML .= "Twitter user <a href=\"{$userURL}\">{$username}</a>";
+		} else if("github" == $provider) {
+			$userURL = "https://edent.github.io/github_id/#" . $providerID;
+			$userHTML .= "GitHub user <a href=\"{$userURL}\">{$username}</a>";
+		} else if("facebook" == $provider) {
+			$userHTML .= "Facebook user {$username}";
+		} else if("flickr" == $provider) {
+			$userHTML .= "the <a href=\"https://www.flickr.com/\">Flickr importer</a>";
+		} else if("wikipedia" == $provider) {
+			$userHTML .= "the <a href=\"https://www.wikipedia.org/\">Wikipedia importer</a>";
+		} else {
+			$userHTML .= "an anonymous user";
+		}
+	} else {
+		//	Old style /user/twitter/edent
+		if("twitter" == $provider) {
+			$userID = get_user_id($provider, $username);
+			$userURL = "https://twitter.com/" . $username;
+			$userHTML .= "Twitter user <a href=\"{$userURL}\">{$username}</a>";
+		} else {
+			$userHTML = "Invalid User";
+		}
+	}
 ?>
 </hgroup>
 
 <?php 
-	echo "<h3>Benches added or edited by @<a href='{$nameURL}'>{$name}</a></h3>";
+	echo "<h3>{$userHTML}</h3>";
 ?>
 <div id="map"></div>
 <div id="benchImage"></div>
@@ -17,7 +51,7 @@
 <div id="search-results">
 
 	<?php
-		echo get_user_bench_list_html($provider, $username); 
+		echo get_user_bench_list_html($userID); 
 	?>
 </div>
 
@@ -39,7 +73,7 @@
 		<input type="submit" class="hand-drawn" value="Search inscriptions" />
 	</div>
 </form>
-<script src="/data.json/?provider=<?php echo $provider; ?>&amp;user=<?php echo $name; ?>" type="text/javascript"></script>
+<script src="/data.json/?userID=<?php echo $userID; ?>" type="text/javascript"></script>
 
 <?php
 	//	Map shows most of the world
@@ -74,20 +108,5 @@ for (var i = 0; i < benches.features.length; i++) {
 map.addLayer(markers);
 </script>
 
-<script>
-for (var i = 0; i < benches.features.length; i++) {
-	var bench = benches.features[i];
-	var lat = bench.geometry.coordinates[1];
-	var longt = bench.geometry.coordinates[0];
-	var benchID = bench.id;
-	var title = bench.properties.popupContent;
-	var marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: false });
-
-	marker.bindPopup(title);
-	markers.addLayer(marker);
-}
-
-map.addLayer(markers);
-</script>
 <?php
 	include("footer.php");

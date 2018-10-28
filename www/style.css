@@ -168,6 +168,7 @@ small {
 .avatar {
 	vertical-align: middle;
 	padding: 0.5em;
+	width: 2em;
 }
 
 .leaderboard-list {

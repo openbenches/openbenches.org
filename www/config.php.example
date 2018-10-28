@@ -29,7 +29,13 @@ define('EDIT_SALT', '');
 //	https://geocoder.opencagedata.com/api
 define('OPENCAGE_API_KEY', '');
 
-//  Mastodon
-define('MASTODON_INSTANCE', '');
-define('MASTODON_ACCESS_TOKEN', '');
+//	Auth0 login services
+//	https://auth0.com/
+define('AUTH0_DOMAIN',           '');
+define('AUTH0_CLIENT_ID',        '');
+define('AUTH0_CLIENT_SECRET',    '');
+define('AUTH0_CALLBACK',         '');
+define('AUTH0_AUDIENCE',         '');
+define('AUTH0_LOGOUT_RETURN_URL','');
+
 

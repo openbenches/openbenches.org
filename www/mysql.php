@@ -349,7 +349,7 @@ function get_image($benchID, $full = false)
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
 		$get_media->close();
-		$userString = get_user($userID);
+		// $userString = get_user($userID);
 		if(null != $importURL) {
 			$source = "<a href='{$importURL}'>Image Source</a>";
 		}
@@ -382,7 +382,7 @@ function get_image_html($benchID, $full = true)
 	// 	 WHERE benchID = ?");
 	
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, users.name, users.provider, users.providerID, importURL, licence, media_type
+		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type
 		FROM media
 		INNER JOIN users ON media.userID = users.userID
 		WHERE benchID = ?");
@@ -390,7 +390,7 @@ function get_image_html($benchID, $full = true)
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
 	/* bind result variables */
-	$get_media->bind_result($sha1, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
+	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
 
 	$html = '';
 
@@ -400,7 +400,7 @@ function get_image_html($benchID, $full = true)
 		$userHTML = "";
 		//	Who uploaded this media
 		if("anon" != $userProvider) {
-			$userHTML = "<a href='/user/{$userProvider}/{$userProviderID}'>{$userName}</a>";
+			$userHTML = "<a href='/user/{$userID}'>℅ {$userName}</a>";
 		}
 
 		//	Was this imported from an external source?
@@ -506,7 +506,7 @@ function get_user_from_bench($benchID) {
 	# Loop through rows to build feature arrays
 	while($get_user_from_bench->fetch()) {
 		$get_user_from_bench->close();
-		return get_user($userID);
+		return get_user($userID)["name"];
 		die();
 	}
 }
@@ -526,27 +526,39 @@ function get_user($userID)
 	$get_user->bind_result($provider, $providerID, $name);
 
 	$userString = "";
-
+	$user = array();
 	# Loop through rows to build feature arrays
 	while($get_user->fetch()) {
 		if ("anon" != $provider){
 			$name = htmlspecialchars($name);
-			$userString .= " @{$name}";
+			$user["provider"] = $provider;
+			$user["providerID"] = $providerID;
+			$user["name"] = $name;
 		} else {
-			$userString = "";
+			$user["provider"] = "anonymous";
+			$user["providerID"] = null;
+			$user["name"] = null;
 		}
 	}
 	$get_user->close();
-	return $userString;
+	return $user;
 }
 
-function get_user_id($provider, $username) {
+function get_user_id($provider, $username, $is_id = false) {
 	global $mysqli;
-	$get_user_id = $mysqli->prepare(
-		"SELECT userID FROM users
-		WHERE provider = ?
-		AND	name = ?
-		LIMIT 0 , 1");
+	if ($is_id) {
+		$get_user_id = $mysqli->prepare(
+			"SELECT userID FROM users
+			WHERE provider = ?
+			AND	providerID = ?
+			LIMIT 0 , 1");
+	} else {
+		$get_user_id = $mysqli->prepare(
+			"SELECT userID FROM users
+			WHERE provider = ?
+			AND	name = ?
+			LIMIT 0 , 1");		
+	}
 
 	$get_user_id->bind_param('ss', $provider, $username);
 	$get_user_id->execute();
@@ -710,19 +722,23 @@ function get_leadboard_benches_html() {
 	global $mysqli;
 	
 	$get_leaderboard = $mysqli->prepare("
-		SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
+		SELECT users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT
 		FROM `benches`
 		INNER JOIN users ON benches.userID = users.userID
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
 		
 	$get_leaderboard->execute();
-	$get_leaderboard->bind_result($username, $provider, $count);
+	$get_leaderboard->bind_result($userID, $username, $provider, $providerID, $count);
 
 	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
 		if("twitter"==$provider){
-			$html .= "<li><a href='/user/{$provider}/{$username}'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
+			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
+		} else if("github"==$provider){
+			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars0.githubusercontent.com/u/{$providerID}?v=4&amp;s=48' class='avatar'>$username</a> {$count}</li>";
+		} else if("facebook"==$provider){
+			$html .= "<li><a href='/user/{$userID}/'><img src='/images/svg/facebook.svg' class='avatar'>$username</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -733,29 +749,27 @@ function get_leadboard_media_html() {
 	global $mysqli;
 	
 	$get_leaderboard = $mysqli->prepare("
-		SELECT users.name, users.provider, COUNT(*) AS USERCOUNT
+		SELECT users.userID, users.name, users.provider, COUNT(*) AS USERCOUNT
 		FROM `media`
 		INNER JOIN users ON media.userID = users.userID
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
 		
 	$get_leaderboard->execute();
-	$get_leaderboard->bind_result($username, $provider, $count);
+	$get_leaderboard->bind_result($userID, $username, $provider, $count);
 
 	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
 		if("twitter"==$provider){
-			$html .= "<li><a href='/user/{$provider}/{$username}'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
+			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
 	return $html .= "</ul>";
 }
 
-function get_user_bench_list_html($provider, $username)
-{
-	$userID = get_user_id($provider, $username);
-	
+function get_user_bench_list_html($userID)
+{	
 	global $mysqli;
 	
 	$get_user_list = $mysqli->prepare(
@@ -778,10 +792,8 @@ function get_user_bench_list_html($provider, $username)
 	return $html .= "</ul>";
 }
 
-function get_user_map($provider, $username)
-{
-	$userID = get_user_id($provider, $username);
-	
+function get_user_map($userID)
+{	
 	global $mysqli;
 	
 	$where = "WHERE published = true AND userID = {$userID}";
