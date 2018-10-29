@@ -31,14 +31,15 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* A maximum of 20 results are returned.
 * Inscriptions
 	* By default, the inscriptions are truncated to 128 characters.
-	* To get the full inscriptions, append `truncated=false`
+	* To get the full inscriptions, append `&truncated=false`
 	* `https://openbenches.org/data.json/?truncated=false`
 * Formats
 	* By default, the JSON starts with `var benches = `
-	* To get pure JSON, append `format=raw`
+	* To get pure JSON, append `&format=raw`
 	* `https://openbenches.org/data.json/?bench=123&format=raw`
-* Images
-	* The API doesn't return images. Yet.
+* Media
+	* By default, the API doesn't return media.
+	* To get media, append `&media=true`
 
 ## Running Locally
 

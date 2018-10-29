@@ -8,6 +8,7 @@ $latitude  = $_GET["latitude"];
 $longitude = $_GET["longitude"];
 $radius    = $_GET["radius"];
 $truncated = $_GET["truncated"];
+$media    = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN);
 $userID    = $_GET["userID"];
 $provider  = $_GET["provider"];
 
@@ -22,9 +23,9 @@ if (null != $userID) {
 } else if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
 } else if (null != $benchID){
-	$geojson = get_bench($benchID,$truncated);
+	$geojson = get_bench($benchID, $truncated, $media);
 } else {
-	$geojson = get_all_benches(0, true, $truncated);
+	$geojson = get_all_benches(0, true, $truncated, $media);
 }
 
 

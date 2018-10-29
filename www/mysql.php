@@ -216,12 +216,19 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 	return $geojson;
 }
 
-function get_bench($benchID, $truncated){
-	return get_all_benches($benchID, false, $truncated);
+function get_bench($benchID, $truncated, $media = false){
+	return get_all_benches($benchID, false, $truncated, $media);
 }
 
-function get_all_benches($id = 0, $only_published = true, $truncated = false)
+function get_all_benches($id = 0, $only_published = true, $truncated = false, $media = false)
 {
+	//	If media have been requested
+	if($media) {
+		$media_data = get_all_media($id);
+	} else {
+		$media_data = array();
+	}
+	
 	global $mysqli;
 
 	if(0==$id){
@@ -237,7 +244,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false)
 	}
 
 	$get_benches = $mysqli->prepare(
-		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
+		"SELECT benchID, latitude, longitude, inscription, published FROM benches
 		{$where}
 		LIMIT 0 , 10000");
 
@@ -279,7 +286,8 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => $benchInscription
+				'popupContent' => $benchInscription,
+				'media' => $media_data[$benchID]
 			),
 		);
 		# Add feature arrays to feature collection array
@@ -463,6 +471,52 @@ function get_image_html($benchID, $full = true)
 	
 	$get_media->close();
 	return $html;
+}
+
+function get_all_media($benchID = 0)
+{
+	global $mysqli;
+
+	if(0 == $benchID) {
+		$get_media = $mysqli->prepare(
+			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type
+			 FROM `benches`
+				INNER JOIN 
+			`media` ON benches.benchID = media.benchID");
+			$get_media->execute();
+			/* bind result variables */
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type);
+	} else {
+		$get_media = $mysqli->prepare(
+			"SELECT benchID, sha1, importURL, licence, media_type
+			FROM media
+			WHERE benchID = ?");
+			$get_media->bind_param('i',  $benchID );
+			$get_media->execute();
+			/* bind result variables */
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type);
+	}
+
+	$media = array();
+
+	# Loop through rows to build the array
+	while($get_media->fetch()) {
+		$media_data = array();
+		
+		$media_data["URL"] = "/image/{$sha1}";
+	
+		if(null != $importURL) {
+			$media_data["importURL"] = $importURL;
+		}
+
+		$media_data["licence"]    = $licence;
+		$media_data["media_type"] = $media_type;
+		
+		$media[$benchID][] = $media_data;
+	}
+	
+	$get_media->close();
+	return $media;
 }
 
 function get_image_url($benchID)
