@@ -81,6 +81,8 @@ if($benchID != null && !$published) {
 		}
 	}
 	</script>
+	
+	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
 
 	<link rel="stylesheet" href="/libs/normalize.8.0.0/normalize.min.css">
 
