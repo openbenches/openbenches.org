@@ -519,6 +519,45 @@ function get_all_media($benchID = 0)
 	return $media;
 }
 
+function get_rss($items = 10) {
+	global $mysqli;
+
+	$get_rss = $mysqli->prepare(
+		"SELECT benches.benchID, benches.inscription, benches.address, benches.added, media.sha1
+		
+		FROM `benches`
+			INNER JOIN 
+		`media` ON benches.benchID = media.benchID
+		WHERE benches.published = true
+		ORDER by benches.benchID DESC
+		LIMIT ?");
+		
+	$get_rss->bind_param('i', $items);
+	$get_rss->execute();
+	$get_rss->bind_result($benchID, $benchInscription, $benchAddress, $benchAdded, $sha1);
+	
+	$rssItems = array();
+	
+	while($get_rss->fetch()) {
+		$rssData = array();
+		
+		$rssData["benchID"] = $benchID;
+		$rssData["benchInscription"] = htmlspecialchars($benchInscription);
+		$rssData["benchAddress"] = $benchAddress;
+		$rssData["benchAdded"] = $benchAdded;
+		$rssData["sha1"][] = $sha1;
+		
+		if (key_exists($benchID,$rssItems)){
+			$rssItems[$benchID]["sha1"][] = $sha1;
+		} else {
+			$rssItems[$benchID] = $rssData;
+		}
+	}
+	
+	$get_rss->close();
+	return $rssItems;
+}
+
 function get_image_url($benchID)
 {
 	global $mysqli;

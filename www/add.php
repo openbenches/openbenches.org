@@ -379,6 +379,11 @@ if(null == $user_provider) {
 			);
 			if (!loadingImage) {}
 		}
+		//	Disable button once clicked & let user know that the media are being uploaded
+		$('#submitButton').on('click', function() {
+			$('#submitButton').prop( "disabled", true );
+			$('#submitButton').prop( "value", "Uploading!" );
+		});
 	</script>
 <?php
 	include("footer.php");
