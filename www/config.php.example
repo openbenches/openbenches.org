@@ -38,4 +38,6 @@ define('AUTH0_CALLBACK',         '');
 define('AUTH0_AUDIENCE',         '');
 define('AUTH0_LOGOUT_RETURN_URL','');
 
+//	For sharing on Facebook
+define('FACEBOOK_APP_ID', '');
 

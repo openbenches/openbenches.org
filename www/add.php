@@ -4,120 +4,6 @@ require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
-//	What has been POSTed to us?
-//	Get the inscription, either to add to database, or recover in case of error
-$inscription = $_POST['inscription'];
-$lat = $_POST['newLatitude'];
-$lng = $_POST['newLongitude'];
-$error_message = "";
-
-if ($_FILES['userfile1']['tmp_name'])
-{	//	Has a photo been posted?
-	$filename = $_FILES['userfile1']['tmp_name'];
-	$sha1 = sha1_file ($filename);
-	
-	//	For tweeting
-	$domain = $_SERVER['SERVER_NAME'];
-	$mediaURLs = array();
-	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-
-	//	Mastodon requires files to be uploaded
-	$mediaFiles = array();
-	$mediaFiles[] = get_path_from_hash($sha1,true);
-
-
-	if (duplicate_file($filename))
-	{
-		$error_filename = $_FILES['userfile1']['name'];
-		$error_message .= "<h3>{$error_filename} already exists in the database</h3>";
-	} else {
-		//	Does the first file have a GPS location?
-		$location = get_image_location($filename);
-
-		//	If there is a GPS tag on the photo
-		if (false != $location)
-		{
-			//	Add the user to the database
-			[$user_provider, $user_providerID, $user_name] = get_user_details(true);
-			if (null == $user_provider) {
-				$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
-			} else {
-				$userID = insert_user($user_provider, $user_providerID, $user_name);
-			}
-
-
-			$media_type = $_POST['media_type1'];
-
-			//	Insert Bench
-			$benchID = insert_bench($lat,$lng, $inscription, $userID);
-
-			//	Save the Image
-			save_image($_FILES['userfile1'], $media_type, $benchID, $userID);
-
-			//	Save other images
-			if ($_FILES['userfile2']['tmp_name'])
-			{
-				$sha1 = sha1_file($_FILES['userfile2']['tmp_name']);
-				save_image($_FILES['userfile2'], $_POST['media_type2'], $benchID, $userID);
-				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-				$mediaFiles[] = get_path_from_hash($sha1,true);
-			}
-			if ($_FILES['userfile3']['tmp_name'])
-			{
-				$sha1 = sha1_file($_FILES['userfile3']['tmp_name']);
-				save_image($_FILES['userfile3'], $_POST['media_type3'], $benchID, $userID);
-				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-				$mediaFiles[] = get_path_from_hash($sha1,true);
-			}
-			if ($_FILES['userfile4']['tmp_name'])
-			{
-				$sha1 = sha1_file($_FILES['userfile4']['tmp_name']);
-				save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
-				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-				$mediaFiles[] = get_path_from_hash($sha1,true);
-			}
-
-			//	Drop us an email
-			$key = urlencode(get_edit_key($benchID));
-			$photos = "";
-			foreach($mediaURLs as $img){
-				$photos .= $img."\n";
-			}
-			mail(NOTIFICATION_EMAIL,
-				"Bench {$benchID}",
-				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
-				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
-				$photos
-			);
-			
-			//	Send the user to the bench's page
-			header("Location: /bench/{$benchID}/");
-			//	Tweet the bench
-			try {
-				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0");
-			} catch (Exception $e) {
-				var_export($e);
-				die();
-			}
-			
-			//	Mastodon Toot the bench
-			// try {
-			// 	toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");
-			// } catch (Exception $e) {
-			// 	var_export($e);
-			// 	die();
-			// }
-
-			die();
-		} else {
-			$error_message .= "<h3>No location metadata found in image</h3>";
-		}
-	}
-} else if (null != $inscription) {
-	//	If a photo hasn't been posted, recover the inscription and show an error
-	$error_message .= "<h3>Ooops! Looks like you didn't add a photo</h3>";
-}
-
 //	Start the normal page
 include("header.php");
 ?>
@@ -203,8 +89,14 @@ if(null == $user_provider) {
 			</fieldset>
 		</div>
 		<br>
-		<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
+		<div id="progressInfo" style="display:none;">
+			<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+			<h3 id="status"></h3>
+			<p id="loaded_n_total"></p>
+		</div>
 	</form>
+	<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
+
 		<br>&nbsp;
 		<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
@@ -264,13 +156,11 @@ if(null == $user_provider) {
 					} else {
 						var latitude = exifLat[0] + (( (exifLat[1]*60) + exifLat[2] ) / 3600);
 					}
-					// console.log(latitude);
 
 					if (exifLongRef == "W") {
 						var longitude = (exifLong[0]*-1) + (( (exifLong[1]*-60) + (exifLong[2]*-1) ) / 3600);											} else {
 						var longitude = exifLong[0] + (( (exifLong[1]*60) + exifLong[2] ) / 3600);
 					}
-					// console.log(longitude); 
 					//	Show the map
 					$('#map-hidden').show();
 					$('#latlong-hidden').show();
@@ -383,7 +273,58 @@ if(null == $user_provider) {
 		$('#submitButton').on('click', function() {
 			$('#submitButton').prop( "disabled", true );
 			$('#submitButton').prop( "value", "Uploading!" );
+			uploadFile();
 		});
+		
+		function _(el) {
+			return document.getElementById(el);
+		}
+		
+		function uploadFile() {
+			_("progressInfo").style.display = "block";
+
+			var formdata = new FormData();
+			formdata.append("userfile1",    _("photoFile1").files[0]);
+			formdata.append("userfile2",    _("photoFile2").files[0]);
+			formdata.append("userfile3",    _("photoFile3").files[0]);
+			formdata.append("userfile4",    _("photoFile4").files[0]);
+			formdata.append("inscription",  _("inscription").value);
+			formdata.append("newLongitude", _("newLongitude").value);
+			formdata.append("newLatitude",  _("newLatitude").value);
+			
+			var ajax = new XMLHttpRequest();
+			ajax.upload.addEventListener("progress", progressHandler);
+			ajax.addEventListener("load",  completeHandler);
+			ajax.addEventListener("error", errorHandler);
+			ajax.addEventListener("abort", abortHandler);
+			ajax.open("POST", "/upload.php");
+			ajax.send(formdata);
+		}
+
+		function progressHandler(event) {
+			_("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+			var percent = (event.loaded / event.total) * 100;
+			_("progressBar").value = Math.round(percent);
+			_("status").innerHTML  = Math.round(percent) + "% uploaded... please wait";
+		}
+
+		function completeHandler(event) {
+			var reply = event.target.responseText;
+			if (isNaN(reply)) {
+				_("status").innerHTML = reply;
+			} else {
+				_("status").innerHTML = "Upload complete. Redirecting you.";
+				window.location.replace("/bench/"+reply);
+			}
+		}
+
+		function errorHandler(event) {
+			_("status").innerHTML = "Upload Failed";
+		}
+
+		function abortHandler(event) {
+			_("status").innerHTML = "Upload Aborted";
+		}
 	</script>
 <?php
 	include("footer.php");

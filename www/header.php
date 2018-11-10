@@ -67,6 +67,7 @@ if($benchID != null && !$published) {
 	<meta                            property="place:location:latitude"  content="<?php echo $benchLat;  ?>">
 	<meta                            property="place:location:longitude" content="<?php echo $benchLong; ?>">
 	<meta                            property="og:rich_attachment"       content="true">
+	<meta                            property="fb:app_id"                content="<?php echo FACEBOOK_APP_ID; ?>" />
 
 	<!-- https://developers.google.com/search/docs/data-types/sitelinks-searchbox -->
 	<script type="application/ld+json">
