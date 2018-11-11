@@ -22,7 +22,7 @@ if(null == $user_provider) {
 <?php
 	echo $error_message;
 ?>
-	<form id="fileform" action="/add.php" enctype="multipart/form-data" method="post" onsubmit="true;">
+	<form id="fileform" action="/upload.php" enctype="multipart/form-data" method="post" onsubmit="true;">
 		<h3>Add A Bench</h3>
 		<p>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
 		You can edit the text and add more photos before saving.<br>
@@ -50,8 +50,7 @@ if(null == $user_provider) {
 			<div id='map' class="hand-drawn" ></div>
 		</div>
 		<div id="latlong-hidden" style="clear:both;display: none;">
-			<input type="text"   id="coordinates"  value="" disabled="true" />
-			<!-- <a href="#">Reset</a> -->
+			<input type="text"   id="coordinates"                      value="" disabled="true" />
 			<input type="hidden" id="newLongitude" name="newLongitude" value=""/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value=""/>
 		</div>&nbsp;
@@ -89,11 +88,12 @@ if(null == $user_provider) {
 			</fieldset>
 		</div>
 		<br>
-		<div id="progressInfo" style="display:none;">
+		<fieldset id="progressInfo" style="display:none;">
+			<legend>Upload progress</legend>
 			<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
 			<h3 id="status"></h3>
 			<p id="loaded_n_total"></p>
-		</div>
+		</fieldset>
 	</form>
 	<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
 
@@ -110,8 +110,8 @@ if(null == $user_provider) {
 		var previewWidth = 800;
 		var map = null;
 
-		document.getElementById('photoFile1').onchange = function (e) {
-			var preview1 = document.getElementById("photoPreview1");
+		$("#photoFile1").onchange = function (e) {
+			var preview1 = $("#photoPreview1");
 			//	If a photo was added already, remove it.
 			while (preview1.hasChildNodes()) {
 				preview1.removeChild(preview1.lastChild);
@@ -125,7 +125,7 @@ if(null == $user_provider) {
 				{ maxWidth: previewWidth, canvas: true}
 			);
 			if (!loadingImage) {}
-			document.getElementById('photo2').style.display = "block";
+			$("#photo2").style.display = "block";
 
 			//	Check for GPS data
 			var exifdata = loadImage.parseMetaData(
@@ -162,8 +162,8 @@ if(null == $user_provider) {
 						var longitude = exifLong[0] + (( (exifLong[1]*60) + exifLong[2] ) / 3600);
 					}
 					//	Show the map
-					$('#map-hidden').show();
-					$('#latlong-hidden').show();
+					$("#map-hidden").show();
+					$("#latlong-hidden").show();
 
 					var attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 						'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -200,25 +200,24 @@ if(null == $user_provider) {
 
 					var marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
 
-					var coordinates = document.getElementById('coordinates');
-					var newLatitude = document.getElementById('newLatitude');
-					var newLongitude = document.getElementById('newLongitude');
-					coordinates.value = latitude.toPrecision(7) + ',' + longitude.toPrecision(7);
+					var coordinates  = $("#coordinates");
+					var newLatitude  = $("#newLatitude");
+					var newLongitude = $("#newLongitude");
+					coordinates.value  = latitude.toPrecision(7) + ',' + longitude.toPrecision(7);
 					newLongitude.value = longitude;
-					newLatitude.value =  latitude;
-										marker.on('dragend', function(event){
+					newLatitude.value  = latitude;
+					marker.on('dragend', function(event){
 						newLat =  event.target._latlng.lat.toPrecision(7);
 						newLong = event.target._latlng.lng.toPrecision(7);
-						coordinates.value = newLat + ',' + newLong;
+						coordinates.value  = newLat + ',' + newLong;
 						newLongitude.value = newLong;
-						newLatitude.value =  newLat;
+						newLatitude.value  =  newLat;
 					});
-
 				}
 			);
 		};
-		document.getElementById("photoFile2").onchange = function (e) {
-			var preview2 = document.getElementById("photoPreview2");
+		$("#photoFile2").onchange = function (e) {
+			var preview2 = $("#photoPreview2");
 			//	If a photo was added already, remove it.
 			while (preview2.hasChildNodes()) {
 				preview2.removeChild(preview2.lastChild);
@@ -233,10 +232,10 @@ if(null == $user_provider) {
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
-			document.getElementById('photo3').style.display = "block";
+			$("#photo3").style.display = "block";
 		}
-		document.getElementById("photoFile3").onchange = function (e) {
-			var preview3 = document.getElementById("photoPreview3");
+		$("#photoFile3").onchange = function (e) {
+			var preview3 = $("#photoPreview3");
 			//	If a photo was added already, remove it.
 			while (preview3.hasChildNodes()) {
 				preview3.removeChild(preview3.lastChild);
@@ -251,10 +250,10 @@ if(null == $user_provider) {
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
-			document.getElementById('photo4').style.display = "block";
+			$("#photo4").style.display = "block";
 		}
-		document.getElementById("photoFile4").onchange = function (e) {
-			var preview4 = document.getElementById("photoPreview4");
+		$("#photoFile4").onchange = function (e) {
+			var preview4 = $("#photoPreview4");
 			//	If a photo was added already, remove it.
 			while (preview4.hasChildNodes()) {
 				preview4.removeChild(preview4.lastChild);
@@ -270,27 +269,23 @@ if(null == $user_provider) {
 			if (!loadingImage) {}
 		}
 		//	Disable button once clicked & let user know that the media are being uploaded
-		$('#submitButton').on('click', function() {
-			$('#submitButton').prop( "disabled", true );
-			$('#submitButton').prop( "value", "Uploading!" );
+		$("#submitButton").on('click', function() {
+			$("#submitButton").prop( "disabled", true );
+			$("#submitButton").prop( "value", "Uploading!" );
 			uploadFile();
 		});
 		
-		function _(el) {
-			return document.getElementById(el);
-		}
-		
 		function uploadFile() {
-			_("progressInfo").style.display = "block";
+			$("#progressInfo").style.display = "block";
 
 			var formdata = new FormData();
-			formdata.append("userfile1",    _("photoFile1").files[0]);
-			formdata.append("userfile2",    _("photoFile2").files[0]);
-			formdata.append("userfile3",    _("photoFile3").files[0]);
-			formdata.append("userfile4",    _("photoFile4").files[0]);
-			formdata.append("inscription",  _("inscription").value);
-			formdata.append("newLongitude", _("newLongitude").value);
-			formdata.append("newLatitude",  _("newLatitude").value);
+			formdata.append("userfile1",    $("#photoFile1").files[0]);
+			formdata.append("userfile2",    $("#photoFile2").files[0]);
+			formdata.append("userfile3",    $("#photoFile3").files[0]);
+			formdata.append("userfile4",    $("#photoFile4").files[0]);
+			formdata.append("inscription",  $("#inscription").value);
+			formdata.append("newLongitude", $("#newLongitude").value);
+			formdata.append("newLatitude",  $("#newLatitude").value);
 			
 			var ajax = new XMLHttpRequest();
 			ajax.upload.addEventListener("progress", progressHandler);
@@ -302,28 +297,28 @@ if(null == $user_provider) {
 		}
 
 		function progressHandler(event) {
-			_("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+			$("#loaded_n_total").innerHTML = "Uploaded " + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString();
 			var percent = (event.loaded / event.total) * 100;
-			_("progressBar").value = Math.round(percent);
-			_("status").innerHTML  = Math.round(percent) + "% uploaded... please wait";
+			$("#progressBar").value = Math.round(percent);
+			$("#status").innerHTML  = Math.round(percent) + "% uploaded... please wait";
 		}
 
 		function completeHandler(event) {
 			var reply = event.target.responseText;
 			if (isNaN(reply)) {
-				_("status").innerHTML = reply;
+				$("#status").innerHTML = reply;
 			} else {
-				_("status").innerHTML = "Upload complete. Redirecting you.";
+				$("#status").innerHTML = "Upload complete. Redirecting you.";
 				window.location.replace("/bench/"+reply);
 			}
 		}
 
 		function errorHandler(event) {
-			_("status").innerHTML = "Upload Failed";
+			$("#status").innerHTML = "Upload Failed";
 		}
 
 		function abortHandler(event) {
-			_("status").innerHTML = "Upload Aborted";
+			$("#status").innerHTML = "Upload Aborted";
 		}
 	</script>
 <?php
