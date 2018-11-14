@@ -38,6 +38,9 @@ function get_twitter_details(){
 }
 
 function get_user_details($raw = true) {
+	if (null == AUTH0_DOMAIN) {
+		return null;
+	}
 	$auth0 = new Auth0([
 		'domain' =>        AUTH0_DOMAIN,
 		'client_id' =>     AUTH0_CLIENT_ID,
