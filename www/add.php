@@ -286,8 +286,8 @@ if(null == $user_provider) {
 			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
 			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
 			formdata.append("inscription",  $("#inscription").val());
-			formdata.append("newLongitude", $("#newLongitude").val();
-			formdata.append("newLatitude",  $("#newLatitude").val();
+			formdata.append("newLongitude", $("#newLongitude").val());
+			formdata.append("newLatitude",  $("#newLatitude").val());
 			//	Send the file
 			var ajax = new XMLHttpRequest();
 			ajax.upload.addEventListener("progress", progressHandler);
@@ -299,10 +299,14 @@ if(null == $user_provider) {
 		}
 
 		function progressHandler(event) {
-			$("#loaded_n_total").html("Uploaded " + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString());
+			$("#loaded_n_total").html("Uploaded <pre>" + event.loaded.toLocaleString() + "</pre> bytes of <pre>" + event.total.toLocaleString() + "</pre>");
 			var percent = (event.loaded / event.total) * 100;
 			$("#progressBar").val(Math.round(percent));
 			$("#status").html(Math.round(percent) + "% uploaded");
+			
+			if (100 == Math.round(percent)) {
+				$("#status").html("Upload complete. Redirecting you.");
+			}
 		}
 
 		function completeHandler(event) {
@@ -310,7 +314,7 @@ if(null == $user_provider) {
 			if (isNaN(reply)) {
 				$("#status").html(reply);
 			} else {
-				$("#status").html("Upload complete. Redirecting you.");
+				$("#status").html("Redirecting you.");
 				window.location.replace("/bench/"+reply);
 			}
 		}
