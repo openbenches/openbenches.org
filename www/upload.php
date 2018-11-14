@@ -28,7 +28,7 @@ if ($_FILES['userfile1']['tmp_name'])
 	if (duplicate_file($filename))
 	{
 		$error_filename = $_FILES['userfile1']['name'];
-		$error_message .= "{$error_filename} already exists in the database";
+		$error_message .= "{$error_filename} already exists in the database.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
 	} else {
 		//	Does the first file have a GPS location?
 		$location = get_image_location($filename);
@@ -110,11 +110,11 @@ if ($_FILES['userfile1']['tmp_name'])
 
 			die();
 		} else {
-			$error_message .= "No location metadata found in image";
+			$error_message .= "No location metadata found in image.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
 		}
 	}
 } else {
-	$error_message .= "Ooops! Looks like you didn't add a photo";
+	$error_message .= "Ooops! Looks like you didn't add a photo.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
 	$response["error"] = $error_message;
 }
 

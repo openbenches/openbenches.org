@@ -110,8 +110,8 @@ if(null == $user_provider) {
 		var previewWidth = 800;
 		var map = null;
 
-		$("#photoFile1").onchange = function (e) {
-			var preview1 = $("#photoPreview1");
+		document.getElementById("photoFile1").onchange = function (e) {
+			var preview1 = document.getElementById("photoPreview1");
 			//	If a photo was added already, remove it.
 			while (preview1.hasChildNodes()) {
 				preview1.removeChild(preview1.lastChild);
@@ -125,8 +125,7 @@ if(null == $user_provider) {
 				{ maxWidth: previewWidth, canvas: true}
 			);
 			if (!loadingImage) {}
-			$("#photo2").style.display = "block";
-
+			$("#photo2").show();
 			//	Check for GPS data
 			var exifdata = loadImage.parseMetaData(
 				e.target.files[0],
@@ -200,12 +199,14 @@ if(null == $user_provider) {
 
 					var marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
 
-					var coordinates  = $("#coordinates");
-					var newLatitude  = $("#newLatitude");
-					var newLongitude = $("#newLongitude");
+					//	Get the coordinates to add to map
+					var coordinates  = document.getElementById("coordinates");
+					var newLatitude  = document.getElementById("newLatitude");
+					var newLongitude = document.getElementById("newLongitude");
 					coordinates.value  = latitude.toPrecision(7) + ',' + longitude.toPrecision(7);
 					newLongitude.value = longitude;
 					newLatitude.value  = latitude;
+					//	If the marker is dragged, update the coordinates
 					marker.on('dragend', function(event){
 						newLat =  event.target._latlng.lat.toPrecision(7);
 						newLong = event.target._latlng.lng.toPrecision(7);
@@ -216,8 +217,8 @@ if(null == $user_provider) {
 				}
 			);
 		};
-		$("#photoFile2").onchange = function (e) {
-			var preview2 = $("#photoPreview2");
+		document.getElementById("photoFile2").onchange = function (e) {
+			var preview2 = document.getElementById("photoPreview2");
 			//	If a photo was added already, remove it.
 			while (preview2.hasChildNodes()) {
 				preview2.removeChild(preview2.lastChild);
@@ -232,10 +233,10 @@ if(null == $user_provider) {
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
-			$("#photo3").style.display = "block";
+			document.getElementById("photo3").style.display = "block";
 		}
-		$("#photoFile3").onchange = function (e) {
-			var preview3 = $("#photoPreview3");
+		document.getElementById("photoFile3").onchange = function (e) {
+			var preview3 = document.getElementById("photoPreview3");
 			//	If a photo was added already, remove it.
 			while (preview3.hasChildNodes()) {
 				preview3.removeChild(preview3.lastChild);
@@ -250,10 +251,10 @@ if(null == $user_provider) {
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
-			$("#photo4").style.display = "block";
+			document.getElementById("photo4").style.display = "block";
 		}
-		$("#photoFile4").onchange = function (e) {
-			var preview4 = $("#photoPreview4");
+		document.getElementById("photoFile4").onchange = function (e) {
+			var preview4 = document.getElementById("photoPreview4");
 			//	If a photo was added already, remove it.
 			while (preview4.hasChildNodes()) {
 				preview4.removeChild(preview4.lastChild);
@@ -271,22 +272,23 @@ if(null == $user_provider) {
 		//	Disable button once clicked & let user know that the media are being uploaded
 		$("#submitButton").on('click', function() {
 			$("#submitButton").prop( "disabled", true );
-			$("#submitButton").prop( "value", "Uploading!" );
+			$("#submitButton").prop( "value",   "Uploading!" );
 			uploadFile();
 		});
 		
 		function uploadFile() {
-			$("#progressInfo").style.display = "block";
-
+			//	Show the progress bar
+			$("#progressInfo").show();
+			//	Prepare the data
 			var formdata = new FormData();
-			formdata.append("userfile1",    $("#photoFile1").files[0]);
-			formdata.append("userfile2",    $("#photoFile2").files[0]);
-			formdata.append("userfile3",    $("#photoFile3").files[0]);
-			formdata.append("userfile4",    $("#photoFile4").files[0]);
-			formdata.append("inscription",  $("#inscription").value);
-			formdata.append("newLongitude", $("#newLongitude").value);
-			formdata.append("newLatitude",  $("#newLatitude").value);
-			
+			formdata.append("userfile1",    $("#photoFile1").prop('files')[0]);
+			formdata.append("userfile2",    $("#photoFile2").prop('files')[0]);
+			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
+			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
+			formdata.append("inscription",  $("#inscription").val());
+			formdata.append("newLongitude", $("#newLongitude").val();
+			formdata.append("newLatitude",  $("#newLatitude").val();
+			//	Send the file
 			var ajax = new XMLHttpRequest();
 			ajax.upload.addEventListener("progress", progressHandler);
 			ajax.addEventListener("load",  completeHandler);
@@ -297,28 +299,28 @@ if(null == $user_provider) {
 		}
 
 		function progressHandler(event) {
-			$("#loaded_n_total").innerHTML = "Uploaded " + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString();
+			$("#loaded_n_total").html("Uploaded " + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString());
 			var percent = (event.loaded / event.total) * 100;
-			$("#progressBar").value = Math.round(percent);
-			$("#status").innerHTML  = Math.round(percent) + "% uploaded... please wait";
+			$("#progressBar").val(Math.round(percent));
+			$("#status").html(Math.round(percent) + "% uploaded");
 		}
 
 		function completeHandler(event) {
 			var reply = event.target.responseText;
 			if (isNaN(reply)) {
-				$("#status").innerHTML = reply;
+				$("#status").html(reply);
 			} else {
-				$("#status").innerHTML = "Upload complete. Redirecting you.";
+				$("#status").html("Upload complete. Redirecting you.");
 				window.location.replace("/bench/"+reply);
 			}
 		}
 
 		function errorHandler(event) {
-			$("#status").innerHTML = "Upload Failed";
+			$("#status").html("Upload Failed");
 		}
 
 		function abortHandler(event) {
-			$("#status").innerHTML = "Upload Aborted";
+			$("#status").html("Upload Aborted");
 		}
 	</script>
 <?php
