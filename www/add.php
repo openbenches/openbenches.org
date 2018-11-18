@@ -282,9 +282,17 @@ if(null == $user_provider) {
 			//	Prepare the data
 			var formdata = new FormData();
 			formdata.append("userfile1",    $("#photoFile1").prop('files')[0]);
+			formdata.append("media_type1",  $("#media_type1").val());
+			
 			formdata.append("userfile2",    $("#photoFile2").prop('files')[0]);
+			formdata.append("media_type2",  $("#media_type2").val());
+			
 			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
+			formdata.append("media_type3",  $("#media_type3").val());
+			
 			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
+			formdata.append("media_type3",  $("#media_type4").val());
+			
 			formdata.append("inscription",  $("#inscription").val());
 			formdata.append("newLongitude", $("#newLongitude").val());
 			formdata.append("newLatitude",  $("#newLatitude").val());

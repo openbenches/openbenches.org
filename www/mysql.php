@@ -729,7 +729,7 @@ function get_media_types_html($name = "") {
 	/* bind result variables */
 	$get_media->bind_result($shortName, $longName);
 
-	$html = "<select name='media_type{$name}'>";
+	$html = "<select name='media_type{$name}' id='media_type{$name}'>";
 
 	$count = 1;
 
