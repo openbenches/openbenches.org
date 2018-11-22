@@ -291,7 +291,7 @@ if(null == $user_provider) {
 			formdata.append("media_type3",  $("#media_type3").val());
 			
 			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
-			formdata.append("media_type3",  $("#media_type4").val());
+			formdata.append("media_type4",  $("#media_type4").val());
 			
 			formdata.append("inscription",  $("#inscription").val());
 			formdata.append("newLongitude", $("#newLongitude").val());
