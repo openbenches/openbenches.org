@@ -27,5 +27,8 @@ $auth0_logout = $auth0_api->get_logout_link(
     AUTH0_CLIENT_ID
 );
 
+//	Destroy any remaining edit sessions
+unset($_SESSION['edit_bench_id']);
+
 header('Location: ' . $auth0_logout);
 exit;

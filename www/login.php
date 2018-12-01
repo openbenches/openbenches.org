@@ -1,4 +1,10 @@
 <?php
+//	No cache for this page. Prevents authentication errors. Hopefully.
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+?>
+<?php
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
