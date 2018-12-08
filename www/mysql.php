@@ -902,7 +902,7 @@ function get_user_map($userID)
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		{$where}
-		LIMIT 0 , 10000");
+		LIMIT 0 , 20000");
 
 	$get_benches->bind_param('i', $id);
 	$get_benches->execute();
