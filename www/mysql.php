@@ -368,7 +368,10 @@ function get_image($benchID, $full = false)
 		} else {
 			$imageLink = "/bench/{$benchID}";
 		}
-		$html .= "<a href='{$imageLink}'><img src='/image/{$sha1}/600' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
+		
+		$image_prefix = IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'];
+		
+		$html .= "<a href='{$imageLink}'><img src='{$image_prefix}/image/{$sha1}' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
@@ -399,6 +402,8 @@ function get_image_html($benchID, $full = true)
 	$get_media->execute();
 	/* bind result variables */
 	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
+
+	$image_prefix = IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'];
 
 	$html = '';
 
@@ -450,8 +455,9 @@ function get_image_html($benchID, $full = true)
 			$panorama = "/libs/pannellum.2.4.1/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
+	
 			$html .= "<a href='{$link}'>
-						 	<img src='/image/{$sha1}/600' class='proxy-image' alt='{$alt}' />
+							<img src='{$image_prefix}/image/{$sha1}' class='proxy-image' alt='{$alt}' />
 						</a>";
 		}
 		

@@ -41,3 +41,6 @@ define('AUTH0_LOGOUT_RETURN_URL','');
 //	For sharing on Facebook
 define('FACEBOOK_APP_ID', '');
 
+//	Image Cacheing and resizing - using https://cloudimg.io/ or other similar CDN
+define('IMAGE_CACHE_PREFIX', '');
+
