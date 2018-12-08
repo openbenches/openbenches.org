@@ -945,6 +945,33 @@ function get_user_map($userID)
 	return $geojson;
 }
 
+function merge_benches($originalID, $duplicateID) {
+	global $mysqli;
+
+	//	Unpublish duplicate bench
+	$merge_two_benches = $mysqli->prepare(
+		"UPDATE `benches` SET `published` = '0' WHERE `benches`.`benchID` = ?;");
+	$merge_two_benches->bind_param('i', $duplicateID);
+	$merge_two_benches->execute();
+	$merge_two_benches->close();
+
+	//	Redirect duplicate bench
+	$merge_two_benches = $mysqli->prepare(
+		"INSERT INTO `merged_benches` (`benchID`, `mergedID`) VALUES (?, ?);");
+	$merge_two_benches->bind_param('ii', $duplicateID, $originalID);
+	$merge_two_benches->execute();
+	$merge_two_benches->close();
+
+	//	Merge photos
+	$merge_two_benches = $mysqli->prepare(
+		"UPDATE `media` SET `benchID` = ? WHERE `media`.`benchID` = ?;");
+	$merge_two_benches->bind_param('ii', $originalID, $duplicateID);
+	$merge_two_benches->execute();
+	$merge_two_benches->close();
+
+	return true;
+}
+
 function get_merged_bench($benchID) {
 	global $mysqli;
 	$get_merge_from_bench = $mysqli->prepare(
