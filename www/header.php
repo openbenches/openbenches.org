@@ -3,34 +3,45 @@ require_once ('config.php');
 require_once ('mysql.php');
 require_once ('functions.php');
 
-$benchID = $params[2];
-
-if($benchID != null){
-	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
-	$benchImage = get_image_url($benchID) . "/640";
-} else if ($_POST["random"]) {
+//	Random bench?
+if ($_POST["random"]) {
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_random_bench();
 	header('Cache-Control: no-store, must-revalidate');
 	header('Expires: 0');
 	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}/",TRUE,302);
-} else {
-	$benchInscription = "Welcome to OpenBenches";
-	$benchImage = "/android-chrome-512x512.png";
+	die();
 }
 
-//	Unpublished benches
-if($benchID != null && !$published) {
-	//	Has it been merged?
-	$mergedID = get_merged_bench($benchID);
-	if (null == $mergedID) {
-		//	Nope! Just deleted.  Include 404 content at the end of this page.
-		header("HTTP/1.1 404 Not Found");
-	} else {
-		//	Yup! Where does it live now?
-		header("Location: /bench/{$mergedID}",TRUE,301);
-		die();
+$page = strtolower($params[1]);
+$benchInscription = "Welcome to OpenBenches";
+$benchImage = "/android-chrome-512x512.png";
+
+if ("bench" == $page) {
+	$benchID = $params[2];
+
+	if($benchID != null){
+		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
+		$benchImage = get_image_url($benchID) . "/640";
 	}
+
+	//	Unpublished benches
+	if($benchID != null && !$published) {
+		//	Has it been merged?
+		$mergedID = get_merged_bench($benchID);
+		if (null == $mergedID) {
+			//	Nope! Just deleted.  Include 404 content at the end of this page.
+			header("HTTP/1.1 404 Not Found");
+		} else {
+			//	Yup! Where does it live now?
+			header("Location: /bench/{$mergedID}",TRUE,301);
+			die();
+		}
+	}
+} 
+if ("user" == $page) {
+	//	Handled in user.php
 }
+
 
 ?><!DOCTYPE html>
 <html lang="en-GB">
@@ -105,7 +116,7 @@ if($benchID != null && !$published) {
 				     alt="[logo]: a bird flies above a bench">Open<wbr>Benches</a></h1>
 <?php 
 //	Unpublished benches
-if($benchID != null && !$published) {
+if("bench" == $page && $benchID != null && !$published) {
 	include("404.php");
 	die();
 }
