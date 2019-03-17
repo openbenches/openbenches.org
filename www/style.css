@@ -82,7 +82,8 @@ button, input {
 }
 
 #search-results li {
-	margin: 1em 0;
+	margin-bottom: 1em;
+	display: inline-block;
 }
 
 .search-thumb {
