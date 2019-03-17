@@ -75,8 +75,19 @@ button, input {
 	text-align: left;
 }
 
+#search-results ul {
+	margin: 1em 0;
+	list-style: none;
+	padding-left: 0;
+}
+
 #search-results li {
 	margin: 1em 0;
+}
+
+.search-thumb {
+	float: left;
+	padding-right: 1em;
 }
 
 #header-image {

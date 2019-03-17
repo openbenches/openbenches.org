@@ -43,4 +43,6 @@ define('FACEBOOK_APP_ID', '');
 
 //	Image Cacheing and resizing - using https://cloudimg.io/ or other similar CDN
 define('IMAGE_CACHE_PREFIX', '');
-
+define('IMAGE_DEFAULT_SIZE',   '600');
+define('IMAGE_THUMB_SIZE',      '60');
+define('IMAGE_DEFAULT_FILTER','webp');

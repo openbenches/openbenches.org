@@ -369,7 +369,7 @@ function get_image($benchID, $full = false)
 			$imageLink = "/bench/{$benchID}";
 		}
 		
-		$image_prefix = IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'];
+		$image_prefix = get_image_cache();
 		
 		$html .= "<a href='{$imageLink}'><img src='{$image_prefix}/image/{$sha1}' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
@@ -403,7 +403,7 @@ function get_image_html($benchID, $full = true)
 	/* bind result variables */
 	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
 
-	$image_prefix = IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'];
+	$image_prefix = get_image_cache();
 
 	$html = '';
 
@@ -477,6 +477,35 @@ function get_image_html($benchID, $full = true)
 	
 	$get_media->close();
 	return $html;
+}
+
+function get_image_thumb($benchID, $size = "60")
+{
+	global $mysqli;
+
+	$get_media = $mysqli->prepare(
+		"SELECT sha1 FROM media
+		WHERE benchID = ?
+		LIMIT 0 , 1");
+
+	$get_media->bind_param('i',  $benchID );
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($sha1);
+
+	$thumb = "";
+
+	# Loop through rows to build feature arrays
+	while($get_media->fetch()) {
+		$get_media->close();
+		
+		$image_prefix = get_image_cache(60);
+		
+		$thumb = "{$image_prefix}/image/{$sha1}";
+		break;
+	}
+
+	return $thumb;
 }
 
 function get_all_media($benchID = 0)

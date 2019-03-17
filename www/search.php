@@ -19,7 +19,9 @@ if (null != $query)
 
 	$resultsHTML = "<ul>";
 	foreach ($results as $key => $value) {
-		$resultsHTML .= "<li><a href='/bench/{$key}'>{$value}</a></li>";
+		$thumb = get_image_thumb($key);
+		$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\">";
+		$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a></li>";
 	}
 	$resultsHTML .="</ul>";
 
