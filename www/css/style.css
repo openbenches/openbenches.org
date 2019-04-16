@@ -56,6 +56,7 @@ fieldset {
 
 .search {
 	width: 40em;
+	max-width: 95%;
 }
 
 #search-results {
@@ -201,5 +202,5 @@ a[rel*="license"] {
 }
 
 #cc-by-sa-logo {
-	height: 2em;
+	height: 1.5em;
 }

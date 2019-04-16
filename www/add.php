@@ -31,8 +31,8 @@ if(null == $user_provider) {
 				<legend>Geotagged Photo</legend>
 				<label class="dropimage">
 					<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
-					<div id="photoPreview1" style="display: none;"></div>
 				</label>
+				<div id="photoPreview1" style="display: none;"></div>
 				<label for="media_type1">This photo is a:</label>
 				<?php
 					echo get_media_types_html("1");
