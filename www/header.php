@@ -96,10 +96,8 @@ if ("user" == $page) {
 	
 	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
 
-	<link rel="stylesheet" href="/libs/normalize.8.0.0/normalize.min.css">
-
-	<link rel="stylesheet" href="/css/style.css?cache=2019-04-16T11:33"/>
-	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-16T11:33"/>
+	<link rel="stylesheet" href="/css/style.css?cache=2019-04-16T11:36"/>
+	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-16T11:36"/>
 
 	<link rel="stylesheet" href="/libs/leaflet.1.3.4/leaflet.css" />
 	<script src="/libs/leaflet.1.3.4/leaflet.js"></script>

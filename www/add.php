@@ -12,7 +12,7 @@ include("header.php");
 [$user_provider, $user_providerID, $user_name] = get_user_details();
 
 if(null == $user_provider) {
-	$login_html = "<a href='/login/'>Sign in</a> - or be <strong>anonymous</strong>.";
+	$login_html = "<a href='/login/' class='button'>👤 Sign in</a> or be <strong>anonymous</strong>.";
 	} else {
 	$login_html = "You are logged in as \"{$user_name}\" from " . ucfirst($user_provider);
 }
@@ -23,16 +23,16 @@ if(null == $user_provider) {
 	echo $error_message;
 ?>
 	<form id="fileform" action="/upload.php" enctype="multipart/form-data" method="post" onsubmit="true;">
-		<h3>Add A Bench</h3>
 		<p>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
-		You can edit the text and add more photos before saving.<br>
 		The photo <em>must</em> have GPS information included.<br></p>
 
 		<div id="photo1" class="photo-group" style="display: block;">
 			<fieldset>
 				<legend>Geotagged Photo</legend>
-				<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
-				<div id="photoPreview1" style="display: none;"></div>
+				<label class="dropimage">
+					<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
+					<div id="photoPreview1" style="display: none;"></div>
+				</label>
 				<label for="media_type1">This photo is a:</label>
 				<?php
 					echo get_media_types_html("1");
@@ -97,7 +97,6 @@ if(null == $user_provider) {
 	</form>
 	<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
 
-		<br>&nbsp;
 		<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.

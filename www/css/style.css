@@ -7,7 +7,7 @@
 }
 
 body {
-	font-family: 'varela_roundregular', sans-serif;
+	font-family: 'varela_roundregular', sans-serif !important;
 	font-size: 1.25em;
 	margin: 1em;
 	background-color: #F1F3F4;
@@ -40,6 +40,8 @@ fieldset {
 	width: 0;
 	text-align: left;
 	margin: auto;
+	min-width: 20em;
+	max-width: 95%;
 }
 
 
@@ -107,7 +109,7 @@ a {
 }
 
 hr {
-	margin: 1em;
+	/* margin: 1em; */
 }
 
 .leaflet-control-layers-base{
@@ -155,7 +157,7 @@ input[type="file"] {
 }
 
 small {
-	font-size: 0.8rem;
+	padding: 1em;
 }
 
 #leaderboard-results {
@@ -196,4 +198,8 @@ small {
 
 a[rel*="license"] {
 	text-decoration: none;
+}
+
+#cc-by-sa-logo {
+	height: 2em;
 }
