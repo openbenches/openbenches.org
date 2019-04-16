@@ -27,7 +27,7 @@ canvas {
 	z-index: 1;
 	margin-left: auto;
 	margin-right: auto;
-	border: 0.1rem solid #191E20;
+	border-radius: 2em;
 	word-wrap: normal;
 }
 
@@ -42,17 +42,7 @@ fieldset {
 	margin: auto;
 }
 
-.hand-drawn {
-	color: #F0F3F4;
-	background-color:#107895;
-	padding: 0.5em;
-	border-radius: .75em;
-	text-decoration: none;
-	line-height: 2.5em;
-	border: none;
-	cursor: pointer;
-	white-space: nowrap;
-}
+
 
 .button-bar {
 	margin-bottom: 0.5em;
@@ -62,12 +52,8 @@ fieldset {
 	display: inline;
 }
 
-button, input {
-	line-height: 1em !important;
-}
-
 .search {
-	margin-bottom: 0.5em;
+	width: 40em;
 }
 
 #search-results {

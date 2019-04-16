@@ -5,8 +5,8 @@
 ?>
 </hgroup>
 <div class="button-bar">
-	<a href="/add/" class="hand-drawn">Add bench</a>
-	<span class="hand-drawn" onclick="geoFindMe()" id="gpsButton">Show benches near me</span>
+	<a href="/add/" class="button"><strong>+</strong> Add bench</a>
+	<span class="button" onclick="geoFindMe()" id="gpsButton">📍 benches near me</span>
 </div>
 
 	<div>
@@ -18,18 +18,17 @@
 		<?php
 			echo $error_message;
 		?>
-		<h2>Search for an inscription</h2>
 		<div>
-			<input type="search" class="search" id="inscription" name="search" value="<?php echo htmlspecialchars($query); ?>">
-			<input type="submit" class="hand-drawn" value="Search inscriptions" />
+			<input type="search" class="search" id="inscription" name="search" placeholder="in loving memory of" value="<?php echo htmlspecialchars($query); ?>">
+			<input type="submit" class="button" value="🔎 Search inscriptions" />
 		</div>
 		<br>
 	</form>
 	<div class="button-bar">
 		<form action="/bench/" method="post">
 			<input id="random" name="random" value="random" type="hidden" />
-			<input type="submit" class="hand-drawn" value="Show me a random bench" />
-			<a href="/add/" class="hand-drawn">Add bench</a>
+			<input type="submit" class="button" value="🔀 Random bench" />
+			<a href="/add/" class="button"><strong>+</strong> Add bench</a>
 		</form>
 	</div>
 <script src="/data.json/?truncated=true" type="text/javascript"></script>
