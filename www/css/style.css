@@ -10,10 +10,14 @@ body {
 	font-family: 'varela_roundregular', sans-serif !important;
 	font-size: 1.25em;
 	margin: 1em;
-	background-color: #F1F3F4;
+	background-color: #F1F3F4 !important;
 	color: #191E20;
 	text-align: center;
 	word-wrap: break-word;
+}
+
+h1 a{
+	color: #191E20 !important;
 }
 
 canvas {
@@ -106,7 +110,7 @@ h2 {
 }
 
 a {
-	color: #191E20;
+	color: #8C35B0 !important;
 }
 
 hr {
@@ -203,4 +207,14 @@ a[rel*="license"] {
 
 #cc-by-sa-logo {
 	height: 1.5em;
+}
+
+input[type="search"]::placeholder {
+	text-align: center;
+}
+
+/* https://picnicss.com/documentation#buttons */
+.buttonColour {
+	background: #8C35B0 !important;
+	color: #FFF !important;
 }

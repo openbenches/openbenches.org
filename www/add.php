@@ -12,7 +12,7 @@ include("header.php");
 [$user_provider, $user_providerID, $user_name] = get_user_details();
 
 if(null == $user_provider) {
-	$login_html = "<a href='/login/' class='button'>👤 Sign in</a> or be <strong>anonymous</strong>.";
+	$login_html = "<a href='/login/' class='button buttonColour'>👤 Sign in</a> or be <strong>anonymous</strong>.";
 	} else {
 	$login_html = "You are logged in as \"{$user_name}\" from " . ucfirst($user_provider);
 }
@@ -95,7 +95,7 @@ if(null == $user_provider) {
 			<p id="loaded_n_total"></p>
 		</fieldset>
 	</form>
-	<input class="hand-drawn" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
+	<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
 
 		<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>

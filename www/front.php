@@ -5,8 +5,7 @@
 ?>
 </hgroup>
 <div class="button-bar">
-	<a href="/add/" class="button"><strong>+</strong> Add bench</a>
-	<span class="button" onclick="geoFindMe()" id="gpsButton">📍 benches near me</span>
+	<a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a>
 </div>
 
 	<div>
@@ -20,15 +19,15 @@
 		?>
 		<div>
 			<input type="search" class="search" id="inscription" name="search" placeholder="in loving memory of" value="<?php echo htmlspecialchars($query); ?>">
-			<input type="submit" class="button" value="🔎 Search inscriptions" />
+			<br>
+			<input type="submit" class="button buttonColour" value="🔎 Search inscriptions" />
 		</div>
-		<br>
 	</form>
 	<div class="button-bar">
 		<form action="/bench/" method="post">
 			<input id="random" name="random" value="random" type="hidden" />
-			<input type="submit" class="button" value="🔀 Random bench" />
-			<a href="/add/" class="button"><strong>+</strong> Add bench</a>
+			<input type="submit" class="button buttonColour" value="🔀 Random bench" />
+			<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
 		</form>
 	</div>
 <script src="/data.json/?truncated=true" type="text/javascript"></script>

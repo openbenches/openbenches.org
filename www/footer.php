@@ -1,9 +1,9 @@
 <footer>
 	<hr>
-	<a href="/" class="button">🌍 Map</a>	<a href="/blog/about/" class="button">ℹ️ About</a>
+	<a href="/blog/about/">About</a> | 
 	<span itemscope itemtype="https://schema.org/Organization">
-	  	<a itemprop="sameAs" href="https://www.twitter.com/openbenches" class="button">Twitter</a>
-	  	<a itemprop="sameAs" href="https://www.github.com/edent/openbenches" class="button">GitHub</a>
+	  	<a itemprop="sameAs" href="https://www.twitter.com/openbenches">Twitter</a> | 
+	  	<a itemprop="sameAs" href="https://www.github.com/edent/openbenches">GitHub</a>
 	</span>
 	<br>
 	<a itemprop="license"
