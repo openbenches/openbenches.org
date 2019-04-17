@@ -4,12 +4,10 @@ $URL = urlencode("https://" . $_SERVER['SERVER_NAME'] .  $_SERVER['REQUEST_URI']
 
 $facebook  = "https://www.facebook.com/sharer/sharer.php?u={$URL}";
 $twitter   = "https://twitter.com/intent/tweet?url={$URL}&via=openbenches";
-$gplus     = "https://plus.google.com/share?url={$URL}";
 $pinterest = "https://pinterest.com/pin/create/button/?url={$URL}";
 $email     = "mailto:?&body={$URL}";
 $whatsapp  = "https://api.whatsapp.com/send?text={$URL}";
 $telegram  = "https://telegram.me/share/url?url={$URL}";
-$reddit    = "https://reddit.com/submit?url={$URL}";
 ?>
 <fieldset id="sharing">
 	<legend>Share this bench</legend>
@@ -30,20 +28,12 @@ $reddit    = "https://reddit.com/submit?url={$URL}";
 		<img src="/images/svg/whatsapp.svg" class="share" alt="Share on Whatsapp"/>
 	</a>
 	
-	<a href="<?php echo $gplus; ?>" target="_blank">
-		<img src="/images/svg/google_plus.svg" class="share" alt="Share on Google Plus"/>
-	</a>
-
 	<a href="<?php echo $email; ?>" target="_blank">
 		<img src="/images/svg/gmail.svg" class="share" alt="Share on email"/>
 	</a>
 	
 	<a href="<?php echo $telegram; ?>" target="_blank">
 		<img src="/images/svg/telegram.svg" class="share" alt="Share on Telegram"/>
-	</a>
-
-	<a href="<?php echo $reddit; ?>" target="_blank">
-		<img src="/images/svg/reddit.svg" class="share" alt="Share on Reddit"/>
 	</a>
 
 </fieldset>

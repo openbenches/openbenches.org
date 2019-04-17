@@ -7,10 +7,10 @@
 }
 
 body {
-	font-family: 'varela_roundregular', sans-serif !important;
+	font-family: 'varela_roundregular', sans-serif;
 	font-size: 1.25em;
 	margin: 1em;
-	background-color: #F1F3F4 !important;
+	background-color: #F1F3F4;
 	color: #191E20;
 	text-align: center;
 	word-wrap: break-word;
@@ -18,6 +18,10 @@ body {
 
 h1 a{
 	color: #191E20 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	padding: 0;
 }
 
 canvas {
@@ -92,6 +96,7 @@ fieldset {
 .proxy-image {
 	max-width: 100%;
 	border: 0.1rem solid #191E20;
+	border-radius: 1em;
 }
 
 ol {
@@ -110,7 +115,7 @@ h2 {
 }
 
 a {
-	color: #8C35B0 !important;
+	color: #8C35B0;
 }
 
 hr {
@@ -207,6 +212,7 @@ a[rel*="license"] {
 
 #cc-by-sa-logo {
 	height: 1.5em;
+	margin-top: 0.5em;
 }
 
 input[type="search"]::placeholder {
@@ -215,6 +221,16 @@ input[type="search"]::placeholder {
 
 /* https://picnicss.com/documentation#buttons */
 .buttonColour {
-	background: #8C35B0 !important;
-	color: #FFF !important;
+	background: #8C35B0;
+	color: #FFF;
+}
+
+button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:focus, .button:focus, [type="submit"]:focus, .dropimage:focus {
+	/* Keep WCAG contrast level high enough on hover */
+	box-shadow: inset 0 0 0 99em rgba(255, 255, 255, 0.15);
+}
+
+#idc-container {
+	margin-left: auto !important;
+	margin-right: auto !important;
 }

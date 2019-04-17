@@ -37,9 +37,11 @@ if ($benchAddress == null){
 		</div>
 	</div>
 
-  <p>
-    <a class="hand-drawn" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">Show other benches near this one</a>
-  </p>
+	<div class="button-bar">
+		<a class="button buttonColour" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">🌍 Benches near this</a>
+		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
+		<a href="/edit/<?php echo $benchID; ?>" class="button buttonColour">✏️ Edit this bench</a>
+	</div>
 	<?php 
 		include("sharing.php");
 	?>
@@ -53,11 +55,7 @@ if ($benchAddress == null){
 		<span id="IDCommentsPostTitle" style="display:none"></span>
 		<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 	</div>
-
-	<div class="button-bar">
-		<a href="/add" class="hand-drawn">Add new bench</a>
-		<a href="/edit/<?php echo $benchID; ?>" class="hand-drawn">Edit this bench</a>
-	</div>
+	
 <script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
