@@ -13,7 +13,7 @@ body {
 	background-color: #F1F3F4;
 	color: #191E20;
 	text-align: center;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 h1 a{
@@ -36,7 +36,7 @@ canvas {
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 2em;
-	word-wrap: normal;
+	overflow-wrap: normal;
 }
 
 iframe{
@@ -81,6 +81,10 @@ fieldset {
 #search-results li {
 	margin-bottom: 1em;
 	display: table;
+}
+
+#search-results a {
+	color: #191E20;
 }
 
 .search-thumb {

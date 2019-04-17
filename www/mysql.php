@@ -479,7 +479,7 @@ function get_image_html($benchID, $full = true)
 	return $html;
 }
 
-function get_image_thumb($benchID, $size = "60")
+function get_image_thumb($benchID, $size = IMAGE_THUMB_SIZE)
 {
 	global $mysqli;
 
@@ -499,7 +499,7 @@ function get_image_thumb($benchID, $size = "60")
 	while($get_media->fetch()) {
 		$get_media->close();
 		
-		$image_prefix = get_image_cache(60);
+		$image_prefix = get_image_cache($size);
 		
 		$thumb = "{$image_prefix}/image/{$sha1}";
 		break;
