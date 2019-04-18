@@ -1,9 +1,10 @@
 <footer>
 	<hr>
 	<a href="/blog/about/">About</a> | 
+	<a href="/leaderboard/">Leader Board</a> | 
 	<span itemscope itemtype="https://schema.org/Organization">
-	  	<a itemprop="sameAs" href="https://www.twitter.com/openbenches">Twitter</a> | 
-	  	<a itemprop="sameAs" href="https://www.github.com/edent/openbenches">GitHub</a>
+	  	<a itemprop="sameAs" href="https://twitter.com/openbenches">Twitter</a> | 
+	  	<a itemprop="sameAs" href="https://github.com/edent/openbenches">GitHub</a>
 	</span>
 	<br>
 	<a itemprop="license"
