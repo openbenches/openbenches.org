@@ -10,7 +10,6 @@ $whatsapp  = "https://api.whatsapp.com/send?text={$URL}";
 $telegram  = "https://telegram.me/share/url?url={$URL}";
 ?>
 <fieldset id="sharing">
-	<legend>Share this bench</legend>
 	
 	<a href="<?php echo $facebook; ?>" target="_blank">
 		<img src="/images/svg/facebook.svg" class="share" alt="Share on Facebook"/>

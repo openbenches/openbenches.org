@@ -145,7 +145,7 @@ hr {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	margin: 0.45rem;
+	margin: 0.5em;
 }
 
 
@@ -156,6 +156,7 @@ hr {
 	font-size: 0.5em;
 	max-width: 590px;
 	display: inline-flex;
+	border-radius: 1em;
 }
 
 .caption a {
@@ -190,15 +191,9 @@ small {
 }
 
 #sharing {
-	margin-top: 1em;
-	margin-bottom: 1em;
-	margin-left: auto;
-	margin-right: auto;
-	width: 570px;
-	padding-left: 15px;
-	padding-right: 15px;
-	max-width: 90%;
+	width: 100%;
 	text-align: center;
+	min-width: 0;
 }
 
 .share {
@@ -227,6 +222,12 @@ input[type="search"]::placeholder {
 .buttonColour {
 	background: #8C35B0;
 	color: #FFF;
+	min-width: 12em;
+	text-shadow: .1em .1em #000;
+}
+
+.cc-icon {
+	vertical-align: middle;
 }
 
 button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:focus, .button:focus, [type="submit"]:focus, .dropimage:focus {

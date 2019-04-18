@@ -421,7 +421,7 @@ function get_image_html($benchID, $full = true)
 		if(null != $importURL) {
 			$source = "<a href='{$importURL}' rel='license'>{$licence}</a>";
 		} else {
-			$source = '<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" /></a>';
+			$source = '<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" class="cc-icon"/></a>';
 		}
 
 		//	When was the photo taken?
