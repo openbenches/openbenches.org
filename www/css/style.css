@@ -81,6 +81,7 @@ fieldset {
 #search-results li {
 	margin-bottom: 1em;
 	display: table;
+	width: 100%;
 }
 
 #search-results a {
@@ -189,7 +190,7 @@ small {
 
 .avatar {
 	vertical-align: middle;
-	padding: 0.5em;
+	padding: 0.25rem;
 	width: 2em;
 }
 

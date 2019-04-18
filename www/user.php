@@ -39,6 +39,24 @@
 			$userHTML = "Invalid User";
 		}
 	}
+
+	$results = get_user_bench_list($userID);
+
+	if (0 == count($results)){
+		$resultsHTML = "";
+		$error_message = "No results found";
+	}
+	else {
+		$resultsHTML = "<div id=\"search-results\"><ul>";
+		foreach ($results as $key => $value) {
+			$thumb = get_image_thumb($key);
+			$thumb_width = IMAGE_THUMB_SIZE;
+			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\">";
+			$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a></li>";
+		}
+		$resultsHTML .="</ul></div>";
+	}
+
 ?>
 </hgroup>
 
@@ -51,28 +69,10 @@
 <div id="search-results">
 
 	<?php
-		echo get_user_bench_list_html($userID); 
+		echo $resultsHTML; 
 	?>
 </div>
 
-<div class="button-bar">
-	<form action="/bench/" method="post">
-		<input id="random" name="random" value="random" type="hidden" />
-		<input type="submit" class="hand-drawn" value="Show me a random bench" />
-		<a href="/add/" class="hand-drawn">Add bench</a>
-	</form>
-</div>
-<br>
-<form action="/search/" enctype="multipart/form-data" method="get">
-	<?php
-		echo $error_message;
-	?>
-	<h2>Search for an inscription</h2>
-	<div>
-		<input type="search" id="inscription" name="search" class="search" value="<?php echo htmlspecialchars($query); ?>">
-		<input type="submit" class="hand-drawn" value="Search inscriptions" />
-	</div>
-</form>
 <script src="/data.json/?userID=<?php echo $userID; ?>" type="text/javascript"></script>
 
 <?php

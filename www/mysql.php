@@ -898,34 +898,37 @@ function get_leadboard_media_html() {
 	return $html .= "</ul>";
 }
 
-function get_user_bench_list_html($userID)
-{	
+function get_user_bench_list($userID)
+{
 	global $mysqli;
 	
 	$get_user_list = $mysqli->prepare(
-		"SELECT `benchID`, `inscription`
-		 FROM	`benches`
+		"SELECT `benchID`, `inscription`, `address`
+		 FROM	  `benches`
 		 WHERE  `userID` = ?
-		 AND	 `published` = 1
+		 AND	  `published` = 1
 		 LIMIT 0 , 1024");
-	$get_user_list->bind_param('i',$userID);
+	$get_user_list->bind_param('i', $userID);
 
 	$get_user_list->execute();
-	$get_user_list->bind_result($benchID, $inscription);
+	$get_user_list->bind_result($benchID, $inscription, $address);
 
-	$html = "<ul>";
+	$results = array();
 	while($get_user_list->fetch()) {
-		$inscrib = nl2br(htmlspecialchars($inscription, ENT_HTML5, "UTF-8", false));
-		$html .= "<li><a href='/bench/{$benchID}'>$inscrib</a></li>";
+		if($address != null){
+			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
+		}
+		$results[$benchID] = $inscription;
 	}
+	
 	$get_user_list->close();
-	return $html .= "</ul>";
+	return $results;
 }
 
 function get_user_map($userID)
 {	
 	global $mysqli;
-	
+
 	$where = "WHERE published = true AND userID = {$userID}";
 
 	$get_benches = $mysqli->prepare(
