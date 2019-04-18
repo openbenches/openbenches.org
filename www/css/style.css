@@ -179,7 +179,7 @@ input, select {
 }
 
 small {
-	padding: 1em;
+	/* padding: 1em; */
 }
 
 #leaderboard-results {
@@ -251,4 +251,8 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 	max-width: 20em;
 	text-align: center;
 	font-family: monospace;
+}
+
+#progressBar {
+	width: 100%;
 }

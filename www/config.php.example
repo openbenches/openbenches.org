@@ -29,6 +29,11 @@ define('EDIT_SALT', '');
 //	https://geocoder.opencagedata.com/api
 define('OPENCAGE_API_KEY', '');
 
+//	OpenStreetMap
+//	https://docs.mapbox.com/help/how-mapbox-works/access-tokens/
+define('MAPBOX_API_KEY', '');
+
+
 //	Auth0 login services
 //	https://auth0.com/
 define('AUTH0_DOMAIN',           '');

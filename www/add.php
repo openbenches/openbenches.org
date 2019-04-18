@@ -23,9 +23,10 @@ if(null == $user_provider) {
 	echo $error_message;
 ?>
 	<form id="fileform" action="/upload.php" enctype="multipart/form-data" method="post" onsubmit="true;">
-		<p>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
-		The photo <em>must</em> have GPS information included.<br></p>
-
+		<div>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
+			The photo <em>must</em> have GPS information included.
+		</div>
+		
 		<div id="photo1" class="photo-group" style="display: block;">
 			<div>
 				<label for="photoFile1">Geotagged Photo:</label>
@@ -84,12 +85,12 @@ if(null == $user_provider) {
 			</div>
 		</div>
 		<br>
-		<fieldset id="progressInfo" style="display:none;">
-			<legend>Upload progress</legend>
-			<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+		<div id="progressInfo" style="display:none;">
+			<label for="progressBar">Upload progress:<br></label>
+			<progress id="progressBar" value="0" max="100"></progress>
 			<h3 id="status"></h3>
 			<p id="loaded_n_total"></p>
-		</fieldset>
+		</div>
 	</form>
 	<div class="button-bar">
 		<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="📷 Share Bench" style="display: none;"/>
@@ -164,14 +165,14 @@ if(null == $user_provider) {
 						'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 						'Imagery © <a href="https://mapbox.com">Mapbox</a>';
 
-					var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+					var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=<?php echo MAPBOX_API_KEY; ?>', {
 						minZoom: 2,
 						maxZoom: 18,
 						attribution: attribution,
 						id: 'mapbox.light'
 					});
 
-					var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWRlbnQiLCJhIjoiY2o0dmVnZjVhMHA1MDMzcWp4YmtzcWNsbiJ9.DIgG0nrOK4bnswj2RFfLgQ', {
+					var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=<?php echo MAPBOX_API_KEY; ?>', {
 							minZoom: 2,
 							maxZoom: 18,
 							attribution: attribution,
