@@ -109,7 +109,7 @@ if ($valid) {
 	<br>
 	You can edit your inscription, change location, or add more photos if you need to.
 	<br>
-	Or <a href='/add/'>Add a new bench</a>";
+	Or <a href='/add/' class='button buttonColour'><strong>+</strong> Add a new bench</a>";
 }
 
 if($user_provider != null){
@@ -138,7 +138,7 @@ if($user_provider != null){
 			<input type="text"   id="coordinates"  value="<?php echo $benchLat; ?>,<?php echo $benchLong; ?>" disabled="true" />
 			<input type="hidden" id="newLongitude" name="newLongitude" value="<?php echo $benchLong; ?>"/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="<?php echo $benchLat;  ?>"/>
-			<input type="submit" value="Save Changes" />
+			<input type="submit" class='button buttonColour' value="💾 Save Changes" />
 		</div>&nbsp;
 
 		<div>
@@ -152,63 +152,63 @@ if($user_provider != null){
 		
 		<h3>Add more images?</h3>
 		<div id="photo1" class="photo-group" style="display: block;">
-			<fieldset>
-				<legend>Geotagged Photo</legend>
+			<div>
+				<label for="photoFile1">Geotagged Photo</legend>
 				<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
 				<div id="photoPreview1" style="display: none;"></div>
+			</div>
+			<div
 				<label for="media_type1">This photo is a:</label>
-				<?php
-					echo get_media_types_html("1");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("1"); ?>
+			</div>
 		</div>&nbsp;
 		<div id="photo2" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional Photo</legend>
+			<div>
+				<label for="photoFile2">Optional photo of same bench:</label>
 				<input id="photoFile2" name="userfile2" type="file" accept="image/jpeg" />
 				<div id="photoPreview2" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type2">This photo is a:</label>
-				<?php
-					echo get_media_types_html("2");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("2"); ?>
+			</div>
 		</div>&nbsp;
 		<div id="photo3" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional Photo</legend>
+			<div>
+				<label for="photoFile3">Optional photo of same bench:</label>
 				<input id="photoFile3" name="userfile3" type="file" accept="image/jpeg" />
 				<div id="photoPreview3" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type3">This photo is a:</label>
-				<?php
-					echo get_media_types_html("3");
-				?>
-			</fieldset>
-		</div>
+				<?php echo get_media_types_html("3"); ?>
+			</div>
+		</div>&nbsp;
 		<div id="photo4" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional Photo</legend>
+			<div>
+				<label for="photoFile4">Optional photo of same bench:</label>
 				<input id="photoFile4" name="userfile4" type="file" accept="image/jpeg" />
 				<div id="photoPreview4" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type4">This photo is a:</label>
-				<?php
-					echo get_media_types_html("4");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("4"); ?>
+			</div>
 		</div>
 		<br>
 
 		<br>
 		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
-			<label for="publishedTrue">Published</label>
+			<label for="publishedTrue" class="checkable">Publish this bench</label>
 		<br>
 		<input type="radio" id="publishedFalse" name="published" value="false">
-			<label for="publishedFalse">Delete</label>
+			<label for="publishedFalse" class="checkable">Delete this bench</label>
 
 		<input type="hidden" name="key" value="<?php echo urlencode(get_edit_key($benchID)); ?>"/>
 		<br>&nbsp;
-		<br>&nbsp;
-		<input type="submit" value="Save Changes" />
-
+		<div class="button-bar">
+			<input type="submit" class='button buttonColour' value="💾 Save Changes" />
+		</div>
 	</form>
 
 <script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>

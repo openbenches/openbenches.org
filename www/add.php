@@ -36,11 +36,9 @@ if(null == $user_provider) {
 				<label for="media_type1">This photo is a:</label>
 				<?php echo get_media_types_html("1"); ?>
 			</div>
-		</div>&nbsp;
-		<br>
-		<div id="message"></div>
+		</div>
 		<div id="inscription-hidden" style="display: none;">
-			<label for="inscription">Inscription:</label><br>
+			<label for="inscription" id="message">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
 		</div>
 		<div id="map-hidden" style="clear:both;display: none;">
