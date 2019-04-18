@@ -12,7 +12,7 @@ include("header.php");
 [$user_provider, $user_providerID, $user_name] = get_user_details();
 
 if(null == $user_provider) {
-	$login_html = "<a href='/login/' class='button buttonColour'>👤 Sign in</a> or be <strong>anonymous</strong>.";
+	$login_html = "<a href='/login/' class='button buttonColour'>👤 Sign in</a><br>or be <strong>anonymous</strong>.";
 	} else {
 	$login_html = "You are logged in as \"{$user_name}\" from " . ucfirst($user_provider);
 }
@@ -27,20 +27,18 @@ if(null == $user_provider) {
 		The photo <em>must</em> have GPS information included.<br></p>
 
 		<div id="photo1" class="photo-group" style="display: block;">
-			<fieldset>
-				<legend>Geotagged Photo</legend>
-				<label class="dropimage">
-					<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
-				</label>
+			<div>
+				<label for="photoFile1">Geotagged Photo:</label>
+				<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
 				<div id="photoPreview1" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type1">This photo is a:</label>
-				<?php
-					echo get_media_types_html("1");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("1"); ?>
+			</div>
 		</div>&nbsp;
 		<br>
-		<code id="message"></code>
+		<div id="message"></div>
 		<div id="inscription-hidden" style="display: none;">
 			<label for="inscription">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
@@ -55,37 +53,37 @@ if(null == $user_provider) {
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value=""/>
 		</div>&nbsp;
 		<div id="photo2" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional photo of same bench</legend>
+			<div>
+				<label for="photoFile2">Optional photo of same bench:</label>
 				<input id="photoFile2" name="userfile2" type="file" accept="image/jpeg" />
 				<div id="photoPreview2" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type2">This photo is a:</label>
-				<?php
-					echo get_media_types_html("2");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("2"); ?>
+			</div>
 		</div>&nbsp;
 		<div id="photo3" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional photo of same bench</legend>
+			<div>
+				<label for="photoFile3">Optional photo of same bench:</label>
 				<input id="photoFile3" name="userfile3" type="file" accept="image/jpeg" />
 				<div id="photoPreview3" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type3">This photo is a:</label>
-				<?php
-					echo get_media_types_html("3");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("3"); ?>
+			</div>
 		</div>&nbsp;
 		<div id="photo4" class="photo-group" style="display: none;">
-			<fieldset>
-				<legend>Optional photo of same bench</legend>
+			<div>
+				<label for="photoFile4">Optional photo of same bench:</label>
 				<input id="photoFile4" name="userfile4" type="file" accept="image/jpeg" />
 				<div id="photoPreview4" style="display: none;"></div>
+			</div>
+			<div>
 				<label for="media_type4">This photo is a:</label>
-				<?php
-					echo get_media_types_html("4");
-				?>
-			</fieldset>
+				<?php echo get_media_types_html("4"); ?>
+			</div>
 		</div>
 		<br>
 		<fieldset id="progressInfo" style="display:none;">
@@ -95,9 +93,10 @@ if(null == $user_provider) {
 			<p id="loaded_n_total"></p>
 		</fieldset>
 	</form>
-	<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="Share Bench" style="display: none;"/>
-
-		<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
+	<div class="button-bar">
+		<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="📷 Share Bench" style="display: none;"/>
+	</div>
+	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>

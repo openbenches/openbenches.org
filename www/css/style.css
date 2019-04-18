@@ -25,7 +25,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 canvas {
-	width: 400px;
+	width: 800px;
+	max-width: 100%;
 }
 
 #map{
@@ -48,7 +49,6 @@ fieldset {
 	width: 0;
 	text-align: left;
 	margin: auto;
-	min-width: 20em;
 	max-width: 95%;
 }
 
@@ -109,6 +109,8 @@ ol {
 
 textarea {
 	max-width: 95%;
+	width: 1024px;
+	border-radius: 1em;
 }
 
 h2 {
@@ -165,6 +167,11 @@ hr {
 
 input[type="file"] {
 	font-size: 1rem;
+	margin-bottom: 1em;
+}
+
+input, select {
+	max-width: 20em;
 }
 
 .photo-group {
@@ -238,4 +245,10 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 #idc-container {
 	margin-left: auto !important;
 	margin-right: auto !important;
+}
+
+#coordinates {
+	max-width: 20em;
+	text-align: center;
+	font-family: monospace;
 }
