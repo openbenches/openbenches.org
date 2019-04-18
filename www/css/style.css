@@ -36,7 +36,7 @@ canvas {
 	z-index: 1;
 	margin-left: auto;
 	margin-right: auto;
-	border-radius: 2em;
+	border-radius: 1rem;
 	overflow-wrap: normal;
 }
 
@@ -100,7 +100,7 @@ fieldset {
 .proxy-image {
 	max-width: 100%;
 	border: 0.1rem solid #191E20;
-	border-radius: 1em;
+	border-radius: 1rem;
 }
 
 ol {
@@ -110,7 +110,7 @@ ol {
 textarea {
 	max-width: 95%;
 	width: 1024px;
-	border-radius: 1em;
+	border-radius: 1rem;
 }
 
 h2 {
