@@ -1,5 +1,6 @@
 <footer>
 	<hr>
+	<a href="/"><img src="/images/openbencheslogo.svg" alt="Homepage" id="homeIcon"></a> |
 	<a href="/blog/about/">About</a> | 
 	<a href="/leaderboard/">Leader Board</a> | 
 	<span itemscope itemtype="https://schema.org/Organization">

@@ -202,7 +202,7 @@ if($user_provider != null){
 			<label for="publishedTrue" class="checkable">Publish this bench</label>
 		<br>
 		<input type="radio" id="publishedFalse" name="published" value="false">
-			<label for="publishedFalse" class="checkable">Delete this bench</label>
+			<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
 
 		<input type="hidden" name="key" value="<?php echo urlencode(get_edit_key($benchID)); ?>"/>
 		<br>&nbsp;

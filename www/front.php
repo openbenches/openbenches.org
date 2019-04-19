@@ -95,10 +95,10 @@ function geoFindMe() {
 	}
 
 	function error() {
-		output.innerHTML = "Unable to retrieve your location";
+		output.innerHTML = "🚫 Unable to retrieve your location";
 	}
 
-	output.innerHTML = "Locating…";
+	output.innerHTML = "🛰️ Locating…";
 
 	navigator.geolocation.getCurrentPosition(success, error);
 }

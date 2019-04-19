@@ -10,13 +10,14 @@ body {
 	font-family: 'varela_roundregular', sans-serif;
 	font-size: 1.25em;
 	margin: 1em;
-	background-color: #F1F3F4;
+	background-color: #e1ffe9;
 	color: #191E20;
 	text-align: center;
 	overflow-wrap: break-word;
 }
 
 h1 a{
+	font-size: 2rem !important;
 	color: #191E20 !important;
 }
 
@@ -49,7 +50,7 @@ fieldset {
 	width: 0;
 	text-align: left;
 	margin: auto;
-	max-width: 95%;
+	max-width: 100%;
 }
 
 
@@ -64,7 +65,7 @@ fieldset {
 
 .search {
 	width: 40em;
-	max-width: 95%;
+	max-width: 100%;
 }
 
 #search-results {
@@ -109,7 +110,7 @@ ol {
 }
 
 textarea {
-	max-width: 95%;
+	max-width: 100%;
 	width: 1024px;
 	border-radius: 1rem;
 }
@@ -236,6 +237,11 @@ input[type="search"]::placeholder {
 
 .cc-icon {
 	vertical-align: middle;
+}
+
+#homeIcon {
+	vertical-align: middle;
+	width: 2em;
 }
 
 button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:focus, .button:focus, [type="submit"]:focus, .dropimage:focus {
