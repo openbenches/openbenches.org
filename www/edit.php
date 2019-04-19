@@ -256,7 +256,7 @@ for (var i = 0; i < benches.features.length; i++) {
 map.addLayer(markers);
 
 </script>
-<script src="/libs/load-image.2.19.0/load-image.all.min.js"></script>
+<script src="/libs/load-image.2.21.0/load-image.all.min.js"></script>
 <script type="text/javascript">
 	var previewWidth = 400;
 
@@ -272,7 +272,7 @@ map.addLayer(markers);
 		var loadingImage = loadImage(
 			e.target.files[0],
 			function (img) { preview1.appendChild(img); },
-			{ maxWidth: previewWidth, canvas: true}
+			{ maxWidth: previewWidth, canvas: true, orientation: true}
 		);
 		if (!loadingImage) {}
 
@@ -305,7 +305,7 @@ map.addLayer(markers);
 		var loadingImage = loadImage(
 			e.target.files[0],
 			function (img) { preview2.appendChild(img); },
-			{ maxWidth: previewWidth, canvas: true}
+			{ maxWidth: previewWidth, canvas: true, orientation: true}
 		);
 		if (!loadingImage) {}
 		//	Show the next upload box
@@ -324,7 +324,7 @@ map.addLayer(markers);
 		var loadingImage = loadImage(
 			e.target.files[0],
 			function (img) { preview3.appendChild(img); },
-			{ maxWidth: previewWidth, canvas: true}
+			{ maxWidth: previewWidth, canvas: true, orientation: true}
 		);
 		if (!loadingImage) {}
 		//	Show the next upload box
@@ -343,7 +343,7 @@ map.addLayer(markers);
 		var loadingImage = loadImage(
 			e.target.files[0],
 			function (img) { preview4.appendChild(img); },
-			{ maxWidth: previewWidth, canvas: true}
+			{ maxWidth: previewWidth, canvas: true, orientation: true}
 		);
 		if (!loadingImage) {}
 	}

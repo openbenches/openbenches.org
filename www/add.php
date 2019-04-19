@@ -102,7 +102,7 @@ if(null == $user_provider) {
 	<script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
 	<script src="/libs/vision/key.js"></script>
 	<script src="/libs/vision/vision.js"></script>
-	<script src="/libs/load-image.2.19.0/load-image.all.min.js"></script>
+	<script src="/libs/load-image.2.21.0/load-image.all.min.js"></script>
 	<script type="text/javascript">
 		var previewWidth = 800;
 		var map = null;
@@ -119,7 +119,7 @@ if(null == $user_provider) {
 			var loadingImage = loadImage(
 				e.target.files[0],
 				function (img) { preview1.appendChild(img); },
-				{ maxWidth: previewWidth, canvas: true}
+				{ maxWidth: previewWidth, canvas: true, orientation: true}
 			);
 			if (!loadingImage) {}
 			$("#photo2").show();
@@ -226,7 +226,7 @@ if(null == $user_provider) {
 			var loadingImage = loadImage(
 				e.target.files[0],
 				function (img) { preview2.appendChild(img); },
-				{ maxWidth: previewWidth, canvas: true}
+				{ maxWidth: previewWidth, canvas: true, orientation: true}
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
@@ -244,7 +244,7 @@ if(null == $user_provider) {
 			var loadingImage = loadImage(
 				e.target.files[0],
 				function (img) { preview3.appendChild(img); },
-				{ maxWidth: previewWidth, canvas: true}
+				{ maxWidth: previewWidth, canvas: true, orientation: true}
 			);
 			if (!loadingImage) {}
 			//	Show the next upload box
@@ -262,7 +262,7 @@ if(null == $user_provider) {
 			var loadingImage = loadImage(
 				e.target.files[0],
 				function (img) { preview4.appendChild(img); },
-				{ maxWidth: previewWidth, canvas: true}
+				{ maxWidth: previewWidth, canvas: true, orientation: true}
 			);
 			if (!loadingImage) {}
 		}
