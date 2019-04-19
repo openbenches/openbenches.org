@@ -304,7 +304,7 @@ if(null == $user_provider) {
 		}
 
 		function progressHandler(event) {
-			$("#loaded_n_total").html("Uploaded <code>" + event.loaded.toLocaleString() + "</code> bytes of <code>" + event.total.toLocaleString() + "</code>");
+			$("#loaded_n_total").html("Uploaded <output>" + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString() + "</output>");
 			var percent = (event.loaded / event.total) * 100;
 			$("#progressBar").val(Math.round(percent));
 			$("#status").html(Math.round(percent) + "% uploaded");

@@ -263,3 +263,7 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 #progressBar {
 	width: 100%;
 }
+
+output {
+	font-family: monospace;
+}
