@@ -89,7 +89,7 @@ function geoFindMe() {
 		var latitude  = position.coords.latitude;
 		var longitude = position.coords.longitude;
 
-		output.innerHTML = 'Update my location';
+		output.innerHTML = '🔄 Update my location';
 		L.marker([latitude, longitude], {opacity:0.5, icon: gpsIcon}).addTo(map);
 		map.setView([latitude, longitude], 10);
 	}
