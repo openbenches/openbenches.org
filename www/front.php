@@ -30,7 +30,7 @@
 			<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
 		</form>
 	</div>
-<script src="/data.json/?truncated=true" type="text/javascript"></script>
+<script src="/data.json/?truncated=true"></script>
 
 <?php echo get_map_javascript(16.3, 0, "2"); ?>
 

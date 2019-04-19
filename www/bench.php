@@ -53,10 +53,10 @@ if ($benchAddress == null){
 			var idcomments_post_url;
 		</script>
 		<span id="IDCommentsPostTitle" style="display:none"></span>
-		<script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+		<script src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 	</div>
 	
-<script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="/data.json/?bench=<?php echo $benchID; ?>"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 

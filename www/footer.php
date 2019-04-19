@@ -10,7 +10,7 @@
 	<br>
 	<a itemprop="license"
 		rel="license" 
-		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" id="cc-by-sa-logo"/></a>
+		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" id="cc-by-sa-logo" alt="Creative Commons Attribution Share-alike"/></a>
 	<br>
 		Made with 💖 in Oxford by<br>
 	<a itemprop="creator" href="https://shkspr.mobi/blog">Terence Eden</a> and 

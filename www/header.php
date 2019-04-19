@@ -106,13 +106,13 @@ if ("user" == $page) {
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.css">
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.Default.css">
 </head>
-<body>
-	<hgroup itemscope itemtype="https://schema.org/WebPage">
+<body itemscope itemtype="https://schema.org/WebPage">
+	<hgroup>
 		<h1>
 			<a href="/">
 				<img src="/images/openbencheslogo.svg"
 				     id="header-image"
-				     alt="[logo]: a bird flies above a bench">Open<wbr>Benches</a></h1>
+				     alt="A bird flies above a bench">Open<wbr>Benches</a></h1>
 <?php 
 //	Unpublished benches
 if("bench" == $page && $benchID != null && !$published) {
