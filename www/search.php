@@ -26,7 +26,7 @@ if (null != $query)
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
-			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\">";
+			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\" alt=\"\">";
 			$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a></li>";
 		}
 		$resultsHTML .="</ul></div>";
