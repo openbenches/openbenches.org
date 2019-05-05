@@ -37,7 +37,7 @@ if ("bench" == $page) {
 			die();
 		}
 	}
-} 
+}
 if ("user" == $page) {
 	//	Handled in user.php
 }
@@ -49,15 +49,19 @@ if ("user" == $page) {
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>OpenBenches - by @edent &amp; @summerbeth</title>
+	<title>OpenBenches</title>
 
-	<link rel="apple-touch-icon"      sizes="180x180" href="/apple-touch-icon.png?cache=2017-08-08">
-	<link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32x32.png?cache=2017-08-08">
-	<link rel="icon" type="image/png" sizes="16x16"   href="/favicon-16x16.png?cache=2017-08-08">
-	<link rel="manifest"                              href="/manifest.json?cache=2017-08-08">
-	<link rel="mask-icon"             color="#5bbad5" href="/safari-pinned-tab.svg?cache=2017-08-08">
-	<link rel="shortcut icon"                         href="/favicon.ico?cache=2017-08-08">
+	<!-- Favicons https://realfavicongenerator.net -->
+	<link rel="apple-touch-icon"      sizes="180x180" href="/apple-touch-icon.png?cache=2019-05-05">
+	<link rel="icon" type="image/png" sizes="32x32"   href="/favicon-32x32.png?cache=2019-05-05">
+	<link rel="icon" type="image/png" sizes="16x16"   href="/favicon-16x16.png?cache=2019-05-05">
+	<link rel="manifest"                              href="/manifest.json?cache=2019-05-05">
+	<link rel="mask-icon"             color="#5bbad5" href="/safari-pinned-tab.svg?cache=2019-05-05">
+	<link rel="shortcut icon"                         href="/favicon.ico?cache=2019-05-05">
 	<meta name="theme-color" content="#ffffff">
+	<meta name="msapplication-TileColor"    content="#ffc40d">
+	<meta name="application-name"           content="OpenBenches">
+	<meta name="apple-mobile-web-app-title" content="OpenBenches">
 
 	<!-- Twitter Specific Metadata https://dev.twitter.com/cards/markup -->
 	<meta name="twitter:card"                            content="summary_large_image">
@@ -93,7 +97,7 @@ if ("user" == $page) {
 		}
 	}
 	</script>
-	
+
 	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-19T14:40"/>
@@ -113,7 +117,7 @@ if ("user" == $page) {
 				<img src="/images/openbencheslogo.svg"
 				     id="header-image"
 				     alt="A bird flies above a bench">Open<wbr>Benches</a></h1>
-<?php 
+<?php
 //	Unpublished benches
 if("bench" == $page && $benchID != null && !$published) {
 	include("404.php");
