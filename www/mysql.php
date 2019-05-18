@@ -110,11 +110,11 @@ function edit_media_type($mediaID, $media_type) {
 function insert_user($provider, $providerID, $name)
 {
 	global $mysqli;
-	
+
 	//	Does the user already exist?
 	//	Only applicable for Auth0 users
 	if ("anon" != $provider) {
-		$search_user = $mysqli->prepare("SELECT `userID` FROM `users` 
+		$search_user = $mysqli->prepare("SELECT `userID` FROM `users`
 			WHERE `provider` LIKE ? AND `providerID` LIKE ?");
 		$search_user->bind_param('ss', $provider, $providerID);
 		$search_user->execute();
@@ -128,7 +128,7 @@ function insert_user($provider, $providerID, $name)
 		}
 		$search_user->close();
 	}
-	
+
 	$insert_user = $mysqli->prepare("INSERT INTO `users`
 				 (`userID`, `provider`, `providerID`, `name`)
 		VALUES (NULL,	  ?,			  ?,				?);"
@@ -228,7 +228,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	} else {
 		$media_data = array();
 	}
-	
+
 	global $mysqli;
 
 	if(0==$id){
@@ -261,7 +261,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	);
 	# Loop through rows to build feature arrays
 	while($get_benches->fetch()) {
-	
+
 		# some inscriptions got stored with leading/trailing whitespace
 		$benchInscription=trim($benchInscription);
 
@@ -293,7 +293,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}
-	
+
 	$get_benches->close();
 	return $geojson;
 }
@@ -368,9 +368,9 @@ function get_image($benchID, $full = false)
 		} else {
 			$imageLink = "/bench/{$benchID}";
 		}
-		
+
 		$image_prefix = get_image_cache();
-		
+
 		$html .= "<a href='{$imageLink}'><img src='{$image_prefix}/image/{$sha1}' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
 	}
@@ -391,7 +391,7 @@ function get_image_html($benchID, $full = true)
 	// 	"SELECT sha1, userID, importURL, licence, media_type
 	// 	 FROM media
 	// 	 WHERE benchID = ?");
-	
+
 	$get_media = $mysqli->prepare(
 		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type
 		FROM media
@@ -409,7 +409,7 @@ function get_image_html($benchID, $full = true)
 
 	# Loop through rows to build the HTML
 	while($get_media->fetch()) {
-		
+
 		$userHTML = "";
 		//	Who uploaded this media
 		if("anon" != $userProvider) {
@@ -455,12 +455,12 @@ function get_image_html($benchID, $full = true)
 			$panorama = "/libs/pannellum.2.4.1/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
-	
+
 			$html .= "<a href='{$link}'>
 							<img src='{$image_prefix}/image/{$sha1}' class='proxy-image' alt='{$alt}' />
 						</a>";
 		}
-		
+
 		$html .= "<h3 class='caption-heading'>
 						<span class='caption'>{$source}&nbsp;{$exif_html}&nbsp;{$userHTML}</span>
 					</h3>";
@@ -474,7 +474,7 @@ function get_image_html($benchID, $full = true)
 			break;
 		}
 	}
-	
+
 	$get_media->close();
 	return $html;
 }
@@ -498,9 +498,9 @@ function get_image_thumb($benchID, $size = IMAGE_THUMB_SIZE)
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
 		$get_media->close();
-		
+
 		$image_prefix = get_image_cache($size);
-		
+
 		$thumb = "{$image_prefix}/image/{$sha1}";
 		break;
 	}
@@ -516,7 +516,7 @@ function get_all_media($benchID = 0)
 		$get_media = $mysqli->prepare(
 			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type
 			 FROM `benches`
-				INNER JOIN 
+				INNER JOIN
 			`media` ON benches.benchID = media.benchID");
 			$get_media->execute();
 			/* bind result variables */
@@ -537,19 +537,19 @@ function get_all_media($benchID = 0)
 	# Loop through rows to build the array
 	while($get_media->fetch()) {
 		$media_data = array();
-		
+
 		$media_data["URL"] = "/image/{$sha1}";
-	
+
 		if(null != $importURL) {
 			$media_data["importURL"] = $importURL;
 		}
 
 		$media_data["licence"]    = $licence;
 		$media_data["media_type"] = $media_type;
-		
+
 		$media[$benchID][] = $media_data;
 	}
-	
+
 	$get_media->close();
 	return $media;
 }
@@ -559,36 +559,36 @@ function get_rss($items = 10) {
 
 	$get_rss = $mysqli->prepare(
 		"SELECT benches.benchID, benches.inscription, benches.address, benches.added, media.sha1
-		
+
 		FROM `benches`
-			INNER JOIN 
+			INNER JOIN
 		`media` ON benches.benchID = media.benchID
 		WHERE benches.published = true
 		ORDER by benches.benchID DESC
 		LIMIT ?");
-		
+
 	$get_rss->bind_param('i', $items);
 	$get_rss->execute();
 	$get_rss->bind_result($benchID, $benchInscription, $benchAddress, $benchAdded, $sha1);
-	
+
 	$rssItems = array();
-	
+
 	while($get_rss->fetch()) {
 		$rssData = array();
-		
+
 		$rssData["benchID"] = $benchID;
 		$rssData["benchInscription"] = htmlspecialchars($benchInscription);
 		$rssData["benchAddress"] = $benchAddress;
 		$rssData["benchAdded"] = $benchAdded;
 		$rssData["sha1"][] = $sha1;
-		
+
 		if (key_exists($benchID,$rssItems)){
 			$rssItems[$benchID]["sha1"][] = $sha1;
 		} else {
 			$rssItems[$benchID] = $rssData;
 		}
 	}
-	
+
 	$get_rss->close();
 	return $rssItems;
 }
@@ -685,7 +685,7 @@ function get_user_id($provider, $username, $is_id = false) {
 			"SELECT userID FROM users
 			WHERE provider = ?
 			AND	name = ?
-			LIMIT 0 , 1");		
+			LIMIT 0 , 1");
 	}
 
 	$get_user_id->bind_param('ss', $provider, $username);
@@ -771,7 +771,7 @@ function get_media_types_html($name = "") {
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
 		if ($count == $name) {
-			$html .= "<option value='{$shortName}' selected>{$longName}</option>";			
+			$html .= "<option value='{$shortName}' selected>{$longName}</option>";
 		} else {
 			$html .= "<option value='{$shortName}'>{$longName}</option>";
 		}
@@ -804,14 +804,14 @@ function get_media_types_array() {
 
 function get_search_results($q) {
 	global $mysqli;
-	
+
 	//	Replace spaces in query with `[[:space:]]*`
 	$q = str_replace(" ","[[:space:]]*", $q);
 	$quoteTranslation=array("\"" => "[\"“”]", "“" => "[\"“]", "”" => "[\"”]", "'" => "['‘’]", "‘" => "['‘]", "’" => "['’]");
 	$q = strtr($q,$quoteTranslation);
 
 	//	Query will be like
-	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott' 
+	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
 	$search = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
 		 FROM	`benches`
@@ -850,14 +850,14 @@ function get_bench_count() {
 
 function get_leadboard_benches_html() {
 	global $mysqli;
-	
+
 	$get_leaderboard = $mysqli->prepare("
 		SELECT users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT
 		FROM `benches`
 		INNER JOIN users ON benches.userID = users.userID
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
-		
+
 	$get_leaderboard->execute();
 	$get_leaderboard->bind_result($userID, $username, $provider, $providerID, $count);
 
@@ -868,7 +868,7 @@ function get_leadboard_benches_html() {
 		} else if("github"==$provider){
 			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars0.githubusercontent.com/u/{$providerID}?v=4&amp;s=48' class='avatar'>$username</a> {$count}</li>";
 		} else if("facebook"==$provider){
-			$html .= "<li><a href='/user/{$userID}/'><img src='/images/svg/facebook.svg' class='avatar'>$username</a> {$count}</li>";
+			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$providerID}/small' class='avatar'>$username</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -877,14 +877,14 @@ function get_leadboard_benches_html() {
 
 function get_leadboard_media_html() {
 	global $mysqli;
-	
+
 	$get_leaderboard = $mysqli->prepare("
 		SELECT users.userID, users.name, users.provider, COUNT(*) AS USERCOUNT
 		FROM `media`
 		INNER JOIN users ON media.userID = users.userID
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
-		
+
 	$get_leaderboard->execute();
 	$get_leaderboard->bind_result($userID, $username, $provider, $count);
 
@@ -901,7 +901,7 @@ function get_leadboard_media_html() {
 function get_user_bench_list($userID)
 {
 	global $mysqli;
-	
+
 	$get_user_list = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
 		 FROM	  `benches`
@@ -920,13 +920,13 @@ function get_user_bench_list($userID)
 		}
 		$results[$benchID] = $inscription;
 	}
-	
+
 	$get_user_list->close();
 	return $results;
 }
 
 function get_user_map($userID)
-{	
+{
 	global $mysqli;
 
 	$where = "WHERE published = true AND userID = {$userID}";
@@ -949,7 +949,7 @@ function get_user_map($userID)
 	);
 	# Loop through rows to build feature arrays
 	while($get_benches->fetch()) {
-	
+
 		# some inscriptions got stored with leading/trailing whitespace
 		$benchInscription=trim($benchInscription);
 
@@ -978,7 +978,7 @@ function get_user_map($userID)
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}
-	
+
 	$get_benches->close();
 	return $geojson;
 }
