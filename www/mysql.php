@@ -855,6 +855,7 @@ function get_leadboard_benches_html() {
 		SELECT users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT
 		FROM `benches`
 		INNER JOIN users ON benches.userID = users.userID
+		WHERE benches.published = TRUE
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
 
@@ -882,6 +883,7 @@ function get_leadboard_media_html() {
 		SELECT users.userID, users.name, users.provider, COUNT(*) AS USERCOUNT
 		FROM `media`
 		INNER JOIN users ON media.userID = users.userID
+		WHERE users.provider != 'anon'
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
 
