@@ -19,7 +19,7 @@ if ($_FILES['userfile1']['tmp_name'])
 {	//	Has a photo been posted?
 	$filename = $_FILES['userfile1']['tmp_name'];
 	$sha1 = sha1_file ($filename);
-	
+
 	//	For tweeting
 	$domain = $_SERVER['SERVER_NAME'];
 	$mediaURLs = array();
@@ -50,7 +50,7 @@ if ($_FILES['userfile1']['tmp_name'])
 			// $response["redirect"] = $benchID;
 			// echo json_encode($response);
 			echo $benchID;
-			
+
 			//	Save the Image
 			$media_type = $_POST['media_type1'];
 			save_image($_FILES['userfile1'], $media_type, $benchID, $userID);
@@ -77,7 +77,7 @@ if ($_FILES['userfile1']['tmp_name'])
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
-			
+
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
@@ -89,17 +89,18 @@ if ($_FILES['userfile1']['tmp_name'])
 				"Bench {$benchID}",
 				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
 				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
+				"From: {$user_provider} {$user_name}".
 				$photos
 			);
 
 			//	Tweet the bench
 			try {
-				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0");
+				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0", $user_provider, $user_name);
 			} catch (Exception $e) {
 				// var_export($e);
 				die();
 			}
-			
+
 			//	Mastodon Toot the bench
 			// try {
 			// 	toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");

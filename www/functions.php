@@ -10,12 +10,12 @@ function get_twitter_details(){
 
 	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();
-	
+
 	if (isset($_SESSION['oauth_token']) && isset($_SESSION['oauth_token_secret'])) {
 		// assign access token on each page load
-		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);	
+		$cb->setToken($_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
 		$reply = (array) $cb->account_verifyCredentials();
-		
+
 		if (isset($reply["errors"]) ){
 			//	If the authorization hasn't worked, clear the session variables and start again
 			$_SESSION['oauth_token'] = null;
@@ -52,8 +52,8 @@ function get_user_details($raw = true) {
 		'persist_access_token' =>  true,
 		'persist_refresh_token' => true,
 	]);
-	
-	
+
+
 	session_start();
 	$userInfo = $auth0->getUser();
 	if (!$userInfo) {
@@ -62,17 +62,17 @@ function get_user_details($raw = true) {
 	} else {
 		// User is authenticated
 		$username = explode("|", $userInfo["sub"]);
-		
+
 		if ($raw) {
 			return array(
-								$username[0], 
-								$username[1], 
+								$username[0],
+								$username[1],
 								$userInfo['nickname']
-							);			
+							);
 		} else {
 			return array(
-								htmlspecialchars($username[0]), 
-								htmlspecialchars($username[1]), 
+								htmlspecialchars($username[0]),
+								htmlspecialchars($username[1]),
 								htmlspecialchars($userInfo['nickname'])
 							);
 		}
@@ -142,7 +142,9 @@ function get_image_location($file)
 	return false;
 }
 
-function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=null, $longitude=null, $license=null){
+function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
+                     $latitude=null, $longitude=null, $license=null,
+                    $user_provider=null, $user_name=null){
 	//	Send Tweet
 	\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();
@@ -150,9 +152,9 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 
 	//	Add the image
 	if(null!=$mediaURLs){
-		
+
 		$media_ids = array();
-		
+
 		foreach ($mediaURLs as $file) {
 			// upload all media files
 			$reply = $cb->media_upload(['media' => $file]);
@@ -164,15 +166,24 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 
 	//	Tweet length is now 280
 	$length = 280;
-	
-	//	Remove the length of the items and a newline character
+
+	//	Tweet will end with "℅ @twittername"
+	if ("twitter" == $user_provider) {
+		$from = "℅ @{$user_name}";
+	} else {
+		//	Might use this for Github / Facebook names in future
+		$from = "";
+	}
+
+	//	Remove the length of the items and the newline character
+	$length = $length - mb_strlen($from) - 1;
 	$length = $length - mb_strlen($license) - 1;
 	//	Remove URL
 	$length = $length - 24 - 1;
-	//	One more for luck :-)
-	$length = $length - 1;
-	
-	
+	//	Two more for luck :-)
+	$length = $length - 2;
+
+	//	Truncate the inscription
 	$tweet_inscription = mb_substr($inscription, 0, $length);
 	if (mb_strlen($inscription) > $length) {
 		$tweet_inscription .= "…";
@@ -181,7 +192,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 	$domain = $_SERVER['SERVER_NAME'];
 
 	$params = [
-		'status'    => "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}",
+		'status'    => "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}",
 		'lat'       => $latitude,
 		'long'      => $longitude,
 		'media_ids' => $media_ids,
@@ -191,37 +202,37 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null, $latitude=nul
 }
 
 // function toot_bench($benchID, $mediaFiles=null, $inscription=null, $license=null){
-// 
+//
 // 	//	Send Tweet
 // 	$mastodon_api = new Mastodon_api();
 // 	$mastodon_api->set_url(MASTODON_INSTANCE);
 // 	$mastodon_api->set_token(MASTODON_ACCESS_TOKEN,'bearer');
-// 
+//
 // 	//	Add the image
 // 	if(null!=$mediaFiles){
-// 		
+//
 // 		$media_ids = array();
-// 		
+//
 // 		foreach ($mediaFiles as $file) {
 // 			// upload all media files
 // 			$reply =  $mastodon_api->media($file);
 // 			var_export($reply);
-// 
+//
 // 			// and collect their IDs
 // 			$media_ids[] = $reply["html"]["id"];
 // 		}
 // 	}
-// 
+//
 // 	//	Toot length is 500 - this gives us overhead for link, licence, and metadata
 // 	$length = 400;
-// 	
+//
 // 	$toot_inscription = mb_substr($inscription, 0, $length);
 // 	if (mb_strlen($inscription) > $length) {
 // 		$toot_inscription .= "…";
 // 	}
-// 
+//
 // 	$domain = $_SERVER['SERVER_NAME'];
-// 
+//
 // 	$params = [
 // 		'status'    => "{$toot_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}",
 // 		'media_ids' => $media_ids,
@@ -304,13 +315,13 @@ function get_exif_html($filename) {
 	} else if (array_key_exists("GPSDateStamp", $exif)) {
 		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
 	}
-	
+
 	//	Get the make and model
 	$ifd0 = $exif_data["IFD0"];
 	$makeHTML = "";
 	if (array_key_exists("Make", $ifd0)) {
 		$makeHTML = ucwords($ifd0["Make"]);
-	} 
+	}
 	if (array_key_exists("Model", $ifd0)) {
 		$makeHTML .= " " . $ifd0["Model"];
 	}
@@ -339,11 +350,11 @@ function get_path_from_hash($sha1, $full = true) {
 	$directory = substr($sha1,0,1);
 	$subdirectory = substr($sha1,1,1);
 	$photo_path = "photos/".$directory."/".$subdirectory."/";
-	
+
 	if($full) {
 		return $photo_path.$sha1.".jpg";
 	}
-	
+
 	return $photo_path;
 }
 
@@ -367,15 +378,15 @@ function get_place_name($latitude, $longitude) {
 	return $address;
 }
 
-function save_image($file, $media_type, $benchID, $userID) { 
+function save_image($file, $media_type, $benchID, $userID) {
 	$filename = $file['name'];
 	$file =     $file['tmp_name'];
-	
+
 	//	Not needed. This is checked in add.php
 	// if (get_image_location($file) == false) {
 	// 	return "<h3>No GPS tags in: {$filename}</h3>";
 	// }
-	
+
 	if (duplicate_file($file)) {
 		return "<h3>Duplicate image: {$filename}</h3>";
 	}
@@ -387,11 +398,11 @@ function save_image($file, $media_type, $benchID, $userID) {
 		//	If it has been miscategorised, remove the media type
 		$media_type = null;
 	}
-	
+
 	$sha1 = sha1_file($file);
 	$photo_full_path = get_path_from_hash($sha1, true);
 	$photo_path      = get_path_from_hash($sha1, false);
-	
+
 	//	Move media to the correct location
 	if (!is_dir($photo_path)) {
 		mkdir($photo_path, 0777, true);
@@ -411,7 +422,7 @@ function save_image($file, $media_type, $benchID, $userID) {
 function duplicate_file($filename) {
 	$sha1 = sha1_file($filename);
 	$photo_full_path = get_path_from_hash($sha1, true);
-	
+
 	//	Does this photo already exit?
 	if(file_exists($photo_full_path)){
 		return true;
