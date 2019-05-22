@@ -378,6 +378,23 @@ function get_image($benchID, $full = false)
 	return $html;
 }
 
+function get_user_from_media($benchID) {
+	global $mysqli;
+
+	$get_media = $mysqli->prepare(
+		"SELECT users.userID, users.name
+		FROM media
+		INNER JOIN users ON media.userID = users.userID
+		WHERE benchID = ?");
+
+	$get_media->bind_param('i',  $benchID );
+	$get_media->execute();
+	/* bind result variables */
+	$get_media->bind_result($userID, $userName);
+
+	return array($userID, $userName);
+}
+
 function get_image_html($benchID, $full = true)
 {
 	//	Which bench? Should this link to the full image?
@@ -546,6 +563,21 @@ function get_all_media($benchID = 0)
 
 		$media_data["licence"]    = $licence;
 		$media_data["media_type"] = $media_type;
+		$media_data["sha1"]       = $sha1;
+
+		try {
+			$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
+		} catch (Exception $e) {
+			$refer = $_SERVER["HTTP_REFERER"];
+			error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
+			die();
+		}
+		$height = $imagick->getImageHeight();
+		$width  = $imagick->getImageWidth();
+		$imagick->clear();
+
+		$media_data["width"]      = $width;
+		$media_data["height"]     = $height;
 
 		$media[$benchID][] = $media_data;
 	}
