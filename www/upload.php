@@ -89,7 +89,7 @@ if ($_FILES['userfile1']['tmp_name'])
 				"Bench {$benchID}",
 				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
 				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
-				"From: {$user_provider} {$user_name}".
+				"From: {$user_provider} {$user_name}\n\n".
 				$photos
 			);
 
