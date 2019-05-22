@@ -39,13 +39,6 @@ if($benchID != null){
 
 //  https://oembed.com/
 
-
-/*
-<link rel="alternate" type="application/json+oembed"
-	href="https://openbenches.org/oembed/?url=https%3A%2F%2Fopenbenches.org%2Fbench%2F1234%2F"
-	title="Bacon Lollys oEmbed Profile" />
-*/
-
 $data = array(
 	"version"       => "1.0",
 	"type"          => "photo",
