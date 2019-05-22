@@ -531,22 +531,22 @@ function get_all_media($benchID = 0)
 
 	if(0 == $benchID) {
 		$get_media = $mysqli->prepare(
-			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type
+			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID
 			 FROM `benches`
 				INNER JOIN
 			`media` ON benches.benchID = media.benchID");
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID);
 	} else {
 		$get_media = $mysqli->prepare(
-			"SELECT benchID, sha1, importURL, licence, media_type
+			"SELECT benchID, sha1, importURL, licence, media_type, userID
 			FROM media
 			WHERE benchID = ?");
 			$get_media->bind_param('i',  $benchID );
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $user);
 	}
 
 	$media = array();
@@ -564,6 +564,7 @@ function get_all_media($benchID = 0)
 		$media_data["licence"]    = $licence;
 		$media_data["media_type"] = $media_type;
 		$media_data["sha1"]       = $sha1;
+		$media_data["user"]       = $user;
 
 		try {
 			$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));

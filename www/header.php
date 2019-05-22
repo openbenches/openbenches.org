@@ -16,12 +16,20 @@ $page = strtolower($params[1]);
 $benchInscription = "Welcome to OpenBenches";
 $benchImage = "/android-chrome-512x512.png";
 
+$oembedMeta = null;
+
 if ("bench" == $page) {
 	$benchID = $params[2];
 
 	if($benchID != null){
 		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
 		$benchImage = get_image_url($benchID) . "/640";
+
+		//	https://oembed.com/
+		$oembedMeta = "<link rel='alternate'
+		type='application/json+oembed'
+		href='https://openbenches.org/oembed/?url=https%3A%2F%2Fopenbenches.org%2Fbench%2F{$benchID}%2F'
+		title='OpenBenches oEmbed Profile' />";
 	}
 
 	//	Unpublished benches
@@ -99,6 +107,7 @@ if ("user" == $page) {
 	</script>
 
 	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
+	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-19T14:40"/>
 	<link rel="stylesheet" href="/css/style.css?cache=2019-04-19T14:41"/>
