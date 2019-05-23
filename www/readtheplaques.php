@@ -9,7 +9,6 @@ include("header.php");
 //	Has a photo been posted?
 if ($_GET["plaqueURL"])
 {
-
 	$long  = $_GET["long"];
 	$lat   = $_GET["lat"];
 	$photo = $_GET["photo"];
