@@ -33,7 +33,7 @@ function insert_bench($lat, $long, $inscription, $userID)
 		return $resultID;
 	} else {
 		$insert_bench->close();
-		return null;
+		return $mysqli->error;
 	}
 }
 
@@ -79,7 +79,7 @@ function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
 				 (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`)
-		VALUES (NULL,		?,		  ?,		 ?,		?,			?			,  ?);'
+		VALUES (NULL,      ?,        ?,       ?,      ?,         ?,          ?);'
 	);
 
 	$insert_media->bind_param('iissss', $benchID, $userID, $sha1, $licence, $import, $media_type);
@@ -90,7 +90,7 @@ function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import
 		return $resultID;
 	} else {
 		$insert_media->close();
-		return null;
+		return $mysqli->error;
 	}
 }
 
