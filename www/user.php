@@ -10,7 +10,7 @@
 		$username   = $user["name"];
 		$provider   = $user["provider"];
 		$providerID = $user["providerID"];
-		
+
 		if("twitter" == $provider && is_numeric($providerID)) {
 			$userURL = "https://twitter.com/intent/user?user_id=" . $providerID;
 			$userHTML .= "Twitter user <a href=\"{$userURL}\">{$username}</a>";
@@ -26,6 +26,8 @@
 			$userHTML .= "the <a href=\"https://www.flickr.com/\">Flickr importer</a>";
 		} else if("wikipedia" == $provider) {
 			$userHTML .= "the <a href=\"https://www.wikipedia.org/\">Wikipedia importer</a>";
+		} else if("readtheplaque" == $provider) {
+			$userHTML .= "the <a href=\"https://www.readtheplaque.com/\">ReadThePlaque importer</a>";
 		} else {
 			$userHTML .= "an anonymous user";
 		}
@@ -60,7 +62,7 @@
 ?>
 </hgroup>
 
-<?php 
+<?php
 	echo "<h3>{$userHTML}</h3>";
 ?>
 <div id="map"></div>
@@ -69,7 +71,7 @@
 <div id="search-results">
 
 	<?php
-		echo $resultsHTML; 
+		echo $resultsHTML;
 	?>
 </div>
 
@@ -77,7 +79,7 @@
 
 <?php
 	//	Map shows most of the world
-	echo get_map_javascript(16.3, 0, "2"); 
+	echo get_map_javascript(16.3, 0, "2");
 ?>
 <script>
 markers.on('click', function (bench) {
