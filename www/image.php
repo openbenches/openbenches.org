@@ -1,5 +1,5 @@
 <?php
-require_once ('config.php');
+require_once ("config.php");
 
 $sha1 = $params[2];
 
@@ -60,9 +60,12 @@ function show_scaled_image($imagePath, $size)
 }
 
 if ("exif" == $size){
-	$exif_data = exif_read_data($photo_full_path,0,true);
+	$img = new \Imagick($photo_full_path);
+	$exif = $img->getImageProperties();
+	$img->clear();
+
 	echo "<pre>";
-	echo var_export($exif_data);
+	echo var_export($exif);
 	echo "</pre>";
 	die();
 } else if(null != $size){
