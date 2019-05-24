@@ -11,7 +11,8 @@ $path = parse_url($benchURL, PHP_URL_PATH);
 //	Remove any trailing slashes
 $path = trim($path, "/");
 //	Get the bench ID
-$benchID = end(explode("/",$path));
+$paths = explode("/",$path);
+$benchID = end($paths);
 
 if($benchID != null){
 	//	Get the first bench image

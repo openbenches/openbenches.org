@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ('config.php');
 require_once ("mysql.php");
 require_once ("functions.php");
@@ -39,7 +39,7 @@ if ($_GET["flickrID"])
 	$large = $size->{"source"};
 	$b64 = base64_encode(file_get_contents($large));
 
-	
+
 	switch ($license) {
 		case 0:
 			$license = "All Rights Reserved";

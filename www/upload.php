@@ -1,13 +1,13 @@
 <?php
-// header('Content-Type: application/json');
-
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
 //	What has been POSTed to us?
 //	Get the inscription, either to add to database, or recover in case of error
+// echo var_export($_POST);
+// die();
 $inscription = $_POST['inscription'];
 $lat = $_POST['newLatitude'];
 $lng = $_POST['newLongitude'];

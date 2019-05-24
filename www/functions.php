@@ -6,7 +6,7 @@ use Auth0\SDK\Auth0;
 
 
 function get_twitter_details(){
-	session_start();
+	if(!isset($_SESSION)) { session_start(); }
 
 	\Codebird\Codebird::setConsumerKey(ADMIN_CONSUMER_KEY, ADMIN_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();
@@ -54,7 +54,7 @@ function get_user_details($raw = true) {
 	]);
 
 
-	session_start();
+	if(!isset($_SESSION)) { session_start(); }
 	$userInfo = $auth0->getUser();
 	if (!$userInfo) {
 		// We have no user info

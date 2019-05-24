@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
@@ -20,13 +20,13 @@ if(null == $user_provider) {
 	echo "<p>{$login_html}</p>";
 ?>
 <?php
-	echo $error_message;
+	echo (isset($error_message) ? "{$error_message}" : "");
 ?>
 	<form id="fileform" action="/upload.php" enctype="multipart/form-data" method="post" onsubmit="true;">
 		<div>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
 			The photo <em>must</em> have GPS information included.
 		</div>
-		
+
 		<div id="photo1" class="photo-group" style="display: block;">
 			<div>
 				<label for="photoFile1">Geotagged Photo:</label>
@@ -139,13 +139,13 @@ if(null == $user_provider) {
 						return;
 					}
 					// upload the photo for text detection
-					uploadFiles(e);	
+					uploadFiles(e);
 
 					var exifLong    = data.exif.get("GPSLongitude");
 					var exifLongRef = data.exif.get("GPSLongitudeRef");
-					var exifLat     = data.exif.get("GPSLatitude"); 
-					var exifLatRef  = data.exif.get("GPSLatitudeRef"); 
-					
+					var exifLat     = data.exif.get("GPSLatitude");
+					var exifLatRef  = data.exif.get("GPSLatitudeRef");
+
 					//	Correct for negative values
 					if (exifLatRef == "S") {
 						var latitude = (exifLat[0]*-1) + (( (exifLat[1]*-60) + (exifLat[2]*-1) ) / 3600);
@@ -272,7 +272,7 @@ if(null == $user_provider) {
 			$("#submitButton").prop( "value",   "Uploading!" );
 			uploadFile();
 		});
-		
+
 		function uploadFile() {
 			//	Show the progress bar
 			$("#progressInfo").show();
@@ -280,16 +280,16 @@ if(null == $user_provider) {
 			var formdata = new FormData();
 			formdata.append("userfile1",    $("#photoFile1").prop('files')[0]);
 			formdata.append("media_type1",  $("#media_type1").val());
-			
+
 			formdata.append("userfile2",    $("#photoFile2").prop('files')[0]);
 			formdata.append("media_type2",  $("#media_type2").val());
-			
+
 			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
 			formdata.append("media_type3",  $("#media_type3").val());
-			
+
 			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
 			formdata.append("media_type4",  $("#media_type4").val());
-			
+
 			formdata.append("inscription",  $("#inscription").val());
 			formdata.append("newLongitude", $("#newLongitude").val());
 			formdata.append("newLatitude",  $("#newLatitude").val());
@@ -308,7 +308,7 @@ if(null == $user_provider) {
 			var percent = (event.loaded / event.total) * 100;
 			$("#progressBar").val(Math.round(percent));
 			$("#status").html(Math.round(percent) + "% uploaded");
-			
+
 			if (100 == Math.round(percent)) {
 				$("#status").html("Upload complete. Redirecting you.");
 			}

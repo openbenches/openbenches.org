@@ -25,7 +25,7 @@ $auth0 = new Auth0([
 ]);
 
 
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 
 $userInfo = $auth0->getUser();
 
@@ -36,9 +36,9 @@ if (!$userInfo) {
 } else {
 	// User is authenticated
 	$username = explode("|", $userInfo["sub"]);
-	
+
 	$userID = insert_user($username[0], $username[1], $userInfo['nickname']);
-	
+
 	// echo "<pre>";
 	// var_export($auth0->getAccessToken());
 	// echo "</pre>";
@@ -57,6 +57,6 @@ if(is_numeric($benchID)){
 	header("Location: /edit/{$benchID}/?cache={$cache}");
 } else {
 	//	Redirect to the Add page
-	header("Location: /add/?cache={$cache}");	
+	header("Location: /add/?cache={$cache}");
 }
 die();

@@ -2,7 +2,6 @@
 ini_set( 'serialize_precision', -1 );	//	https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
 require_once ('mysql.php');
 
-$benchID = $_GET["bench"];
 if( isset($_GET["bench"]) )     { $benchID   = $_GET["bench"]; }     else { $benchID   = null;}
 if( isset($_GET["format"]) )    { $format    = $_GET["format"]; }    else { $format    = null;}
 if( isset($_GET["latitude"]) )  { $latitude  = $_GET["latitude"]; }  else { $latitude  = null;}

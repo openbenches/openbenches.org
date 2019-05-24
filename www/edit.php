@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
@@ -8,15 +8,12 @@ require_once ("functions.php");
 //	edit/123/qwertyiop
 $benchID = $params[2];
 
-if (null != $params[3]) {
-	$key = urldecode($params[3]);
-} else {
-	[$user_provider, $user_providerID, $user_name] = get_user_details(true);
-	if(null == $user_provider) {
-		$_SESSION['edit_bench_id'] = $benchID;
-		header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
+//	If the user isn't logged in, force them to
+[$user_provider, $user_providerID, $user_name] = get_user_details(true);
+if(null == $user_provider) {
+	$_SESSION['edit_bench_id'] = $benchID;
+	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
 	die();
-	}
 }
 
 //	Start the normal page
@@ -42,9 +39,9 @@ if(isset($_POST['key'])) {
 		}
 
 		list ($oldBenchID, $oldBenchLat, $oldBenchLong, $oldBenchAddress, $oldBenchInscription, $oldPublished) = get_bench_details($benchID);
-		
+
 		edit_bench($latitude, $longitude, $inscription, $benchID, $published=="true", $userID);
-		
+
 		$newImages = 0;
 		//	Add photos
 		$image1 = $image2 = $image3 = $image4 = true;
@@ -68,7 +65,7 @@ if(isset($_POST['key'])) {
 			$image4 = save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
 			$newImages++;
 		}
-		
+
 		mail(NOTIFICATION_EMAIL,
 			"Edit to Bench {$benchID} by {$user_name}",
 			"New Images: {$newImages}\n".
@@ -97,19 +94,10 @@ if(isset($_POST['key'])) {
 	}
 }
 
-$valid = hash_equals(EDIT_SALT . $key, crypt($benchID,EDIT_SALT));
-if (!$valid && null == $user_providerID) {
+if (null == $user_providerID) {
 	$error_message .= "<h3>Invalid Edit URL</h3>";
 } else {
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
-}
-
-if ($valid) {
-	$info = "Your bench has been changed! <a href='/bench/{$benchID}'>View your bench</a>.
-	<br>
-	You can edit your inscription, change location, or add more photos if you need to.
-	<br>
-	Or <a href='/add/' class='button buttonColour'><strong>+</strong> Add a new bench</a>";
 }
 
 if($user_provider != null){
@@ -120,10 +108,10 @@ if($user_provider != null){
 ?>
 	</hgroup>
 	<br>
-	<form action="/edit/<?php echo $benchID . "/" . urlencode($key); ?>" enctype="multipart/form-data" method="post">
+	<form action="/edit/<?php echo $benchID . "/"; ?>" enctype="multipart/form-data" method="post">
 		<h2>Edit A Bench</h2>
 		<?php echo $info; ?>
-		<?php 
+		<?php
 			if($error_message != "") {
 				echo $error_message;
 				include("footer.php");
@@ -149,7 +137,7 @@ if($user_provider != null){
 		<div id='benchImage'>
 			<?php echo get_image_html($benchID); ?>
 		</div>
-		
+
 		<h3>Add more images?</h3>
 		<div id="photo1" class="photo-group" style="display: block;">
 			<div>
@@ -292,7 +280,7 @@ map.addLayer(markers);
 		);
 		document.getElementById('photo2').style.display = "block";
 	};
-	
+
 	document.getElementById("photoFile2").onchange = function (e) {
 		var preview2 = document.getElementById("photoPreview2");
 		//	If a photo was added already, remove it.
@@ -311,7 +299,7 @@ map.addLayer(markers);
 		//	Show the next upload box
 		document.getElementById('photo3').style.display = "block";
 	}
-	
+
 	document.getElementById("photoFile3").onchange = function (e) {
 		var preview3 = document.getElementById("photoPreview3");
 		//	If a photo was added already, remove it.
@@ -330,7 +318,7 @@ map.addLayer(markers);
 		//	Show the next upload box
 		document.getElementById('photo4').style.display = "block";
 	}
-	
+
 	document.getElementById("photoFile4").onchange = function (e) {
 		var preview4 = document.getElementById("photoPreview4");
 		//	If a photo was added already, remove it.

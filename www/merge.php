@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
@@ -14,11 +14,11 @@ if ("twitter" == $user_provider && 14054507 == $user_providerID)
 	$originalID  = $_GET["originalID"];
 	$duplicateID = $_GET["duplicateID"];
 	merge_benches($originalID, $duplicateID);
-	
+
 	echo "Redirected <a href='https://openbenches.org/bench/{$duplicateID}'>{$duplicateID}</a>";
 
 } else {
 	die();
-} 
+}
 
 include("footer.php");

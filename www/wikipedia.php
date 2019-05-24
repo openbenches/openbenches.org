@@ -1,5 +1,5 @@
 <?php
-session_start();
+if(!isset($_SESSION)) { session_start(); }
 require_once ('config.php');
 require_once ("mysql.php");
 require_once ("functions.php");
@@ -12,7 +12,7 @@ if ($_GET["wikiID"])
 	$wikiID = $_GET["wikiID"];
 	$wikiAPI = "https://tools.wmflabs.org/magnus-toolserver/commonsapi.php?meta&image={$wikiID}";
 
-	$ch = curl_init(); 
+	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $wikiAPI);
 	curl_setopt($ch, CURLOPT_USERAGENT, "OpenBenches.org" );
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -23,9 +23,9 @@ if ($_GET["wikiID"])
 
 	$lat =       $wikiData->{"file"}->{"location"}->{"lat"};
 	$long =      $wikiData->{"file"}->{"location"}->{"lon"};
-	
+
 	$license =   $wikiData->{"licenses"}->{"license"}->{"name"};
-	
+
 	$original =  $wikiData->{"file"}->{"urls"}->{"file"};
 	$import =    $wikiData->{"file"}->{"urls"}->{"description"};
 	$sha1 =      $wikiData->{"file"}->{"sha1"};
@@ -38,10 +38,10 @@ if ($_GET["wikiID"])
 	$md5 = md5($file);
 	$path1 = substr($md5, 0, 1);
 	$path2 = substr($md5, 0, 2);
-		
+
 	$thumbnail = "https://upload.wikimedia.org/wikipedia/commons/thumb/{$path1}/{$path2}/{$file}/512px-{$file}";
 	$large =     "https://upload.wikimedia.org/wikipedia/commons/thumb/{$path1}/{$path2}/{$file}/1024px-{$file}";
-	
+
 	$b64 = base64_encode(file_get_contents($large));
 
 	switch ($license) {
