@@ -11,6 +11,11 @@ if( isset($params[3]) ) {
 
 $photo_full_path = get_path_from_hash($sha1);
 
+//	If the photo doesn't exist, stop
+if(!file_exists($photo_full_path)){
+	die();
+}
+
 function show_scaled_image($imagePath, $size)
 {
 	try {
