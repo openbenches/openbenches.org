@@ -3,8 +3,12 @@ require_once ('config.php');
 require_once ('mysql.php');
 require_once ('functions.php');
 
+//	Defaults
+$benchLat  = null;
+$benchLong = null;
+
 //	Random bench?
-if ($_POST["random"]) {
+if (isset($_POST["random"])) {
 	list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_random_bench();
 	header('Cache-Control: no-store, must-revalidate');
 	header('Expires: 0');

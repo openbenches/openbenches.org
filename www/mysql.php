@@ -276,6 +276,11 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 			$benchInscription=nl2br(htmlspecialchars($benchInscription));
 		}
 
+		if ($media) {
+			$mediaFeature = $media_data[$benchID];
+		} else {
+			$mediaFeature = null;
+		}
 		$feature = array(
 			'id' => $benchID,
 			'type' => 'Feature',
@@ -287,7 +292,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 			# Pass other attribute columns here
 			'properties' => array(
 				'popupContent' => $benchInscription,
-				'media' => $media_data[$benchID]
+				'media' => $mediaFeature
 			),
 		);
 		# Add feature arrays to feature collection array

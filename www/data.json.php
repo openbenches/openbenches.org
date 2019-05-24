@@ -2,15 +2,16 @@
 ini_set( 'serialize_precision', -1 );	//	https://stackoverflow.com/questions/42981409/php7-1-json-encode-float-issue
 require_once ('mysql.php');
 
-$benchID   = $_GET["bench"];
-$format    = $_GET["format"];
-$latitude  = $_GET["latitude"];
-$longitude = $_GET["longitude"];
-$radius    = $_GET["radius"];
-$truncated = $_GET["truncated"];
-$media    = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN);
-$userID    = $_GET["userID"];
-$provider  = $_GET["provider"];
+$benchID = $_GET["bench"];
+if( isset($_GET["bench"]) )     { $benchID   = $_GET["bench"]; }     else { $benchID   = null;}
+if( isset($_GET["format"]) )    { $format    = $_GET["format"]; }    else { $format    = null;}
+if( isset($_GET["latitude"]) )  { $latitude  = $_GET["latitude"]; }  else { $latitude  = null;}
+if( isset($_GET["longitude"]) ) { $longitude = $_GET["longitude"]; } else { $longitude = null;}
+if( isset($_GET["radius"]) )    { $radius    = $_GET["radius"]; }    else { $radius    = null;}
+if( isset($_GET["truncated"]) ) { $truncated = $_GET["truncated"]; } else { $truncated = null;}
+if( isset($_GET["userID"]) )    { $userID    = $_GET["userID"]; }    else { $userID    = null;}
+if( isset($_GET["provider"]) )  { $provider  = $_GET["provider"]; }  else { $provider  = null;}
+if( isset($_GET["media"]) )     { $media     = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN); } else { $media = null;}
 
 if ( "true" == $truncated or null == $truncated) {
 	$truncated = true;

@@ -304,7 +304,12 @@ EOT;
 function get_exif_html($filename) {
 	$exif_data = exif_read_data($filename,0,true);
 
-	$exif = $exif_data["EXIF"];
+	//	Does this contain an EXIF block?
+	if( isset($exif_data["EXIF"]) ) {
+		$exif = $exif_data["EXIF"];
+	} else {
+		$exif = array();
+	}
 
 	if (array_key_exists("DateTime", $exif)) {
 		$dateHTML = exif_date_to_timestamp($exif["DateTime"]);
@@ -314,10 +319,17 @@ function get_exif_html($filename) {
 		$dateHTML = exif_date_to_timestamp($exif["DateTimeDigitized"]);
 	} else if (array_key_exists("GPSDateStamp", $exif)) {
 		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
+	} else {
+		$dateHTML = null;
 	}
 
 	//	Get the make and model
-	$ifd0 = $exif_data["IFD0"];
+	if( isset($exif_data["IFD0"]) ) {
+		$ifd0 = $exif_data["IFD0"];
+	} else {
+		$ifd0 = array();
+	}
+
 	$makeHTML = "";
 	if (array_key_exists("Make", $ifd0)) {
 		$makeHTML = ucwords($ifd0["Make"]);

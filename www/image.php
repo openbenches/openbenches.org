@@ -2,7 +2,12 @@
 require_once ('config.php');
 
 $sha1 = $params[2];
-$size = $params[3];
+
+if( isset($params[3]) ) {
+	$size = $params[3];
+} else {
+	$size = null;
+}
 
 $photo_full_path = get_path_from_hash($sha1);
 
@@ -39,10 +44,10 @@ function show_scaled_image($imagePath, $size)
 
 	//	Resize the image
 	$imagick->resizeImage($size, null, Imagick::FILTER_CATROM,1);
-	
+
 	//	Set the quality
 	$imagick->setImageCompressionQuality(85);
-	
+
 	//	Progressive image for slower connections
 	$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
 
