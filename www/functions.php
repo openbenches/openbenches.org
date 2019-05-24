@@ -307,40 +307,29 @@ EOT;
 }
 
 function get_exif_html($filename) {
-	$exif_data = exif_read_data($filename,0,true);
+	$img = new \Imagick($filename);
+	$exif = $img->getImageProperties();
+	$img->clear();
 
-	//	Does this contain an EXIF block?
-	if( isset($exif_data["EXIF"]) ) {
-		$exif = $exif_data["EXIF"];
-	} else {
-		$exif = array();
-	}
-
-	if (array_key_exists("DateTime", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["DateTime"]);
-	} else if (array_key_exists("DateTimeOriginal", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["DateTimeOriginal"]);
-	} else if (array_key_exists("DateTimeDigitized", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["DateTimeDigitized"]);
-	} else if (array_key_exists("GPSDateStamp", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["GPSDateStamp"]);
+	if (array_key_exists("exif:DateTime", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["exif:DateTime"]);
+	} else if (array_key_exists("exif:DateTimeOriginal", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["exif:DateTimeOriginal"]);
+	} else if (array_key_exists("exif:DateTimeDigitized", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["exif:DateTimeDigitized"]);
+	} else if (array_key_exists("exif:GPSDateStamp", $exif)) {
+		$dateHTML = exif_date_to_timestamp($exif["exif:GPSDateStamp"]);
 	} else {
 		$dateHTML = null;
 	}
 
 	//	Get the make and model
-	if( isset($exif_data["IFD0"]) ) {
-		$ifd0 = $exif_data["IFD0"];
-	} else {
-		$ifd0 = array();
-	}
-
 	$makeHTML = "";
-	if (array_key_exists("Make", $ifd0)) {
-		$makeHTML = ucwords($ifd0["Make"]);
+	if (array_key_exists("exif:Make", $exif)) {
+		$makeHTML = ucwords($exif["exif:Make"]);
 	}
-	if (array_key_exists("Model", $ifd0)) {
-		$makeHTML .= " " . $ifd0["Model"];
+	if (array_key_exists("exif:Model", $exif)) {
+		$makeHTML .= " " . $exif["exif:Model"];
 	}
 
 	//	Format the text

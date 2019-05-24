@@ -969,14 +969,14 @@ function get_user_map($userID)
 {
 	global $mysqli;
 
-	$where = "WHERE published = true AND userID = {$userID}";
+	// $where = "WHERE published = true AND userID = {$userID}";
 
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
-		{$where}
+		WHERE published = true AND userID = ?
 		LIMIT 0 , 20000");
 
-	$get_benches->bind_param('i', $id);
+	$get_benches->bind_param('i', $userID);
 	$get_benches->execute();
 
 	/* bind result variables */
