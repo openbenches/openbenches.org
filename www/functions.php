@@ -101,18 +101,23 @@ function is_photosphere($filename) {
 function get_image_location($file)
 {
 	if (is_file($file)) {
-		$info = exif_read_data($file);
+		$img = new \Imagick($file);
+		$info = $img->getImageProperties("exif:*");
+		$img->clear();
+
+		// $info = exif_read_data($file);
 		if ($info !== false) {
 				$direction = array('N', 'S', 'E', 'W');
-				if (isset($info['GPSLatitude'], $info['GPSLongitude'], $info['GPSLatitudeRef'], $info['GPSLongitudeRef']) &&
-					in_array($info['GPSLatitudeRef'], $direction) && in_array($info['GPSLongitudeRef'], $direction)) {
+				if (isset($info['exif:GPSLatitude'], $info['exif:GPSLongitude'], $info['exif:GPSLatitudeRef'],
+				    $info['exif:GPSLongitudeRef']) &&
+					in_array($info['exif:GPSLatitudeRef'], $direction) && in_array($info['exif:GPSLongitudeRef'], $direction)) {
 
-					$lat_degrees_a = explode('/',$info['GPSLatitude'][0]);
-					$lat_minutes_a = explode('/',$info['GPSLatitude'][1]);
-					$lat_seconds_a = explode('/',$info['GPSLatitude'][2]);
-					$lng_degrees_a = explode('/',$info['GPSLongitude'][0]);
-					$lng_minutes_a = explode('/',$info['GPSLongitude'][1]);
-					$lng_seconds_a = explode('/',$info['GPSLongitude'][2]);
+					$lat_degrees_a = explode('/',$info['exif:GPSLatitude'][0]);
+					$lat_minutes_a = explode('/',$info['exif:GPSLatitude'][1]);
+					$lat_seconds_a = explode('/',$info['exif:GPSLatitude'][2]);
+					$lng_degrees_a = explode('/',$info['exif:GPSLongitude'][0]);
+					$lng_minutes_a = explode('/',$info['exif:GPSLongitude'][1]);
+					$lng_seconds_a = explode('/',$info['exif:GPSLongitude'][2]);
 
 					$lat_degrees = $lat_degrees_a[0] / $lat_degrees_a[1];
 					$lat_minutes = $lat_minutes_a[0] / $lat_minutes_a[1];
@@ -128,8 +133,8 @@ function get_image_location($file)
 
 					//If the latitude is South, make it negative.
 					//If the longitude is west, make it negative
-					$lat = $info['GPSLatitudeRef'] == 'S' ? $lat * -1 : $lat;
-					$lng = $info['GPSLongitudeRef'] == 'W' ? $lng * -1 : $lng;
+					$lat = $info['exif:GPSLatitudeRef'] == 'S' ? $lat * -1 : $lat;
+					$lng = $info['exif:GPSLongitudeRef'] == 'W' ? $lng * -1 : $lng;
 
 					return array(
 						'lat' => round($lat,10),
