@@ -112,12 +112,16 @@ function get_image_location($file)
 				    $info['exif:GPSLongitudeRef']) &&
 					in_array($info['exif:GPSLatitudeRef'], $direction) && in_array($info['exif:GPSLongitudeRef'], $direction)) {
 
-					$lat_degrees_a = explode('/',$info['exif:GPSLatitude'][0]);
-					$lat_minutes_a = explode('/',$info['exif:GPSLatitude'][1]);
-					$lat_seconds_a = explode('/',$info['exif:GPSLatitude'][2]);
-					$lng_degrees_a = explode('/',$info['exif:GPSLongitude'][0]);
-					$lng_minutes_a = explode('/',$info['exif:GPSLongitude'][1]);
-					$lng_seconds_a = explode('/',$info['exif:GPSLongitude'][2]);
+					//	https://stackoverflow.com/questions/19347005/how-can-i-explode-and-trim-whitespace
+					$gpsLat = preg_split ('/(\s*,*\s*)*,+(\s*,*\s*)*/',$info['exif:GPSLatitude']);
+					$lat_degrees_a = explode('/',$gpsLat[0]);
+					$lat_minutes_a = explode('/',$gpsLat[1]);
+					$lat_seconds_a = explode('/',$gpsLat[2]);
+
+					$gpsLng = preg_split ('/(\s*,*\s*)*,+(\s*,*\s*)*/',$info['exif:GPSLongitude']);
+					$lng_degrees_a = explode('/',$gpsLng[0]);
+					$lng_minutes_a = explode('/',$gpsLng[1]);
+					$lng_seconds_a = explode('/',$gpsLng[2]);
 
 					$lat_degrees = $lat_degrees_a[0] / $lat_degrees_a[1];
 					$lat_minutes = $lat_minutes_a[0] / $lat_minutes_a[1];
@@ -149,7 +153,7 @@ function get_image_location($file)
 
 function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
                      $latitude=null, $longitude=null, $license=null,
-                    $user_provider=null, $user_name=null){
+                     $user_provider=null, $user_name=null){
 	//	Send Tweet
 	\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();

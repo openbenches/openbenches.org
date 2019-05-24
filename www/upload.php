@@ -6,14 +6,21 @@ require_once ("functions.php");
 
 //	What has been POSTed to us?
 //	Get the inscription, either to add to database, or recover in case of error
+// echo "<pre>";
 // echo var_export($_POST);
+// echo var_export($_FILES);
+// echo "</pre>";
 // die();
+
+$error_message = "";
+$error_message = "<pre>" . var_export($_POST, true) . "\n\n" .var_export($_FILES, true) . "</pre>";
+
 $inscription = $_POST['inscription'];
 $lat = $_POST['newLatitude'];
 $lng = $_POST['newLongitude'];
 
 $response = array("Open" => "Benches");
-$error_message = "";
+
 
 if ($_FILES['userfile1']['tmp_name'])
 {	//	Has a photo been posted?
@@ -116,6 +123,9 @@ if ($_FILES['userfile1']['tmp_name'])
 	}
 } else {
 	$error_message .= "Ooops! Looks like you didn't add a photo.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
+
+	$error_message .= "<pre>" . var_export($_POST, true) . "\n\n" .var_export($_FILES, true) . "</pre>";
+
 	$response["error"] = $error_message;
 }
 
