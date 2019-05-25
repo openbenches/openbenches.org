@@ -9,17 +9,22 @@ include("header.php");
 //	Has a photo been posted?
 if ($_GET["plaqueURL"])
 {
-	$long  = $_GET["long"];
-	$lat   = $_GET["lat"];
-	$photo = $_GET["photo"];
-	$url   = $_GET["plaqueURL"];
+	$plaqueURL = $_GET["plaqueURL"];
+	$rtpJSON = file_get_contents("https://readtheplaque.com/geojson/{$plaqueURL}");
+	$rtpData = json_decode($rtpJSON);
+
+	$long  = $rtpData->geometry->coordinates[0];
+	$lat   = $rtpData->geometry->coordinates[1];
+
+	$photo = $rtpData->properties->img_url_tiny;
+	$url   = "https://readtheplaque.com" . $rtpData->properties->title_page_url;
 
 	$photo = str_replace("http://", "https://", $photo);
 
 	//	Get the largest image
 	//	Documentation: https://sites.google.com/site/picasaresources/Home/Picasa-FAQ/google-photos-1/how-to/how-to-get-a-direct-link-to-an-image
 	$original = str_replace("=s100-c", "=s0", $photo);
-	$large = str_replace("=s100-c", "=s2048", $photo);
+	$large    = str_replace("=s100-c", "=s2048", $photo);
 
 	//	Encode for sending to cloud vision
 	$b64 = base64_encode(file_get_contents($large));
@@ -32,14 +37,11 @@ if ($_GET["plaqueURL"])
 	echo "<textarea name='inscription' id='inscription' cols='70' rows='6'></textarea><br>";
 	echo "<a target='_blank' href='{$original}'><img src='{$large}' width='1024'/></a><br>";
 	echo get_media_types_html();
-	echo "<input type='text' name='image'   size='60' value='{$original}'><br>";
-	echo "<input type='text' name='lat'     size='60' value='{$lat}'><br>";
-	echo "<input type='text' name='long'    size='60' value='{$long}'><br>";
 	echo "<select name='license'>";
 		echo "<option value='CC BY 4.0'>CC BY 4.0</option>";
 		echo "<option value='CC BY-SA 2.0'>CC BY-SA 2.0</option>";
 	echo "</select>";
-	echo "<input type='text' name='import'  size='60' value='{$url}'><br>";
+	echo "<input type='text' name='plaqueURL'  size='60' value='{$plaqueURL}'><br>";
 	echo "<div>
 		<div id='map'></div>
 		<div id='benchImage' ></div>
@@ -137,12 +139,26 @@ function displayJSON (data) {
 	die();
 } elseif ($_POST != null) {
 	$inscription = $_POST['inscription'];
-	$imageURL = $_POST['image'];
-	$import = $_POST['import'];
+
+	$rtpJSON = file_get_contents("https://readtheplaque.com/geojson/".$_POST["plaqueURL"]);
+	$rtpData = json_decode($rtpJSON);
+
+	$long  = $rtpData->geometry->coordinates[0];
+	$lat   = $rtpData->geometry->coordinates[1];
+
+	$img   = $rtpData->properties->img_url_tiny;
+	$import= "https://readtheplaque.com" . $rtpData->properties->title_page_url;
+
+	$img = str_replace("http://", "https://", $img);
+
+	//	Get the largest image
+	//	Documentation: https://sites.google.com/site/picasaresources/Home/Picasa-FAQ/google-photos-1/how-to/how-to-get-a-direct-link-to-an-image
+	$imageURL = str_replace("=s100-c", "=s0", $img);
+
 	$license = $_POST["license"];
 	$mediaType = $_POST["media_type"];
-	$lat = $_POST["lat"];
-	$long = $_POST["long"];
+
+
 	$filename =  "photos/tmp/" . (microtime(true) * 1000);
 	$photo = file_put_contents($filename, file_get_contents($imageURL));
 	$sha1 = sha1_file($filename);

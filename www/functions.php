@@ -311,9 +311,14 @@ EOT;
 }
 
 function get_exif_html($filename) {
-	$img = new \Imagick($filename);
-	$exif = $img->getImageProperties();
-	$img->clear();
+
+	try {
+		$img = new \Imagick($filename);
+		$exif = $img->getImageProperties();
+		$img->clear();
+	} catch (\Exception $e) {
+		return "";
+	}
 
 	if (array_key_exists("exif:DateTime", $exif)) {
 		$dateHTML = exif_date_to_timestamp($exif["exif:DateTime"]);

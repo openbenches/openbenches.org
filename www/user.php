@@ -2,7 +2,13 @@
 	include("header.php");
 
 	$provider = $params[2];
-	$username = $params[3];
+
+	if( isset($params[3]) ) {
+		$username = $params[3];
+	} else {
+		$username = null;
+	}
+
 	$userHTML = "Benches added or edited by ";
 	if (is_numeric($provider)) {
 		$user = get_user($provider);
