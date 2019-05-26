@@ -29,7 +29,7 @@ $resultsHTML = "";
 //	Has a search been requested?
 if (null != $query)
 {
-	$results = get_search_results($query, $page);
+	$results = get_search_results($query, $page, $count);
 	$total_results = get_search_count($query);
 
 	if (0 == count($results)){
