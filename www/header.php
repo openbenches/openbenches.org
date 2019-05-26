@@ -114,7 +114,7 @@ if ("user" == $page) {
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-19T14:40"/>
-	<link rel="stylesheet" href="/css/style.css?cache=2019-04-19T14:41"/>
+	<link rel="stylesheet" href="/css/style.css?cache=2019-05-26T15:51"/>
 
 	<link rel="stylesheet" href="/libs/leaflet.1.4.0/leaflet.css" />
 	<script                 src="/libs/leaflet.1.4.0/leaflet.js"></script>

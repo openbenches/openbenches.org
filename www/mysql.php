@@ -840,13 +840,13 @@ function get_media_types_array() {
 	return $media_types_array;
 }
 
-function get_search_results($q) {
+function get_search_results($q, $page=0, $results=2) {
 	global $mysqli;
 
+	$offset = $page * $results;
+
 	//	Replace spaces in query with `[[:space:]]*`
-	$q = str_replace(" ","[[:space:]]*", $q);
-	$quoteTranslation=array("\"" => "[\"“”]", "“" => "[\"“]", "”" => "[\"”]", "'" => "['‘’]", "‘" => "['‘]", "’" => "['’]");
-	$q = strtr($q,$quoteTranslation);
+	$q = prepare_search_query($q);
 
 	//	Query will be like
 	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
@@ -856,9 +856,9 @@ function get_search_results($q) {
 		 WHERE  `inscription`
 		 REGEXP	?
 		 AND	 `published` = 1
-		 LIMIT 0 , 20");
+		 LIMIT ? , ?");
 
-	$search->bind_param('s',$q);
+	$search->bind_param('sii', $q, $offset, $results);
 
 	$search->execute();
 	/* bind result variables */
@@ -875,6 +875,28 @@ function get_search_results($q) {
 
 	$search->close();
 	return $results;
+}
+
+function get_search_count($q) {
+	global $mysqli;
+
+	//	Replace spaces in query with `[[:space:]]*`
+	$q = prepare_search_query($q);
+
+	$search = $mysqli->prepare(
+		"SELECT  COUNT(*)
+		 FROM   `benches`
+		 WHERE  `inscription`
+		 REGEXP  ?
+		 AND    `published` = true");
+
+	$search->bind_param('s', $q);
+	$search->execute();
+	$search->bind_result($count);
+	$search->fetch();
+	$search->close();
+
+	return $count;
 }
 
 function get_bench_count() {

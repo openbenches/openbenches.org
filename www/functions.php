@@ -449,3 +449,10 @@ function get_image_cache($size=IMAGE_DEFAULT_SIZE, $filter=IMAGE_DEFAULT_FILTER)
 	//	Generate a prefix for the cached image. Can be thumbnailed. https://docs.cloudimage.io/go/cloudimage-documentation/en/operations/
 	return IMAGE_CACHE_PREFIX . "{$size}/$filter/" . $_SERVER['SERVER_NAME'];
 }
+
+function prepare_search_query($q) {
+	$q = str_replace(" ","[[:space:]]*", $q);
+	$quoteTranslation=array("\"" => "[\"“”]", "“" => "[\"“]", "”" => "[\"”]", "'" => "['‘’]", "‘" => "['‘]", "’" => "['’]");
+	$q = strtr($q,$quoteTranslation);
+	return $q;
+}

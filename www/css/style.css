@@ -81,7 +81,7 @@ fieldset {
 
 #search-results li {
 	margin-bottom: 1em;
-	display: table;
+	/* display: table; */
 	width: 100%;
 }
 
@@ -106,7 +106,7 @@ fieldset {
 }
 
 ol {
-	padding-left: 0px;
+	max-width: 48em;
 }
 
 textarea {
@@ -127,7 +127,7 @@ a {
 }
 
 hr {
-	/* margin: 1em; */
+	clear: both;
 }
 
 .leaflet-control-layers-base{
