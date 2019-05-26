@@ -8,7 +8,6 @@
 	//	/user/1234 (shows internal userid)
 
 	$option = $params[2];
-	echo "OPTION IS {$option}";
 
 	if (is_numeric($option)){
 		$userID   = $option;
@@ -90,6 +89,9 @@
 		$error_message = "No results found";
 	}
 	else {
+		$first = ($count * $page)+1;
+		$last  = ($count * ($page+1));
+
 		$resultsHTML = "<div id=\"search-results\">
 			<h2>Total benches found: {$total_results}.</h2>
 			<ol start='{$first}'>";
