@@ -13,7 +13,8 @@ body {
 	background-color: #e1ffe9;
 	color: #191E20;
 	text-align: center;
-	overflow-wrap: break-word;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 h1 a{
