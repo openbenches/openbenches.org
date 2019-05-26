@@ -960,17 +960,19 @@ function get_leadboard_media_html() {
 	return $html .= "</ul>";
 }
 
-function get_user_bench_list($userID)
+function get_user_bench_list($userID, $page=0, $results=20)
 {
 	global $mysqli;
+	$offset = $page * $results;
 
 	$get_user_list = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
 		 FROM	  `benches`
 		 WHERE  `userID` = ?
 		 AND	  `published` = 1
-		 LIMIT 0 , 1024");
-	$get_user_list->bind_param('i', $userID);
+		 LIMIT ? , ?");
+
+	$get_user_list->bind_param('iii', $userID, $offset, $results);
 
 	$get_user_list->execute();
 	$get_user_list->bind_result($benchID, $inscription, $address);
@@ -985,6 +987,25 @@ function get_user_bench_list($userID)
 
 	$get_user_list->close();
 	return $results;
+}
+
+function get_user_bench_count($userID) {
+	global $mysqli;
+
+	$search = $mysqli->prepare(
+		"SELECT COUNT(*)
+		 FROM	  `benches`
+		 WHERE  `userID` = ?
+		 AND	  `published` = true");
+
+	$search->bind_param('i', $userID);
+
+	$search->execute();
+	$search->bind_result($count);
+	$search->fetch();
+	$search->close();
+
+	return $count;
 }
 
 function get_user_map($userID)

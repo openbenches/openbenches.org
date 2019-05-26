@@ -1,18 +1,42 @@
 <?php
 	include("header.php");
 
-	$provider = $params[2];
 
-	if( isset($params[3]) ) {
-		$username = $params[3];
+	//	Either
+	//	/user/twitter/edent (shows external username)
+	//	or
+	//	/user/1234 (shows internal userid)
+
+	$option = $params[2];
+	echo "OPTION IS {$option}";
+
+	if (is_numeric($option)){
+		$userID   = $option;
+		$thisURL  = "/user/{$userID}/";
 	} else {
-		$username = null;
+		$username = $params[3];
+		$provider = $option;
+		$thisURL  = "/user/{$provider}/{$username}/";
+	}
+
+	//	/user/1234?page=2&count=5
+	if(isset($_GET['page'])){
+		$page = (int)$_GET['page'];
+	} else {
+		$page = 0;
+	}
+
+	if(isset($_GET['count'])){
+		$count = (int)$_GET['count'];
+	} else {
+		$count = 20;
 	}
 
 	$userHTML = "Benches added or edited by ";
-	if (is_numeric($provider)) {
-		$user = get_user($provider);
-		$userID     = $provider;
+
+	//	/user/1234
+	if (is_numeric($option)) {
+		$user = get_user($userID);
 		$username   = $user["name"];
 		$provider   = $user["provider"];
 		$providerID = $user["providerID"];
@@ -27,7 +51,8 @@
 			$userURL = "https://edent.github.io/github_id/#" . $providerID;
 			$userHTML .= "GitHub user <a href=\"{$userURL}\">{$username}</a>";
 		} else if("facebook" == $provider) {
-			$userHTML .= "Facebook user {$username}";
+			$userURL = "https://facebook.com/" . $providerID;
+			$userHTML .= "Facebook user <a href=\"{$userURL}\">{$username}</a>";
 		} else if("flickr" == $provider) {
 			$userHTML .= "the <a href=\"https://www.flickr.com/\">Flickr importer</a>";
 		} else if("wikipedia" == $provider) {
@@ -43,28 +68,49 @@
 			$userID = get_user_id($provider, $username);
 			$userURL = "https://twitter.com/" . $username;
 			$userHTML .= "Twitter user <a href=\"{$userURL}\">{$username}</a>";
+		} else if("github" == $provider) {
+			$userID = get_user_id($provider, $username);
+			$userURL = "https://github.com/" . $username;
+			$userHTML .= "GitHub user <a href=\"{$userURL}\">{$username}</a>";
+		} else if("facebook" == $provider) {
+			$userID = get_user_id($provider, $username);
+			$userURL = "https://facebook.com/" . $username;
+			$userHTML .= "GitHub user <a href=\"{$userURL}\">{$userID}</a>";
 		} else {
 			$userHTML = "Invalid User";
 		}
 	}
 
-	$results = get_user_bench_list($userID);
+	$results = get_user_bench_list($userID, $page, $count);
+	$total_results = get_user_bench_count($userID);
+
 
 	if (0 == count($results)){
 		$resultsHTML = "";
 		$error_message = "No results found";
 	}
 	else {
-		$resultsHTML = "<div id=\"search-results\"><ul>";
+		$resultsHTML = "<div id=\"search-results\">
+			<h2>Total benches found: {$total_results}.</h2>
+			<ol start='{$first}'>";
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
 			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\">";
-			$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a></li>";
+			$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a><hr></li>";
 		}
-		$resultsHTML .="</ul></div>";
+		$resultsHTML .="</ol></div></div>";
 	}
 
+	$resultsHTML .= "<div id=\"pagination\">";
+	if ($page > 0) {
+		$previous = $page - 1;
+		$resultsHTML .= "<a href='{$thisURL}?page={$previous}' class='button buttonColour'><strong>⬅️</strong> Previous Results</a>&emsp;&emsp;";
+	}
+	if ( ($count * ($page+1)) < $total_results) {
+		$next = $page + 1;
+		$resultsHTML .= "<a href='{$thisURL}?page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a>";
+	}
 ?>
 </hgroup>
 
