@@ -840,7 +840,7 @@ function get_media_types_array() {
 	return $media_types_array;
 }
 
-function get_search_results($q, $page=0, $results=2) {
+function get_search_results($q, $page=0, $results=20) {
 	global $mysqli;
 
 	$offset = $page * $results;

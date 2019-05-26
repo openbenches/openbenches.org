@@ -20,7 +20,7 @@ if(isset($_GET['page'])){
 if(isset($_GET['count'])){
 	$count = (int)$_GET['count'];
 } else {
-	$count = 2;
+	$count = 20;
 }
 
 $error_message = "";
