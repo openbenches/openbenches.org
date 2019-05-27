@@ -58,6 +58,8 @@
 			$userHTML .= "the <a href=\"https://www.wikipedia.org/\">Wikipedia importer</a>";
 		} else if("readtheplaque" == $provider) {
 			$userHTML .= "the <a href=\"https://www.readtheplaque.com/\">ReadThePlaque importer</a>";
+		} else if("geograph" == $provider) {
+			$userHTML .= "the <a href=\"https://www.geograph.org.uk/\">Geograph importer</a>";
 		} else {
 			$userHTML .= "an anonymous user";
 		}

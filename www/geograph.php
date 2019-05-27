@@ -40,7 +40,7 @@ if ($_GET["url"])
 
 	//	Get the largest image
         	       // https://t0.geograph.org.uk/stamp.php?id=5983414&title=on&gravity=SouthEast&hash=09b272ba&large=1&pointsize=24
-	$original = "https://t0.geograph.org.uk/stamp.php?id={$id}&title=on&gravity=SouthEast&hash={$hash}";
+	$original = "https://t0.geograph.org.uk/stamp.php?id={$id}&title=on&gravity=SouthEast&hash={$hash}&large=1";
 	$large    = $ggData->url;
 
 	//	Encode for sending to cloud vision
@@ -52,7 +52,15 @@ if ($_GET["url"])
 	echo "<a class='button' name='detectButton' id='detectButton' onclick='sendURLToCloudVision(\"{$b64}\")'>Detect Text</a>";
 	echo '<code style="white-space:pre" id="message"></code>';
 	echo "<textarea name='inscription' id='inscription' cols='70' rows='6'></textarea><br>";
-	echo "<a target='_blank' href='{$original}'><img src='{$original}' width='1024'/></a><br>";
+	echo "<a target='_blank' href='{$large}'><img src='{$original}' width='1024'/></a><br>";
+	echo "<label>
+         	<input type=\"radio\" id=\"big\" name=\"large\" value=\"1\" checked>
+         	<span class=\"checkable\">Large Available</span>
+         </label>
+			<label>
+			  <input type=\"radio\" id=\"small\" name=\"large\" value=\"0\">
+			  <span class=\"checkable\">Small Only</span>
+			</label><br>";
 	echo get_media_types_html();
 	echo $license;
 	echo "<select name='license'>";
@@ -157,6 +165,7 @@ function displayJSON (data) {
 } elseif ($_POST != null) {
 	$inscription = $_POST['inscription'];
 	$id = $_POST['id'];
+	$large = $_POST['large'];
 
 	$ggJSON = file_get_contents("https://api.geograph.org.uk/api/oembed?format=json&url=http%3A%2F%2Fwww.geograph.org.uk%2Fphoto%2F{$id}");
 	$ggData = json_decode($ggJSON);
@@ -182,7 +191,7 @@ function displayJSON (data) {
 	$import = $ggData->web_page;
 
 	//	Get the largest image
-	$original = "https://t0.geograph.org.uk/stamp.php?id={$id}&title=on&gravity=SouthEast&hash={$hash}";
+	$original = "https://t0.geograph.org.uk/stamp.php?id={$id}&title=on&gravity=SouthEast&hash={$hash}&large={$large}";
 
 	$license = $_POST["license"];
 	$mediaType = $_POST["media_type"];
