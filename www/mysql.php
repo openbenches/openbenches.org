@@ -532,9 +532,14 @@ function get_image_thumb($benchID, $size = IMAGE_THUMB_SIZE)
 
 function get_all_media($benchID = 0)
 {
+	if (0==$benchID){
+		$allBenches = true;
+	} else {
+		$allBenches = false;
+	}
 	global $mysqli;
 
-	if(0 == $benchID) {
+	if($allBenches) {
 		$get_media = $mysqli->prepare(
 			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID
 			 FROM `benches`
@@ -551,7 +556,7 @@ function get_all_media($benchID = 0)
 			$get_media->bind_param('i',  $benchID );
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $user);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID);
 	}
 
 	$media = array();
@@ -569,22 +574,27 @@ function get_all_media($benchID = 0)
 		$media_data["licence"]    = $licence;
 		$media_data["media_type"] = $media_type;
 		$media_data["sha1"]       = $sha1;
-		$media_data["user"]       = $user;
+		$media_data["user"]       = $userID;
 
-		try {
-			$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
-		} catch (Exception $e) {
-			$refer = $_SERVER["HTTP_REFERER"];
-			error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
-			die();
+		//	Images times out with large datasets
+		//	Only do this for a single image
+		if (!$allBenches) {
+			try {
+				$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
+			} catch (Exception $e) {
+				$refer = $_SERVER["HTTP_REFERER"];
+				error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
+				die();
+			}
+			$height = $imagick->getImageHeight();
+			$width  = $imagick->getImageWidth();
+			$imagick->clear();
+
+			$media_data["width"]  = $width;
+			$media_data["height"] = $height;
 		}
-		$height = $imagick->getImageHeight();
-		$width  = $imagick->getImageWidth();
-		$imagick->clear();
 
-		$media_data["width"]      = $width;
-		$media_data["height"]     = $height;
-
+		//	Add all the media details to the response
 		$media[$benchID][] = $media_data;
 	}
 
