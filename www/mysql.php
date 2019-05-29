@@ -277,7 +277,11 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 		}
 
 		if ($media) {
-			$mediaFeature = $media_data[$benchID];
+			if (isset($media_data[$benchID])){
+				$mediaFeature = $media_data[$benchID];
+			} else {
+				$mediaFeature = null;
+			}
 		} else {
 			$mediaFeature = null;
 		}
@@ -595,11 +599,18 @@ function get_all_media($benchID = 0)
 		}
 
 		//	Add all the media details to the response
-		$media[$benchID][] = $media_data;
+		if (sizeof($media_data) > 0){
+			$media[$benchID][] = $media_data;
+		}
 	}
 
 	$get_media->close();
-	return $media;
+
+	if (sizeof($media) > 0){
+		return $media;
+	} else {
+		return null;
+	}
 }
 
 function get_rss($items = 10) {
