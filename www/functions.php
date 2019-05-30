@@ -424,9 +424,19 @@ function save_image($file, $media_type, $benchID, $userID) {
 	}
 	$moved = move_uploaded_file($file, $photo_full_path);
 
+	$dimensions = get_image_dimensions($sha1);
+
+	if (null != $dimensions) {
+		$width = $dimensions["width"];
+		$height = $dimensions["height"];
+	} else {
+		$width  = 0;
+		$height = 0;
+	}
+
 	//	Add the media to the database
 	if ($moved){
-		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type);
+		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type, $width, $height);
 		return true;
 	} else {
 		return("<h3>Unable to move {$filename} to {$photo_full_path} - bench {$benchID} user {$userID} media {$media_type}</h3>");
@@ -455,4 +465,24 @@ function prepare_search_query($q) {
 	$quoteTranslation=array("\"" => "[\"“”]", "“" => "[\"“]", "”" => "[\"”]", "'" => "['‘’]", "‘" => "['‘]", "’" => "['’]");
 	$q = strtr($q,$quoteTranslation);
 	return $q;
+}
+
+function get_image_dimensions($sha1) {
+	try {
+		$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
+	} catch (Exception $e) {
+		$refer = $_SERVER["HTTP_REFERER"];
+		error_log("Image error! {$sha1} - from {$refer} - {$e}" , 0);
+		return null;
+	}
+	$height = $imagick->getImageHeight();
+	$width  = $imagick->getImageWidth();
+	$imagick->clear();
+
+	$image_dimensions = array();
+
+	$image_dimensions["width"]  = $width;
+	$image_dimensions["height"] = $height;
+
+	return $image_dimensions;
 }

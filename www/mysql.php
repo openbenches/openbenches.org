@@ -44,12 +44,12 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true, $userI
 	global $mysqli;
 	$edit_bench = $mysqli->prepare(
 		"UPDATE `benches`
-			 SET `latitude` =	 ?,
-				  `longitude` =	?,
-				  `address` =	  ?,
-				  `inscription` = ?,
-				  `published` =	?,
-				  `userID` =		?
+			 SET `latitude`   = ?,
+				  `longitude`  = ?,
+				  `address`    = ?,
+				  `inscription`= ?,
+				  `published`  = ?,
+				  `userID`     = ?
 		  WHERE `benches`.`benchID` = ?");
 	$edit_bench->bind_param('ddssisi', $lat, $long, $address, $inscription, $published, $userID, $benchID);
 	$edit_bench->execute();
@@ -73,16 +73,16 @@ function update_bench_address($benchID, $benchLat, $benchLong) {
 }
 
 
-function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null)
+function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null, $width=null, $height=null)
 {
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
-				 (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`)
-		VALUES (NULL,      ?,        ?,       ?,      ?,         ?,          ?);'
+				 (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`, `width`, `height`)
+		VALUES (NULL,      ?,        ?,       ?,      ?,         ?,          ?,             ?,       ?);'
 	);
 
-	$insert_media->bind_param('iissss', $benchID, $userID, $sha1, $licence, $import, $media_type);
+	$insert_media->bind_param('iissssii', $benchID, $userID, $sha1, $licence, $import, $media_type, $width, $height);
 	$insert_media->execute();
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
@@ -545,22 +545,23 @@ function get_all_media($benchID = 0)
 
 	if($allBenches) {
 		$get_media = $mysqli->prepare(
-			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID
+			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID,
+			        media.width, media.height
 			 FROM `benches`
 				INNER JOIN
 			`media` ON benches.benchID = media.benchID");
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height);
 	} else {
 		$get_media = $mysqli->prepare(
-			"SELECT benchID, sha1, importURL, licence, media_type, userID
+			"SELECT benchID, sha1, importURL, licence, media_type, userID, width, height
 			FROM media
 			WHERE benchID = ?");
 			$get_media->bind_param('i',  $benchID );
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height);
 	}
 
 	$media = array();
@@ -579,23 +580,13 @@ function get_all_media($benchID = 0)
 		$media_data["media_type"] = $media_type;
 		$media_data["sha1"]       = $sha1;
 		$media_data["user"]       = $userID;
+		$media_data["width"]      = $width;
+		$media_data["height"]     = $height;
 
-		//	Images times out with large datasets
-		//	Only do this for a single image
-		if (!$allBenches) {
-			try {
-				$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
-			} catch (Exception $e) {
-				$refer = $_SERVER["HTTP_REFERER"];
-				error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
-				die();
-			}
-			$height = $imagick->getImageHeight();
-			$width  = $imagick->getImageWidth();
-			$imagick->clear();
-
-			$media_data["width"]  = $width;
-			$media_data["height"] = $height;
+		//	If the dimensions weren't originally recorded,
+		//	update the database
+		if (null == $width) {
+			add_image_dimensions($sha1);
 		}
 
 		//	Add all the media details to the response
@@ -1132,4 +1123,38 @@ function get_merged_bench($benchID) {
 		return $mergedID;
 		die();
 	}
+}
+
+function add_image_dimensions($sha1) {
+	//	If an image was added without recording the original width and height,
+	//	this function will add the dimensions to the database
+	//ALTER TABLE `media_history` ADD `width` INT NULL DEFAULT NULL AFTER `media_type`, ADD `height` INT NULL DEFAULT NULL AFTER `width`;
+
+	//	UPDATE `media` SET `width` = '111', `height` = '222' WHERE `media`.`mediaID` = 106
+	$image_dimensions = get_image_dimensions($sha1);
+	$width  = $image_dimensions["width"];
+	$height = $image_dimensions["height"];
+
+	//	Need a 2nd DB connection as we're already connected to the global one
+	$mysqli2 = new mysqli(DB_IP, DB_USER, DB_PASS, DB_TABLE);
+	if ($mysqli2->connect_errno) {
+		echo "Failed to connect to MySQL: (" . $mysqli2->connect_errno . ") " . $mysqli2->connect_error;
+	}
+
+	if (!$mysqli2->set_charset("utf8mb4")) {
+		printf("Error loading character set utf8mb4: %s\n", $mysqli2->error);
+		exit();
+	}
+
+	$update_media = $mysqli2->prepare(
+		"UPDATE `media`
+		 SET `media`.`width`  = ?,
+		     `media`.`height` = ?
+		 WHERE `media`.`sha1` = ?");
+
+	$update_media->bind_param('iis', $width, $height, $sha1);
+	$update_media->execute();
+	$update_media->close();
+
+	return null;
 }
