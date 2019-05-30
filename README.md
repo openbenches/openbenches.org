@@ -62,6 +62,7 @@ You will need to sign up to some external API providers:
 * Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
 * Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
 * Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
+* Image resizing and caching requires a [CloudImage.io account](https://www.cloudimage.io)
 * **Optional** Login requires a free [Auth0.com](https://auth0.com/) account.
 
 Add them to `config.php.example` - rename that to `config.php`
@@ -107,6 +108,8 @@ Media storage can be complicated. Storing thousands of images in a single direct
 * `importURL` If the image was imported from an external source - like Flickr.
 * `licence` The default is `CC BY-SA 4.0`, imported images may be different.
 * `media_type` We allow different types of photo - in the future, we might have other types of media.
+* `width` The image's width in pixels.
+* `height` The image's width in pixels.
 
 #### Media Types
 
