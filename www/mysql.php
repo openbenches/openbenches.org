@@ -444,10 +444,13 @@ function get_image_html($benchID, $full = true)
 
 		//	Was this imported from an external source?
 		$source="";
+
+		$cc_icon = license_to_icon($licence);
+
 		if(null != $importURL) {
-			$source = "<a href='{$importURL}' rel='license'>{$licence}</a>";
+			$source = "<a href=\"{$importURL}\"><img src=\"/images/cc/{$cc_icon}\" class=\"cc-icon\" alt=\"{$licence}\"/></a>";
 		} else {
-			$source = '<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc-by-sa.svg" class="cc-icon" alt="Creative Commons Attribution Share-alike"/></a>';
+			$source = "<a rel=\"license\" href=\"https://creativecommons.org/licenses/by-sa/4.0/\"><img src=\"/images/cc/{$cc_icon}\" class=\"cc-icon\" alt=\"Creative Commons Attribution Share-alike\"/></a>";
 		}
 
 		//	When was the photo taken?

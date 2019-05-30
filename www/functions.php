@@ -485,3 +485,23 @@ function get_image_dimensions($sha1) {
 
 	return $image_dimensions;
 }
+
+function license_to_icon($shortName){
+	//	The exception which doesn't fit
+	if ("CC Zero" == $shortName){
+		return "cc-zero.svg";
+	}
+
+	//	Remove the version
+	$version = array("1.0","2.0","3.0","4.0");
+	$shortName = str_replace($version, "", $shortName);
+
+	//	Lower case
+	$shortName = strtolower($shortName);
+	//	Remove trailing space
+	$shortName = rtrim($shortName);
+	//	Replace space
+	$shortName = str_replace(" ","-",$shortName);
+	//	Add file type
+	return $shortName . ".svg";
+}
