@@ -1128,9 +1128,7 @@ function get_merged_bench($benchID) {
 function add_image_dimensions($sha1) {
 	//	If an image was added without recording the original width and height,
 	//	this function will add the dimensions to the database
-	//ALTER TABLE `media_history` ADD `width` INT NULL DEFAULT NULL AFTER `media_type`, ADD `height` INT NULL DEFAULT NULL AFTER `width`;
 
-	//	UPDATE `media` SET `width` = '111', `height` = '222' WHERE `media`.`mediaID` = 106
 	$image_dimensions = get_image_dimensions($sha1);
 	$width  = $image_dimensions["width"];
 	$height = $image_dimensions["height"];

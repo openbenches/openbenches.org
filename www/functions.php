@@ -471,8 +471,7 @@ function get_image_dimensions($sha1) {
 	try {
 		$imagick = new \Imagick(realpath(get_path_from_hash($sha1)));
 	} catch (Exception $e) {
-		$refer = $_SERVER["HTTP_REFERER"];
-		error_log("Image error! {$sha1} - from {$refer} - {$e}" , 0);
+		error_log("Image error! {$sha1} - {$e}" , 0);
 		return null;
 	}
 	$height = $imagick->getImageHeight();
