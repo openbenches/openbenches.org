@@ -583,12 +583,6 @@ function get_all_media($benchID = 0)
 		$media_data["width"]      = $width;
 		$media_data["height"]     = $height;
 
-		//	If the dimensions weren't originally recorded,
-		//	update the database
-		if (null == $width) {
-			add_image_dimensions($sha1);
-		}
-
 		//	Add all the media details to the response
 		if (sizeof($media_data) > 0){
 			$media[$benchID][] = $media_data;
@@ -1123,36 +1117,4 @@ function get_merged_bench($benchID) {
 		return $mergedID;
 		die();
 	}
-}
-
-function add_image_dimensions($sha1) {
-	//	If an image was added without recording the original width and height,
-	//	this function will add the dimensions to the database
-
-	$image_dimensions = get_image_dimensions($sha1);
-	$width  = $image_dimensions["width"];
-	$height = $image_dimensions["height"];
-
-	//	Need a 2nd DB connection as we're already connected to the global one
-	$mysqli2 = new mysqli(DB_IP, DB_USER, DB_PASS, DB_TABLE);
-	if ($mysqli2->connect_errno) {
-		echo "Failed to connect to MySQL: (" . $mysqli2->connect_errno . ") " . $mysqli2->connect_error;
-	}
-
-	if (!$mysqli2->set_charset("utf8mb4")) {
-		printf("Error loading character set utf8mb4: %s\n", $mysqli2->error);
-		exit();
-	}
-
-	$update_media = $mysqli2->prepare(
-		"UPDATE `media`
-		 SET `media`.`width`  = ?,
-		     `media`.`height` = ?
-		 WHERE `media`.`sha1` = ?");
-
-	$update_media->bind_param('iis', $width, $height, $sha1);
-	$update_media->execute();
-	$update_media->close();
-
-	return null;
 }

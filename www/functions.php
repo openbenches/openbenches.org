@@ -430,8 +430,8 @@ function save_image($file, $media_type, $benchID, $userID) {
 		$width = $dimensions["width"];
 		$height = $dimensions["height"];
 	} else {
-		$width  = 0;
-		$height = 0;
+		$width  = null;
+		$height = null;
 	}
 
 	//	Add the media to the database
