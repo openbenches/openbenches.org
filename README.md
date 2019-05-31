@@ -1,15 +1,8 @@
 # OpenBenches
 
-![A bench in a park, birds fly up above. In the background is a tree.](https://openbenches.org/mstile-70x70.png) 
+![A bench in a park, birds fly up above. In the background is a tree.](https://openbenches.org/mstile-70x70.png)
 
 https://OpenBenches.org/ - an open data repository for memorial benches.
-
-[![Buy me a coffee](https://www.ko-fi.com/img/donate_sm.png)](https://ko-fi.com/edent)
-
-# BETA
-
-OMG! This code is still a bit horrible. Looking at it will make you a bit sad.
-This is a *slightly grubby* beta - thrown together to test whether things work, but now we are sharing the blame with all the folks who have contributed so far.
 
 ## Contributing
 
