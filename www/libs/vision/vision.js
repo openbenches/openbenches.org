@@ -20,11 +20,11 @@ var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=' + window.ap
 $(function () {
 	// $('#fileform').on('submit', uploadFiles);
 	$('#detectButton').click(uploadFiles);
-	
+
 	$("#typeButton" ).click(function() {
 		//	Unhide the inscription box
 		$('#inscription-hidden').show();
-		$('#submitButton').show();
+		$('#buttonBar').show();
 	});
 });
 
@@ -40,7 +40,7 @@ function uploadFiles (event) {
 		//	Large images can't be sent to Google Cloud Vision
 		//	Use the scaled image from the canvas
 		textFromCanvas();
-	} else {		
+	} else {
 		var reader = new FileReader();
 		reader.onloadend = processFile;
 		reader.readAsDataURL(file);
@@ -81,9 +81,9 @@ function sendFileToCloudVision (content) {
 		$('#message').text('Automatic text detection encountered an error:\n ' + textStatus + ' ' + errorThrown + '.\nSorry about that. Please enter the inscription yourself.');
 	 //	Unhide the inscription box
 	 $('#inscription-hidden').show();
-	 $('#submitButton').show();
+	 $('#buttonBar').show();
 	}).done(displayJSON);
-	// uncomment the line below if you're doing testing without a Google Vision API key and want to fake successful detection of text 
+	// uncomment the line below if you're doing testing without a Google Vision API key and want to fake successful detection of text
 	//setTimeout( function() { displayJSON(JSON.parse('{  "responses": [  { "fullTextAnnotation": { "text": "BUFFY ANNE SUMMERS\\n1981 - 2001\\nBELOVED SISTER\\nDEVOTED FRIEND\\nSHE SAVED THE WORLD\\nA LOT" } }] }')); }, 5000);
 }
 
@@ -91,11 +91,11 @@ function sendFileToCloudVision (content) {
  * Displays the results.
  */
 function displayJSON (data) {
-	//  Tell visitor the automatic text detection finished 
+	//  Tell visitor the automatic text detection finished
 	$('#message').text('Automatically detected text is shown below.\nPlease check and edit if needed.');
 	//	Unhide the inscription box
 	$('#inscription-hidden').show();
-	$('#submitButton').show();
+	$('#buttonBar').show();
 	//	Get the text
 	var contents = data.responses[0].fullTextAnnotation.text;
 	//	Add the detected inscription
@@ -119,7 +119,7 @@ async function textFromCanvas() {
 	var canvases = document.getElementsByTagName("canvas");
 	var canvas = canvases[0];
   console.log('Two second later');
-	canvas.toBlob(function(blob) { 
+	canvas.toBlob(function(blob) {
 		var reader = new window.FileReader();
 		reader.readAsDataURL(blob);
 		reader.onloadend = function() {
@@ -127,6 +127,6 @@ async function textFromCanvas() {
 			sendFileToCloudVision(
 				base64data.replace('data:image/jpeg;base64,', '')
 			);
-		}	
+		}
 	}, 'image/jpeg', 0.75);
 }

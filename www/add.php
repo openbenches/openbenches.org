@@ -38,7 +38,7 @@ if(null == $user_provider) {
 				<?php echo get_media_types_html("1"); ?>
 			</div>
 		</div>
-		<div id="inscription-hidden" style="">
+		<div id="inscriptionBox" style="">
 			<label for="inscription" id="message">Inscription:</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6" placeholder="In loving memory of
 Buffy Anne Summers
@@ -95,8 +95,9 @@ A lot..."></textarea>
 			<p id="loaded_n_total"></p>
 		</div>
 	</form>
-	<div class="button-bar">
-		<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="📷 Share Bench" style="display: none;"/>
+	<div class="button-bar" id="buttonBar" style="display: none;">
+		Please <a href="#inscriptionBox">check the inscription</a> before sharing.<br>
+		<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="📷 Share Bench"/>
 	</div>
 	<small>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
