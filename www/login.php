@@ -38,25 +38,18 @@ if (!$userInfo) {
 	$username = explode("|", $userInfo["sub"]);
 
 	$userID = insert_user($username[0], $username[1], $userInfo['nickname']);
-
-	// echo "<pre>";
-	// var_export($auth0->getAccessToken());
-	// echo "</pre>";
-	// echo "<pre>";
-	// var_export($auth0->getIdToken());
-	// echo "</pre>";
 }
 
 //	Cache buster
 $cache = time();
 
 //	Is this an edit login?
-$benchID = $_SESSION['edit_bench_id'];
-if(is_numeric($benchID)){
-	//	Redirect to the Edit page
+if(!empty($_SESSION['edit_bench_id'])) {
+	$benchID = (int)$_SESSION['edit_bench_id'];
 	header("Location: /edit/{$benchID}/?cache={$cache}");
-} else {
-	//	Redirect to the Add page
-	header("Location: /add/?cache={$cache}");
+	die();
 }
+
+//	Redirect to the Add page
+header("Location: /add/?cache={$cache}");
 die();

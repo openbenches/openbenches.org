@@ -57,21 +57,21 @@ if ($_FILES['userfile1']['tmp_name'])
 			save_image($_FILES['userfile1'], $media_type, $benchID, $userID);
 
 			//	Save other images
-			if ($_FILES['userfile2']['tmp_name'])
+			if (!empty($_FILES['userfile2']['tmp_name']))
 			{
 				$sha1 = sha1_file($_FILES['userfile2']['tmp_name']);
 				save_image($_FILES['userfile2'], $_POST['media_type2'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
-			if ($_FILES['userfile3']['tmp_name'])
+			if (!empty($_FILES['userfile3']['tmp_name']))
 			{
 				$sha1 = sha1_file($_FILES['userfile3']['tmp_name']);
 				save_image($_FILES['userfile3'], $_POST['media_type3'], $benchID, $userID);
 				$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
-			if ($_FILES['userfile4']['tmp_name'])
+			if (!empty($_FILES['userfile4']['tmp_name']))
 			{
 				$sha1 = sha1_file($_FILES['userfile4']['tmp_name']);
 				save_image($_FILES['userfile4'], $_POST['media_type4'], $benchID, $userID);
@@ -123,5 +123,4 @@ if ($_FILES['userfile1']['tmp_name'])
 	$response["error"] = $error_message;
 }
 
-// echo json_encode($response);
 echo $error_message;
