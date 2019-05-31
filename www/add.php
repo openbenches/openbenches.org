@@ -38,9 +38,12 @@ if(null == $user_provider) {
 				<?php echo get_media_types_html("1"); ?>
 			</div>
 		</div>
-		<div id="inscription-hidden" style="display: none;">
+		<div id="inscription-hidden" style="">
 			<label for="inscription" id="message">Inscription:</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6"></textarea>
+			<textarea id="inscription" name="inscription" cols="40" rows="6" placeholder="In loving memory of
+Buffy Anne Summers
+She saved the world.
+A lot..."></textarea>
 		</div>
 		<div id="map-hidden" style="clear:both;display: none;">
 			<h3>Drag pin if you need to adjust the bench's location</h3>
