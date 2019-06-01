@@ -719,6 +719,35 @@ function get_user($userID)
 	return $user;
 }
 
+function get_all_users()
+{
+	global $mysqli;
+	$get_user = $mysqli->prepare(
+		"SELECT userID, provider, providerID, name FROM users");
+
+	$get_user->execute();
+	/* bind result variables */
+	$get_user->bind_result($userID, $provider, $providerID, $name);
+
+	$userString = "";
+	$users = array();
+	# Loop through rows to build feature arrays
+	while($get_user->fetch()) {
+		if ("anon" != $provider){
+			$name = htmlspecialchars($name);
+			$users[$userID]["provider"] = $provider;
+			$users[$userID]["providerID"] = $providerID;
+			$users[$userID]["name"] = $name;
+		} else {
+			$users[$userID]["provider"] = "anonymous";
+			$users[$userID]["providerID"] = null;
+			$users[$userID]["name"] = null;
+		}
+	}
+	$get_user->close();
+	return $users;
+}
+
 function get_user_id($provider, $username, $is_id = false) {
 	global $mysqli;
 	if ($is_id) {
