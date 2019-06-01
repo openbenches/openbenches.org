@@ -54,7 +54,9 @@
         <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
     </rule>
     <rule ref="Generic.Metrics"/>
-    <rule ref="Generic.NamingConventions"/>
+    <rule ref="Generic.NamingConventions">
+        <exclude name="Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps"/>
+    </rule>
     <rule ref="Generic.PHP">
         <exclude name="Generic.PHP.ClosingPHPTag"/>
         <exclude name="Generic.PHP.UpperCaseConstant"/>
@@ -77,6 +79,9 @@
         <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
         <exclude name="Squiz.Commenting.FunctionCommentThrowTag.WrongNumber"/>
+    </rule>
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude-pattern>tests/*\.php</exclude-pattern>
     </rule>
     <rule ref="Squiz.ControlStructures"/>
     <rule ref="Squiz.Functions">

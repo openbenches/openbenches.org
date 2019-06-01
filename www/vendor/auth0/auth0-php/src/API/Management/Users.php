@@ -142,35 +142,17 @@ class Users extends GenericResource
 
         // Keep existing pagination params if passed (backwards-compat), override with non-null function param if not.
         if (! isset($params['page']) && null !== $page) {
-            $params['page'] = abs(intval($page));
+            $params['page'] = abs((int) $page);
         }
 
         if (! isset($params['per_page']) && null !== $per_page) {
-            $params['per_page'] = abs(intval($per_page));
+            $params['per_page'] = abs((int) $per_page);
         }
 
         return $this->apiClient->method('get')
             ->addPath('users')
             ->withDictParams($params)
             ->call();
-    }
-
-    /**
-     * Wrapper for self::search().
-     *
-     * TODO: Deprecate, replaced with getAll above.
-     *
-     * @param array $params Search parameters to send.
-     *
-     * @return mixed|string
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @see self::getAll()
-     */
-    public function search(array $params = [])
-    {
-        return $this->getAll($params);
     }
 
     /**
@@ -241,22 +223,6 @@ class Users extends GenericResource
     }
 
     /**
-     * Unlink device.
-     * TODO: Deprecate, endpoint does not exist.
-     *
-     * @param string $user_id   User ID.
-     * @param string $device_id Device ID.
-     *
-     * @return void
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     */
-    public function unlinkDevice($user_id, $device_id)
-    {
-        throw new \Exception('Endpoint /api/v2/users/{user_id}/devices/{device_id} does not exist.');
-    }
-
-    /**
      * Delete the multifactor provider settings for a particular user.
      * This will force user to re-configure the multifactor provider.
      * Required scope: "update:users"
@@ -275,4 +241,49 @@ class Users extends GenericResource
             ->addPath('multifactor', $mfa_provider)
             ->call();
     }
+
+    /*
+     * Deprecated
+     */
+
+    // phpcs:disable
+
+    /**
+     * Wrapper for self::getAll().
+     *
+     * @deprecated 5.4.0, use $this->>getAll instead.
+     *
+     * @param array $params Search parameters to send.
+     *
+     * @return mixed|string
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @codeCoverageIgnores - Deprecated
+     */
+    public function search(array $params = [])
+    {
+        return $this->getAll($params);
+    }
+
+    /**
+     * Unlink device.
+     *
+     * @deprecated 5.4.0, endpoint does not exist.
+     *
+     * @param string $user_id   User ID.
+     * @param string $device_id Device ID.
+     *
+     * @return void
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @codeCoverageIgnores - Deprecated
+     */
+    public function unlinkDevice($user_id, $device_id)
+    {
+        throw new \Exception('Endpoint /api/v2/users/{user_id}/devices/{device_id} does not exist.');
+    }
+
+    // phpcs:enable
 }

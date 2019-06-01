@@ -1,12 +1,10 @@
 <?php
-
-
-namespace Auth0\Tests\API\Management;
+namespace Auth0\Tests\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\API\ApiTests;
 
-class AuthApiDBConnectionsTest extends ApiTests
+class DbConnectionsTest extends ApiTests
 {
 
     protected $email;
@@ -20,7 +18,7 @@ class AuthApiDBConnectionsTest extends ApiTests
 
     public function testSignup()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
@@ -38,7 +36,7 @@ class AuthApiDBConnectionsTest extends ApiTests
 
     public function testChangePassword()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 

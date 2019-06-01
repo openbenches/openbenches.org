@@ -5,6 +5,8 @@ namespace Auth0\Tests;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Header\Header;
+use Auth0\SDK\API\Header\Telemetry;
+use Auth0\SDK\API\Header\ForwardedFor;
 
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,5 +41,25 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Content-Type', $header->getHeader());
         $this->assertEquals($contentType, $header->getValue());
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
+    }
+
+    public function testTelemetry()
+    {
+        $telemetryVal = uniqid();
+        $header       = new Telemetry($telemetryVal);
+
+        $this->assertEquals('Auth0-Client', $header->getHeader());
+        $this->assertEquals($telemetryVal, $header->getValue());
+        $this->assertEquals("Auth0-Client: $telemetryVal\n", $header->get());
+    }
+
+    public function testForwardedFor()
+    {
+        $forwardedForVal = uniqid();
+        $header          = new ForwardedFor($forwardedForVal);
+
+        $this->assertEquals('Auth0-Forwarded-For', $header->getHeader());
+        $this->assertEquals($forwardedForVal, $header->getValue());
+        $this->assertEquals("Auth0-Forwarded-For: $forwardedForVal\n", $header->get());
     }
 }

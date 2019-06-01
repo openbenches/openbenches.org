@@ -1,5 +1,73 @@
 # Change Log
 
+## [5.4.0](https://github.com/auth0/auth0-PHP/tree/5.4.0) (2019-02-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.2...5.4.0)
+
+**Notes for this release:**
+- `\Auth0\SDK\Auth0` now accepts a `$config` key called `skip_userinfo` that uses the decoded ID token for the user profile instead of a call to the `/userinfo` endpoint. This will save an HTTP call during login and should have no affect on most applications.
+
+**Closed issues**
+- `Auth0::exchange()` assumes a valid id_token [\#317](https://github.com/auth0/auth0-PHP/issues/317)
+- Feature Request: Support sending `auth0-forwarded-for` header [\#208](https://github.com/auth0/auth0-PHP/issues/208)
+
+**Added**
+- Authentication class cleanup and tests [\#322](https://github.com/auth0/auth0-PHP/pull/322) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Grants Management endpoint [\#321](https://github.com/auth0/auth0-PHP/pull/321) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add `Auth0-Forwarded-For` header for RO grant [\#320](https://github.com/auth0/auth0-PHP/pull/320) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve API Telemetry [\#319](https://github.com/auth0/auth0-PHP/pull/319) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Mock API Request Capability and Mocked Connections Tests [\#314](https://github.com/auth0/auth0-PHP/pull/314) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Test suite improvements [\#313](https://github.com/auth0/auth0-PHP/pull/313) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve repo documentation [\#312](https://github.com/auth0/auth0-PHP/pull/312) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Official deprecation for `JWKFetcher` method [\#328](https://github.com/auth0/auth0-PHP/pull/328) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\Helpers\JWKFetcher::fetchKeys()`
+- Official deprecation for `User` methods [\#327](https://github.com/auth0/auth0-PHP/pull/327) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Management\Users::search()`
+    - `\Auth0\SDK\API\Management\Users::unlinkDevice()`
+- Official deprecation of `ClientGrants` method [\#326](https://github.com/auth0/auth0-PHP/pull/326) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Management\ClientGrants::get()`
+- Official deprecation of legacy `InformationHeaders` methods [\#325](https://github.com/auth0/auth0-PHP/pull/325) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setEnvironment()`
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setDependency()`
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setDependencyData()`
+- Official deprecation of legacy `Authentication` methods [\#324](https://github.com/auth0/auth0-PHP/pull/324) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Authentication::setApiClient()`
+    - `\Auth0\SDK\API\Authentication::sms_code_passwordless_verify()`
+    - `\Auth0\SDK\API\Authentication::email_code_passwordless_verify()`
+    - `\Auth0\SDK\API\Authentication::impersonate()`
+
+**Fixed**
+- Fix `Auth0::exchange()` to handle missing id_token [\#318](https://github.com/auth0/auth0-PHP/pull/318) ([joshcanhelp](https://github.com/joshcanhelp))
+
+## [5.3.2](https://github.com/auth0/auth0-PHP/tree/5.3.2) (2018-11-2)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.1...5.3.2)
+
+**Closed issues**
+- Something is wrong with the latest release 5.3.1 [\#303](https://github.com/auth0/auth0-PHP/issues/303)
+
+**Fixed**
+- Fix info headers Extend error in dependant libs [\#304](https://github.com/auth0/auth0-PHP/pull/304) ([joshcanhelp](https://github.com/joshcanhelp))
+
+## [5.3.1](https://github.com/auth0/auth0-PHP/tree/5.3.1) (2018-10-31)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.0...5.3.1)
+
+**Closed issues**
+- Array to String exception when audience is an array [\#296](https://github.com/auth0/auth0-PHP/issues/296)
+- Passing accessToken from frontend to PHP API [\#281](https://github.com/auth0/auth0-PHP/issues/281)
+- Deprecated method email_code_passwordless_verify [\#280](https://github.com/auth0/auth0-PHP/issues/280)
+
+**Added**
+- Fix documentation for Auth0 constructor options [\#298](https://github.com/auth0/auth0-PHP/pull/298) ([biganfa](https://github.com/biganfa))
+
+**Changed**
+- Change telemetry headers to new format and add tests [\#300](https://github.com/auth0/auth0-PHP/pull/300) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix bad exception message generation [\#297](https://github.com/auth0/auth0-PHP/pull/297) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.3.0](https://github.com/auth0/auth0-PHP/tree/5.3.0) (2018-10-09)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.2.0...5.3.0)
 
@@ -78,16 +146,15 @@
 ## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
 
-[State validation](https://auth0.com/docs/protocols/oauth2/oauth-state) was added in 5.1.0 for improved security. By default, this uses session storage and will happen automatically if you are using a combination of `Auth0::login()` and any method which calls `Auth0::exchange()` in your callback.
+**Notes on this release:**
 
-If you need to use a different storage method, implement your own [StateHandler](https://github.com/auth0/auth0-PHP/blob/master/src/API/Helpers/State/StateHandler.php) and set it using the `state_handler` config key when you initialize an `Auth0` instance.
-
-If you are using `Auth0::exchange()` and a method other than `Auth0::login()` to generate the Authorize URL, you can disable automatic state validation by setting the `state_handler` key to `false` when you initialize the `Auth0` instance. It is **highly recommended** to implement state validation, either automatically or otherwise
+[State validation](https://auth0.com/docs/protocols/oauth2/oauth-state) was added for improved security. Please see our [troubleshooting page](https://auth0.com/docs/libraries/auth0-php/troubleshooting) for more information on how this works and potential issues.
 
 **Closed issues**
 - Support for php-jwt 5 [\#210](https://github.com/auth0/auth0-PHP/issues/210)
 
 **Added**
+- Added XSRF State Storage / Validation [\#214](https://github.com/auth0/auth0-PHP/pull/214) ([cocojoe](https://github.com/cocojoe))
 - Adding tests for state handler; correcting storage method used [\#228](https://github.com/auth0/auth0-PHP/pull/228) ([joshcanhelp](https://github.com/joshcanhelp))
 
 **Changed**

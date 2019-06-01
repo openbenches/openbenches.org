@@ -23,7 +23,7 @@ class JWTVerifier
      *
      * @var JWKFetcher|null
      */
-    protected $JWKFetcher = null;
+    protected $JWKFetcher;
 
     /**
      * Algorithms supported.
@@ -46,7 +46,7 @@ class JWTVerifier
      *
      * @var array|null
      */
-    protected $authorized_iss = null;
+    protected $authorized_iss;
 
     /**
      * Application Client Secret.
@@ -54,7 +54,7 @@ class JWTVerifier
      *
      * @var string|null
      */
-    protected $client_secret = null;
+    protected $client_secret;
 
     /**
      * Path to the JWKS for RS256 tokens.
@@ -199,9 +199,9 @@ class JWTVerifier
         if (! empty($body_decoded->aud)) {
             $audience = is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
             if (! count(array_intersect($audience, $this->valid_audiences))) {
-                throw new InvalidTokenException(
-                    'Invalid audience '.$body_decoded->aud.'; expected '.implode( ', ', $this->valid_audiences )
-                );
+                $message  = 'Invalid token audience '.implode( ', ', $audience );
+                $message .= '; expected '.implode( ', ', $this->valid_audiences );
+                throw new InvalidTokenException($message);
             }
         }
 
