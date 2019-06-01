@@ -1,5 +1,5 @@
 <?php
-require_once ("../../mysql.php");
+require_once ("mysql.php");
 
 if( isset($_GET["userID"]) )    { $userID    = $_GET["userID"]; }    else { $userID    = null;}
 if( isset($_GET["format"]) )    { $format    = $_GET["format"]; }    else { $format    = null;}
