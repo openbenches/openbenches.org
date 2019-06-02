@@ -146,7 +146,6 @@ Everything we do builds on someone else's hard work.
 * Map tiles by [MapBox](https://www.mapbox.com/).
 * GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
-* JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) [MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt).
+* JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) ([MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt)).
 * Login services provided by [Auth0.com's PHP library](https://github.com/auth0/auth0-PHP) [MIT](https://github.com/auth0/auth0-PHP/blob/master/LICENSE.txt).
-)
 * CSS based on [PicniCSS](https://github.com/franciscop/picnic) [MIT](https://github.com/franciscop/picnic/blob/master/LICENSE) (chosen mostly because we like picnic benches!)
