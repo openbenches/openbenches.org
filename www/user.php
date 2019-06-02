@@ -131,7 +131,7 @@
 	?>
 </div>
 
-<script src="/data.json/?userID=<?php echo $userID; ?>" type="text/javascript"></script>
+<script src="/api/v1.0/data.json/?userID=<?php echo $userID; ?>" type="text/javascript"></script>
 
 <?php
 	//	Map shows most of the world

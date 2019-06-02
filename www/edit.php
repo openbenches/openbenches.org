@@ -199,7 +199,7 @@ if($user_provider != null){
 		</div>
 	</form>
 
-<script src="/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
+<script src="/api/v1.0/data.json/?bench=<?php echo $benchID; ?>" type="text/javascript"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 

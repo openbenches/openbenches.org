@@ -73,7 +73,7 @@ if ($_GET["url"])
 	</div>";
 	echo '<input type="submit" value="Share Bench" /><br>';
 	echo "</form>";
-	echo "<script src='/data.json/?longitude={$long}&latitude={$lat}&radius=10000'></script>";
+	echo "<script src='/api/v1.0/data.json/?longitude={$long}&latitude={$lat}&radius=10000'></script>";
 
 ?>
 <script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>

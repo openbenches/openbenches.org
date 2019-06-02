@@ -9,21 +9,6 @@ if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
 }
 
-// //	Unpublished benches
-// if(!$published) {
-// 	//	Has it been merged?
-// 	$mergedID = get_merged_bench($benchID);
-// 	if (null == $mergedID) {
-// 		//	Nope! Just deleted.
-// 		header("HTTP/1.1 404 Not Found");
-// 		include("404.php");
-// 		die();
-// 	} else {
-// 		//	Yup! Where does it live now?
-// 		header("Location: /bench/{$mergedID}",TRUE,301);
-// 	}
-// 	die();
-// }
 ?>
 	</hgroup>
 	<div itemscope itemtype="http://schema.org/Place">
@@ -42,7 +27,7 @@ if ($benchAddress == null){
 		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
 		<a href="/edit/<?php echo $benchID; ?>" class="button buttonColour">✏️ Edit this bench</a>
 	</div>
-	<?php 
+	<?php
 		include("sharing.php");
 	?>
 
@@ -55,8 +40,8 @@ if ($benchAddress == null){
 		<span id="IDCommentsPostTitle" style="display:none"></span>
 		<script src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 	</div>
-	
-<script src="/data.json/?bench=<?php echo $benchID; ?>"></script>
+
+<script src="/api/v1.0/data.json/?bench=<?php echo $benchID; ?>"></script>
 
 <?php echo get_map_javascript($benchLat, $benchLong, "16"); ?>
 
