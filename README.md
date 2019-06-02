@@ -40,15 +40,15 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* To get media, append `&media=true`
 
 ### Users
-	* All User Data
-		* `https://openbenches.org/api/v1.0/users.json/`
-		* That last `/` is *required*.
-	* Specific User
-		* `https://openbenches.org/api/v1.0/users.json/?userID=1234`
-	* Formats
-		* By default, the JSON starts with `var users = `
-		* To get pure JSON, append `&format=raw`
-		* `https://openbenches.org/api/v1.0/users.json/?userID=1234&format=raw`
+* All User Data
+	* `https://openbenches.org/api/v1.0/users.json/`
+	* That last `/` is *required*.
+* Specific User
+	* `https://openbenches.org/api/v1.0/users.json/?userID=1234`
+* Formats
+	* By default, the JSON starts with `var users = `
+	* To get pure JSON, append `&format=raw`
+	* `https://openbenches.org/api/v1.0/users.json/?userID=1234&format=raw`
 
 ## Running Locally
 
