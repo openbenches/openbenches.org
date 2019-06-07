@@ -82,7 +82,7 @@ if ($_GET["flickrID"])
 	echo "<input type='text' name='lat'     size='60' value='{$lat}'><br>";
 	echo "<input type='text' name='long'    size='60' value='{$long}'><br>";
 	echo "<input type='text' name='license' size='60' value='{$license}'><br>";
-	echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
+	// echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
 	echo "</form>";
 ?>
 <script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
