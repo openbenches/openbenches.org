@@ -16,6 +16,10 @@ if (isset($params[2]) && isset($params[3])) {
 			require_once("apis/v1.0.data.json.php");
 			die();
 
+		} else if ("tags.json" == $apiRoute) {
+			require_once("apis/v1.0.tags.json.php");
+			die();
+
 		} else {
 			$error = "No API found with that name.";
 		}

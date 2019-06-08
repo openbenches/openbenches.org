@@ -12,7 +12,7 @@
 	//	Available pages
 	$pages = array("bench", "add", "image", "benchimage", "flickr", "edit",
 	               "search", "sitemap.xml", "data.json", "login", "logout",
-	               "leaderboard", "user", "rss", "oembed", "api");
+	               "leaderboard", "user", "rss", "oembed", "api", "tag");
 
 	if(in_array($params[1], $pages)) {
 		include($params[1].".php");

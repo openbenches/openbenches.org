@@ -224,31 +224,48 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 {
 	//	If media have been requested
 	if($media) {
-		$media_data = get_all_media($id);
+		if(is_numeric($id)) {
+			$media_data = get_all_media($id);
+		} else {
+			$media_data = get_all_media(0);
+		}
 	} else {
 		$media_data = array();
 	}
 
-	global $mysqli;
-
-	if(0==$id){
-		$benchQuery = ">";
-	} else {
-		$benchQuery = "=";
-	}
-
 	if ($only_published){
-		$where = "WHERE published = true AND benchID {$benchQuery} ?";
+		$where = "WHERE `published` = true AND ";
 	} else {
-		$where = "WHERE benchID {$benchQuery} ?";
+		$where = "WHERE ";
 	}
+
+	//	Is this an ID or a tag?
+	if(is_numeric($id)) {
+		//	An ID
+		if(0==$id){
+			$benchQuery = ">";
+		} else {
+			$benchQuery = "=";
+		}
+		$where .= "`benchID` {$benchQuery} ?";
+
+	} else {
+		//	A Tag
+		$tagID    = get_tagID($id);
+		$benches  = get_benches_from_tag_id($tagID);
+		$benchIDs = implode($benches,",");
+		$where .= "`benchID` IN ({$benchIDs})";
+	}
+
+	global $mysqli;
 
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, longitude, inscription, published FROM benches
 		{$where}
 		LIMIT 0 , 20000");
 
-	$get_benches->bind_param('i', $id);
+	if(is_numeric($id)) { $get_benches->bind_param('i', $id); }
+
 	$get_benches->execute();
 
 	/* bind result variables */
@@ -1149,4 +1166,95 @@ function get_merged_bench($benchID) {
 		return $mergedID;
 		die();
 	}
+}
+
+function get_tags() {
+	global $mysqli;
+	$get_tags = $mysqli->prepare(
+		"SELECT `tagID`, `tagText` FROM `tags` WHERE 1;");
+	$get_tags->execute();
+
+	$get_tags->bind_result($tagID, $tagText);
+
+	$results = array();
+	while($get_tags->fetch()) {
+		$results[$tagID] = $tagText;
+	}
+
+	$get_tags->close();
+	return $results;
+}
+
+function get_tagID($tagText) {
+	global $mysqli;
+	$get_tags = $mysqli->prepare(
+		"SELECT `tagID` FROM `tags`
+		WHERE `tagText` LIKE ?
+		LIMIT 0 , 1");
+
+	$get_tags->bind_param('s',  $tagText);
+	$get_tags->execute();
+
+	$get_tags->bind_result($tagID);
+
+	$id = null;
+	while($get_tags->fetch()) {
+		$id = $tagID;
+	}
+
+	$get_tags->close();
+	return $id;
+}
+
+function get_benches_from_tag_id($tagID) {
+	global $mysqli;
+	$get_benches = $mysqli->prepare(
+		"SELECT `benchID` FROM `tag_map`
+		WHERE `tagID` = ?");
+
+	$get_benches->bind_param('i',  $tagID);
+	$get_benches->execute();
+
+	$get_benches->bind_result($benchID);
+
+	$results = array();
+	while($get_benches->fetch()) {
+		$results[] = $benchID;
+	}
+
+	$get_benches->close();
+	return $results;
+}
+
+function get_benches_from_tag_text($tagText, $page=0, $results=20)
+{
+	global $mysqli;
+	$offset = $page * $results;
+
+	$tagID    = get_tagID($tagText);
+	$benches  = get_benches_from_tag_id($tagID);
+	$benchIDs = implode($benches,",");
+
+	$get_benches = $mysqli->prepare(
+		"SELECT `benchID`, `inscription`, `address`
+		 FROM   `benches`
+		 WHERE  `benchID` IN ({$benchIDs})
+		 AND    `published` = 1
+		 LIMIT ? , ?");
+
+	$get_benches->bind_param('ii', $offset, $results);
+
+	$get_benches->execute();
+	$get_benches->bind_result($benchID, $inscription, $address);
+
+	$results = array();
+	while($get_benches->fetch()) {
+		if($address != null){
+			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
+		}
+		$results[$benchID] = $inscription;
+	}
+
+	$get_benches->close();
+	return $results;
 }

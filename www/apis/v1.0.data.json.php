@@ -11,6 +11,7 @@ if( isset($_GET["truncated"]) ) { $truncated = $_GET["truncated"]; } else { $tru
 if( isset($_GET["userID"]) )    { $userID    = $_GET["userID"]; }    else { $userID    = null;}
 if( isset($_GET["provider"]) )  { $provider  = $_GET["provider"]; }  else { $provider  = null;}
 if( isset($_GET["media"]) )     { $media     = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN); } else { $media = null;}
+if( isset($_GET["tagText"]) )   { $tagText   = $_GET["tagText"]; }   else { $tagText   = null;}
 
 if ( "true" == $truncated or null == $truncated) {
 	$truncated = true;
@@ -24,6 +25,8 @@ if (null != $userID) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
 } else if (null != $benchID){
 	$geojson = get_bench($benchID, $truncated, $media);
+} else if (null != $tagText){
+	$geojson = get_all_benches($tagText, true, $truncated, $media);
 } else {
 	$geojson = get_all_benches(0, true, $truncated, $media);
 }
