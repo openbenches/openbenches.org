@@ -19,7 +19,7 @@
 		$count = 20;
 	}
 
-	$userHTML = "Benches tagged with " . htmlspecialchars($tag);
+	$userHTML = "Benches tagged with \"" . htmlspecialchars(urldecode($tag)) . "\"";
 
 	$results = get_benches_from_tag_text($tag, $page, $count);
 	$total_results = get_bench_tag_count($tag);

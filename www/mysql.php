@@ -1187,6 +1187,7 @@ function get_tags() {
 }
 
 function get_tagID($tagText) {
+	$tagText = urldecode($tagText);
 	global $mysqli;
 	$get_tags = $mysqli->prepare(
 		"SELECT `tagID` FROM `tags`
