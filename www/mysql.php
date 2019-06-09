@@ -1237,6 +1237,9 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 		return false;
 	}
 	$benches  = get_benches_from_tag_id($tagID);
+	if(empty($benches)){
+		return null;
+	}
 	$benchIDs = implode($benches,",");
 	global $mysqli;
 
