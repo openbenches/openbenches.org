@@ -1178,7 +1178,7 @@ function get_tags() {
 
 	$results = array();
 	while($get_tags->fetch()) {
-		$results[$tagID] = $tagText;
+		$results[] = $tagText;
 	}
 
 	$get_tags->close();
@@ -1228,12 +1228,12 @@ function get_benches_from_tag_id($tagID) {
 
 function get_benches_from_tag_text($tagText, $page=0, $results=20)
 {
-	global $mysqli;
 	$offset = $page * $results;
 
 	$tagID    = get_tagID($tagText);
 	$benches  = get_benches_from_tag_id($tagID);
 	$benchIDs = implode($benches,",");
+	global $mysqli;
 
 	$get_benches = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
@@ -1257,4 +1257,25 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 
 	$get_benches->close();
 	return $results;
+}
+
+function get_bench_tag_count($tagText) {
+	$tagID    = get_tagID($tagText);
+
+	global $mysqli;
+
+	$search = $mysqli->prepare(
+		"SELECT COUNT(`mapID`)
+		 FROM `tag_map`
+		 INNER JOIN `benches` ON (benches.benchID = tag_map.benchID)
+		 WHERE  tag_map.tagID = ?  AND benches.published = 1");
+
+	$search->bind_param('i', $tagID);
+
+	$search->execute();
+	$search->bind_result($count);
+	$search->fetch();
+	$search->close();
+
+	return $count;
 }

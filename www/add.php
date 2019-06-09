@@ -88,6 +88,16 @@ A lot..."></textarea>
 			</div>
 		</div>
 		<br>
+		<div id="tagInput">
+			<label for="id_label_multiple">
+				Choose some tags:
+				<select class="js-tags-multiple form-control" name="tags[]" id="id_label_multiple" multiple="multiple">
+					<option value="AL">Alabama</option>
+					<option value="WY">Wyoming</option>
+					<option value="NY">New York</option>
+				</select>
+			</label>
+		</div>
 		<div id="progressInfo" style="display:none;">
 			<label for="progressBar">Upload progress:<br></label>
 			<progress id="progressBar" value="0" max="100"></progress>
@@ -107,6 +117,14 @@ A lot..."></textarea>
 	<script src="/libs/vision/key.js"></script>
 	<script src="/libs/vision/vision.js"></script>
 	<script src="/libs/load-image.2.21.0/load-image.all.min.js"></script>
+	<script src="/libs/select2.4.0.7/js/select2.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$('.js-tags-multiple').select2();
+	});
+	</script>
+	<script src="https://test.openbenches.org/api/v1.0/tags.json/"></script>
+
 	<script type="text/javascript">
 		var previewWidth = 800;
 		var map = null;

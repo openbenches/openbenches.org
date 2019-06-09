@@ -8,11 +8,7 @@ if (null == $tagText) {
 	//	Return all tags
 	$tagsJSON = get_tags();
 	$type = "tags";
-} else {
-	//	Return all benches with that tag
-	$tagsJSON = get_benches_from_tag_text($tagText);
-	$type = "benches";
-}
+} 
 
 if ("raw" == $format) {
 	//	Pure JSON

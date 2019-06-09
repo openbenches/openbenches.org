@@ -116,6 +116,8 @@ if ("user" == $page) {
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-19T14:40"/>
 	<link rel="stylesheet" href="/css/style.css?cache=2019-05-27T15:54"/>
 
+	<link rel="stylesheet" href="/libs/select2.4.0.7/css/select2.min.css?cache=2019-06-09T00:54"  />
+
 	<link rel="stylesheet" href="/libs/leaflet.1.4.0/leaflet.css" />
 	<script                 src="/libs/leaflet.1.4.0/leaflet.js"></script>
 

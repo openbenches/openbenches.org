@@ -22,7 +22,7 @@
 	$userHTML = "Benches tagged with " . htmlspecialchars($tag);
 
 	$results = get_benches_from_tag_text($tag, $page, $count);
-	$total_results = 5;//get_user_bench_count($userID);
+	$total_results = get_bench_tag_count($tag);
 
 
 	if (0 == count($results)){
