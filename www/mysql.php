@@ -1233,6 +1233,9 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 	$offset = $page * $results;
 
 	$tagID    = get_tagID($tagText);
+	if (null == $tagID) {
+		return false;
+	}
 	$benches  = get_benches_from_tag_id($tagID);
 	$benchIDs = implode($benches,",");
 	global $mysqli;
