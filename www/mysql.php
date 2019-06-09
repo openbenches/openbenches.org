@@ -252,6 +252,10 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	} else {
 		//	A Tag
 		$tagID    = get_tagID($id);
+		if(null == $tagID)
+		{
+			return null;
+		}
 		$benches  = get_benches_from_tag_id($tagID);
 		$benchIDs = implode($benches,",");
 		$where .= "`benchID` IN ({$benchIDs})";
@@ -1234,11 +1238,11 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 
 	$tagID    = get_tagID($tagText);
 	if (null == $tagID) {
-		return false;
+		return array();
 	}
 	$benches  = get_benches_from_tag_id($tagID);
 	if(empty($benches)){
-		return null;
+		return array();
 	}
 	$benchIDs = implode($benches,",");
 	global $mysqli;
