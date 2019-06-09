@@ -1298,3 +1298,24 @@ function save_tags($benchID, $tags) {
 	}
 	return true;
 }
+
+function get_tags_from_bench($benchID) {
+	global $mysqli;
+
+	$get_tags = $mysqli->prepare(
+		"SELECT tags.tagText
+		 FROM `tag_map`
+		 INNER JOIN tags ON (tags.`tagID` = tag_map.`tagID`)
+		 WHERE `benchID` = ?");
+	$get_tags->bind_param('i', $benchID);
+	$get_tags->execute();
+	$get_tags->bind_result($tag);
+
+	$results = array();
+	while($get_tags->fetch()) {
+		$tags[] = $tag;
+	}
+
+	$get_tags->close();
+	return $tags;
+}

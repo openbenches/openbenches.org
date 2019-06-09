@@ -22,6 +22,19 @@ if ($benchAddress == null){
 		</div>
 	</div>
 
+	<div id="taglist">
+		<?php
+		$tags = get_tags_from_bench($benchID);
+		if(!empty($tags)){
+			echo "<ul>";
+			foreach ($tags as $tag) {
+				echo "<li><a href='/tag/{$tag}/'>{$tag}</a></li>";
+			}
+			echo "</ul>";
+		}
+		?>
+	</div>
+
 	<div class="button-bar">
 		<a class="button buttonColour" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">🌍 Benches near this</a>
 		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
