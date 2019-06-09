@@ -125,7 +125,7 @@ A lot..."></textarea>
 		});
 	});
 	</script>
-	<script src="https://test.openbenches.org/api/v1.0/tags.json/"></script>
+	<script src="/api/v1.0/tags.json/"></script>
 
 	<script type="text/javascript">
 		var previewWidth = 800;

@@ -1314,7 +1314,7 @@ function get_tags_from_bench($benchID) {
 	$get_tags->execute();
 	$get_tags->bind_result($tag);
 
-	$results = array();
+	$tags = array();
 	while($get_tags->fetch()) {
 		$tags[] = $tag;
 	}
