@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 30, 2019 at 12:43 PM
+-- Generation Time: Jun 09, 2019 at 03:26 PM
 -- Server version: 10.2.23-MariaDB-log-cll-lve
 -- PHP Version: 7.2.7
 
@@ -158,6 +158,55 @@ CREATE TABLE `merged_benches` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tags`
+--
+
+CREATE TABLE `tags` (
+  `tagID` bigint(20) NOT NULL,
+  `tagText` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tags`
+--
+
+INSERT INTO `tags` (`tagID`, `tagText`) VALUES
+(15, '18th Century'),
+(14, '19th Century'),
+(18, 'beach'),
+(1, 'cat'),
+(17, 'colleague'),
+(2, 'dog'),
+(13, 'emoji'),
+(8, 'funny'),
+(19, 'graveyard'),
+(22, 'illegible'),
+(9, 'indoors'),
+(6, 'metal'),
+(11, 'multiple plaques'),
+(20, 'park'),
+(16, 'picture'),
+(10, 'poem'),
+(12, 'quote'),
+(7, 'stone'),
+(21, 'train station'),
+(5, 'wood');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tag_map`
+--
+
+CREATE TABLE `tag_map` (
+  `mapID` bigint(20) NOT NULL,
+  `benchID` bigint(20) NOT NULL,
+  `tagID` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -216,6 +265,21 @@ ALTER TABLE `merged_benches`
   ADD KEY `mergedID` (`mergedID`);
 
 --
+-- Indexes for table `tags`
+--
+ALTER TABLE `tags`
+  ADD PRIMARY KEY (`tagID`),
+  ADD UNIQUE KEY `tagText` (`tagText`);
+
+--
+-- Indexes for table `tag_map`
+--
+ALTER TABLE `tag_map`
+  ADD PRIMARY KEY (`mapID`),
+  ADD KEY `tag_map_ibfk_1` (`benchID`),
+  ADD KEY `tag_map_ibfk_2` (`tagID`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -236,6 +300,18 @@ ALTER TABLE `benches`
 --
 ALTER TABLE `media`
   MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tags`
+--
+ALTER TABLE `tags`
+  MODIFY `tagID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
+-- AUTO_INCREMENT for table `tag_map`
+--
+ALTER TABLE `tag_map`
+  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -275,6 +351,13 @@ ALTER TABLE `media`
 ALTER TABLE `merged_benches`
   ADD CONSTRAINT `merged_benches_ibfk_1` FOREIGN KEY (`benchID`) REFERENCES `benches` (`benchID`),
   ADD CONSTRAINT `merged_benches_ibfk_2` FOREIGN KEY (`mergedID`) REFERENCES `benches` (`benchID`);
+
+--
+-- Constraints for table `tag_map`
+--
+ALTER TABLE `tag_map`
+  ADD CONSTRAINT `tag_map_ibfk_1` FOREIGN KEY (`benchID`) REFERENCES `benches` (`benchID`),
+  ADD CONSTRAINT `tag_map_ibfk_2` FOREIGN KEY (`tagID`) REFERENCES `tags` (`tagID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

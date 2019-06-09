@@ -141,6 +141,23 @@ At the moment, we only accept photos - of the inscription, the bench, the view f
 * `longName` Displayed to the user.
 * `url` For more information.
 
+#### Tagging
+
+Benches can be given multiple "tags". For example "cat" if the bench commemorates a feline, or "beach" if the bench is at the seaside.
+
+Tagging uses the [Toxi structure](http://howto.philippkeller.com/2005/04/24/Tags-Database-schemas/).
+
+* `tags` contains:
+	* `tagID` a unique ID
+	* `tagText` the displayed text
+
+* `tag_map` contains:
+	* `mapID` a unique ID
+	* `tagID` the ID of a tag
+	* `benchID` the ID of a bench
+
+Tags are hard-coded in the database and can't be added or edited by regular users.
+
 ## Open Source Licenses
 
 Everything we do builds on someone else's hard work.
