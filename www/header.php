@@ -16,7 +16,11 @@ if (isset($_POST["random"])) {
 	die();
 }
 
-$page = strtolower($params[1]);
+if (isset($params[1])) {
+	$page = strtolower($params[1]);
+} else {
+	$page = null;
+}
 $benchInscription = "Welcome to OpenBenches";
 $benchImage = "/android-chrome-512x512.png";
 
