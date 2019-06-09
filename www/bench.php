@@ -27,7 +27,7 @@ if ($benchAddress == null){
 		$tags = get_tags_from_bench($benchID);
 		if(!empty($tags)){
 			echo "<ul>";
-				echo "<li class='pseudo button'>Tags:</li>";
+			echo    "<li class='pseudo button'>Tags:</li>";
 
 			foreach ($tags as $tag) {
 				echo "<li class='pseudo button'><a href='/tag/{$tag}/'>#{$tag}</a></li>";
