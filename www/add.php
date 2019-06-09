@@ -45,6 +45,14 @@ Buffy Anne Summers
 She saved the world.
 A lot..."></textarea>
 		</div>
+		<div id="tagInput">
+			<label for="tag_multiple">
+				Choose some tags:
+				<select class="js-tags-multiple form-control"
+				        name="tags[]" id="tag_multiple"
+				        multiple="multiple" form="fileform"></select>
+			</label>
+		</div>
 		<div id="map-hidden" style="clear:both;display: none;">
 			<h3>Drag pin if you need to adjust the bench's location</h3>
 			<div id='map' class="hand-drawn" ></div>
@@ -88,16 +96,6 @@ A lot..."></textarea>
 			</div>
 		</div>
 		<br>
-		<div id="tagInput">
-			<label for="id_label_multiple">
-				Choose some tags:
-				<select class="js-tags-multiple form-control" name="tags[]" id="id_label_multiple" multiple="multiple">
-					<option value="AL">Alabama</option>
-					<option value="WY">Wyoming</option>
-					<option value="NY">New York</option>
-				</select>
-			</label>
-		</div>
 		<div id="progressInfo" style="display:none;">
 			<label for="progressBar">Upload progress:<br></label>
 			<progress id="progressBar" value="0" max="100"></progress>
@@ -120,7 +118,11 @@ A lot..."></textarea>
 	<script src="/libs/select2.4.0.7/js/select2.min.js"></script>
 	<script>
 	$(document).ready(function() {
-		$('.js-tags-multiple').select2();
+		$('.js-tags-multiple').select2({
+			data: tags,
+			closeOnSelect: false,
+			placeholder: "tag your bench up"
+		});
 	});
 	</script>
 	<script src="https://test.openbenches.org/api/v1.0/tags.json/"></script>
@@ -315,6 +317,9 @@ A lot..."></textarea>
 			formdata.append("inscription",  $("#inscription").val());
 			formdata.append("newLongitude", $("#newLongitude").val());
 			formdata.append("newLatitude",  $("#newLatitude").val());
+
+			formdata.append("tags[]",       $("#tag_multiple").val());
+
 			//	Send the file
 			var ajax = new XMLHttpRequest();
 			ajax.upload.addEventListener("progress", progressHandler);

@@ -1178,7 +1178,8 @@ function get_tags() {
 
 	$results = array();
 	while($get_tags->fetch()) {
-		$results[] = $tagText;
+		//	https://select2.org/data-sources/arrays
+		$results[] = array("id" => $tagID, "text" => $tagText);
 	}
 
 	$get_tags->close();
@@ -1278,4 +1279,18 @@ function get_bench_tag_count($tagText) {
 	$search->close();
 
 	return $count;
+}
+
+function save_tags($benchID, $tags) {
+	global $mysqli;
+
+	foreach ($tags as $tagID) {
+		$save_tag = $mysqli->prepare(
+			"INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
+			VALUES                 (NULL,     ?,         ?)");
+		$save_tag->bind_param('ii', $benchID, $tagID);
+		$save_tag->execute();
+		$save_tag->close();
+	}
+	return true;
 }

@@ -16,7 +16,6 @@ All contributions are welcome.  Before making a pull request, please:
 You can get all the data, or partial data, from the API.  Data is returned in [geoJSON](http://geojson.org/) format.
 
 ### Benches
-
 * All Bench Data
 	* `https://openbenches.org/api/v1.0/data.json/`
 	* That last `/` is *required*.
@@ -27,6 +26,9 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* `latitude` and `longitude` in [WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System).
 	* `radius` in Kilometres.
 	* A maximum of 20 results are returned.
+* Tags
+	* `https://openbenches.org/api/v1.0/data.json/?tagText=cat`
+	* Returns all the benches with a specific tag.
 * Inscriptions
 	* By default, the inscriptions are truncated to 128 characters.
 	* To get the full inscriptions, append `&truncated=false`
@@ -38,6 +40,14 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 * Media
 	* By default, the API doesn't return media.
 	* To get media, append `&media=true`
+
+
+### Tags
+* All available folksonomy tags
+	* `https://openbenches.org/api/v1.0/data.json/`
+	* That last `/` is *required*.
+	* Returned in a format suitable for [Select2](https://select2.org/data-sources/arrays).
+
 
 ### Users
 * All User Data

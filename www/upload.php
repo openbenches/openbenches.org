@@ -15,6 +15,14 @@ $lng = $_POST['newLongitude'];
 
 $response = array("Open" => "Benches");
 
+//	Get any tags
+if (isset($_POST['tags'])){
+	$sentTags = $_POST['tags'][0];
+	$tags = explode(",", $sentTags);
+} else {
+	$tags = null;
+}
+
 
 if ($_FILES['userfile1']['tmp_name'])
 {	//	Has a photo been posted?
@@ -79,6 +87,7 @@ if ($_FILES['userfile1']['tmp_name'])
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 
+			save_tags($benchID,$tags);
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
