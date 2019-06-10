@@ -8,7 +8,11 @@ require_once ("functions.php");
 include("header.php");
 
 //	Get the search query, or recover in case of error
-$query = $_GET['search'];
+if(isset($_GET['search'])){
+	$query = $_GET['search'];
+} else {
+	$query = "";
+}
 $query_encoded = urlencode($query);
 
 if(isset($_GET['page'])){
@@ -53,7 +57,7 @@ if (null != $query)
 	}
 
 	$resultsHTML .= "<div id=\"pagination\">";
-	
+
 	if ($page > 0) {
 		$previous = $page - 1;
 		$resultsHTML .= "<a href='/search/?search={$query_encoded}&page={$previous}' class='button buttonColour'><strong>⬅️</strong> Previous Results</a>&emsp;&emsp;";
