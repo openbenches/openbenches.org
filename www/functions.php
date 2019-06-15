@@ -388,7 +388,13 @@ function get_place_name($latitude, $longitude) {
 	$context = stream_context_create($options);
 	$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
 	$locationData = json_decode($locationJSON);
-	$address = $locationData->results[0]->formatted;
+	try {
+		$address = $locationData->results[0]->formatted;
+	} catch (Exception $e) {
+		$loc = var_export($locationData);
+		error_log("Caught $e - $loc");
+		return "";
+	}
 
 	return $address;
 }

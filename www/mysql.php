@@ -163,7 +163,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			AS distance, benchID, latitude, longitude, inscription, published
 		FROM
 			benches
-		WHERE published = true
+		WHERE published = true AND present = true
 		HAVING distance < ?
 		ORDER BY distance
 		LIMIT 0 , ?");
@@ -332,7 +332,7 @@ function get_bench_details($benchID){
 	global $mysqli;
 
 	$get_bench = $mysqli->prepare(
-		"SELECT benchID, latitude, longitude, address, inscription, published
+		"SELECT benchID, latitude, longitude, address, inscription, published, present, description
 		 FROM benches
 		 WHERE benchID = ?"
 	);
@@ -341,11 +341,11 @@ function get_bench_details($benchID){
 	$get_bench->execute();
 
 	/* bind result variables */
-	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published, $present, $description);
 
 	while($get_bench->fetch()) {
 		$get_bench->close();
-		return array ($benchID, $benchLat, $benchLong, htmlspecialchars($benchAddress), htmlspecialchars($benchInscription), $published);
+		return array ($benchID, $benchLat, $benchLong, htmlspecialchars($benchAddress), htmlspecialchars($benchInscription), $published, $present, htmlspecialchars($description));
 	}
 }
 
@@ -354,7 +354,7 @@ function get_random_bench(){
 
 	$get_bench = $mysqli->prepare(
 		"SELECT benchID, latitude, longitude, address, inscription, published
-		 FROM benches WHERE published = 1 ORDER BY RAND() LIMIT 1;"
+		 FROM benches WHERE published = true AND present = true ORDER BY RAND() LIMIT 1;"
 	);
 
 	$get_bench->execute();
@@ -631,7 +631,7 @@ function get_rss($items = 10) {
 		FROM `benches`
 			INNER JOIN
 		`media` ON benches.benchID = media.benchID
-		WHERE benches.published = true
+		WHERE benches.published = true AND benches.present = true
 		ORDER by benches.benchID DESC
 		LIMIT ?");
 
@@ -961,7 +961,7 @@ function get_search_count($q) {
 function get_bench_count() {
 	global $mysqli;
 
-	$result = $mysqli->query("SELECT COUNT(*) FROM `benches` WHERE published = true");
+	$result = $mysqli->query("SELECT COUNT(*) FROM `benches` WHERE published = true AND present = true ");
 	$row = $result->fetch_row();
 	$result->close();
 	return $row[0];
@@ -974,7 +974,7 @@ function get_leadboard_benches_html() {
 		SELECT users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT
 		FROM `benches`
 		INNER JOIN users ON benches.userID = users.userID
-		WHERE benches.published = TRUE
+		WHERE benches.published = TRUE AND benches.present = true
 		GROUP by users.userID
 		ORDER by USERCOUNT DESC");
 
@@ -1075,7 +1075,7 @@ function get_user_map($userID)
 
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
-		WHERE published = true AND userID = ?
+		WHERE published = true AND present = true AND userID = ?
 		LIMIT 0 , 20000");
 
 	$get_benches->bind_param('i', $userID);
@@ -1280,7 +1280,7 @@ function get_bench_tag_count($tagText) {
 		"SELECT COUNT(`mapID`)
 		 FROM `tag_map`
 		 INNER JOIN `benches` ON (benches.benchID = tag_map.benchID)
-		 WHERE  tag_map.tagID = ?  AND benches.published = 1");
+		 WHERE  tag_map.tagID = ?  AND benches.published = true AND benches.present = true ");
 
 	$search->bind_param('i', $tagID);
 

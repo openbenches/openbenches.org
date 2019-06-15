@@ -30,7 +30,7 @@ if ("bench" == $page) {
 	$benchID = $params[2];
 
 	if($benchID != null){
-		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published) = get_bench_details($benchID);
+		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published, $present, $description) = get_bench_details($benchID);
 		$benchImage = get_image_url($benchID) . "/640";
 
 		//	https://oembed.com/

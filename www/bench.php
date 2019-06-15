@@ -9,6 +9,10 @@ if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
 }
 
+if (!$present) {
+	//	Has the bench been removed
+	$benchInscription = "This bench has been removed from this physical location.<br><del>{$benchInscription}</del>";
+}
 ?>
 	</hgroup>
 	<div itemscope itemtype="http://schema.org/Place">
