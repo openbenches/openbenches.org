@@ -11,7 +11,7 @@ if ($benchAddress == null){
 
 if (!$present) {
 	//	Has the bench been removed
-	$benchInscription = "This bench has been removed from this physical location.<br><del>{$benchInscription}</del>";
+	$benchInscription = "<em>This bench has been removed from this physical location.</em><br><del>{$benchInscription}</del>";
 }
 ?>
 	</hgroup>

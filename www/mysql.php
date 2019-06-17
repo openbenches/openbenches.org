@@ -234,7 +234,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	}
 
 	if ($only_published){
-		$where = "WHERE `published` = true AND ";
+		$where = "WHERE `published` = true AND `present` = true AND";
 	} else {
 		$where = "WHERE ";
 	}
