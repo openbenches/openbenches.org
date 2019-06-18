@@ -368,6 +368,25 @@ function get_random_bench(){
 	}
 }
 
+function get_latest_bench(){
+	global $mysqli;
+
+	$get_bench = $mysqli->prepare(
+		"SELECT benchID, latitude, longitude, address, inscription, published
+		 FROM benches WHERE published = true AND present = true ORDER BY `benchID` DESC LIMIT 1;"
+	);
+
+	$get_bench->execute();
+
+	/* bind result variables */
+	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+
+	while($get_bench->fetch()) {
+		$get_bench->close();
+		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
+	}
+}
+
 function get_image($benchID, $full = false)
 {
 	global $mysqli;
