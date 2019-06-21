@@ -25,7 +25,7 @@ if ("raw" == $format) {
 	echo json_encode($speech, JSON_NUMERIC_CHECK);
 } else {
 	header('Content-type: text/javascript; charset=utf-8');
-	echo "var benches = " . json_encode($speech, JSON_NUMERIC_CHECK);
+	echo "var alexa = " . json_encode($speech, JSON_NUMERIC_CHECK);
 }
 
 die();
