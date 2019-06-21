@@ -16,9 +16,6 @@ if(null == $user_provider) {
 	die();
 }
 
-//	Start the normal page
-include("header.php");
-
 $error_message = "";
 
 if(isset($_POST['key'])) {
@@ -93,6 +90,9 @@ if(isset($_POST['key'])) {
 		}
 	}
 }
+
+//	Start the normal page
+include("header.php");
 
 if (null == $user_providerID) {
 	$error_message .= "<h3>Invalid Edit URL</h3>";
