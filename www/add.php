@@ -112,8 +112,7 @@ A lot..."></textarea>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
 	<script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
-	<script src="/libs/vision/key.js"></script>
-	<script src="/libs/vision/vision.js"></script>
+	<script src="/libs/vision/vision.js.php"></script>
 	<script src="/libs/load-image.2.21.0/load-image.all.min.js"></script>
 	<script src="/libs/select2.4.0.7/js/select2.min.js"></script>
 	<script>

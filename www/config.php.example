@@ -33,7 +33,6 @@ define('OPENCAGE_API_KEY', '');
 //	https://docs.mapbox.com/help/how-mapbox-works/access-tokens/
 define('MAPBOX_API_KEY', '');
 
-
 //	Auth0 login services
 //	https://auth0.com/
 define('AUTH0_DOMAIN',           '');
@@ -51,3 +50,6 @@ define('IMAGE_CACHE_PREFIX', '');
 define('IMAGE_DEFAULT_SIZE',   '600');
 define('IMAGE_THUMB_SIZE',     '120');
 define('IMAGE_DEFAULT_FILTER','webp');
+
+//	Google Cloud Vision - https://cloud.google.com/console
+define('CLOUD_VISION_KEY','');
