@@ -80,11 +80,11 @@ if ($_GET["wikiID"])
 	echo "<textarea name='inscription' id='inscription' cols='70' rows='6'></textarea><br>";
 	echo '<input type="submit" value="Share Bench" /><br>';
 	echo "<a target='_blank' href='{$original}'><img id='wikiimg' src='{$thumbnail}' width='512'/></a><br>";
-	echo "<input type='text' name='image'   size='60' value='{$original}'><br>";
+	echo "<input type='text' name='wikiID'  size='60' value='{$wikiID}'><br>";
 	echo "<input type='text' name='lat'     size='60' value='{$lat}'><br>";
 	echo "<input type='text' name='long'    size='60' value='{$long}'><br>";
 	echo "<input type='text' name='license' size='60' value='{$license}'><br>";
-	echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
+	// echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
 	echo "</form>";
 ?>
 <script src="/libs/jquery.3.3.1/jquery-3.3.1.min.js"></script>
@@ -133,12 +133,26 @@ function displayJSON (data) {
 	die();
 } elseif ($_POST != null) {
 	$inscription = $_POST['inscription'];
-	$imageURL    = $_POST['image'];
-	$import      = $_POST['import'];
+	$wikiID    = $_POST['wikiID'];
+	$import      = "https://commons.wikimedia.org/wiki/File:" . $wikiID;
 	$license     = $_POST["license"];
 	$lat         = $_POST["lat"];
 	$long        = $_POST["long"];
 	$filename =  "photos/tmp/" . (microtime(true) * 1000);
+
+	$wikiAPI = "https://tools.wmflabs.org/magnus-toolserver/commonsapi.php?meta&image={$wikiID}";
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $wikiAPI);
+	curl_setopt($ch, CURLOPT_USERAGENT, "OpenBenches.org" );
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$wikiXML = curl_exec($ch);
+	curl_close($ch);
+
+	$wikiData = simplexml_load_string($wikiXML)[0];
+	$imageURL =  $wikiData->{"file"}->{"urls"}->{"file"};
+
+
 	$photo = file_put_contents($filename, file_get_contents($imageURL));
 	$sha1  = sha1_file ($filename);
 
