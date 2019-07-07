@@ -373,8 +373,34 @@ function get_path_from_hash($sha1, $full = true) {
 	return $photo_path;
 }
 
+function get_location_from_name($location) {
+	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
+	$geocode_api_key = OPENCAGE_API_KEY;
+	$location = urlencode($location);
+	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&key={$geocode_api_key}";
+	$options = array(
+		'http'=>array(
+			'method'=>"GET",
+			'header'=>"User-Agent: OpenBenches.org\r\n"
+		)
+	);
+
+	$context = stream_context_create($options);
+	$locationJSON = file_get_contents($geocodeAPI, false, $context);
+	$locationData = json_decode($locationJSON);
+	try {
+		$lat = $locationData->results[0]->geometry->lat;
+		$lng = $locationData->results[0]->geometry->lng;
+	} catch (Exception $e) {
+		$loc = var_export($locationData);
+		error_log("Caught $e - $loc");
+		return "";
+	}
+
+	return "{$lat}/{$lng}";
+}
+
 function get_place_name($latitude, $longitude) {
-	// https://nominatim.openstreetmap.org/reverse?format=json&lat=51.522221&lon=-0.125833&zoom=18&addressdetails=1
 	$geocode_api_key = OPENCAGE_API_KEY;
 
 	$reverseGeocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$latitude}%2C{$longitude}&no_annotations=1&key={$geocode_api_key}";
