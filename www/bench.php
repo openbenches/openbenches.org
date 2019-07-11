@@ -45,10 +45,25 @@ if (!$present) {
 		<a class="button buttonColour" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">🌍 Benches near this</a>
 		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
 		<a href="/edit/<?php echo $benchID; ?>" class="button buttonColour">✏️ Edit this bench</a>
+
 	</div>
 	<?php
 		include("sharing.php");
 	?>
+	<form action="/bench/" method="post">
+		<input id="random" name="random" value="random" type="hidden" />
+		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
+		<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
+	</form>
+	<form action="/search/" enctype="multipart/form-data" method="get">
+		<div>
+			<input type="search" class="search" id="inscription" name="search"
+				placeholder="in loving memory of"
+				value="<?php echo ( isset($query) ? htmlspecialchars($query) : "") ; ?>">
+			<br>
+			<input type="submit" class="button buttonColour" value="🔎 Search inscriptions" />
+		</div>
+	</form>
 
 	<div id="comments">
 		<script>
