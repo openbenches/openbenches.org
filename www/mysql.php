@@ -525,8 +525,15 @@ function get_image_html($benchID, $full = true)
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
 
+			$dimensions = get_image_dimensions($sha1);
+			$width  = $dimensions["width"];
+			$height = $dimensions["height"];
+			$default_width = IMAGE_DEFAULT_SIZE;
+			$ratio  = $default_width / $width;
+			$height = round($height * $ratio);
+
 			$html .= "<a href='{$link}'>
-							<img src='{$image_prefix}/image/{$sha1}' class='proxy-image' alt='{$alt}' />
+							<img src='{$image_prefix}/image/{$sha1}' class='proxy-image' alt='{$alt}' width='{$default_width}' height='{$height}' />
 						</a>";
 		}
 
