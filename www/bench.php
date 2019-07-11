@@ -50,11 +50,7 @@ if (!$present) {
 	<?php
 		include("sharing.php");
 	?>
-	<form action="/bench/" method="post">
-		<input id="random" name="random" value="random" type="hidden" />
-		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
-		<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
-	</form>
+
 	<form action="/search/" enctype="multipart/form-data" method="get">
 		<div>
 			<input type="search" class="search" id="inscription" name="search"
@@ -64,7 +60,11 @@ if (!$present) {
 			<input type="submit" class="button buttonColour" value="🔎 Search inscriptions" />
 		</div>
 	</form>
-
+	<form action="/bench/" method="post">
+		<input id="random" name="random" value="random" type="hidden" />
+		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
+		<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
+	</form>
 	<div id="comments">
 		<script>
 			var idcomments_acct = '2c821c4a265bb30b50b1127cf2b99934';
