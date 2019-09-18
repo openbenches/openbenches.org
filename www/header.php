@@ -143,7 +143,7 @@ if ("user" == $page) {
 				     alt="A bird flies above a bench">Open<wbr>Benches</a></h1>
 <?php
 //	Unpublished or non-existant benches
-if ( ($benchID == null) || ("bench" == $page && $benchID != null && !$published) ) {
+if ( ("bench" == $page && $benchID == null) || ("bench" == $page && $benchID != null && !$published) ) {
 	include("404.php");
 	die();
 }
