@@ -93,6 +93,7 @@ You will need to sign up to some external API providers:
 * Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
 * Image resizing and caching requires a [CloudImage.io account](https://www.cloudimage.io)
 * **Optional** Login requires a free [Auth0.com](https://auth0.com/) account.
+* **Optional** Map display requires a free [Mapbox](https://www.mapbox.com/) account
 
 Add them to `config.php.example` - rename that to `config.php`
 
