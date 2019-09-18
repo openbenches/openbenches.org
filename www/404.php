@@ -11,10 +11,12 @@ $broken_image = $broken_images[array_rand($broken_images,1)];
 <h2>404 - Bench Not Found</h2>
 <img src="/image/<?echo $broken_image; ?>/600" class="proxy-image" alt="Photograph of a bench with a removed plaque">
 <form action="/search/" enctype="multipart/form-data" method="get">
-	<h2>Search for an inscription</h2>
 	<div>
-		<input type="search" id="inscription" name="search" class="search" value="">
-		<input type="submit" class="hand-drawn" value="Search inscriptions" />
+		<input type="search" class="search" id="inscription" name="search"
+			placeholder="in loving memory of"
+			value="<?php echo ( isset($query) ? htmlspecialchars($query) : "") ; ?>">
+		<br>
+		<input type="submit" class="button buttonColour" value="🔎 Search inscriptions" />
 	</div>
 </form>
 <?php
