@@ -53,6 +53,11 @@ if ("bench" == $page) {
 			die();
 		}
 	}
+
+	// Benches which don't exist
+	if($benchID == null) {
+		header("HTTP/1.1 404 Not Found");
+	}
 }
 if ("user" == $page) {
 	//	Handled in user.php
@@ -137,8 +142,8 @@ if ("user" == $page) {
 				     id="header-image"
 				     alt="A bird flies above a bench">Open<wbr>Benches</a></h1>
 <?php
-//	Unpublished benches
-if("bench" == $page && $benchID != null && !$published) {
+//	Unpublished or non-existant benches
+if ( ($benchID == null) || ("bench" == $page && $benchID != null && !$published) ) {
 	include("404.php");
 	die();
 }
