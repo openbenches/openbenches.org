@@ -489,6 +489,9 @@ function duplicate_file($filename) {
 
 function get_image_cache($size=IMAGE_DEFAULT_SIZE, $filter=IMAGE_DEFAULT_FILTER) {
 	//	Generate a prefix for the cached image. Can be thumbnailed. https://docs.cloudimage.io/go/cloudimage-documentation/en/operations/
+	if (IMAGE_CACHE_PREFIX == "") {
+		return "";
+	}
 	return IMAGE_CACHE_PREFIX . "{$size}/$filter/" . $_SERVER['SERVER_NAME'];
 }
 
