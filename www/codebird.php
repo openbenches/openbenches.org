@@ -6,9 +6,9 @@ namespace Codebird;
  * A Twitter library in PHP.
  *
  * @package   codebird
- * @version   3.2.0-beta.1
- * @author    Jublo Solutions <support@jublo.net>
- * @copyright 2010-2017 Jublo Solutions <support@jublo.net>
+ * @version   4.0.0-beta.1
+ * @author    Jublo Limited <support@jublo.net>
+ * @copyright 2010-2018 Jublo Limited <support@jublo.net>
  * @license   https://opensource.org/licenses/GPL-3.0 GNU General Public License 3.0
  * @link      https://github.com/jublonet/codebird-php
  */
@@ -40,6 +40,7 @@ unset($id);
  *
  * @package codebird
  * @subpackage codebird-php
+ * @method bool curl_setopt (resource $ch, int $option, mixed $value)
  */
 class Codebird
 {
@@ -68,17 +69,15 @@ class Codebird
    */
   protected static $_endpoints = [
     'ads'          => [
-      'production' => 'https://ads-api.twitter.com/1/',
-      'sandbox'    => 'https://ads-api-sandbox.twitter.com/1/'
+      'production' => 'https://ads-api.twitter.com/2/',
+      'sandbox'    => 'https://ads-api-sandbox.twitter.com/2/'
     ],
     'media'        => 'https://upload.twitter.com/1.1/',
     'publish'      => 'https://publish.twitter.com/',
     'oauth'        => 'https://api.twitter.com/',
     'rest'         => 'https://api.twitter.com/1.1/',
     'streaming'    => [
-      'public'     => 'https://stream.twitter.com/1.1/',
-      'user'       => 'https://userstream.twitter.com/1.1/',
-      'site'       => 'https://sitestream.twitter.com/1.1/'
+      'public'     => 'https://stream.twitter.com/1.1/'
     ],
     'ton'          => 'https://ton.twitter.com/1.1/'
   ];
@@ -90,6 +89,14 @@ class Codebird
     'GET' => [
       'account/settings',
       'account/verify_credentials',
+      'account_activity/all/:env_name/subscriptions',
+      'account_activity/all/:env_name/subscriptions/list',
+      'account_activity/all/:env_name/webhooks',
+      'account_activity/all/webhooks',
+      'account_activity/subscriptions/count',
+      'account_activity/webhooks',
+      'account_activity/webhooks/:webhook_id/subscriptions/all',
+      'account_activity/webhooks/:webhook_id/subscriptions/all/list',
       'ads/accounts',
       'ads/accounts/:account_id',
       'ads/accounts/:account_id/account_media',
@@ -258,10 +265,17 @@ class Codebird
       'collections/entries',
       'collections/list',
       'collections/show',
-      'direct_messages',
-      'direct_messages/sent',
-      'direct_messages/show',
+      'custom_profiles/:id',
+      'custom_profiles/list',
+      'direct_messages/events/list',
+      'direct_messages/events/show',
+      'direct_messages/welcome_messages/list',
+      'direct_messages/welcome_messages/rules/list',
+      'direct_messages/welcome_messages/rules/show',
+      'direct_messages/welcome_messages/show',
       'favorites/list',
+      'feedback/events',
+      'feedback/show/:id',
       'followers/ids',
       'followers/list',
       'friends/ids',
@@ -295,7 +309,6 @@ class Codebird
       'saved_searches/list',
       'saved_searches/show/:id',
       'search/tweets',
-      'site',
       'statuses/firehose',
       'statuses/home_timeline',
       'statuses/mentions_timeline',
@@ -309,9 +322,6 @@ class Codebird
       'trends/available',
       'trends/closest',
       'trends/place',
-      'user',
-      'users/contributees',
-      'users/contributors',
       'users/profile_banner',
       'users/search',
       'users/show',
@@ -323,9 +333,12 @@ class Codebird
       'account/remove_profile_banner',
       'account/settings',
       'account/update_profile',
-      'account/update_profile_background_image',
       'account/update_profile_banner',
       'account/update_profile_image',
+      'account_activity/all/:env_name/subscriptions',
+      'account_activity/all/:env_name/webhooks',
+      'account_activity/webhooks',
+      'account_activity/webhooks/:webhook_id/subscriptions/all',
       'ads/accounts/:account_id/account_media',
       'ads/accounts/:account_id/app_lists',
       'ads/accounts/:account_id/campaigns',
@@ -394,11 +407,15 @@ class Codebird
       'collections/entries/move',
       'collections/entries/remove',
       'collections/update',
-      'direct_messages/destroy',
-      'direct_messages/new',
-      'dm/new',
+      'custom_profiles/new',
+      'direct_messages/events/new',
+      'direct_messages/indicate_typing',
+      'direct_messages/mark_read',
+      'direct_messages/welcome_messages/new',
+      'direct_messages/welcome_messages/rules/new',
       'favorites/create',
       'favorites/destroy',
+      'feedback/create',
       'friendships/create',
       'friendships/destroy',
       'friendships/update',
@@ -427,14 +444,18 @@ class Codebird
       'statuses/retweet/:id',
       'statuses/unretweet/:id',
       'statuses/update',
-      'statuses/update_with_media', // deprecated, use media/upload
       'ton/bucket/:bucket',
       'ton/bucket/:bucket?resumable=true',
       'tweets/search/30day/:env',
+      'tweets/search/30day/:env/counts',
+      'tweets/search/fullarchive/:env',
+      'tweets/search/fullarchive/:env/counts',
       'users/lookup',
       'users/report_spam'
     ],
     'PUT' => [
+      'account_activity/all/:env_name/webhooks/:webhook_id',
+      'account_activity/webhooks/:webhook_id',
       'ads/accounts/:account_id/campaigns/:campaign_id',
       'ads/accounts/:account_id/cards/app_download/:card_id',
       'ads/accounts/:account_id/cards/image_app_download/:card_id',
@@ -465,9 +486,14 @@ class Codebird
       'ads/sandbox/accounts/:account_id/targeting_criteria',
       'ads/sandbox/accounts/:account_id/videos/:id',
       'ads/sandbox/accounts/:account_id/web_event_tags/:web_event_tag_id',
+      'direct_messages/welcome_messages/update',
       'ton/bucket/:bucket/:file?resumable=true&resumeId=:resumeId'
     ],
     'DELETE' => [
+      'account_activity/all/:env_name/subscriptions',
+      'account_activity/all/:env_name/webhooks/:webhook_id',
+      'account_activity/webhooks/:webhook_id',
+      'account_activity/webhooks/:webhook_id/subscriptions/all',
       'ads/accounts/:account_id/campaigns/:campaign_id',
       'ads/accounts/:account_id/cards/app_download/:card_id',
       'ads/accounts/:account_id/cards/image_app_download/:card_id',
@@ -499,7 +525,11 @@ class Codebird
       'ads/sandbox/accounts/:account_id/tailored_audiences/:id',
       'ads/sandbox/accounts/:account_id/targeting_criteria/:id',
       'ads/sandbox/accounts/:account_id/videos/:id',
-      'ads/sandbox/accounts/:account_id/web_event_tags/:web_event_tag_id'
+      'ads/sandbox/accounts/:account_id/web_event_tags/:web_event_tag_id',
+      'custom_profiles/destroy',
+      'direct_messages/events/destroy',
+      'direct_messages/welcome_messages/destroy',
+      'direct_messages/welcome_messages/rules/destroy'
     ]
   ];
 
@@ -508,10 +538,8 @@ class Codebird
    */
   protected static $_possible_files = [
     // Tweets
-    'statuses/update_with_media' => ['media[]'],
     'media/upload' => ['media'],
     // Accounts
-    'account/update_profile_background_image' => ['image'],
     'account/update_profile_image' => ['image'],
     'account/update_profile_banner' => ['banner']
   ];
@@ -519,7 +547,7 @@ class Codebird
   /**
    * The current Codebird version
    */
-  protected static $_version = '3.2.0-beta.1';
+  protected static $_version = '4.0.0-beta.1';
 
   /**
    * The Request or access token. Used to sign requests
@@ -1665,6 +1693,9 @@ class Codebird
           'ads/sandbox/accounts/:account_id/features',
           'ads/sandbox/accounts/:account_id/funding_instruments'
         ],
+        'url' => [
+          'account_activity/webhooks'
+        ],
         'user_id' => [
           'ads/accounts/:account_id/promoted_accounts',
           'ads/sandbox/accounts/:account_id/promoted_accounts'
@@ -1730,12 +1761,10 @@ class Codebird
   {
     $multiparts = [
       // Tweets
-      'statuses/update_with_media',
       'media/upload',
 
       // Users
       // no multipart for these, for now:
-      //'account/update_profile_background_image',
       //'account/update_profile_image',
       //'account/update_profile_banner'
     ];
@@ -1944,8 +1973,16 @@ class Codebird
       'ads/sandbox/batch/accounts/:account_id/line_items',
       'ads/sandbox/batch/accounts/:account_id/targeting_criteria',
       'collections/entries/curate',
+      'custom_profiles/new',
+      'direct_messages/events/new',
+      'direct_messages/indicate_typing',
+      'direct_messages/mark_read',
+      'direct_messages/welcome_messages/new',
+      'direct_messages/welcome_messages/rules/new',
+      'direct_messages/welcome_messages/update',
       'media/metadata/create',
-      'tweets/search/30day/:env'
+      'tweets/search/30day/:env',
+      'tweets/search/fullarchive/:env'
     ];
     return in_array($method_template, $json_bodies);
   }
@@ -1977,11 +2014,8 @@ class Codebird
     $streamings = [
       'public' => [
         'statuses/sample',
-        'statuses/filter',
-        'statuses/firehose'
-      ],
-      'user' => ['user'],
-      'site' => ['site']
+        'statuses/filter'
+      ]
     ];
     foreach ($streamings as $key => $values) {
       if (in_array($method, $values)) {
@@ -2658,7 +2692,7 @@ class Codebird
  * Catch errors when authtoken is expired
  */
 class CodebirdAuthException extends \Exception {
-	
+
 }
 
 
@@ -2666,14 +2700,14 @@ class CodebirdAuthException extends \Exception {
  * Catch error when credentials are not set correclty
  */
 class CodebirdCredentialsException extends \Exception {
-	
+
 }
 
 /**
  * Catch errors r elated to bad endpoi ts
  */
 class CodebirdEndpointException extends \Exception {
-	
+
 }
 
 /*
@@ -2681,6 +2715,5 @@ class CodebirdEndpointException extends \Exception {
  */
 
 class CodebirdMediaException extends \Exception {
-	
-}
 
+}
