@@ -125,10 +125,10 @@ if ("user" == $page) {
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
 	<link rel="stylesheet" href="/css/style.css?cache=2019-07-12T12:50"/>
 
-	<link rel="stylesheet" href="/libs/select2.4.0.7/css/select2.min.css?cache=2019-06-09T00:54"  />
+	<link rel="stylesheet" href="/libs/select2.4.0.10/select2.min.css"  />
 
-	<link rel="stylesheet" href="/libs/leaflet.1.4.0/leaflet.css" />
-	<script                 src="/libs/leaflet.1.4.0/leaflet.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.5.1/leaflet.css" />
+	<script                 src="/libs/leaflet.1.5.1/leaflet.js"></script>
 
 	<script                 src="/libs/leaflet.markercluster.1.4.1/leaflet.markercluster.js"></script>
 	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.css">

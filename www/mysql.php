@@ -518,10 +518,10 @@ function get_image_html($benchID, $full = true)
 
 		//	What sort of image is it?
 		if("360" == $media_type) {
-			$panorama = "/libs/pannellum.2.4.1/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true";
+			$panorama = "/libs/pannellum.2.5.4/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else if("pano" == $media_type){
-			$panorama = "/libs/pannellum.2.4.1/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
+			$panorama = "/libs/pannellum.2.5.4/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
 		} else {
 
