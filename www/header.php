@@ -122,7 +122,7 @@ if ("user" == $page) {
 	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
 	<?php echo $oembedMeta; ?>
 
-	<link rel="stylesheet" href="/css/picnic.css?cache=2019-04-19T14:40"/>
+	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
 	<link rel="stylesheet" href="/css/style.css?cache=2019-07-12T12:50"/>
 
 	<link rel="stylesheet" href="/libs/select2.4.0.7/css/select2.min.css?cache=2019-06-09T00:54"  />
