@@ -1,17 +1,17 @@
 [
     {
         "name": "auth0/auth0-php",
-        "version": "5.4.0",
-        "version_normalized": "5.4.0.0",
+        "version": "5.5.1",
+        "version_normalized": "5.5.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/auth0/auth0-PHP.git",
-            "reference": "a8db6117c1efd4cc9f84fd18b309494cc04ec4a5"
+            "reference": "6b6902b6e3f45064f1270b598dd03165508ad397"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/a8db6117c1efd4cc9f84fd18b309494cc04ec4a5",
-            "reference": "a8db6117c1efd4cc9f84fd18b309494cc04ec4a5",
+            "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/6b6902b6e3f45064f1270b598dd03165508ad397",
+            "reference": "6b6902b6e3f45064f1270b598dd03165508ad397",
             "shasum": ""
         },
         "require": {
@@ -21,13 +21,13 @@
             "php": "^5.5 || ^7.0"
         },
         "require-dev": {
-            "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+            "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
             "josegonzalez/dotenv": "^2.0",
             "phpcompatibility/php-compatibility": "^8.1",
             "phpunit/phpunit": "^4.8 || ^5.7",
             "squizlabs/php_codesniffer": "^3.2"
         },
-        "time": "2019-02-28T17:37:39+00:00",
+        "time": "2019-07-15T16:22:08+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

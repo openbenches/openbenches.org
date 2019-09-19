@@ -1,5 +1,29 @@
 # Change Log
 
+## [5.5.1](https://github.com/auth0/auth0-PHP/tree/5.5.1) (2019-07-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.0...5.5.1)
+
+**Closed issues**
+- No packagist package created for 5.5.0 [\#346](https://github.com/auth0/auth0-PHP/issues/346)
+
+**Fixed**
+- Fix empty url params [\#349](https://github.com/auth0/auth0-PHP/pull/349) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix tests to reduce the number of sensitive credentials used [\#348](https://github.com/auth0/auth0-PHP/pull/348) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change normalizeIncludeTotals() in GenericResource to have sane defaults [\#347](https://github.com/auth0/auth0-PHP/pull/347) ([kler](https://github.com/kler))
+
+## [5.5.0](https://github.com/auth0/auth0-PHP/tree/5.5.0) (2019-06-07)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.4.0...5.5.0)
+
+**Closed issues**
+- Consider dropping PHP-5.x version supports [\#343](https://github.com/auth0/auth0-PHP/issues/343)
+- Auth0 Error:  'Invalid state' in /auth0/vendor/auth0/auth0-php/src/Auth0.php: line#537  [\#333](https://github.com/auth0/auth0-PHP/issues/333)
+
+**Added**
+- Add missing User endpoints for Management API [\#341](https://github.com/auth0/auth0-PHP/pull/341) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add all Management API Roles endpoints [\#337](https://github.com/auth0/auth0-PHP/pull/337) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add missing Users test and switch to mocked calls. [\#336](https://github.com/auth0/auth0-PHP/pull/336) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Authentication::refresh_token() method [\#335](https://github.com/auth0/auth0-PHP/pull/335) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.4.0](https://github.com/auth0/auth0-PHP/tree/5.4.0) (2019-02-28)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.2...5.4.0)
 

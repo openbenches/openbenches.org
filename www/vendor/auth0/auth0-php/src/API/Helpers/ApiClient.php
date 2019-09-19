@@ -7,7 +7,7 @@ use Auth0\SDK\API\Header\Telemetry;
 class ApiClient
 {
 
-    const API_VERSION = '5.4.0';
+    const API_VERSION = '5.5.1';
 
     protected static $infoHeadersDataEnabled = true;
 
@@ -97,7 +97,7 @@ class ApiClient
         ]);
         $builder->withHeaders($this->headers);
 
-        if (in_array($method, [ 'patch', 'post', 'put' ])) {
+        if (in_array($method, [ 'patch', 'post', 'put', 'delete' ])) {
             $builder->withHeader(new ContentType('application/json'));
         }
 
