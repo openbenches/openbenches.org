@@ -1,6 +1,6 @@
 # OpenBenches
 
-![A bench in a park, birds fly up above. In the background is a tree.](https://openbenches.org/mstile-70x70.png)
+![A bench in a park, birds fly up above. In the background is a tree.](https://openbenches.org/images/icons/icon-72x72.png)
 
 https://OpenBenches.org/ - an open data repository for memorial benches.
 
