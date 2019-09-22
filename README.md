@@ -140,6 +140,9 @@ Media storage can be complicated. Storing thousands of images in a single direct
 * `media_type` We allow different types of photo - in the future, we might have other types of media.
 * `width` The image's width in pixels.
 * `height` The image's width in pixels.
+* `datetime` The date and time the image was created - based on EXIF metadata.
+* `make` The make of camera which took the photo - based on EXIF metadata.
+* `model` The model of camera which took the photo - based on EXIF metadata.
 
 #### Media Types
 
