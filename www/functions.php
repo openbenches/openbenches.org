@@ -105,7 +105,6 @@ function get_image_location($file)
 		$info = $img->getImageProperties("exif:*");
 		$img->clear();
 
-		// $info = exif_read_data($file);
 		if ($info !== false) {
 				$direction = array('N', 'S', 'E', 'W');
 				if (isset($info['exif:GPSLatitude'], $info['exif:GPSLongitude'], $info['exif:GPSLatitudeRef'],
@@ -310,55 +309,59 @@ EOT;
 	echo $mapJavaScript;
 }
 
-function get_exif_html($filename) {
+function get_exif_from_file($sha1) {
+	$filename = get_path_from_hash($sha1, $full = true);
+	$exif_data = array();
+	$exif_data["datetime"] = null;
+	$exif_data["make"]     = null;
+	$exif_data["model"]    = null;
 
 	try {
 		$img = new \Imagick($filename);
 		$exif = $img->getImageProperties();
 		$img->clear();
 	} catch (\Exception $e) {
-		return "";
+		return null;
 	}
 
-	if (array_key_exists("exif:DateTime", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["exif:DateTime"]);
-	} else if (array_key_exists("exif:DateTimeOriginal", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["exif:DateTimeOriginal"]);
-	} else if (array_key_exists("exif:DateTimeDigitized", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["exif:DateTimeDigitized"]);
-	} else if (array_key_exists("exif:GPSDateStamp", $exif)) {
-		$dateHTML = exif_date_to_timestamp($exif["exif:GPSDateStamp"]);
+	if (array_key_exists("exif:DateTimeDigitized", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:DateTimeDigitized"], $sha1);
+	} elseif (array_key_exists("exif:DateTime", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:DateTime"], $sha1);
+	} elseif (array_key_exists("exif:DateTimeOriginal", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:DateTimeOriginal"], $sha1);
+	} elseif (array_key_exists("exif:GPSDateStamp", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:GPSDateStamp"], $sha1);
 	} else {
-		$dateHTML = null;
+		$date = null;
 	}
+	$exif_data["datetime"] = $date;
 
 	//	Get the make and model
-	$makeHTML = "";
 	if (array_key_exists("exif:Make", $exif)) {
-		$makeHTML = ucwords($exif["exif:Make"]);
+		$exif_data["make"]  = $exif["exif:Make"];
 	}
 	if (array_key_exists("exif:Model", $exif)) {
-		$makeHTML .= " " . $exif["exif:Model"];
+		$exif_data["model"] = $exif["exif:Model"];
 	}
 
-	//	Format the text
-	// if ($makeHTML != "") {
-	// 	$makeHTML = " | " . $makeHTML;
-	// }
-
-	$exifHTML = "{$dateHTML}&nbsp;{$makeHTML}";
-
-	return $exifHTML;
+	return $exif_data;
 }
 
+
 function exif_date_to_timestamp($date) {
-	//	Take the first 10 characters e.g. 2017:08:25 and turn it into a date
-	$datestring = ( substr( str_replace(":", "-", $date) ,0, 10 ));
-	$datetime = new DateTime($datestring);
-	$time = $datetime->format('c');
-	$human = $datetime->format('jS') . " " . $datetime->format('F') . " " . $datetime->format('Y');
-	$dateHTML = "<time datetime=\"{$time}\">{$human}</time>";
-	return $dateHTML;
+	$length = strlen($date);
+	if ($length == 10) {
+		//	2001:12:25
+		$date = str_replace(":", "-", $date);
+		$date = $date . " 00:00:00";
+		$datetime = date_create_from_format('Y-m-d H:i:s', $date);
+		return $datetime->format('Y-m-d H:i:s');
+	} else {
+		//	Too many different timestamp formats to do manually.
+		$date_array = date_parse($date);
+		return date('Y-m-d H:i:s', mktime($date_array['hour'], $date_array['minute'], $date_array['second'], $date_array['month'], $date_array['day'], $date_array['year']));
+	}
 }
 
 function get_path_from_hash($sha1, $full = true) {
@@ -429,11 +432,6 @@ function save_image($file, $media_type, $benchID, $userID) {
 	$filename = $file['name'];
 	$file =     $file['tmp_name'];
 
-	//	Not needed. This is checked in add.php
-	// if (get_image_location($file) == false) {
-	// 	return "<h3>No GPS tags in: {$filename}</h3>";
-	// }
-
 	if (duplicate_file($file)) {
 		return "<h3>Duplicate image: {$filename}</h3>";
 	}
@@ -459,16 +457,21 @@ function save_image($file, $media_type, $benchID, $userID) {
 	$dimensions = get_image_dimensions($sha1);
 
 	if (null != $dimensions) {
-		$width = $dimensions["width"];
+		$width  = $dimensions["width"];
 		$height = $dimensions["height"];
 	} else {
 		$width  = null;
 		$height = null;
 	}
 
+	$exif = get_exif_from_file($sha1);
+	$datetime = $exif["datetime"];
+	$make     = $exif["make"];
+	$model    = $exif["model"];
+
 	//	Add the media to the database
 	if ($moved){
-		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type, $width, $height);
+		$mediaID = insert_media($benchID, $userID, $sha1, "CC BY-SA 4.0", null, $media_type, $width, $height, $datetime, $make, $model);
 		return true;
 	} else {
 		return("<h3>Unable to move {$filename} to {$photo_full_path} - bench {$benchID} user {$userID} media {$media_type}</h3>");

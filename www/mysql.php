@@ -73,16 +73,17 @@ function update_bench_address($benchID, $benchLat, $benchLong) {
 }
 
 
-function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null, $width=null, $height=null)
+function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import=null, $media_type=null, $width=null, $height=null, $datetime=null, $make=null, $model=null)
 {
 	global $mysqli;
 	$insert_media = $mysqli->prepare(
 		'INSERT INTO `media`
-				 (`mediaID`,`benchID`,`userID`,`sha1`, `licence`, `importURL`, `media_type`, `width`, `height`)
-		VALUES (NULL,      ?,        ?,       ?,      ?,         ?,          ?,             ?,       ?);'
+		(`mediaID`, `benchID`, `userID`, `sha1`, `licence`, `importURL`, `media_type`, `width`, `height`, `datetime`, `make`, `model`)
+		VALUES
+		(NULL,       ?,         ?,        ?,      ?,         ?,           ?,            ?,       ?,       ?,          ?,      ?);'
 	);
 
-	$insert_media->bind_param('iissssii', $benchID, $userID, $sha1, $licence, $import, $media_type, $width, $height);
+	$insert_media->bind_param('iissssiisss', $benchID, $userID, $sha1, $licence, $import, $media_type, $width, $height, $datetime, $make, $model);
 	$insert_media->execute();
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
@@ -453,13 +454,8 @@ function get_image_html($benchID, $full = true)
 
 	global $mysqli;
 
-	// $get_media = $mysqli->prepare(
-	// 	"SELECT sha1, userID, importURL, licence, media_type
-	// 	 FROM media
-	// 	 WHERE benchID = ?");
-
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type
+		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type, datetime, make, model
 		FROM media
 		INNER JOIN users ON media.userID = users.userID
 		WHERE benchID = ?");
@@ -467,7 +463,7 @@ function get_image_html($benchID, $full = true)
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
 	/* bind result variables */
-	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type);
+	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type, $datetime, $make, $model);
 
 	$image_prefix = get_image_cache();
 
@@ -494,7 +490,13 @@ function get_image_html($benchID, $full = true)
 		}
 
 		//	When was the photo taken?
-		$exif_html = get_exif_html(get_path_from_hash($sha1));
+		if ($datetime != null) {
+			$formatted_date = date("jS M Y", strtotime($datetime));
+		} else {
+			$formatted_date = "";
+		}
+		$make = ucwords($make);
+		$exif_html = htmlspecialchars("{$formatted_date} {$make} {$model}");
 
 		//	Pannellum can't take full width images. This size should be quick to compute
 		$panorama_image = "/image/{$sha1}/3396";
