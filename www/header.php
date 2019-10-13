@@ -85,7 +85,7 @@ if ("user" == $page) {
 	<meta name="apple-mobile-web-app-title" content="OpenBenches">
 
 	<!-- Twitter Specific Metadata https://dev.twitter.com/cards/markup -->
-	<meta name="twitter:card"                            content="summary_large_image">
+	<meta name="twitter:card"                            content="summary">
 	<meta name="twitter:site"                            content="@openbenches">
 	<meta name="twitter:creator"                         content="@openbenches" />
 	<meta name="twitter:title"       property="og:title" content="OpenBenches">
