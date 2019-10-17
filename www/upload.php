@@ -108,18 +108,10 @@ if ($_FILES['userfile1']['tmp_name'])
 				tweet_bench($benchID, $mediaURLs, $inscription, $lat, $lng, "CC BY-SA 4.0", $user_provider, $user_name);
 			} catch (Exception $e) {
 				// var_export($e);
-				die();
+				return null;
 			}
 
-			//	Mastodon Toot the bench
-			// try {
-			// 	toot_bench($benchID, $mediaFiles, $inscription, "CC BY-SA 4.0");
-			// } catch (Exception $e) {
-			// 	var_export($e);
-			// 	die();
-			// }
-
-			die();
+			return null;
 		} else {
 			$error_message .= "No location metadata found in image.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
 		}

@@ -13,7 +13,7 @@ if (isset($_POST["random"])) {
 	header('Cache-Control: no-store, must-revalidate');
 	header('Expires: 0');
 	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}/",TRUE,302);
-	die();
+	return null;
 }
 
 if (isset($params[1])) {
@@ -50,7 +50,7 @@ if ("bench" == $page) {
 		} else {
 			//	Yup! Where does it live now?
 			header("Location: /bench/{$mergedID}",TRUE,301);
-			die();
+			return null;
 		}
 	}
 
@@ -145,5 +145,5 @@ if ("user" == $page) {
 //	Unpublished or non-existant benches
 if ( ("bench" == $page && $benchID == null) || ("bench" == $page && $benchID != null && !$published) ) {
 	include("404.php");
-	die();
+	return null;
 }

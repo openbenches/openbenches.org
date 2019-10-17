@@ -6,7 +6,7 @@ global $mysqli;
 $get_ids = $mysqli->prepare(
 	"SELECT benchID FROM benches
 	WHERE published = true
-	LIMIT 0 , 10000");
+	LIMIT 0 , 100000");
 
 $get_ids->execute();
 
@@ -26,3 +26,4 @@ $get_ids->close();
 
 header("Content-type: text/xml");
 echo $sitemap;
+unset($sitemap);

@@ -27,5 +27,3 @@ if ("raw" == $format) {
 	header('Content-type: text/javascript; charset=utf-8');
 	echo "var alexa = " . json_encode($speech, JSON_NUMERIC_CHECK);
 }
-
-die();

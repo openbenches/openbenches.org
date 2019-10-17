@@ -8,7 +8,7 @@ if (null == $tagText) {
 	//	Return all tags
 	$tagsJSON = get_tags();
 	$type = "tags";
-} 
+}
 
 if ("raw" == $format) {
 	//	Pure JSON
@@ -19,5 +19,3 @@ if ("raw" == $format) {
 	header('Content-type: text/javascript; charset=utf-8');
 	echo "var {$type} = " . json_encode($tagsJSON);
 }
-
-die();

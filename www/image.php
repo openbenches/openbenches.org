@@ -13,7 +13,7 @@ $photo_full_path = get_path_from_hash($sha1);
 
 //	If the photo doesn't exist, stop
 if(!file_exists($photo_full_path)){
-	die();
+	return null;
 }
 
 function show_scaled_image($imagePath, $size)
@@ -23,7 +23,7 @@ function show_scaled_image($imagePath, $size)
 	} catch (Exception $e) {
 		$refer = $_SERVER["HTTP_REFERER"];
 		error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
-		die();
+		return null;
 	}
 
 	//	Some phones (mostly iPhones) have rotated images
@@ -61,7 +61,7 @@ function show_scaled_image($imagePath, $size)
 	ob_clean();	//	http://codeblog.vurdalakov.net/2013/01/solution-php-echo-function-or-print.html
 	echo $imagick->getImageBlob();
 	$imagick->clear();
-	die();
+	return null;
 }
 
 if ("exif" == $size){
@@ -72,14 +72,13 @@ if ("exif" == $size){
 	echo "<pre>";
 	echo var_export($exif);
 	echo "</pre>";
-	die();
+	return null;
 } else if(null != $size){
 	show_scaled_image($photo_full_path, $size);
-	die();
+	return null;
 } else {
 	//	Return the full image (preserves EXIF)
 	header('Content-type: image/jpeg');
 	ob_clean();
 	readfile($photo_full_path);
 }
-die();

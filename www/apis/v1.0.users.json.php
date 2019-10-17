@@ -21,5 +21,3 @@ if ("raw" == $format) {
 	header('Content-type: text/javascript; charset=utf-8');
 	echo "var users = " . json_encode($userJSON);
 }
-
-die();

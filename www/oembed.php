@@ -58,4 +58,4 @@ $data = array(
 
 header("Content-Type: application/json+oembed");
 echo json_encode($data);
-die();
+unset($data);

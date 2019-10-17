@@ -731,7 +731,6 @@ function get_user_from_bench($benchID) {
 	while($get_user_from_bench->fetch()) {
 		$get_user_from_bench->close();
 		return get_user($userID)["name"];
-		die();
 	}
 }
 
@@ -822,7 +821,6 @@ function get_user_id($provider, $username, $is_id = false) {
 	while($get_user_id->fetch()) {
 		$get_user_id->close();
 		return $userID;
-		die();
 	}
 }
 
@@ -1196,7 +1194,6 @@ function get_merged_bench($benchID) {
 	while($get_merge_from_bench->fetch()) {
 		$get_merge_from_bench->close();
 		return $mergedID;
-		die();
 	}
 }
 

@@ -13,7 +13,7 @@ $benchID = $params[2];
 if(null == $user_provider) {
 	$_SESSION['edit_bench_id'] = $benchID;
 	header('Location: ' . "https://{$_SERVER['HTTP_HOST']}/login/{$benchID}/");
-	die();
+	return null;
 }
 
 $error_message = "";
@@ -115,7 +115,7 @@ if($user_provider != null){
 			if($error_message != "") {
 				echo $error_message;
 				include("footer.php");
-				die();
+				return null;
 			} ?>
 		<div style="clear:both;">
 			<h3>Drag pin to change bench location, then press "Save Changes"</h3>

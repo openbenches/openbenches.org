@@ -39,5 +39,3 @@ if ("raw" == $format) {
 	header('Content-type: text/javascript; charset=utf-8');
 	echo "var benches = " . json_encode($geojson, JSON_NUMERIC_CHECK);
 }
-
-die();

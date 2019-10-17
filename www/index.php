@@ -17,8 +17,10 @@
 
 	if(in_array($params[1], $pages)) {
 		include($params[1].".php");
+		file_put_contents($params[1] . ".txt", memory_get_usage() . "\n", FILE_APPEND);
 		die();
 	} else {
 		include("front.php");
+		file_put_contents("front.txt", memory_get_usage() . "\n", FILE_APPEND);
 		die();
 	}

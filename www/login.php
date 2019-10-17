@@ -47,9 +47,8 @@ $cache = time();
 if(!empty($_SESSION['edit_bench_id'])) {
 	$benchID = (int)$_SESSION['edit_bench_id'];
 	header("Location: /edit/{$benchID}/?cache={$cache}");
-	die();
+	return null;
 }
 
 //	Redirect to the Add page
 header("Location: /add/?cache={$cache}");
-die();

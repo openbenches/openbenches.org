@@ -24,7 +24,6 @@ function get_twitter_details(){
 			// send to same URL, without oauth GET parameters
 			// header('Location: ' . basename(__FILE__));
 			return null;
-			die();
 		}
 		// var_export($reply);
 		// die();
@@ -475,7 +474,6 @@ function save_image($file, $media_type, $benchID, $userID) {
 		return true;
 	} else {
 		return("<h3>Unable to move {$filename} to {$photo_full_path} - bench {$benchID} user {$userID} media {$media_type}</h3>");
-		die();
 	}
 }
 
