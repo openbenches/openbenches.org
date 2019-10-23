@@ -1005,16 +1005,13 @@ function get_leadboard_benches_html() {
 		ORDER by USERCOUNT DESC");
 
 	$get_leaderboard->execute();
-	$get_leaderboard->bind_result($userID, $username, $provider, $providerID, $count);
+	$get_leaderboard->bind_result($user_ID, $user_name, $user_provider, $user_providerID, $count);
 
 	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
-		if("twitter"==$provider){
-			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
-		} else if("github"==$provider){
-			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars0.githubusercontent.com/u/{$providerID}?v=4&amp;s=48' class='avatar'>$username</a> {$count}</li>";
-		} else if("facebook"==$provider){
-			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$providerID}/small' class='avatar'>$username</a> {$count}</li>";
+		$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
+		if (null!=$avatar) {
+			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar'>$user_name</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -1025,7 +1022,7 @@ function get_leadboard_media_html() {
 	global $mysqli;
 
 	$get_leaderboard = $mysqli->prepare("
-		SELECT users.userID, users.name, users.provider, COUNT(*) AS USERCOUNT
+		SELECT users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT
 		FROM `media`
 		INNER JOIN users ON media.userID = users.userID
 		WHERE users.provider != 'anon'
@@ -1033,12 +1030,13 @@ function get_leadboard_media_html() {
 		ORDER by USERCOUNT DESC");
 
 	$get_leaderboard->execute();
-	$get_leaderboard->bind_result($userID, $username, $provider, $count);
+	$get_leaderboard->bind_result($user_ID, $user_name, $user_provider, $user_providerID, $count);
 
 	$html = "<ul class='leaderboard-list'>";
 	while($get_leaderboard->fetch()) {
-		if("twitter"==$provider){
-			$html .= "<li><a href='/user/{$userID}/'><img src='https://avatars.io/{$provider}/{$username}/small' class='avatar'>$username</a> {$count}</li>";
+		$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
+		if (null!=$avatar) {
+			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar'>$user_name</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
