@@ -270,3 +270,7 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 output {
 	font-family: monospace;
 }
+
+#ocr-icon {
+	vertical-align: middle;
+}

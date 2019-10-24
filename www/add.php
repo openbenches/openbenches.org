@@ -41,13 +41,13 @@ include("header.php");
 			</div>
 		</div>
 		<div id="inscriptionBox" style="">
-			<label for="inscription" id="message">Inscription:</label><br>
-			<textarea id="inscription" name="inscription" cols="40" rows="6" placeholder="In loving memory of
+			<label for="inscription" id="message"></label><br>
+			<textarea id="inscription" name="inscription" class="inscription-hidden" style="display: none;" cols="40" rows="6" placeholder="In loving memory of
 Buffy Anne Summers
 She saved the world.
 A lot..."></textarea>
 		</div>
-		<div id="tagInput">
+		<div id="tagInput" style="">
 			<label for="tag_multiple">
 				Choose some tags:
 				<select class="js-tags-multiple form-control"
@@ -114,7 +114,7 @@ A lot..."></textarea>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
 	<script src="/libs/jquery.3.4.1/jquery-3.4.1.min.js"></script>
-	<script src="/libs/vision/vision.js.php"></script>
+	<script src="/libs/vision/vision.js.php?cache=2019-10-23"></script>
 	<script src="/libs/load-image.2.24.0/load-image.all.min.js"></script>
 	<script src="/libs/select2.4.0.10/select2.min.js"></script>
 	<script>
