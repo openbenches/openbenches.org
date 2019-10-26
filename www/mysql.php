@@ -496,7 +496,7 @@ function get_image_html($benchID, $full = true)
 			$formatted_date = "";
 		}
 		$make = ucwords($make);
-		$exif_html = htmlspecialchars("{$formatted_date} {$make} {$model}");
+		$exif_html = htmlspecialchars($formatted_date) . "<br>" . htmlspecialchars($make) . " " . htmlspecialchars($model);
 
 		//	Pannellum can't take full width images. This size should be quick to compute
 		$panorama_image = "/image/{$sha1}/3396";
