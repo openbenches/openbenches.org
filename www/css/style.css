@@ -104,6 +104,7 @@ fieldset {
 .proxy-image {
 	max-width: 100%;
 	min-height: 100px;
+	height: auto;
 	border: 0.1rem solid #191E20;
 	border-radius: 1rem;
 }
