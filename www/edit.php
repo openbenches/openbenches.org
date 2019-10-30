@@ -139,22 +139,32 @@ if($user_provider != null){
 		</div>
 
 		<h3>Add more images?</h3>
-		<div id="photo1" class="photo-group" style="display: block;">
-			<div>
-				<label for="photoFile1">Geotagged Photo</legend>
-				<input id="photoFile1" name="userfile1" type="file" accept="image/jpeg" />
+		<div id="photo1" class="photo-group">
+			<div class="file_input_button">
 				<div id="photoPreview1" style="display: none;"></div>
+				<div id="upload-prompt1" class="upload-prompt">
+					<span class="upload-copy">
+						📷 Upload a geotagged photograph of the bench
+						<br>
+						<small>Please make sure the inscription is legible and well framed.</small>
+					</span>
+				</div>
+				<input type="file" name="userfile1" id="photoFile1" accept="image/jpeg;capture=camera">
 			</div>
-			<div
+			<div>
 				<label for="media_type1">This photo is a:</label>
 				<?php echo get_media_types_html("1"); ?>
 			</div>
-		</div>&nbsp;
+		</div>
 		<div id="photo2" class="photo-group" style="display: none;">
-			<div>
-				<label for="photoFile2">Optional photo of same bench:</label>
-				<input id="photoFile2" name="userfile2" type="file" accept="image/jpeg" />
+			<div class="file_input_button">
 				<div id="photoPreview2" style="display: none;"></div>
+				<div id="upload-prompt2" class="upload-prompt">
+					<span class="upload-copy">
+						📷 Optional photo of same bench
+					</span>
+				</div>
+				<input type="file" name="userfile2" id="photoFile2" accept="image/jpeg;capture=camera">
 			</div>
 			<div>
 				<label for="media_type2">This photo is a:</label>
@@ -162,10 +172,14 @@ if($user_provider != null){
 			</div>
 		</div>&nbsp;
 		<div id="photo3" class="photo-group" style="display: none;">
-			<div>
-				<label for="photoFile3">Optional photo of same bench:</label>
-				<input id="photoFile3" name="userfile3" type="file" accept="image/jpeg" />
+			<div class="file_input_button">
 				<div id="photoPreview3" style="display: none;"></div>
+				<div id="upload-prompt3" class="upload-prompt">
+					<span class="upload-copy">
+						📷 Optional photo of same bench
+					</span>
+				</div>
+				<input type="file" name="userfile3" id="photoFile3" accept="image/jpeg;capture=camera">
 			</div>
 			<div>
 				<label for="media_type3">This photo is a:</label>
@@ -173,18 +187,20 @@ if($user_provider != null){
 			</div>
 		</div>&nbsp;
 		<div id="photo4" class="photo-group" style="display: none;">
-			<div>
-				<label for="photoFile4">Optional photo of same bench:</label>
-				<input id="photoFile4" name="userfile4" type="file" accept="image/jpeg" />
+			<div class="file_input_button">
 				<div id="photoPreview4" style="display: none;"></div>
+				<div id="upload-prompt4" class="upload-prompt">
+					<span class="upload-copy">
+						📷 Optional photo of same bench
+					</span>
+				</div>
+				<input type="file" name="userfile4" id="photoFile4" accept="image/jpeg;capture=camera">
 			</div>
 			<div>
 				<label for="media_type4">This photo is a:</label>
 				<?php echo get_media_types_html("4"); ?>
 			</div>
-		</div>
-		<br>
-
+		</div>&nbsp;
 		<br>
 		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
 			<label for="publishedTrue" class="checkable">Publish this bench</label>
@@ -256,6 +272,9 @@ map.addLayer(markers);
 		}
 		//	Display the element
 		preview1.style.display = "block";
+		//	Remove the upload text
+		var u1 = document.getElementById("upload-prompt1");
+		u1.style.display = "none";
 		//	Add a quick canvas to the screen showing the image
 		var loadingImage = loadImage(
 			e.target.files[0],
@@ -289,6 +308,9 @@ map.addLayer(markers);
 		}
 		//	Display the element
 		preview2.style.display = "block";
+		//	Remove the upload text
+		var u2 = document.getElementById("upload-prompt2");
+		u2.style.display = "none";
 		//	Add a quick canvas to the screen showing the image
 		var loadingImage = loadImage(
 			e.target.files[0],
@@ -308,6 +330,9 @@ map.addLayer(markers);
 		}
 		//	Display the element
 		preview3.style.display = "block";
+		//	Remove the upload text
+		var u3 = document.getElementById("upload-prompt3");
+		u3.style.display = "none";
 		//	Add a quick canvas to the screen showing the image
 		var loadingImage = loadImage(
 			e.target.files[0],
@@ -327,6 +352,9 @@ map.addLayer(markers);
 		}
 		//	Display the element
 		preview4.style.display = "block";
+		//	Remove the upload text
+		var u4 = document.getElementById("upload-prompt4");
+		u4.style.display = "none";
 		//	Add a quick canvas to the screen showing the image
 		var loadingImage = loadImage(
 			e.target.files[0],
