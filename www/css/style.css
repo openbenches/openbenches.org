@@ -298,3 +298,9 @@ output {
 #ocr-icon {
 	vertical-align: middle;
 }
+
+footer {
+	background-color: #e8e8a0;;
+	margin-left: -1em;
+	margin-right: -1em;
+}
