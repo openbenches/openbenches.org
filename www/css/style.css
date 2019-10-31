@@ -299,6 +299,11 @@ output {
 	vertical-align: middle;
 }
 
+#cc-small {
+	display: inline-block;
+	max-width: 34em;
+}
+
 footer {
 	background-color: #e8e8a0;;
 	margin-left: -1em;
