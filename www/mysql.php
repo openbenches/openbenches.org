@@ -1011,7 +1011,7 @@ function get_leadboard_benches_html() {
 	while($get_leaderboard->fetch()) {
 		$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
 		if (null!=$avatar) {
-			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar'>$user_name</a> {$count}</li>";
+			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar' alt=''>$user_name</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
@@ -1036,7 +1036,7 @@ function get_leadboard_media_html() {
 	while($get_leaderboard->fetch()) {
 		$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
 		if (null!=$avatar) {
-			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar'>$user_name</a> {$count}</li>";
+			$html .= "<li><a href='/user/{$user_ID}/'><img src='{$avatar}' class='avatar' alt=''>$user_name</a> {$count}</li>";
 		}
 	}
 	$get_leaderboard->close();
