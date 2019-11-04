@@ -5,6 +5,12 @@ require_once ('functions.php');
 
 include("header.php");
 
+if (!$published) {
+	//	Bench was deleted
+	//	Dealth with in 404.php
+	return null;
+}
+
 if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
 }
