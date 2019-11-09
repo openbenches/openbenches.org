@@ -46,9 +46,9 @@ define('AUTH0_LOGOUT_RETURN_URL','');
 define('FACEBOOK_APP_ID', '');
 
 //	Image Cacheing and resizing - using https://cloudimg.io/ or other similar CDN
-define('IMAGE_CACHE_PREFIX',  'https://demo.cloudimg.io/v7/');
-define('IMAGE_DEFAULT_SIZE',  '600');
-define('IMAGE_THUMB_SIZE',    '120');
+define('IMAGE_CACHE_PREFIX', 'https://demo.cloudimg.io/v7/');
+define('IMAGE_DEFAULT_SIZE', '600');
+define('IMAGE_THUMB_SIZE',   '120');
 
 //	Google Cloud Vision - https://cloud.google.com/console
 define('CLOUD_VISION_KEY','');
