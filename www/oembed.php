@@ -24,8 +24,7 @@ if($benchID != null){
 	$licence      = $benchMedia["licence"];
 
 	//	Calculate image thumbnail parameters
-	$image_prefix = get_image_cache($thumbWidth);
-	$thumbURL     = "{$image_prefix}/image/{$sha1}/";
+	$thumbURL     = get_image_cache($sha1, $thumbWidth);
 	$thumbRatio   = $thumbWidth / $imageWidth;
 	$thumbHeight  = round($thumbRatio * $imageHeight);
 

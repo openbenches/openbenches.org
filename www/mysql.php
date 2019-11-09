@@ -419,9 +419,7 @@ function get_image($benchID, $full = false)
 			$imageLink = "/bench/{$benchID}";
 		}
 
-		$image_prefix = get_image_cache();
-
-		$html .= "<a href='{$imageLink}'><img src='{$image_prefix}/image/{$sha1}' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
+		$html .= "<a href='{$imageLink}'><img src='".get_image_cache($sha1)."' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
 		break;
 	}
 
@@ -464,8 +462,6 @@ function get_image_html($benchID, $full = true)
 	$get_media->execute();
 	/* bind result variables */
 	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type, $datetime, $make, $model);
-
-	$image_prefix = get_image_cache();
 
 	$html = '';
 
@@ -535,7 +531,7 @@ function get_image_html($benchID, $full = true)
 			$height = round($height * $ratio);
 
 			$html .= "<a href='{$link}'>
-							<img src='{$image_prefix}/image/{$sha1}' class='proxy-image' alt='{$alt}' width='{$default_width}' height='{$height}' />
+							<img src='".get_image_cache($sha1)."' class='proxy-image' alt='{$alt}' width='{$default_width}' height='{$height}' />
 						</a>";
 		}
 
@@ -577,9 +573,7 @@ function get_image_thumb($benchID, $size = IMAGE_THUMB_SIZE)
 	while($get_media->fetch()) {
 		$get_media->close();
 
-		$image_prefix = get_image_cache($size);
-
-		$thumb = "{$image_prefix}/image/{$sha1}";
+		$thumb = get_image_cache($sha1, $size);
 		break;
 	}
 

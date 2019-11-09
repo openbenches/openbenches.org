@@ -488,12 +488,13 @@ function duplicate_file($filename) {
 	return false;
 }
 
-function get_image_cache($size=IMAGE_DEFAULT_SIZE, $filter=IMAGE_DEFAULT_FILTER) {
-	//	Generate a prefix for the cached image. Can be thumbnailed. https://docs.cloudimage.io/go/cloudimage-documentation/en/operations/
+function get_image_cache($sha1, $size=IMAGE_DEFAULT_SIZE) {
+	//	Generate a URL for the cached image. Can be thumbnailed.
+	//	https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/introduction
 	if (IMAGE_CACHE_PREFIX == "") {
-		return "";
+		return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
 	}
-	return IMAGE_CACHE_PREFIX . "{$size}/$filter/" . $_SERVER['SERVER_NAME'];
+	return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "?w={$size}";
 }
 
 function prepare_search_query($q) {
