@@ -71,16 +71,9 @@ if (null != $query)
 
 ?>
 	</hgroup>
-	<?php echo $resultsHTML; ?>
-	<form action="/search/" enctype="multipart/form-data" method="get">
-		<?php
-			echo $error_message;
-		?>
-		<h2>Search for an inscription</h2>
-		<div>
-			<input type="search" id="inscription" name="search" class="search" value="<?php echo htmlspecialchars($query); ?>">
-			<input type="submit" class="button buttonColour" value="Search inscriptions" />
-		</div>
-	</form>
+	<?php
+		echo $resultsHTML;
+		include("searchform.php");
+	?>
 <?php
 	include("footer.php");

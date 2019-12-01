@@ -55,17 +55,9 @@ if (!$present) {
 	</div>
 	<?php
 		include("sharing.php");
+		include("searchform.php");
 	?>
 
-	<form action="/search/" enctype="multipart/form-data" method="get">
-		<div>
-			<input type="search" class="search" id="inscription" name="search"
-				placeholder="in loving memory of"
-				value="<?php echo ( isset($query) ? htmlspecialchars($query) : "") ; ?>">
-			<br>
-			<input type="submit" class="button buttonColour" value="🔎 Search inscriptions" />
-		</div>
-	</form>
 	<form action="/bench/" method="post">
 		<input id="random" name="random" value="random" type="hidden" />
 		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
