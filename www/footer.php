@@ -12,7 +12,7 @@
 		rel="license"
 		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc/cc-by-sa.svg" id="cc-by-sa-logo" alt="Creative Commons Attribution Share-alike"/></a>
 	<br>
-		Made with 💖 in Oxford by<br>
+		Made with 💖 by<br>
 	<a itemprop="creator" href="https://shkspr.mobi/blog">Terence Eden</a> and
 	<a itemprop="creator" href="https://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
 </footer>
