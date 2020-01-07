@@ -250,6 +250,12 @@ a[rel*="license"] {
 	margin-top: 0.5em;
 }
 
+.colophon-logo {
+	vertical-align: middle;
+	height: 2.25em;
+	margin: .5em;
+}
+
 input[type="search"]::placeholder {
 	text-align: center;
 }

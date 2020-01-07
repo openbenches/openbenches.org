@@ -1,12 +1,13 @@
 <footer>
 	<hr>
-	<a href="/"><img src="/images/openbencheslogo.svg" alt="Homepage" id="homeIcon"></a> |
-	<a href="/blog/about/">About</a> |
-	<a href="/leaderboard/">Leader Board</a> |
+	<a href="/"><img src="/images/openbencheslogo.svg" alt="Homepage" id="homeIcon"></a>
+	| <a href="/blog/about/">About</a>
+	| <a href="/leaderboard/">Leader Board</a>
 	<span itemscope itemtype="https://schema.org/Organization">
-		<a itemprop="sameAs" href="https://twitter.com/openbenches">Twitter</a> |
-		<a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org">GitHub</a>
+		| <a itemprop="sameAs" href="https://twitter.com/openbenches">Twitter</a>
+		| <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org">GitHub</a>
 	</span>
+	| <a href="/colophon/">Colophon</a>
 	<br>
 	<a itemprop="license"
 		rel="license"
