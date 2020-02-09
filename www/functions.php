@@ -252,21 +252,27 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	$mapbox = MAPBOX_API_KEY;
 	$mapJavaScript = <<<EOT
 <script>
-	var attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-		'Imagery © <a href="https://mapbox.com">Mapbox</a>';
 
-	var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token={$mapbox}', {
+	var Stadia_Outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
 		minZoom: 2,
-		maxZoom: 18,
-		attribution: attribution,
-		id: 'mapbox.light'
+		maxZoom: 19,
+		attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+		id: 'stadia.outdoors'
 	});
 
-	var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token={$mapbox}', {
+	var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		minZoom: 2,
+		maxZoom: 19,
+		attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		id: 'osm.mapnik'
+	});
+
+	var Mapbox_Satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token={$mapbox}', {
 			minZoom: 2,
-			maxZoom: 18,
-			attribution: attribution,
+			maxZoom: 19,
+			attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				'Imagery © <a href="https://mapbox.com">Mapbox</a>',
 			id: 'mapbox.satellite'
 		});
 
@@ -291,11 +297,18 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	map.setView([{$lat}, {$long}], {$zoom});
 
 	var baseMaps = {
-		"Map View": grayscale,
-		"Satellite View": satellite
+		"Map View": Stadia_Outdoors,
+		"Mapnik": OpenStreetMap_Mapnik,
+		"Satellite View": Mapbox_Satellite
 	};
 
-	grayscale.addTo(map);
+	// Rotate between mapping providers depending on date
+	var day = new Date().getDate();
+	if (day % 2 == 0) {
+		Stadia_Outdoors.addTo(map);
+	} else {
+		OpenStreetMap_Mapnik.addTo(map);
+	}
 
 	L.control.layers(baseMaps).addTo(map);
 

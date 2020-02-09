@@ -87,13 +87,14 @@ This is a simple PHP and MySQL website. No need for node, complicated deploys, o
 
 You will need to sign up to some external API providers:
 
+* Map display requires a [Stadia Maps account](https://stadiamaps.com/)
 * Reverse Geocoding requires an [OpenCage API key](https://geocoder.opencagedata.com/)
 * Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
 * Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
 * Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
 * Image resizing and caching requires a [CloudImage.io account](https://www.cloudimage.io). (But note: this requires your development webserver to be accessible from the internet)
 * **Optional** Login requires a free [Auth0.com](https://auth0.com/) account.
-* **Optional** Map display requires a free [Mapbox](https://www.mapbox.com/) account
+* **Optional** Satellite Map display requires a free [Mapbox](https://www.mapbox.com/) account
 
 Add them to `config.php.example` - rename that to `config.php`
 
