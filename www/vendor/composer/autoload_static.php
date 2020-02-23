@@ -60,11 +60,22 @@ class ComposerStaticInit23d398d7481b549d604bb82d4bbd4e5e
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'T' => 
+        array (
+            'Twitter\\Text\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/nojimage/twitter-text-php/lib',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit23d398d7481b549d604bb82d4bbd4e5e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit23d398d7481b549d604bb82d4bbd4e5e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit23d398d7481b549d604bb82d4bbd4e5e::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

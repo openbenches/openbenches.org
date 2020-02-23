@@ -163,10 +163,14 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 		$media_ids = array();
 
 		foreach ($mediaURLs as $file) {
-			// upload all media files
-			$reply = $cb->media_upload(['media' => $file]);
-			// and collect their IDs
-			$media_ids[] = $reply->media_id_string;
+			try {
+				// upload all media files
+				$reply = $cb->media_upload(['media' => $file]);
+				// and collect their IDs
+				$media_ids[] = $reply->media_id_string;
+			} catch (\Exception $e) {
+				error_log("Twitter Upload $e");
+			}
 		}
 		$media_ids = implode(',', $media_ids);
 	}
@@ -205,7 +209,16 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 		'media_ids' => $media_ids,
 		'weighted_character_count' => 'true'
 	];
-	$reply = $cb->statuses_update($params);
+	try {
+		$reply = $cb->statuses_update($params);
+	} catch (\Exception $e) {
+		error_log("Twitter post $e");
+		error_log(print_r($reply, TRUE));
+	}
+	error_log(print_r($reply, TRUE));
+	error_log("Inscription length = " . mb_strlen("{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}"));
+	error_log("Inscription = " . "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}");
+
 }
 
 // function toot_bench($benchID, $mediaFiles=null, $inscription=null, $license=null){
