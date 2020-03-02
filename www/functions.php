@@ -233,45 +233,6 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 	}
 }
 
-// function toot_bench($benchID, $mediaFiles=null, $inscription=null, $license=null){
-//
-// 	//	Send Tweet
-// 	$mastodon_api = new Mastodon_api();
-// 	$mastodon_api->set_url(MASTODON_INSTANCE);
-// 	$mastodon_api->set_token(MASTODON_ACCESS_TOKEN,'bearer');
-//
-// 	//	Add the image
-// 	if(null!=$mediaFiles){
-//
-// 		$media_ids = array();
-//
-// 		foreach ($mediaFiles as $file) {
-// 			// upload all media files
-// 			$reply =  $mastodon_api->media($file);
-// 			var_export($reply);
-//
-// 			// and collect their IDs
-// 			$media_ids[] = $reply["html"]["id"];
-// 		}
-// 	}
-//
-// 	//	Toot length is 500 - this gives us overhead for link, licence, and metadata
-// 	$length = 400;
-//
-// 	$toot_inscription = mb_substr($inscription, 0, $length);
-// 	if (mb_strlen($inscription) > $length) {
-// 		$toot_inscription .= "…";
-// 	}
-//
-// 	$domain = $_SERVER['SERVER_NAME'];
-//
-// 	$params = [
-// 		'status'    => "{$toot_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}",
-// 		'media_ids' => $media_ids,
-// 	];
-// 	$reply = $mastodon_api->post_statuses($params);
-// }
-
 //	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	$mapbox = MAPBOX_API_KEY;
