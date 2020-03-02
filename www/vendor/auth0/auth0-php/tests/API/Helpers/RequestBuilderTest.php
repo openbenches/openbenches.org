@@ -4,6 +4,12 @@ namespace Auth0\Tests\API;
 use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\Tests\API\Management\MockManagementApi;
+
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class RequestBuilderTest
@@ -30,11 +36,11 @@ class RequestBuilderTest extends ApiTests
 
         $this->assertEquals('', $builder->getUrl());
 
-        $builder->path1();
+        $builder->addPath('path1');
 
         $this->assertEquals('path1', $builder->getUrl());
 
-        $builder->path2(3);
+        $builder->addPath('path2', 3);
 
         $this->assertEquals('path1/path2/3', $builder->getUrl());
     }
@@ -72,6 +78,33 @@ class RequestBuilderTest extends ApiTests
         $builder = self::getUrlBuilder()->withParam('param1', false);
 
         $this->assertEquals('?param1=false', $builder->getParams());
+    }
+
+    public function testThatBooleanFormParamsAreAdded()
+    {
+        $history = [];
+        $mock    = new MockHandler( [ new Response( 200 ), new Response( 200 ) ] );
+        $handler = HandlerStack::create($mock);
+        $handler->push( Middleware::history($history) );
+
+        $builder = new RequestBuilder( [
+            'domain' => 'api.test.local',
+            'method' => 'post',
+            'returnType' => 'object',
+            'guzzleOptions' => [
+                'handler' => $handler
+            ]
+        ] );
+
+        $builder->addFormParam( 'test', true );
+        $builder->call();
+
+        $this->assertEquals( 'test=true', $history[0]['request']->getBody() );
+
+        $builder->addFormParam( 'test', false );
+        $builder->call();
+
+        $this->assertEquals( 'test=false', $history[1]['request']->getBody() );
     }
 
     public function testThatZeroParamsAreAdded()
@@ -122,8 +155,8 @@ class RequestBuilderTest extends ApiTests
     {
         $builder = self::getUrlBuilder('/api');
 
-        $builder->path(2)
-            ->subpath()
+        $builder->addPath('path', 2)
+            ->addPath('subpath')
             ->withParams(
                 [
                     ['key' => 'param1', 'value' => 'value1'],
@@ -150,46 +183,42 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('api.local.test/api', $options['base_uri']);
     }
 
-    /**
-     * Test that the return type is set properly and returns the correct result.
-     *
-     * @throws \Auth0\SDK\Exception\ApiException Should not be thrown in this test.
-     */
     public function testReturnType()
     {
-        $env   = self::getEnv();
-        $token = self::getToken($env);
+        $response = [ new Response( 200, [ 'Content-Type' => 'application/json' ], '{"key":"__test_value__"}' ) ];
 
         // Test default return type matches "body".
-        $api             = new Management($token, $env['DOMAIN'], []);
-        $results_default = $api->tenants->get();
+        $api             = new MockManagementApi( $response, [ 'return_type' => null ] );
+        $results_default = $api->call()->tenants()->get();
         $this->assertTrue( is_array( $results_default ) );
+        $this->assertArrayHasKey( 'key', $results_default );
+        $this->assertEquals( '__test_value__', $results_default['key'] );
 
-        $api          = new Management($token, $env['DOMAIN'], [], 'body');
-        $results_body = $api->tenants->get();
+        // Test that "body" return type gives us the same result.
+        $api          = new MockManagementApi( $response, [ 'return_type' => 'body' ] );
+        $results_body = $api->call()->tenants()->get();
         $this->assertEquals( $results_default, $results_body );
 
         // Test that "headers" return type contains expected keys.
-        $api             = new Management($token, $env['DOMAIN'], [], 'headers');
-        $results_headers = $api->tenants->get();
-        $this->assertArrayHasKey( 'x-ratelimit-limit', $results_headers );
-        $this->assertArrayHasKey( 'x-ratelimit-remaining', $results_headers );
-        $this->assertArrayHasKey( 'x-ratelimit-reset', $results_headers );
+        $api             = new MockManagementApi( $response, [ 'return_type' => 'headers' ] );
+        $results_headers = $api->call()->tenants()->get();
+        $this->assertArrayHasKey( 'Content-Type', $results_headers );
+        $this->assertEquals( 'application/json', $results_headers['Content-Type'][0] );
 
         // Test that "object" return type returns the correct object type.
-        $api            = new Management($token, $env['DOMAIN'], [], 'object');
-        $results_object = $api->tenants->get();
+        $api            = new MockManagementApi( $response, [ 'return_type' => 'object' ] );
+        $results_object = $api->call()->tenants()->get();
         $this->assertInstanceOf( 'GuzzleHttp\Psr7\Response', $results_object );
 
         // Test that an invalid return type throws an error.
-        $caught_return_type_error = false;
+        $api = new MockManagementApi( $response, [ 'return_type' => '__invalid_return_type__' ] );
         try {
-            $api = new Management($token, $env['DOMAIN'], [], '__invalid_return_type__');
-            $api->tenants->get();
+            $api->call()->tenants()->get();
+            $error_msg = 'No exception caught';
         } catch (CoreException $e) {
-            $caught_return_type_error = $this->errorHasString( $e, 'Invalid returnType' );
+            $error_msg = $e->getMessage();
         }
 
-        $this->assertTrue( $caught_return_type_error );
+        $this->assertStringStartsWith( 'Invalid returnType', $error_msg );
     }
 }

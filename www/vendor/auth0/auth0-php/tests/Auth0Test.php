@@ -10,6 +10,7 @@ use Auth0\Tests\Traits\ErrorHelpers;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -34,7 +35,6 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         'redirect_uri'  => '__test_redirect_uri__',
         'store' => false,
         'state_handler' => false,
-        'scope' => 'openid offline_access',
     ];
 
     /**
@@ -268,28 +268,117 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
      */
     public function testThatRenewTokensSucceeds()
     {
-        $id_token = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
-
-        $mock = new MockHandler( [
+        $id_token        = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
+        $request_history = [];
+        $mock            = new MockHandler( [
             // Code exchange response.
             new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4"}' ),
             // Refresh token response.
             new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token.'"}' ),
         ] );
+        $handler         = HandlerStack::create($mock);
+        $handler->push( Middleware::history($request_history) );
 
         $add_config = [
             'skip_userinfo' => true,
             'persist_access_token' => true,
-            'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
+            'guzzle_options' => [ 'handler' => $handler ]
         ];
         $auth0      = new Auth0( self::$baseConfig + $add_config );
 
         $_GET['code'] = uniqid();
 
         $this->assertTrue( $auth0->exchange() );
-        $auth0->renewTokens();
+        $auth0->renewTokens(['scope' => 'openid']);
 
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
+
+        $renew_request = $request_history[1]['request'];
+        $renew_body    = json_decode($renew_request->getBody(), true);
+        $this->assertEquals( 'openid', $renew_body['scope'] );
+        $this->assertEquals( '__test_client_secret__', $renew_body['client_secret'] );
+        $this->assertEquals( '__test_client_id__', $renew_body['client_id'] );
+        $this->assertEquals( '2.3.4', $renew_body['refresh_token'] );
+        $this->assertEquals( 'https://__test_domain__/oauth/token', (string) $renew_request->getUri() );
+    }
+
+    public function testThatGetLoginUrlUsesDefaultValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $parsed_url = parse_url( $auth0->getLoginUrl() );
+
+        $this->assertEquals( 'https', $parsed_url['scheme'] );
+        $this->assertEquals( '__test_domain__', $parsed_url['host'] );
+        $this->assertEquals( '/authorize', $parsed_url['path'] );
+
+        $url_query = explode( '&', $parsed_url['query'] );
+
+        $this->assertContains( 'scope=openid%20profile%20email', $url_query );
+        $this->assertContains( 'response_type=code', $url_query );
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+    }
+
+    public function testThatGetLoginUrlAddsValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $custom_params = [
+            'connection' => '__test_connection__',
+            'prompt' => 'none',
+            'audience' => '__test_audience__',
+            'state' => '__test_state__',
+        ];
+
+        $auth_url         = $auth0->getLoginUrl( $custom_params );
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+        $this->assertContains( 'connection=__test_connection__', $url_query );
+        $this->assertContains( 'prompt=none', $url_query );
+        $this->assertContains( 'audience=__test_audience__', $url_query );
+        $this->assertContains( 'state=__test_state__', $url_query );
+    }
+
+    public function testThatGetLoginUrlOverridesDefaultValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $override_params = [
+            'scope' => 'openid profile email',
+            'response_type' => 'id_token',
+            'response_mode' => 'form_post',
+        ];
+
+        $auth_url         = $auth0->getLoginUrl( $override_params );
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'scope=openid%20profile%20email', $url_query );
+        $this->assertContains( 'response_type=id_token', $url_query );
+        $this->assertContains( 'response_mode=form_post', $url_query );
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+    }
+
+    public function testThatGetLoginUrlGeneratesState()
+    {
+        $custom_config = self::$baseConfig;
+        unset( $custom_config['state_handler'] );
+
+        $auth0 = new Auth0( $custom_config );
+
+        // Ignore cookie error triggered when session is started.
+        // phpcs:ignore
+        $auth_url = @$auth0->getLoginUrl();
+
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
     }
 }

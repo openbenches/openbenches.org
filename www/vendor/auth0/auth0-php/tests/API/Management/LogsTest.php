@@ -29,11 +29,20 @@ class LogsTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        $env   = self::getEnv();
-        $token = self::getToken($env);
-        $api   = new Management($token, $env['DOMAIN'], ['timeout' => 30]);
+        $env = self::getEnv();
+        $api = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
 
-        self::$api = $api->logs;
+        self::$api = $api->logs();
+    }
+
+
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Logs::class, $api->logs );
+        $this->assertInstanceOf( Management\Logs::class, $api->logs() );
+        $api->logs = null;
+        $this->assertInstanceOf( Management\Logs::class, $api->logs() );
     }
 
     /**
@@ -47,6 +56,7 @@ class LogsTest extends ApiTests
             'fields' => '_id,log_id,date',
             'include_fields' => true,
         ]);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNotEmpty($search_results);
         $this->assertNotEmpty($search_results[0]['_id']);
         $this->assertNotEmpty($search_results[0]['log_id']);
@@ -55,6 +65,7 @@ class LogsTest extends ApiTests
 
         // Test getting a single log result with a valid ID from above.
         $one_log = self::$api->get($search_results[0]['log_id']);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNotEmpty($one_log);
         $this->assertEquals($search_results[0]['log_id'], $one_log['log_id']);
     }
@@ -79,6 +90,7 @@ class LogsTest extends ApiTests
             // Include totals to check pagination.
             'include_totals' => true,
         ]);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
 
         $this->assertCount($expected_count, $search_results['logs']);
         $this->assertEquals($expected_count, $search_results['length']);

@@ -2,8 +2,6 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Header\ContentType;
-
 class Jobs extends GenericResource
 {
     /**
@@ -13,8 +11,8 @@ class Jobs extends GenericResource
      */
     public function get($id)
     {
-        return $this->apiClient->get()
-        ->jobs($id)
+        return $this->apiClient->method('get')
+        ->addPath('jobs', $id)
         ->call();
     }
 
@@ -25,9 +23,9 @@ class Jobs extends GenericResource
      */
     public function getErrors($id)
     {
-        return $this->apiClient->get()
-        ->jobs($id)
-        ->errors()
+        return $this->apiClient->method('get')
+        ->addPath('jobs', $id)
+        ->addPath('errors')
         ->call();
     }
 
@@ -35,16 +33,30 @@ class Jobs extends GenericResource
      *
      * @param  string $file_path
      * @param  string $connection_id
+     * @param  array  $params
      * @return mixed
      */
-    public function importUsers($file_path, $connection_id)
+    public function importUsers($file_path, $connection_id, $params = [])
     {
-        return $this->apiClient->post()
-        ->jobs()
+        $request = $this->apiClient->method('post', false)
+        ->addPath('jobs')
         ->addPath('users-imports')
         ->addFile('users', $file_path)
-        ->addFormParam('connection_id', $connection_id)
-        ->call();
+        ->addFormParam('connection_id', $connection_id);
+
+        if (isset($params['upsert'])) {
+            $request->addFormParam('upsert', filter_var($params['upsert'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (isset($params['send_completion_email'])) {
+            $request->addFormParam('send_completion_email', filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (! empty($params['external_id'])) {
+            $request->addFormParam('external_id', $params['external_id']);
+        }
+
+        return $request->call();
     }
 
     /**
@@ -54,10 +66,9 @@ class Jobs extends GenericResource
      */
     public function sendVerificationEmail($user_id)
     {
-        return $this->apiClient->post()
-        ->jobs()
+        return $this->apiClient->method('post')
+        ->addPath('jobs')
         ->addPath('verification-email')
-        ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode([
             'user_id' => $user_id
         ]))

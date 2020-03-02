@@ -1,0 +1,6 @@
+{
+    "require": {
+        "auth0/auth0-php": "^5.5",
+        "nojimage/twitter-text-php": "^3.0"
+    }
+}

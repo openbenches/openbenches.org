@@ -107,7 +107,7 @@ class Auth0
      *
      * @var string
      */
-    protected $scope;
+    protected $scope = 'openid profile email';
 
     /**
      * Auth0 Refresh Token
@@ -412,36 +412,58 @@ class Auth0
     public function login($state = null, $connection = null, array $additionalParams = [])
     {
         $params = [];
-        if ($this->audience) {
-            $params['audience'] = $this->audience;
+
+        if ($state) {
+            $params['state'] = $state;
         }
 
-        if ($this->scope) {
-            $params['scope'] = $this->scope;
+        if ($connection) {
+            $params['connection'] = $connection;
         }
-
-        if ($state === null) {
-            $state = $this->stateHandler->issue();
-        } else {
-            $this->stateHandler->store($state);
-        }
-
-        $params['response_mode'] = $this->responseMode;
 
         if (! empty($additionalParams) && is_array($additionalParams)) {
             $params = array_replace($params, $additionalParams);
         }
 
-        $url = $this->authentication->get_authorize_link(
-            $this->responseType,
-            $this->redirectUri,
-            $connection,
-            $state,
-            $params
-        );
+        $login_url = $this->getLoginUrl($params);
 
-        header('Location: '.$url);
+        header('Location: '.$login_url);
         exit;
+    }
+
+    /**
+     * Build the login URL.
+     *
+     * @param array $params Array of authorize parameters to use.
+     *
+     * @return string
+     */
+    public function getLoginUrl(array $params = [])
+    {
+        $default_params = [
+            'scope' => $this->scope,
+            'audience' => $this->audience,
+            'response_mode' => $this->responseMode,
+            'response_type' => $this->responseType,
+            'redirect_uri' => $this->redirectUri,
+        ];
+
+        $auth_params = array_replace( $default_params, $params );
+        $auth_params = array_filter( $auth_params );
+
+        if (empty( $auth_params['state'] )) {
+            $auth_params['state'] = $this->stateHandler->issue();
+        } else {
+            $this->stateHandler->store($auth_params['state']);
+        }
+
+        return $this->authentication->get_authorize_link(
+            $auth_params['response_type'],
+            $auth_params['redirect_uri'],
+            null,
+            null,
+            $auth_params
+        );
     }
 
     /**
@@ -573,11 +595,14 @@ class Auth0
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
      *
+     * @param array $options Options for the token endpoint request.
+     *      - options.scope         Access token scope requested; optional.
+     *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
      * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
-    public function renewTokens()
+    public function renewTokens(array $options = [])
     {
         if (! $this->accessToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
@@ -587,7 +612,7 @@ class Auth0
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
-        $response = $this->authentication->refresh_token( $this->refreshToken );
+        $response = $this->authentication->refresh_token( $this->refreshToken, $options );
 
         if (empty($response['access_token']) || empty($response['id_token'])) {
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');

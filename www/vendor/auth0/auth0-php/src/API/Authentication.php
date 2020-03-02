@@ -283,10 +283,9 @@ class Authentication
             $data['authParams'] = $authParams;
         }
 
-        return $this->apiClient->post()
-        ->passwordless()
-        ->start()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('passwordless')
+        ->addPath('start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -308,10 +307,9 @@ class Authentication
             'phone_number' => $phone_number,
         ];
 
-        return $this->apiClient->post()
-        ->passwordless()
-        ->start()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('passwordless')
+        ->addPath('start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -327,9 +325,8 @@ class Authentication
      */
     public function userinfo($access_token)
     {
-        return $this->apiClient->get()
-        ->userinfo()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('get')
+        ->addPath('userinfo')
         ->withHeader(new AuthorizationBearer($access_token))
         ->call();
     }
@@ -573,10 +570,9 @@ class Authentication
             'connection' => $connection,
         ];
 
-        return $this->apiClient->post()
-        ->dbconnections()
-        ->signup()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('dbconnections')
+        ->addPath('signup')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -612,10 +608,9 @@ class Authentication
             $data['password'] = $password;
         }
 
-        return $this->apiClient->post()
-        ->dbconnections()
-        ->change_password()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('dbconnections')
+        ->addPath('change_password')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -628,7 +623,7 @@ class Authentication
     /**
      * Set an ApiClient for use in this object
      *
-     * @deprecated 5.4.0, not used.
+     * @deprecated 5.4.0, not used and no replacement provided.
      *
      * @return void
      *
@@ -724,10 +719,9 @@ class Authentication
             'additionalParameters' => $additionalParameters,
         ];
 
-        return $this->apiClient->post()
-            ->users($user_id)
-            ->impersonate()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPath('impersonate')
             ->withHeader(new AuthorizationBearer($access_token))
             ->withBody(json_encode($data))
             ->call();
@@ -736,7 +730,7 @@ class Authentication
     /**
      * Authorize using an access token
      *
-     * @deprecated - 5.1.1, This feature is disabled by default for new tenants as of 8 June
+     * @deprecated 5.1.1, disabled by default for new tenants as of 8 June
      * 2017. Open the browser to do social authentication instead, which is
      * what Google and Facebook are recommending.
      *
@@ -770,10 +764,9 @@ class Authentication
             ]
         );
 
-        return $this->apiClient->post()
-            ->oauth()
-            ->access_token()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('oauth')
+            ->addPath('access_token')
             ->withBody(json_encode($data))
             ->call();
     }
@@ -835,10 +828,9 @@ class Authentication
             $data['connection'] = $connection;
         }
 
-        return $this->apiClient->post()
-            ->oauth()
-            ->ro()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('oauth')
+            ->addPath('ro')
             ->withBody(json_encode($data))
             ->call();
     }

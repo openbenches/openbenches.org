@@ -3,6 +3,7 @@ require_once ("codebird.php");
 require_once ("config.php");
 require_once (__DIR__ . '/vendor/autoload.php');
 use Auth0\SDK\Auth0;
+use Twitter\Text\Parser;
 
 
 function get_twitter_details(){
@@ -152,12 +153,13 @@ function get_image_location($file)
 function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
                      $latitude=null, $longitude=null, $license=null,
                      $user_provider=null, $user_name=null){
+
 	//	Send Tweet
 	\Codebird\Codebird::setConsumerKey(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET);
 	$cb = \Codebird\Codebird::getInstance();
 	$cb->setToken(OAUTH_ACCESS_TOKEN, OAUTH_TOKEN_SECRET);
 
-	//	Add the image
+	//	Add the images
 	if(null!=$mediaURLs){
 
 		$media_ids = array();
@@ -176,34 +178,41 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 	}
 
 	//	Tweet length is now 280
-	$length = 280;
+	$tweet_length = 280;
 
 	//	Tweet will end with "℅ @twittername"
 	if ("twitter" == $user_provider) {
-		$from = "℅ @{$user_name}";
+		$from = "℅ @{$user_name}   "; //	Paranoia. A few spaces of padding which will be trimmed before tweeting.
 	} else {
 		//	Might use this for Github / Facebook names in future
-		$from = "";
-	}
-
-	//	Remove the length of the items and the newline character
-	$length = $length - mb_strlen($from) - 1;
-	$length = $length - mb_strlen($license) - 1;
-	//	Remove URL
-	$length = $length - 24 - 1;
-	//	Two more for luck :-)
-	$length = $length - 2;
-
-	//	Truncate the inscription
-	$tweet_inscription = mb_substr($inscription, 0, $length);
-	if (mb_strlen($inscription) > $length) {
-		$tweet_inscription .= "…";
+		$from = "   ";
 	}
 
 	$domain = $_SERVER['SERVER_NAME'];
+	$tweet_url = "https://{$domain}/bench/{$benchID}";
+
+	// To go after the inscription
+	$tweet_end = "\n{$tweet_url}\n{$license}\n{$from}";
+
+	//	Left pad the inscription based on the after-matter's length
+	$padded_inscription = $tweet_end . "\n" . $tweet_inscription;
+
+	//	Run the Twitter weighted length algorithm
+	$padded_inscription_data = \Twitter\Text\Parser::create()->parseTweet($padded_inscription);
+
+	//	If it is too long, truncate it
+	if ($padded_inscription_data->weightedLength > $tweet_length) {
+		$padded_inscription = mb_substr($padded_inscription, 0, $padded_inscription_data->validRangeEnd);
+		//	Add ellipsis to show truncation
+		$padded_inscription .= "…";
+	}
+
+	//	Remove padding and add after-matter
+	$text_array = explode("\n", $padded_inscription, 5);
+	$tweet_text = trim($text_array[4] . $tweet_end);
 
 	$params = [
-		'status'    => "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}",
+		'status'    => $tweet_text,
 		'lat'       => $latitude,
 		'long'      => $longitude,
 		'media_ids' => $media_ids,
@@ -212,13 +221,16 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 	try {
 		$reply = $cb->statuses_update($params);
 	} catch (\Exception $e) {
-		error_log("Twitter post $e");
+		error_log("Twitter: $e");
 		error_log(print_r($reply, TRUE));
+		error_log("Status: {$tweet_text}");
 	}
-	error_log(print_r($reply, TRUE));
-	error_log("Inscription length = " . mb_strlen("{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}"));
-	error_log("Inscription = " . "{$tweet_inscription}\nhttps://{$domain}/bench/{$benchID}\n{$license}\n{$from}");
 
+	//	Error code back from Twitter
+	if ($reply->httpstatus != 200 ) {
+		error_log(print_r($reply, TRUE));
+		error_log("Status: {$tweet_text}");
+	}
 }
 
 // function toot_bench($benchID, $mediaFiles=null, $inscription=null, $license=null){

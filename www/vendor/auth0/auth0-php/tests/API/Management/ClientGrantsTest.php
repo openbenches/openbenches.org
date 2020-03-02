@@ -15,16 +15,18 @@ class ClientGrantsTest extends ApiTests
 {
 
     /**
-     * Existing test API audience identifier.
-     */
-    const TESTS_API_AUDIENCE = 'tests';
-
-    /**
      * Client Grants API client.
      *
      * @var Management\ClientGrants
      */
     protected static $api;
+
+    /**
+     * Resource Server identifier.
+     *
+     * @var string
+     */
+    protected static $apiIdentifier;
 
     /**
      * Valid test scopes for the "tests" API.
@@ -35,13 +37,52 @@ class ClientGrantsTest extends ApiTests
     protected static $scopes = ['test:scope1', 'test:scope2'];
 
     /**
-     * Sets up API client for the testing class.
-     *
+     * @throws CoreException
      * @throws \Auth0\SDK\Exception\ApiException
+     * @throws \Exception
      */
     public static function setUpBeforeClass()
     {
-        self::$api = self::getApi( 'client_grants' );
+        self::getEnv();
+        $api       = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
+        self::$api = $api->clientGrants();
+
+        $create_data = [
+            'name' => 'TEST_PHP_SDK_CREATE_'.uniqid(),
+            'token_lifetime' => rand( 10000, 20000 ),
+            'signing_alg' => 'RS256'
+        ];
+
+        self::$apiIdentifier = 'TEST_PHP_SDK_CLIENT_GRANT_API_'.uniqid();
+        $api->resourceServers()->create(self::$apiIdentifier, $create_data);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+    }
+
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\ClientGrants::class, $api->client_grants );
+        $this->assertInstanceOf( Management\ClientGrants::class, $api->clientGrants() );
+        $api->client_grants = null;
+        $this->assertInstanceOf( Management\ClientGrants::class, $api->clientGrants() );
+    }
+
+
+    /**
+     * @throws CoreException
+     * @throws \Exception
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
+        $api->resourceServers()->delete( self::$apiIdentifier );
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     }
 
     /**
@@ -55,6 +96,7 @@ class ClientGrantsTest extends ApiTests
     public function testGet()
     {
         $all_results = self::$api->getAll();
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNotEmpty($all_results);
 
         $expected_client_id = $all_results[0]['client_id'] ?: null;
@@ -64,10 +106,12 @@ class ClientGrantsTest extends ApiTests
         $this->assertNotNull($expected_audience);
 
         $audience_results = self::$api->getByAudience($expected_audience);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNotEmpty($audience_results);
         $this->assertEquals($expected_audience, $audience_results[0]['audience']);
 
         $client_id_results = self::$api->getByClientId($expected_client_id);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNotEmpty($client_id_results);
         $this->assertEquals($expected_client_id, $client_id_results[0]['client_id']);
     }
@@ -84,10 +128,12 @@ class ClientGrantsTest extends ApiTests
         $expected_count = 2;
 
         $results_1 = self::$api->getAll([], 0, $expected_count);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertCount($expected_count, $results_1);
 
         $expected_page = 1;
         $results_2     = self::$api->getAll([], $expected_page, 1);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertCount(1, $results_2);
         $this->assertEquals($results_1[$expected_page]['client_id'], $results_2[0]['client_id']);
         $this->assertEquals($results_1[$expected_page]['audience'], $results_2[0]['audience']);
@@ -106,6 +152,7 @@ class ClientGrantsTest extends ApiTests
         $expected_count = 2;
 
         $results = self::$api->getAll(['include_totals' => true], $expected_page, $expected_count);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertArrayHasKey('total', $results);
         $this->assertEquals($expected_page * $expected_count, $results['start']);
         $this->assertEquals($expected_count, $results['limit']);
@@ -123,10 +170,11 @@ class ClientGrantsTest extends ApiTests
     public function testCreateUpdateDeleteGrant()
     {
         $client_id = self::$env['APP_CLIENT_ID'];
-        $audience  = self::TESTS_API_AUDIENCE;
+        $audience  = self::$apiIdentifier;
 
         // Create a Client Grant with just one of the testing scopes.
         $create_result = self::$api->create($client_id, $audience, [self::$scopes[0]]);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertArrayHasKey('id', $create_result);
         $this->assertEquals($client_id, $create_result['client_id']);
         $this->assertEquals($audience, $create_result['audience']);
@@ -136,10 +184,12 @@ class ClientGrantsTest extends ApiTests
 
         // Test patching the created Client Grant.
         $update_result = self::$api->update($grant_id, self::$scopes);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertEquals(self::$scopes, $update_result['scope']);
 
         // Test deleting the created Client Grant.
         $delete_result = self::$api->delete($grant_id);
+        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertNull($delete_result);
     }
 
@@ -154,7 +204,7 @@ class ClientGrantsTest extends ApiTests
     {
         $throws_missing_client_id_exception = false;
         try {
-            self::$api->create('', self::TESTS_API_AUDIENCE, []);
+            self::$api->create('', self::$apiIdentifier, []);
         } catch (CoreException $e) {
             $throws_missing_client_id_exception = $this->errorHasString($e, 'Empty or invalid "client_id" parameter');
         }

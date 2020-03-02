@@ -13,6 +13,8 @@ use Firebase\JWT\JWT;
  * Class JWTVerifier.
  * Used to validate JWTs issued by Auth0.
  *
+ * @deprecated 5.7.0, replacement available in upcoming 7.0.0: Auth0\SDK\Helpers\Tokens\IdTokenVerifier
+ *
  * @package Auth0\SDK
  */
 class JWTVerifier
@@ -216,8 +218,8 @@ class JWTVerifier
                 throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
             }
 
-            $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $jwks_url = $body_decoded->iss.$this->jwks_path;
+            $secret   = $this->JWKFetcher->getKeys($jwks_url);
         }
 
         try {

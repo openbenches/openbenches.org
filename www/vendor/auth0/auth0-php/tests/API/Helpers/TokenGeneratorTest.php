@@ -385,9 +385,9 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         // Mock the JWKFetcher object.
         $mocked_jwks = $this
             ->getMockBuilder( JWKFetcher::class )
-            ->setMethods( [ 'requestJwkX5c' ] )
+            ->setMethods( [ 'getKeys' ] )
             ->getMock();
-        $mocked_jwks->method( 'requestJwkX5c' )->willReturn( uniqid() );
+        $mocked_jwks->method( 'getKeys' )->willReturn( uniqid() );
 
         // Mock the JWT object.
         $expected_sub  = uniqid();
