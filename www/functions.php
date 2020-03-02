@@ -195,7 +195,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 	$tweet_end = "\n{$tweet_url}\n{$license}\n{$from}";
 
 	//	Left pad the inscription based on the after-matter's length
-	$padded_inscription = $tweet_end . "\n" . $tweet_inscription;
+	$padded_inscription = $tweet_end . "\n" . $inscription;
 
 	//	Run the Twitter weighted length algorithm
 	$padded_inscription_data = \Twitter\Text\Parser::create()->parseTweet($padded_inscription);
