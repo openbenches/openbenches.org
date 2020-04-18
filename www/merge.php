@@ -11,12 +11,21 @@ include("header.php");
 //	Hardcoded for @edent
 if ("twitter" == $user_provider && 14054507 == $user_providerID)
 {
-	$originalID  = $_GET["originalID"];
-	$duplicateID = $_GET["duplicateID"];
-	merge_benches($originalID, $duplicateID);
+	$originalID  = $_POST["originalID"];
+	$duplicateID = $_POST["duplicateID"];
+	if ($originalID != null && $duplicateID != null)
+	{
+		merge_benches($originalID, $duplicateID);
+		echo "Redirected <a href='https://openbenches.org/bench/{$duplicateID}'>{$duplicateID}</a><br>";
+	}
+?>
+	<form action="merge.php" method="post" autocomplete="off">
+	Original:  <input type="text" name="originalID"><br>
+	Duplicate: <input type="text" name="duplicateID"><br>
+	<input type="submit">
+	</form>
 
-	echo "Redirected <a href='https://openbenches.org/bench/{$duplicateID}'>{$duplicateID}</a>";
-
+<?php
 } else {
 	die();
 }
