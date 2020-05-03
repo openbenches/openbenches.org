@@ -196,3 +196,5 @@ Everything we do builds on someone else's hard work.
 * CSS based on [PicniCSS](https://github.com/franciscop/picnic) [MIT](https://github.com/franciscop/picnic/blob/master/LICENSE) (chosen mostly because we like picnic benches!)
 * Tagging library by [Select2](https://select2.org/) [MIT](https://github.com/select2/select2/blob/master/LICENSE.md)
 * Animated OCR icon by [Loading.io](https://loading.io/spinner/magnify/-searching-for-loading-icon) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
+
+And thanks to the many contributors who have improved this codebase.
