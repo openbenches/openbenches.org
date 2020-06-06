@@ -544,11 +544,11 @@ function license_to_icon($shortName){
 
 function get_user_avatar($user_provider, $user_providerID, $user_name) {
 	if("twitter"==$user_provider){
-		return "https://avatars.io/{$user_provider}/{$user_name}/small";
+		return "https://unavatar.now.sh/{$user_provider}/{$user_name}";
 	} else if("github"==$user_provider){
 		return "https://avatars0.githubusercontent.com/u/{$user_providerID}?v=4&amp;s=48";
 	} else if("facebook"==$user_provider){
-		return "https://avatars.io/{$user_provider}/{$user_providerID}/small";
+		return "https://unavatar.now.sh/{$user_provider}/{$user_providerID}";
 	} else {
 		return null;
 	}
