@@ -7,9 +7,14 @@ require_once ("functions.php");
 //	Start the normal page
 include("header.php");
 
+$soundex = false;
+
 //	Get the search query, or recover in case of error
 if(isset($_GET['search'])){
 	$query = $_GET['search'];
+} else if(isset($_GET['soundex'])){
+	$query = $_GET['soundex'];
+	$soundex = true;
 } else {
 	$query = "";
 }
@@ -33,7 +38,7 @@ $resultsHTML = "";
 //	Has a search been requested?
 if (null != $query)
 {
-	$results = get_search_results($query, $page, $count);
+	$results = get_search_results($query, $page, $count, $soundex);
 	$total_results = get_search_count($query);
 
 	if (0 == count($results)){
@@ -44,9 +49,11 @@ if (null != $query)
 		$first = ($count * $page)+1;
 		$last  = ($count * ($page+1));
 
-		$resultsHTML = "<div id=\"search-results\">
-			<h2>Total benches found: {$total_results}.</h2>
-		<ol start='{$first}'>";
+		$resultsHTML = "<div id=\"search-results\">";
+		if ($soundex == false){
+			$resultsHTML .= "<h2>Total benches found: {$total_results}.</h2>";
+		}
+		$resultsHTML .= "<ol start='{$first}'>";
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;

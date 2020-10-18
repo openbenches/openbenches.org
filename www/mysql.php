@@ -919,7 +919,7 @@ function get_media_types_array() {
 	return $media_types_array;
 }
 
-function get_search_results($q, $page=0, $results=20) {
+function get_search_results($q, $page=0, $results=20, $soundex=false) {
 	global $mysqli;
 
 	$offset = $page * $results;
@@ -927,15 +927,24 @@ function get_search_results($q, $page=0, $results=20) {
 	//	Replace spaces in query with `[[:space:]]*`
 	$q = prepare_search_query($q);
 
-	//	Query will be like
-	//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
-	$search = $mysqli->prepare(
-		"SELECT `benchID`, `inscription`, `address`
-		 FROM	`benches`
-		 WHERE  `inscription`
-		 REGEXP	?
-		 AND	 `published` = 1
-		 LIMIT ? , ?");
+	if ($soundex == false) {
+		//	Query will be like
+		//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
+		$search = $mysqli->prepare(
+			"SELECT `benchID`, `inscription`, `address`
+			 FROM	`benches`
+			 WHERE  `inscription`
+			 REGEXP	?
+			 AND	 `published` = 1
+			 LIMIT ? , ?");
+	} else {
+		$search = $mysqli->prepare(
+			"SELECT `benchID`, `inscription`, `address`
+			 FROM	`benches`
+			 WHERE  SOUNDEX(`inscription`) = ?
+			 AND	 `published` = 1
+			 LIMIT ? , ?");
+	}
 
 	$search->bind_param('sii', $q, $offset, $results);
 
@@ -976,6 +985,36 @@ function get_search_count($q) {
 	$search->close();
 
 	return $count;
+}
+
+function get_duplicates_results() {
+	global $mysqli;
+
+	//	Query will be like
+	//	SELECT inscription, SOUNDEX(inscription), COUNT(SOUNDEX(inscription)) FROM benches WHERE published=1 GROUP BY SOUNDEX(inscription) HAVING COUNT(SOUNDEX(inscription)) > 1
+	$search = $mysqli->prepare(
+		"SELECT `inscription`, SOUNDEX(`inscription`), COUNT(SOUNDEX(`inscription`))
+		 FROM	`benches`
+		 WHERE `published` = 1
+		 GROUP BY SOUNDEX(`inscription`)
+		 HAVING COUNT(SOUNDEX(`inscription`)) > 1
+		 LIMIT 0 , 1024");
+
+	$search->execute();
+	/* bind result variables */
+	$search->bind_result($inscription, $soundex, $count);
+
+	$results = array();
+	# Loop through rows to build feature arrays
+	while($search->fetch()) {
+		if($soundex != null){
+			$inscription = htmlspecialchars($inscription) .	" (" . $count . ")";
+		}
+		$results[$soundex] = $inscription;
+	}
+
+	$search->close();
+	return $results;
 }
 
 function get_bench_count() {
