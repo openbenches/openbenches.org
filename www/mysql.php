@@ -539,9 +539,7 @@ function get_image_html($benchID, $full = true)
 						</a>";
 		}
 
-		$html .= "<h3 class='caption-heading'>
-						<span class='caption'>{$source}&nbsp;{$exif_html}&nbsp;{$userHTML}</span>
-					</h3>";
+		$html .= "<span class='caption'>{$source}&nbsp;{$exif_html}&nbsp;{$userHTML}</span>";
 
 		$html .= "</div>";
 

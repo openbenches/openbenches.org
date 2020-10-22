@@ -171,8 +171,13 @@ hr {
 	padding: 0.4em;
 	font-size: 0.5em;
 	max-width: 590px;
-	display: inline-flex;
 	border-radius: 1em;
+	margin: auto;
+	position: absolute;
+	bottom: 1em;
+	left: 0;
+	right: 0;
+	width: max-content;	
 }
 
 .caption a {
