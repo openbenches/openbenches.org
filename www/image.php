@@ -78,7 +78,8 @@ if ("exif" == $size){
 	return null;
 } else {
 	//	Return the full image (preserves EXIF)
-	header('Content-type: image/jpeg');
+	$mime = mime_content_type($photo_full_path);
+	header("Content-type: {$mime}");
 	ob_clean();
 	readfile($photo_full_path);
 }

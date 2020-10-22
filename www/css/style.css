@@ -109,6 +109,14 @@ fieldset {
 	border-radius: 1rem;
 }
 
+video {
+	max-width: 100%;
+	min-height: 100px;
+	height: auto;
+	border: 0.1rem solid #191E20;
+	border-radius: 1rem;
+}
+
 ol {
 	max-width: 48em;
 }

@@ -521,7 +521,11 @@ function get_image_html($benchID, $full = true)
 		} else if("pano" == $media_type){
 			$panorama = "/libs/pannellum.2.5.4/pannellum.htm#panorama={$panorama_image}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60";
 			$html .= "<iframe width=\"600\" height=\"400\" allowfullscreen src=\"{$panorama}\"></iframe>";
-		} else {
+		} else if ("video" == $media_type){
+			$video = "/image/{$sha1}";
+			$html .= "<video src=\"{$video}\" width=\"600\" controls loop></video>";
+		}
+		else {
 
 			$dimensions = get_image_dimensions($sha1);
 			$width  = $dimensions["width"];
