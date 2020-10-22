@@ -95,11 +95,16 @@ if ($_FILES['userfile1']['tmp_name'])
 			foreach($mediaURLs as $img){
 				$photos .= $img."\n";
 			}
+			$duplicate_count = get_duplicates_count($inscription) - 1;
+			$soundex = get_soundex($inscription);
+
 			mail(NOTIFICATION_EMAIL,
 				"Bench {$benchID}",
+				"Possible duplicates {$duplicate_count}\n" .
 				"{$inscription}\nhttps://{$domain}/bench/{$benchID}\n\n" .
 				"Edit: https://{$domain}/edit/{$benchID}/{$key}/\n\n" .
 				"From: {$user_provider} {$user_name}\n\n".
+				"Duplicates: https://{$domain}/search/?soundex={$soundex}\n\n".
 				$photos
 			);
 

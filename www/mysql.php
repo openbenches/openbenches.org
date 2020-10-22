@@ -1017,6 +1017,39 @@ function get_duplicates_results() {
 	return $results;
 }
 
+function get_duplicates_count($inscription) {
+	global $mysqli;
+
+	$search = $mysqli->prepare(
+		"SELECT  COUNT(*)
+		 FROM   `benches`
+		 WHERE  SOUNDEX(`inscription`) = SOUNDEX(?)
+		 AND    `published` = true");
+
+	$search->bind_param('s', $inscription);
+	$search->execute();
+	$search->bind_result($count);
+	$search->fetch();
+	$search->close();
+
+	return $count;
+}
+
+function get_soundex($inscription) {
+	global $mysqli;
+
+	$search = $mysqli->prepare(
+		"SELECT  SOUNDEX(?)");
+
+	$search->bind_param('s', $inscription);
+	$search->execute();
+	$search->bind_result($soundex);
+	$search->fetch();
+	$search->close();
+
+	return $soundex;
+}
+
 function get_bench_count() {
 	global $mysqli;
 
