@@ -64,37 +64,5 @@ for (var i = 0; i < benches.features.length; i++) {
 
 map.addLayer(markers);
 </script>
-<script>
-function geoFindMe() {
-	var output = document.getElementById("gpsButton");
-
-	var gpsIcon = L.icon({
-		iconUrl: '/images/gps.png',
-		iconSize: [200, 200],
-	});
-
-	if (!navigator.geolocation){
-		output.innerHTML = "GPS is not supported by your device";
-		return;
-	}
-
-	function success(position) {
-		var latitude  = position.coords.latitude;
-		var longitude = position.coords.longitude;
-
-		output.innerHTML = '🔄 Update my location';
-		L.marker([latitude, longitude], {opacity:0.5, icon: gpsIcon, zIndexOffset: -100000}).addTo(map);
-		map.setView([latitude, longitude], 10);
-	}
-
-	function error() {
-		output.innerHTML = "🚫 Unable to retrieve your location";
-	}
-
-	output.innerHTML = "🛰️ Locating…";
-
-	navigator.geolocation.getCurrentPosition(success, error);
-}
-</script>
 <?php
 	include("footer.php");
