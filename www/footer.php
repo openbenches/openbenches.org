@@ -18,6 +18,38 @@
 	<a itemprop="creator" href="https://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
 </footer>
 <script>
+function geoFindMe() {
+	var output = document.getElementById("gpsButton");
+
+	var gpsIcon = L.icon({
+		iconUrl: '/images/gps.png',
+		iconSize: [200, 200],
+	});
+
+	if (!navigator.geolocation){
+		output.innerHTML = "GPS is not supported by your device";
+		return;
+	}
+
+	function success(position) {
+		var latitude  = position.coords.latitude;
+		var longitude = position.coords.longitude;
+
+		output.innerHTML = '🔄 Update my location';
+		L.marker([latitude, longitude], {opacity:0.5, icon: gpsIcon, zIndexOffset: -100000}).addTo(map);
+		map.setView([latitude, longitude], 10);
+	}
+
+	function error() {
+		output.innerHTML = "🚫 Unable to retrieve your location";
+	}
+
+	output.innerHTML = "🛰️ Locating…";
+
+	navigator.geolocation.getCurrentPosition(success, error);
+}
+</script>
+<script>
 if ("serviceWorker" in navigator) {
 	if (navigator.serviceWorker.controller) {
 		console.log("[PWA Builder] active service worker found, no need to register");
