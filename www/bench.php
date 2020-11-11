@@ -61,7 +61,7 @@ if (!$present) {
 	<form action="/bench/" method="post">
 		<input id="random" name="random" value="random" type="hidden" />
 		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
-		<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
+		<!-- <span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span> -->
 	</form>
 	<div id="comments">
 		<script>
