@@ -322,14 +322,14 @@ function get_exif_from_file($sha1) {
 		return null;
 	}
 
-	if (array_key_exists("exif:DateTimeDigitized", $exif)) {
-		$date = exif_date_to_timestamp($exif["exif:DateTimeDigitized"], $sha1);
-	} elseif (array_key_exists("exif:DateTime", $exif)) {
-		$date = exif_date_to_timestamp($exif["exif:DateTime"], $sha1);
+	if (array_key_exists("exif:GPSDateStamp", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:GPSDateStamp"], $sha1);
 	} elseif (array_key_exists("exif:DateTimeOriginal", $exif)) {
 		$date = exif_date_to_timestamp($exif["exif:DateTimeOriginal"], $sha1);
-	} elseif (array_key_exists("exif:GPSDateStamp", $exif)) {
-		$date = exif_date_to_timestamp($exif["exif:GPSDateStamp"], $sha1);
+	} elseif (array_key_exists("exif:DateTime", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:DateTime"], $sha1);
+	} elseif (array_key_exists("exif:DateTimeDigitized", $exif)) {
+		$date = exif_date_to_timestamp($exif["exif:DateTimeDigitized"], $sha1);
 	} else {
 		$date = null;
 	}
