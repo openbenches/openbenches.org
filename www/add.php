@@ -134,7 +134,7 @@ A lot..."></textarea>
 	</small>
 	<script src="/libs/jquery.3.4.1/jquery-3.4.1.min.js"></script>
 	<script src="/libs/vision/vision.js.php?cache=2019-10-23"></script>
-	<script src="/libs/load-image.2.24.0/load-image.all.min.js"></script>
+	<script src="/libs/load-image.5.14.0/load-image.all.min.js"></script>
 	<script src="/libs/select2.4.0.10/select2.min.js"></script>
 	<script>
 	$(document).ready(function() {
@@ -175,24 +175,29 @@ A lot..."></textarea>
 			var exifdata = loadImage.parseMetaData(
 				e.target.files[0],
 				function (data) {
+					// console.log('Original image head: ', data.imageHead);
+					// console.log('Exif data: ', data.exif);
 					if (!data.imageHead) {
 						return;
 					}
 
-					if ( typeof data.exif == 'undefined' ) {
+					var gpsInfo = data.exif && data.exif.get('GPSInfo');
+					// console.log(gpsInfo);
+
+					if ( typeof gpsInfo == 'undefined' ) {
 						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
-					} else if (data.exif.get("GPSLongitude") == null) {
+					} else if (gpsInfo.get("GPSLongitude") == null) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
 					}
 					// upload the photo for text detection
 					uploadFiles(e);
 
-					var exifLong    = data.exif.get("GPSLongitude");
-					var exifLongRef = data.exif.get("GPSLongitudeRef");
-					var exifLat     = data.exif.get("GPSLatitude");
-					var exifLatRef  = data.exif.get("GPSLatitudeRef");
+					var exifLong    = gpsInfo.get("GPSLongitude");
+					var exifLongRef = gpsInfo.get("GPSLongitudeRef");
+					var exifLat     = gpsInfo.get("GPSLatitude");
+					var exifLatRef  = gpsInfo.get("GPSLatitudeRef");
 
 					//	Correct for negative values
 					if (exifLatRef == "S") {
