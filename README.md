@@ -22,10 +22,10 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 * Specific Bench
 	* `https://openbenches.org/api/v1.0/data.json/?bench=123`
 * Geographic Area (Haversine)
-	* `https://openbenches.org/api/v1.0/data.json/?latitude=51.234&longitude=-1.234&radius=20`
+	* `https://openbenches.org/api/v1.0/data.json/?latitude=51.234&longitude=-1.234&radius=20&results=5`
 	* `latitude` and `longitude` in [WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System).
 	* `radius` in Kilometres.
-	* A maximum of 20 results are returned.
+	* `results` maximum number of benches returned. By defaults, 20 results are returned.
 * Tags
 	* `https://openbenches.org/api/v1.0/data.json/?tagText=cat`
 	* Returns all the benches with a specific tag.

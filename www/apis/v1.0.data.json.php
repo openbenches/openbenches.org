@@ -10,6 +10,7 @@ if( isset($_GET["radius"]) )    { $radius    = $_GET["radius"]; }    else { $rad
 if( isset($_GET["truncated"]) ) { $truncated = $_GET["truncated"]; } else { $truncated = null;}
 if( isset($_GET["userID"]) )    { $userID    = $_GET["userID"]; }    else { $userID    = null;}
 if( isset($_GET["provider"]) )  { $provider  = $_GET["provider"]; }  else { $provider  = null;}
+if( isset($_GET["results"]) )   { $results   = $_GET["results"]; }   else { $results   = 20;}
 if( isset($_GET["media"]) )     { $media     = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN); } else { $media = null;}
 if( isset($_GET["tagText"]) )   { $tagText   = $_GET["tagText"]; }   else { $tagText   = null;}
 
@@ -22,7 +23,7 @@ if ( "true" == $truncated or null == $truncated) {
 if (null != $userID) {
 	$geojson = get_user_map($userID);
 } else if (null != $latitude && null != $longitude && null != $radius) {
-	$geojson = get_nearest_benches($latitude, $longitude, $radius, 20, $truncated);
+	$geojson = get_nearest_benches($latitude, $longitude, $radius, $results, $truncated);
 } else if (null != $benchID){
 	$geojson = get_bench($benchID, $truncated, $media);
 } else if (null != $tagText){
