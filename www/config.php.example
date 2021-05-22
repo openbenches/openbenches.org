@@ -52,3 +52,6 @@ define('IMAGE_THUMB_SIZE',   '120');
 
 //	Google Cloud Vision - https://cloud.google.com/console
 define('CLOUD_VISION_KEY','');
+
+//	Cloudinary Social Media Profile Image - https://cloudinary.com/documentation/social_media_profile_pictures
+define('CLOUDINARY_KEY', '');

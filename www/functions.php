@@ -543,13 +543,20 @@ function license_to_icon($shortName){
 }
 
 function get_user_avatar($user_provider, $user_providerID, $user_name) {
+	//	https://cloudinary.com/documentation/social_media_profile_pictures
 	if("twitter"==$user_provider){
-		return "https://unavatar.now.sh/{$user_provider}/{$user_name}";
-	} else if("github"==$user_provider){
-		return "https://avatars0.githubusercontent.com/u/{$user_providerID}?v=4&amp;s=48";
+		$user_avatar = "res.cloudinary.com/" . CLOUDINARY_KEY . "/image/twitter/{$user_providerID}.jpg";
 	} else if("facebook"==$user_provider){
-		return "https://unavatar.now.sh/{$user_provider}/{$user_providerID}";
+		$user_avatar = "res.cloudinary.com/" . CLOUDINARY_KEY . "/image/facebook/{$user_providerID}.jpg";
+	} else if("github"==$user_provider){
+		$user_avatar = "avatars0.githubusercontent.com/u/{$user_providerID}?v=4&amp;s=48";
 	} else {
 		return null;
 	}
+
+	return "//{$user_avatar}";
+	// if (IMAGE_CACHE_PREFIX == "") {
+	// 	return "//{$user_avatar}";
+	// }
+	// return IMAGE_CACHE_PREFIX . $user_avatar;
 }
