@@ -9,7 +9,7 @@ include("header.php");
 //	Which iamge
 if ($_GET["wikiID"])
 {
-	$wikiID = $_GET["wikiID"]; // e.g. File:Katherine_Mansfield_Memorial_Park_-_Park_bench_(Norman_Purdie).jpg
+	$wikiID = $_GET["wikiID"]; // e.g. Katherine_Mansfield_Memorial_Park_-_Park_bench_(Norman_Purdie).jpg
 	$wikiAPI = "https://magnus-toolserver.toolforge.org/commonsapi.php?meta&image={$wikiID}";
 
 	$ch = curl_init();
