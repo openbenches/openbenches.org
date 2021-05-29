@@ -9,8 +9,8 @@ include("header.php");
 //	Which iamge
 if ($_GET["wikiID"])
 {
-	$wikiID = $_GET["wikiID"];
-	$wikiAPI = "https://tools.wmflabs.org/magnus-toolserver/commonsapi.php?meta&image={$wikiID}";
+	$wikiID = $_GET["wikiID"]; // e.g. File:Katherine_Mansfield_Memorial_Park_-_Park_bench_(Norman_Purdie).jpg
+	$wikiAPI = "https://magnus-toolserver.toolforge.org/commonsapi.php?meta&image={$wikiID}";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $wikiAPI);
@@ -140,7 +140,7 @@ function displayJSON (data) {
 	$long        = $_POST["long"];
 	$filename =  "photos/tmp/" . (microtime(true) * 1000);
 
-	$wikiAPI = "https://tools.wmflabs.org/magnus-toolserver/commonsapi.php?meta&image={$wikiID}";
+	$wikiAPI = "https://magnus-toolserver.toolforge.org/commonsapi.php?meta&image={$wikiID}";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $wikiAPI);
