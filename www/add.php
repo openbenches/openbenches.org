@@ -218,16 +218,16 @@ A lot..."></textarea>
 						'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 						'Imagery © <a href="https://mapbox.com">Mapbox</a>';
 
-					var grayscale = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?access_token=<?php echo MAPBOX_API_KEY; ?>', {
+					var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 						minZoom: 2,
-						maxZoom: 18,
+						maxZoom: 19,
 						attribution: attribution,
-						id: 'mapbox.light'
+						id: 'osm.mapnik'
 					});
 
 					var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=<?php echo MAPBOX_API_KEY; ?>', {
 							minZoom: 2,
-							maxZoom: 18,
+							maxZoom: 19,
 							attribution: attribution,
 							id: 'mapbox.satellite'
 						});
@@ -239,11 +239,11 @@ A lot..."></textarea>
 					// Centre the map
 					map.setView([latitude, longitude], 18);
 					var baseMaps = {
-						"Map View": grayscale,
+						"Mapnik": OpenStreetMap_Mapnik,
 						"Satellite View": satellite
 					};
 
-					grayscale.addTo(map);
+					OpenStreetMap_Mapnik.addTo(map);
 
 					L.control.layers(baseMaps).addTo(map);
 
