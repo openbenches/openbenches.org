@@ -196,6 +196,10 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			}
 			$benchInscription=nl2br(htmlspecialchars($benchInscription));
 		}
+		//	Horrible hack to force numeric inscriptions to be strings
+		if (is_numeric($benchInscription)) {
+			 $benchInscription .= " ";
+		}
 
 		$feature = array(
 			'id' => $benchID,
@@ -296,6 +300,11 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 				$benchInscription = $benchInscriptionTruncate . '…';
 			}
 			$benchInscription=nl2br(htmlspecialchars($benchInscription));
+		}
+
+		//	Horrible hack to force numeric inscriptions to be strings
+		if (is_numeric($benchInscription)) {
+			 $benchInscription .= " ";
 		}
 
 		if ($media) {
@@ -1195,6 +1204,10 @@ function get_user_map($userID)
 			$benchInscription = $benchInscriptionTruncate . '…';
 		}
 		$benchInscription=nl2br(htmlspecialchars($benchInscription));
+		//	Horrible hack to force numeric inscriptions to be strings
+		if (is_numeric($benchInscription)) {
+			 $benchInscription .= " ";
+		}
 
 		$feature = array(
 			'id' => $benchID,
