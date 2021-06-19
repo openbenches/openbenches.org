@@ -237,7 +237,7 @@ A lot..."></textarea>
 					}
 					map = L.map('map');
 					// Centre the map
-					map.setView([latitude, longitude], 18);
+					map.setView([latitude, longitude], 19);
 					var baseMaps = {
 						"Mapnik": OpenStreetMap_Mapnik,
 						"Satellite View": satellite
