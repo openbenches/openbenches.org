@@ -2,6 +2,8 @@
 require_once ('config.php');
 require_once ('functions.php');
 
+$MAX_LIMIT = "30000";	//	Temporary limit. But might need optimisation later
+
 //	Set up the database connection
 $mysqli = new mysqli(DB_IP, DB_USER, DB_PASS, DB_TABLE);
 if ($mysqli->connect_errno) {
@@ -271,7 +273,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, longitude, inscription, published FROM benches
 		{$where}
-		LIMIT 0 , 20000");
+		LIMIT 0 , 30000");
 
 	if(is_numeric($id)) { $get_benches->bind_param('i', $id); }
 
@@ -1177,7 +1179,7 @@ function get_user_map($userID)
 	$get_benches = $mysqli->prepare(
 		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
 		WHERE published = true AND present = true AND userID = ?
-		LIMIT 0 , 20000");
+		LIMIT 0 , 30000");
 
 	$get_benches->bind_param('i', $userID);
 	$get_benches->execute();
