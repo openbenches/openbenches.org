@@ -489,11 +489,17 @@ function duplicate_file($filename) {
 
 function get_image_cache($sha1, $size=IMAGE_DEFAULT_SIZE) {
 	//	Generate a URL for the cached image. Can be thumbnailed.
-	//	https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/introduction
+
 	if (IMAGE_CACHE_PREFIX == "") {
 		return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
 	}
-	return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "?w={$size}";
+
+	//	https://statically.io/
+	return "https://cdn.statically.io/img/" . $_SERVER['SERVER_NAME'] . "/w={$size},f=auto,q=80" . "/image/{$sha1}.jpg";
+
+	//	https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/introduction
+	// return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "?w={$size}";
+
 }
 
 function prepare_search_query($q) {

@@ -9,6 +9,9 @@ if( isset($params[3]) ) {
 	$size = null;
 }
 
+// Remove the .ext from the hash
+$sha1 = explode(".", $sha1)[0];
+
 $photo_full_path = get_path_from_hash($sha1);
 
 //	If the photo doesn't exist, stop
