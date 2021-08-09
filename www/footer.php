@@ -9,6 +9,9 @@
 	</span>
 	| <a href="/colophon/">Colophon</a>
 	<br>
+	Thanks to <a href="https://statically.io/">Statically CDN</a>
+	| <a href="https://krystal.uk/">Krystal Hosting</a>
+	<br>
 	<a itemprop="license"
 		rel="license"
 		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc/cc-by-sa.svg" id="cc-by-sa-logo" alt="Creative Commons Attribution Share-alike"/></a>
