@@ -235,7 +235,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 
 //	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
-	$mapbox = MAPBOX_API_KEY;
+	$esri_api = ESRI_API_KEY;
 	$mapJavaScript = <<<EOT
 <script>
 
@@ -253,14 +253,12 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 		id: 'osm.mapnik'
 	});
 
-	var Mapbox_Satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token={$mapbox}', {
-			minZoom: 2,
-			maxZoom: 19,
-			attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-				'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-				'Imagery © <a href="https://mapbox.com">Mapbox</a>',
-			id: 'mapbox.satellite'
-		});
+	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token={$esri_api}', {
+		minZoom: 2,
+		maxZoom: 19,
+		attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
+		id: 'esri.satellite'
+	});
 
 	var map = L.map('map');
 
@@ -285,7 +283,7 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	var baseMaps = {
 		"Map View": Stadia_Outdoors,
 		"Mapnik": OpenStreetMap_Mapnik,
-		"Satellite View": Mapbox_Satellite
+		"Satellite View": ESRI_Satellite
 	};
 
 	// Rotate between mapping providers depending on date
