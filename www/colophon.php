@@ -9,7 +9,9 @@
 		<ul class="leaderboard-list">
 			<li><a href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss"><img id="auth0-logo" alt="JWT Auth for open source projects" src="/images/colophon/auth0.svg" class="colophon-logo"/></a> login services</li>
 			<li><a href="https://opencagedata.com/"><img src="/images/colophon/opencage.svg" class="colophon-logo" alt="OpenCage"/></a> reverse geocoding</li>
-			<li><a href="https://www.mapbox.com/"><img src="/images/colophon/mapbox.svg" class="colophon-logo" alt="MapBox"/></a> web maps</li>
+			<li><a href="https://stadiamaps.com/"><img src="/images/colophon/stadiamaps.svg" class="colophon-logo" alt="Stadia Maps"/></a> Stadia streetmaps</li>
+			<li><a href="https://www.openstreetmap.org/"><img src="/images/colophon/osm.svg" class="colophon-logo" alt="OpenStreetMap"/></a> Open Street Map.</li>
+			<li><a href="https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/basemap-layers/#imagery"><img src="/images/colophon/esri.svg" class="colophon-logo" alt="ArcGIS Developer"/></a> satellite maps</li>
 			<li><a href="https://statically.io/"><img src="/images/colophon/statically.svg" class="colophon-logo" alt="Statically lightning bolt logo"/></a> CDN and image resizing</a></li>
 			<li><a href="https://php.net/"><img src="/images/colophon/php.svg" class="colophon-logo" alt="PHP"/></a> web scripting</li>
 			<li><a href="https://mysql.com/"><img src="/images/colophon/mysql.svg" class="colophon-logo" alt="MySQL"/></a> database</li>
