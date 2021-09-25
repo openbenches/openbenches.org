@@ -38,6 +38,7 @@ canvas {
 	z-index: 1;
 	margin-left: auto;
 	margin-right: auto;
+	border: 0.1rem solid #191E20;
 	border-radius: 1rem;
 	overflow-wrap: normal;
 	word-break: normal !important;
@@ -177,7 +178,7 @@ hr {
 	bottom: 1em;
 	left: 0;
 	right: 0;
-	width: max-content;	
+	width: max-content;
 }
 
 .caption a {

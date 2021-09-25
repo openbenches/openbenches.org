@@ -20,7 +20,7 @@ if ("twitter" == $user_provider && 14054507 == $user_providerID)
 	}
 ?>
 	<form action="merge.php" method="post" autocomplete="off">
-	Original:  <input type="text" name="originalID"><br>
+	Original:  <input type="text" name="originalID" autofocus><br>
 	Duplicate: <input type="text" name="duplicateID"><br>
 	<input type="submit" value="Merge Benches">
 	</form>
