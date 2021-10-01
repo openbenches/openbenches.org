@@ -76,6 +76,10 @@ fieldset {
 	align-items: center;
 }
 
+.searchbox__other {
+	margin-top: 10px;
+}
+
 .searchbox button[type="submit"]{
 	flex-shrink: 0;
 	white-space: nowrap;

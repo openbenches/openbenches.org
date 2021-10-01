@@ -10,7 +10,7 @@
 		<button type="submit" class="button buttonColour"><strong>🔎</strong> Search inscriptions</button>
 	</div>
 </form>
-<div class="button-bar">
+<div class="button-bar searchbox__other">
 	<form action="/bench/" method="post">
 		<input id="random" name="random" value="random" type="hidden" />
 		<button type="submit" class="button buttonColour"><strong>🔀</strong> Random bench</button>
