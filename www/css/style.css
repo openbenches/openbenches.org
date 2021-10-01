@@ -65,6 +65,10 @@ fieldset {
 	display: inline;
 }
 
+.button strong {
+	margin-right: 5px;
+}
+
 .searchbox {
 	display: flex;
 	max-width: 1024px;
@@ -72,8 +76,9 @@ fieldset {
 	align-items: center;
 }
 
-.searchbox input[type="submit"]{
+.searchbox button[type="submit"]{
 	flex-shrink: 0;
+	white-space: nowrap;
 }
 
 .search {
@@ -82,8 +87,14 @@ fieldset {
 }
 
 #search-results {
+	max-width: 1024px;
 	display: inline-block;
 	text-align: left;
+	margin-top: 20px;
+}
+
+#search-results h2 {
+	font-weight: bold;
 }
 
 #search-results ul {
@@ -93,18 +104,37 @@ fieldset {
 }
 
 #search-results li {
-	margin-bottom: 1em;
-	/* display: table; */
+	margin: 0;
+	border-bottom: 1px solid #666;
+	padding: 20px 5px;
 	width: 100%;
+	display: flex;
+	transition: 0.25s background-color;
+}
+
+#search-results li .number {
+	margin-right: 20px;
+	flex-shrink: 0;
 }
 
 #search-results a {
 	color: #191E20;
+	display: flex;
+	align-items: flex-start;
+}
+
+#search-results a .text {
+	margin-top: -5px;
+	line-height: 1.3;
+}
+
+#search-results li:hover {
+	background-color: rgba(0,0,0,0.05);
 }
 
 .search-thumb {
-	float: left;
-	padding-right: 1em;
+	margin-right: 20px;
+	flex-shrink: 0;
 }
 
 #header-image {
@@ -412,6 +442,10 @@ hgroup {
 	margin-bottom: 40px;
 }
 
+hgroup h1 {
+	display: inline-block
+}
+
 hgroup h1 a {
 	display: flex;
 	justify-content: center;
@@ -437,6 +471,10 @@ hgroup a:hover {
 	text-decoration: underline;
 }
 
+ol.searchResults {
+	padding: 0;
+	list-style: decimal inside none;
+}
 
 
 @media (max-width: 768px) {
