@@ -9,12 +9,13 @@
 body {
 	font-family: 'varela_roundregular', sans-serif;
 	font-size: 1.25em;
-	margin: 1em;
 	background-color: #e1ffe9;
+	margin: 0;
 	color: #191E20;
 	text-align: center;
 	overflow-wrap: anywhere;
 	word-break: break-word;
+	overflow-x: hidden;
 }
 
 h1 a{
@@ -32,14 +33,14 @@ canvas {
 }
 
 #map{
-	width: 1024px;
+	width: 100%;
 	height: 400px;
 	max-width: 100%;
 	z-index: 1;
 	margin-left: auto;
 	margin-right: auto;
-	border: 0.1rem solid #191E20;
-	border-radius: 1rem;
+	border-top:1px solid #aaa;
+	border-bottom:1px solid #aaa;
 	overflow-wrap: normal;
 	word-break: normal !important;
 }
@@ -56,8 +57,6 @@ fieldset {
 	max-width: 100%;
 }
 
-
-
 .button-bar {
 	margin-bottom: 0.5em;
 }
@@ -66,9 +65,20 @@ fieldset {
 	display: inline;
 }
 
+.searchbox {
+	display: flex;
+	max-width: 1024px;
+	margin: auto;
+	align-items: center;
+}
+
+.searchbox input[type="submit"]{
+	flex-shrink: 0;
+}
+
 .search {
-	width: 40em;
 	max-width: 100%;
+	margin-right: 20px;
 }
 
 #search-results {
@@ -326,6 +336,89 @@ output {
 
 footer {
 	background-color: #e8e8a0;;
+	margin-top: 20px;
 	margin-left: -1em;
 	margin-right: -1em;
+	font-size: 14px;
+	padding: 10px;
+}
+
+ul.menu {
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+ul.menu li {
+	display: inline-block;
+}
+
+ul.menu li a {
+	padding: 5px 15px;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+ul.menu a.addBench {
+	border:1px solid #8C35B0;
+	border-radius: 1em;
+	background-color: #8C35B0;
+	margin-left: 20px;
+	white-space: nowrap;
+}
+footer ul.menu {
+	margin-bottom: 10px;
+}
+
+footer ul.menu li a {
+	font-size: 14px;
+}
+
+footer ul.menu a.addBench {
+	background-color: transparent;
+	border: 0;
+	margin-left: 0;
+}
+
+ul.menu a.addBench:hover {
+	color: #8C35B0;
+	background-color: #fff;
+	text-decoration: none;
+}
+
+hgroup {
+	background-color: #11b0a3;
+	box-shadow: 0 0 5px rgba(0,0,0,0.15);
+	padding: 10px 0 20px;
+	margin-bottom: 40px;
+}
+
+hgroup h1 a {
+	display: flex;
+	justify-content: center;
+}
+hgroup h1 a:hover {
+	text-decoration: none;
+}
+
+hgroup h1 img {
+	margin-right: 10px;
+}
+hgroup h2 {
+	margin-top: 10px;
+	max-width: 300px;
+	margin: 10px auto;
+	font-size: 16px;
+}
+
+hgroup a, hgroup a:visited {
+	color: #fff;
+}
+hgroup a:hover {
+	text-decoration: underline;
+}
+@media (max-width: 768px) {
+	.searchbox {
+		flex-direction: column;
+	}
 }
