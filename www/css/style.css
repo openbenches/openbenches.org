@@ -253,12 +253,30 @@ input, select {
 	position: relative;
 	padding: .25em;
 	background-color: #DDD;
+	margin: 10px 0;
 }
 
 .upload-prompt {
 	border: 0.25em dashed #403F41;
 	padding: 0.5em;
 	text-align: center;
+}
+
+#media_type1 {
+	background-position: calc(100% - 15px) 11px;
+	margin-left: 5px;
+}
+
+#tagInput .select2 {
+	margin-left: 5px;
+}
+
+#tagInput .select2 ul {
+	display: block;
+}
+
+#tagInput .select2 li {
+	margin-bottom: 0;
 }
 
 small {

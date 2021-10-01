@@ -48,9 +48,9 @@ if (!$present) {
 	</div>
 
 	<div class="button-bar">
-		<a class="button buttonColour" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16">🌍 Benches near this</a>
+		<a class="button buttonColour" href="/#<?php echo $benchLat ?>/<?php echo $benchLong ?>/16"><strong>🌍</strong> Benches near this</a>
 		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
-		<a href="/edit/<?php echo $benchID; ?>" class="button buttonColour">✏️ Edit this bench</a>
+		<a href="/edit/<?php echo $benchID; ?>" class="button buttonColour"><strong>✏️</strong> Edit this bench</a>
 
 	</div>
 	<?php
