@@ -49,18 +49,25 @@ if (null != $query)
 		$first = ($count * $page)+1;
 		$last  = ($count * ($page+1));
 
+		include("searchform.php");
+
 		$resultsHTML = "<div id=\"search-results\">";
 		if ($soundex == false){
 			$resultsHTML .= "<h2>Total benches found: {$total_results}.</h2>";
 		}
-		$resultsHTML .= "<ol start='{$first}'>";
+		$resultsHTML .= "<ul class=\"searchResults\" start='{$first}'>";
+		$currentNumber = $first;
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
 			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\" alt=\"\">";
-			$resultsHTML .= "<li><a href='/bench/{$key}'>{$thumb_html}{$value}</a><hr></li>";
+			if (strlen($value)>300){
+				$value = substr($value, 0, 300)."...";
+			}
+			$resultsHTML .= "<li><div class=\"number\">".$currentNumber.".</div><a href='/bench/{$key}'>{$thumb_html}<div class=\"text\">{$value}</div></a></li>";
+			$currentNumber++;
 		}
-		$resultsHTML .="</ol></div></div>";
+		$resultsHTML .="</ul></div></div>";
 	}
 
 	$resultsHTML .= "<div id=\"pagination\">";
@@ -77,10 +84,8 @@ if (null != $query)
 }
 
 ?>
-	</hgroup>
 	<?php
 		echo $resultsHTML;
-		include("searchform.php");
 	?>
 <?php
 	include("footer.php");

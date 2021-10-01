@@ -20,7 +20,7 @@ if (!$present) {
 	$benchInscription = "<em>This bench has been removed from this physical location.</em><br><del>{$benchInscription}</del>";
 }
 ?>
-	</hgroup>
+
 	<div itemscope itemtype="http://schema.org/Place">
 		<h2  id="benchInscription" itemprop="description"><?php echo nl2br($benchInscription); ?></h2>
 		<?php echo get_image_html($benchID); ?>
@@ -57,12 +57,6 @@ if (!$present) {
 		include("sharing.php");
 		include("searchform.php");
 	?>
-
-	<form action="/bench/" method="post">
-		<input id="random" name="random" value="random" type="hidden" />
-		<input type="submit" class="button buttonColour" value="🔀 Random bench" />
-		<!-- <span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span> -->
-	</form>
 	<div id="comments">
 		<script>
 			var idcomments_acct = '2c821c4a265bb30b50b1127cf2b99934';

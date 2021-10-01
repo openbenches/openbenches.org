@@ -1,13 +1,6 @@
 <?php
 	include("header.php");
-
-	echo '<h2 itemprop="description">A map of ' . number_format(get_bench_count()) . " memorial benches - added by people like you</h2>";
 ?>
-</hgroup>
-<div class="button-bar">
-	<a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a>
-</div>
-
 	<div>
 		<div id='map'></div>
 		<div id='benchImage' ></div>
@@ -16,13 +9,6 @@
 	<?php
 		include("searchform.php");
 	?>
-	<div class="button-bar">
-		<form action="/bench/" method="post">
-			<input id="random" name="random" value="random" type="hidden" />
-			<input type="submit" class="button buttonColour" value="🔀 Random bench" />
-			<span class="button buttonColour" onclick="geoFindMe()" id="gpsButton">📍 Benches near me</span>
-		</form>
-	</div>
 <script src="/api/v1.0/data.json/?truncated=true"></script>
 
 <?php echo get_map_javascript(16.3, 0, "2"); ?>

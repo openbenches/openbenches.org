@@ -116,7 +116,6 @@
 		$resultsHTML .= "<a href='{$thisURL}?page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a>";
 	}
 ?>
-</hgroup>
 
 <?php
 	echo "<h3>{$userHTML}</h3>";
