@@ -340,7 +340,7 @@ footer {
 	margin-left: -1em;
 	margin-right: -1em;
 	font-size: 14px;
-	padding: 10px;
+	padding: 5px 0;
 }
 
 ul.menu {
@@ -367,10 +367,11 @@ ul.menu a.addBench {
 	white-space: nowrap;
 }
 footer ul.menu {
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 }
 
 footer ul.menu li a {
+	padding: 0px 5px;
 	font-size: 14px;
 }
 
@@ -378,6 +379,24 @@ footer ul.menu a.addBench {
 	background-color: transparent;
 	border: 0;
 	margin-left: 0;
+}
+
+footer ul.menu a.addBench strong {
+	display: none;
+}
+
+footer ul.menu a.addBench:hover {
+	background: none;
+}
+
+footer .footerIcons img {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+}
+
+footer .footerIcons a:last-child img{
+	margin-right: 0;
 }
 
 ul.menu a.addBench:hover {
@@ -417,6 +436,9 @@ hgroup a, hgroup a:visited {
 hgroup a:hover {
 	text-decoration: underline;
 }
+
+
+
 @media (max-width: 768px) {
 	.searchbox {
 		flex-direction: column;
