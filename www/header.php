@@ -141,6 +141,11 @@ if ("user" == $page) {
 				<img src="/images/openbencheslogo.svg"
 				     id="header-image"
 				     alt="A bird flies above a bench">Open<wbr>Benches</a></h1>
+
+				<?php
+				echo '<h2 itemprop="description">A map of ' . number_format(get_bench_count()) . " memorial benches - added by people like you</h2>";
+				require("menu.php");?>
+			</hgroup>
 <?php
 //	Unpublished or non-existant benches
 if ( ("bench" == $page && $benchID == null) || ("bench" == $page && $benchID != null && !$published) ) {
