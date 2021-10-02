@@ -387,8 +387,6 @@ output {
 
 footer {
 	background-color: #e8e8a0;;
-	margin-left: -1em;
-	margin-right: -1em;
 	padding: .1em 0;
 }
 
@@ -484,6 +482,9 @@ ol.searchResults {
 	list-style: decimal inside none;
 }
 
+#comments {
+	margin: 0 .1em 0 .1em;
+}
 
 @media (max-width: 768px) {
 	.searchbox {

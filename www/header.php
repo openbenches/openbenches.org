@@ -123,7 +123,7 @@ if ("user" == $page) {
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
-	<link rel="stylesheet" href="/css/style.css?cache=2021-10-02T12:04"/>
+	<link rel="stylesheet" href="/css/style.css?cache=2021-10-02T12:05"/>
 
 	<link rel="stylesheet" href="/libs/select2.4.0.10/select2.min.css"  />
 
