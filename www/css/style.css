@@ -66,7 +66,7 @@ fieldset {
 }
 
 .button strong {
-	margin-right: 5px;
+	margin-right: .1em;
 }
 
 .searchbox {
@@ -76,8 +76,8 @@ fieldset {
 	align-items: center;
 }
 
-.searchbox__other {
-	margin-top: 10px;
+.searchbox_other {
+	margin-top: .1em;
 }
 
 .searchbox button[type="submit"]{
@@ -87,14 +87,13 @@ fieldset {
 
 .search {
 	max-width: 100%;
-	margin-right: 20px;
+	margin: .5em;
 }
 
 #search-results {
 	max-width: 1024px;
 	display: inline-block;
 	text-align: left;
-	margin-top: 20px;
 }
 
 #search-results h2 {
@@ -110,14 +109,14 @@ fieldset {
 #search-results li {
 	margin: 0;
 	border-bottom: 1px solid #666;
-	padding: 20px 5px;
+	padding: .5em .1em;
 	width: 100%;
 	display: flex;
 	transition: 0.25s background-color;
 }
 
 #search-results li .number {
-	margin-right: 20px;
+	margin-right: 1em;
 	flex-shrink: 0;
 }
 
@@ -128,7 +127,7 @@ fieldset {
 }
 
 #search-results a .text {
-	margin-top: -5px;
+	margin-top: -.1em;
 	line-height: 1.3;
 }
 
@@ -137,7 +136,7 @@ fieldset {
 }
 
 .search-thumb {
-	margin-right: 20px;
+	margin-right: 1em;
 	flex-shrink: 0;
 }
 
@@ -257,7 +256,7 @@ input, select {
 	position: relative;
 	padding: .25em;
 	background-color: #DDD;
-	margin: 10px 0;
+	margin: 1em 0;
 }
 
 .upload-prompt {
@@ -388,17 +387,16 @@ output {
 
 footer {
 	background-color: #e8e8a0;;
-	margin-top: 20px;
 	margin-left: -1em;
 	margin-right: -1em;
-	font-size: 14px;
-	padding: 5px 0;
+	padding: .1em 0;
 }
 
 ul.menu {
 	list-style: none;
 	padding: 0;
 	margin-bottom: 0;
+	margin-top: 0;
 }
 
 ul.menu li {
@@ -406,25 +404,20 @@ ul.menu li {
 }
 
 ul.menu li a {
-	padding: 5px 15px;
-	font-size: 18px;
-	margin-bottom: 5px;
 }
 
 ul.menu a.addBench {
 	border:1px solid #8C35B0;
-	border-radius: 1em;
 	background-color: #8C35B0;
-	margin-left: 20px;
+	margin-left: 1em;
 	white-space: nowrap;
 }
 footer ul.menu {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 
 footer ul.menu li a {
-	padding: 0px 5px;
-	font-size: 14px;
+	padding: 0 .1em;
 }
 
 footer ul.menu a.addBench {
@@ -442,9 +435,9 @@ footer ul.menu a.addBench:hover {
 }
 
 footer .footerIcons img {
-	width: 25px;
-	height: 25px;
-	margin-right: 10px;
+	width: 2em;
+	height: 2em;
+	margin-right: .5em;
 }
 
 footer .footerIcons a:last-child img{
@@ -459,9 +452,7 @@ ul.menu a.addBench:hover {
 
 hgroup {
 	background-color: #11b0a3;
-	box-shadow: 0 0 5px rgba(0,0,0,0.15);
-	padding: 10px 0 20px;
-	margin-bottom: 40px;
+	padding: 1em 0 0 0;
 }
 
 hgroup h1 {
@@ -477,20 +468,15 @@ hgroup h1 a:hover {
 }
 
 hgroup h1 img {
-	margin-right: 10px;
+	margin-right: .5rem;
 }
 hgroup h2 {
-	margin-top: 10px;
-	max-width: 300px;
-	margin: 10px auto;
-	font-size: 16px;
 }
 
 hgroup a, hgroup a:visited {
 	color: #fff;
 }
 hgroup a:hover {
-	text-decoration: underline;
 }
 
 ol.searchResults {
@@ -504,3 +490,4 @@ ol.searchResults {
 		flex-direction: column;
 	}
 }
+

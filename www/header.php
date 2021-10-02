@@ -144,7 +144,10 @@ if ("user" == $page) {
 
 				<?php
 				echo '<h2 itemprop="description">A map of ' . number_format(get_bench_count()) . " memorial benches - added by people like you</h2>";
-				require("menu.php");?>
+				?>
+				<ul class="menu">
+				  <li><a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a></li>
+				</ul>
 			</hgroup>
 <?php
 //	Unpublished or non-existant benches
