@@ -2,7 +2,6 @@
 	include("header.php");
 
 ?>
-</hgroup>
 
 <div id="leaderboard-results">
 	<h3>Most added and edited benches</h3>

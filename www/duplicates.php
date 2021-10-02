@@ -23,7 +23,7 @@ $resultsHTML .="</ol>";
 $resultsHTML .="</div>";
 
 ?>
-	</hgroup>
+
 	<?php
 		echo $resultsHTML;
 		include("searchform.php");

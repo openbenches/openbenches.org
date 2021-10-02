@@ -106,7 +106,7 @@ if($user_provider != null){
 }
 
 ?>
-	</hgroup>
+
 	<br>
 	<form action="/edit/<?php echo $benchID . "/"; ?>" enctype="multipart/form-data" method="post">
 		<h2>Edit A Bench</h2>
