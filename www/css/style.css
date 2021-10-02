@@ -492,3 +492,13 @@ ol.searchResults {
 	}
 }
 
+/* Fixes to IntenseDebate styles for Accessibility */
+#idc-container-parent #idc-container .idc-c-m .idc-form-info {
+	color: #6F6F6E; /*70% Grey */
+	font-size: 12px;
+}
+#idc-container-parent #idc-container textarea.idc-text_noresize {
+	color: #6F6F6E !important;
+	font-size: 12px;
+}
+/* END Fixes to IntenseDebate styles for Accessibility */
