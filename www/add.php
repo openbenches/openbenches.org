@@ -7,7 +7,7 @@ require_once ("functions.php");
 //	Start the normal page
 include("header.php");
 ?>
-</hgroup>
+
 <?php
 	[$user_provider, $user_providerID, $user_name] = get_user_details();
 

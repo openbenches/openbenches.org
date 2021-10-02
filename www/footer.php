@@ -1,14 +1,9 @@
 <footer>
-	<hr>
-	<a href="/"><img src="/images/openbencheslogo.svg" alt="Homepage" id="homeIcon"></a>
-	| <a href="/blog/about/">About</a>
-	| <a href="/leaderboard/">Leader Board</a>
-	<span itemscope itemtype="https://schema.org/Organization">
-		| <a itemprop="sameAs" href="https://twitter.com/openbenches">Twitter</a>
-		| <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org">GitHub</a>
-	</span>
-	| <a href="/colophon/">Colophon</a>
-	<br>
+	<?php require("menu.php");?>
+	<div class="footerIcons" itemscope itemtype="https://schema.org/Organization">
+		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/footer_twitter.svg" alt="twitter"/></a>
+	  <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org" title="Github"><img src="/images/svg/footer_github.svg" alt="github"/></a>
+	</div>
 	Thanks to <a href="https://statically.io/">Statically CDN</a>
 	| <a href="https://krystal.uk/">Krystal Hosting</a>
 	<br>

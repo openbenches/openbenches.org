@@ -2,7 +2,7 @@
 	include("header.php");
 
 ?>
-</hgroup>
+
 
 	<h2>Built with these amazing resources</h2>
 	<div id="leaderboard-results">
