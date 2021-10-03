@@ -494,11 +494,11 @@ ol.searchResults {
 
 /* Fixes to IntenseDebate styles for Accessibility */
 #idc-container-parent #idc-container .idc-c-m .idc-form-info {
-	color: #6F6F6E; /*70% Grey */
-	font-size: 12px;
+	color: #6F6F6E; /* 70% Grey */
+	font-size: 1em;
 }
 #idc-container-parent #idc-container textarea.idc-text_noresize {
-	color: #6F6F6E !important;
-	font-size: 12px;
+	color: #3C3C3B !important; /* 90% Grey */
+	font-size: 1em;
 }
 /* END Fixes to IntenseDebate styles for Accessibility */
