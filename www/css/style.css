@@ -336,7 +336,7 @@ input[type="search"]::placeholder {
 }
 
 /* https://picnicss.com/documentation#buttons */
-.buttonColour {
+.buttonColour, .idc-btn_l {
 	background: #8C35B0;
 	color: #FFF;
 	min-width: 12em;
@@ -502,3 +502,7 @@ ol.searchResults {
 	font-size: 1em;
 }
 /* END Fixes to IntenseDebate styles for Accessibility */
+
+#IDNewThreadSubmitLI {
+	padding: 1em;
+}
