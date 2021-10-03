@@ -43,31 +43,29 @@ if (null != $query)
 
 	if (0 == count($results)){
 		$resultsHTML = "";
-		$error_message = "No results found";
+		$error_message = "<h2>No results found</h2>";
 	}
 	else {
 		$first = ($count * $page)+1;
 		$last  = ($count * ($page+1));
 
-		include("searchform.php");
-
 		$resultsHTML = "<div id=\"search-results\">";
 		if ($soundex == false){
 			$resultsHTML .= "<h2>Total benches found: {$total_results}.</h2>";
 		}
-		$resultsHTML .= "<ul class=\"searchResults\" start='{$first}'>";
+		$resultsHTML .= "<ol class=\"searchResults\" start='{$first}'>";
 		$currentNumber = $first;
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
 			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\" alt=\"\">";
-			if (strlen($value)>300){
-				$value = substr($value, 0, 300)."...";
+			if (mb_strlen($value)>300){
+				$value = mb_substr($value, 0, 300)."...";
 			}
 			$resultsHTML .= "<li><div class=\"number\">".$currentNumber.".</div><a href='/bench/{$key}'>{$thumb_html}<div class=\"text\">{$value}</div></a></li>";
 			$currentNumber++;
 		}
-		$resultsHTML .="</ul></div></div>";
+		$resultsHTML .="</ol></div></div>";
 	}
 
 	$resultsHTML .= "<div id=\"pagination\">";
@@ -83,9 +81,8 @@ if (null != $query)
 	$resultsHTML .="</div>";
 }
 
-?>
-	<?php
-		echo $resultsHTML;
-	?>
-<?php
-	include("footer.php");
+echo $resultsHTML;
+
+include("searchform.php");
+
+include("footer.php");
