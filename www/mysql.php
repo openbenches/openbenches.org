@@ -1132,6 +1132,7 @@ function get_user_bench_list($userID, $page=0, $results=20)
 		 FROM	  `benches`
 		 WHERE  `userID` = ?
 		 AND	  `published` = 1
+		 ORDER BY `benchID` DESC
 		 LIMIT ? , ?");
 
 	$get_user_list->bind_param('iii', $userID, $offset, $results);
