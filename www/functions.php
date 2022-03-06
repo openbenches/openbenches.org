@@ -235,7 +235,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 
 //	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
-	$esri_api = ESRI_API_KEY;
+	$mapbox = MAPBOX_API_KEY;
 	$mapJavaScript = <<<EOT
 <script>
 
@@ -253,7 +253,7 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 		id: 'osm.mapnik'
 	});
 
-	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token={$esri_api}', {
+	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=AAPKda6317ae879941ac8a7fef3a2198a372FZzFP0nkG-58ivR1JcgsuEhn8fB3NS62pZxG4_o1g59yEYHjqTJ1WeX_n9X_k6qS', {
 		minZoom: 2,
 		maxZoom: 19,
 		attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
@@ -492,11 +492,8 @@ function get_image_cache($sha1, $size=IMAGE_DEFAULT_SIZE) {
 		return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
 	}
 
-	//	https://statically.io/
-	return "https://cdn.statically.io/img/" . $_SERVER['SERVER_NAME'] . "/w={$size},f=auto,q=80" . "/image/{$sha1}.jpg";
-
-	//	https://docs.cloudimage.io/go/cloudimage-documentation-v7/en/introduction
-	// return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "?w={$size}";
+	//	https://images.weserv.nl/docs/
+	return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "&w={$size}&q=" . IMAGE_CACHE_QUALITY . "&output=webp";
 
 }
 

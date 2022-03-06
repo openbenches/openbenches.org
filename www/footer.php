@@ -4,8 +4,7 @@
 		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/footer_twitter.svg" alt="twitter"/></a>
 	  <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org" title="Github"><img src="/images/svg/footer_github.svg" alt="github"/></a>
 	</div>
-	Thanks to <a href="https://statically.io/">Statically CDN</a>
-	| <a href="https://krystal.uk/">Krystal Hosting</a>
+	Thanks to <a href="https://krystal.uk/">Krystal Hosting</a>
 	<br>
 	<a itemprop="license"
 		rel="license"

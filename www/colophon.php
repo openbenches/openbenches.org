@@ -12,7 +12,7 @@
 			<li><a href="https://stadiamaps.com/"><img src="/images/colophon/stadiamaps.svg" class="colophon-logo" alt="Stadia Maps"/></a> Stadia streetmaps</li>
 			<li><a href="https://www.openstreetmap.org/"><img src="/images/colophon/osm.svg" class="colophon-logo" alt="OpenStreetMap"/></a> Open Street Map.</li>
 			<li><a href="https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/basemap-layers/#imagery"><img src="/images/colophon/esri.svg" class="colophon-logo" alt="ArcGIS Developer"/></a> satellite maps</li>
-			<li><a href="https://statically.io/"><img src="/images/colophon/statically.svg" class="colophon-logo" alt="Statically lightning bolt logo"/></a> CDN and image resizing</a></li>
+			<li><a href="https://images.weserv.nl/"><img src="/images/colophon/weserv.svg" class="colophon-logo" alt="Weserve Logo"/></a> Weserve.nl CDN and image resizing</a></li>
 			<li><a href="https://php.net/"><img src="/images/colophon/php.svg" class="colophon-logo" alt="PHP"/></a> web scripting</li>
 			<li><a href="https://mysql.com/"><img src="/images/colophon/mysql.svg" class="colophon-logo" alt="MySQL"/></a> database</li>
 			<li><a href="https://cloud.google.com/vision/"><img src="/images/colophon/cloudvision.svg" class="colophon-logo" alt="Google Cloud Vision"/></a> Google Cloud Vision OCR</li>
