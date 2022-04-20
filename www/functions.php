@@ -3,6 +3,9 @@ require_once ("codebird.php");
 require_once ("config.php");
 require_once (__DIR__ . '/vendor/autoload.php');
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
+
 use Twitter\Text\Parser;
 
 
@@ -42,17 +45,17 @@ function get_user_details($raw = true) {
 		return null;
 	}
 	$auth0 = new Auth0([
-		'domain' =>        AUTH0_DOMAIN,
-		'client_id' =>     AUTH0_CLIENT_ID,
-		'client_secret' => AUTH0_CLIENT_SECRET,
-		'redirect_uri' =>  AUTH0_CALLBACK,
-		'audience' =>      AUTH0_AUDIENCE,
-		'scope' =>        'openid profile',
-		'persist_id_token' =>      true,
-		'persist_access_token' =>  true,
-		'persist_refresh_token' => true,
+		'domain'              => AUTH0_DOMAIN,
+		'clientId'            => AUTH0_CLIENT_ID,
+		'clientSecret'        => AUTH0_CLIENT_SECRET,
+		'redirectUri'         => AUTH0_CALLBACK,
+		'audience'            => AUTH0_AUDIENCE,
+		'scope'               => array('openid profile'),
+		'persistIdToken'      => true,
+		'persistAccessToken'  => true,
+		'persistRefreshToken' => true,
+		'cookieSecret'        => AUTH0_COOKIE_SECRET,
 	]);
-
 
 	if(!isset($_SESSION)) { session_start(); }
 	$userInfo = $auth0->getUser();

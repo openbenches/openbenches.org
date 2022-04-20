@@ -1,151 +1,175 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Contract\API\Management\ResourceServersInterface;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Toolkit;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResourceServers.
  * Handles requests to the Resource Servers endpoint of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management
+ * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers
  */
-class ResourceServers extends GenericResource
+final class ResourceServers extends ManagementEndpoint implements ResourceServersInterface
 {
     /**
+     * Create a new Resource Server.
+     * Required scope: `create:resource_servers`
+     *
+     * @param string                 $identifier API identifier to use.
+     * @param array<mixed> $body     Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` or `body` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/post_resource_servers
+     */
+    public function create(
+        string $identifier,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('resource-servers')
+            ->withBody(
+                (object) Toolkit::merge([
+                    'identifier' => $identifier,
+                ], $body)
+            )
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Get all Resource Servers, by page if desired.
-     * Required scope: "read:resource_servers"
+     * Required scope: `read:resource_servers`
      *
-     * @param null|integer $page     Page number to get, zero-based.
-     * @param null|integer $per_page Number of results to get, null to return the default number.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers
      */
-    public function getAll($page = null, $per_page = null)
-    {
-        $params = [];
-
-        // Pagination parameters.
-        if (null !== $page) {
-            $params['page'] = abs( (int) $page);
-        }
-
-        if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
-        }
-
-        return $this->apiClient->method('get')
-            ->withDictParams($params)
+    public function getAll(
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('resource-servers')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get a single Resource Server by ID or API identifier.
-     * Required scope: "read:resource_servers"
+     * Required scope: `read:resource_servers`
      *
-     * @param string $id Resource Server ID or identifier to get.
+     * @param string              $id      Resource Server ID or identifier to get.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers_by_id
      */
-    public function get($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->apiClient->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('resource-servers', $id)
-            ->call();
-    }
-
-    /**
-     * Create a new Resource Server.
-     * Required scope: "create:resource_servers"
-     *
-     * @param string $identifier API identifier to use.
-     * @param array  $data       Additional fields to add.
-     *
-     * @return mixed
-     *
-     * @throws CoreException Thrown if the identifier parameter or data field is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/post_resource_servers
-     */
-    public function create($identifier, array $data)
-    {
-        // Backwards-compatibility with previously-unused $identifier parameter.
-        if (empty($data['identifier'])) {
-            $data['identifier'] = $identifier;
-        }
-
-        if (empty($data['identifier']) || ! is_string($data['identifier'])) {
-            throw new CoreException('Invalid "identifier" field.');
-        }
-
-        return $this->apiClient->method('post')
-            ->addPath('resource-servers')
-            ->withBody(json_encode($data))
-            ->call();
-    }
-
-    /**
-     * Delete a Resource Server by ID.
-     * Required scope: "delete:resource_servers"
-     *
-     * @param string $id Resource Server ID or identifier to delete.
-     *
-     * @return mixed
-     *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/delete_resource_servers_by_id
-     */
-    public function delete($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
-
-        return $this->apiClient->method('delete')
-            ->addPath('resource-servers', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Update a Resource Server by ID.
-     * Required scope: "update:resource_servers"
+     * Required scope: `update:resource_servers`
      *
-     * @param string $id   Resource Server ID or identifier to update.
-     * @param array  $data Data to update.
+     * @param string              $id      Resource Server ID or identifier to update.
+     * @param array<mixed>        $body    Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `body` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/patch_resource_servers_by_id
      */
-    public function update($id, array $data)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->apiClient->method('patch')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('resource-servers', $id)
-            ->withBody(json_encode($data))
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a Resource Server by ID.
+     * Required scope: `delete:resource_servers`
+     *
+     * @param string              $id      Resource Server ID or identifier to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/delete_resource_servers_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('resource-servers', $id)
+            ->withOptions($options)
             ->call();
     }
 }

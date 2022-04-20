@@ -1,109 +1,86 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-class Tickets extends GenericResource
+use Auth0\SDK\Contract\API\Management\TicketsInterface;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Toolkit;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * Class Tickets.
+ * Handles requests to the Tickets endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Tickets
+ */
+final class Tickets extends ManagementEndpoint implements TicketsInterface
 {
     /**
+     * Create an email verification ticket.
+     * Required scope: `create:user_tickets`
      *
-     * @param  string      $user_id
-     * @param  null|string $result_url
-     * @return mixed
+     * @param string              $userId  ID of the user for whom the ticket should be created.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `userId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
      */
-    public function createEmailVerificationTicket($user_id, $result_url = null)
-    {
-        $body = ['user_id' => $user_id];
-        if ($result_url !== null) {
-            $body['result_url'] = $result_url;
-        }
+    public function createEmailVerification(
+        string $userId,
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$userId] = Toolkit::filter([$userId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $request = $this->apiClient->method('post')
-            ->addPath('tickets')
-            ->addPath('email-verification')
-            ->withBody(json_encode($body));
+        Toolkit::assert([
+            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
+        ])->isString();
 
-        return $request->call();
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('tickets', 'email-verification')
+            ->withBody(
+                (object) Toolkit::merge([
+                    'user_id' => $userId,
+                ], $body)
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Create a password change ticket.
+     * Required scope: `create:user_tickets`
      *
-     * @param  string      $user_id
-     * @param  null|string $new_password
-     * @param  null|string $result_url
-     * @param  null|string $connection_id
-     * @return mixed
-     */
-    public function createPasswordChangeTicket(
-        $user_id,
-        $new_password = null,
-        $result_url = null,
-        $connection_id = null
-    )
-    {
-        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id);
-    }
-
-    /**
+     * @param array<mixed>        $body    Body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @param  string      $email
-     * @param  null|string $new_password
-     * @param  null|string $result_url
-     * @param  null|string $connection_id
-     * @return mixed
-     */
-    public function createPasswordChangeTicketByEmail(
-        $email,
-        $new_password = null,
-        $result_url = null,
-        $connection_id = null
-    )
-    {
-        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id);
-    }
-
-    /**
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `body` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
-     * @param  null|string $user_id
-     * @param  null|string $email
-     * @param  null|string $new_password
-     * @param  null|string $result_url
-     * @param  null|string $connection_id
-     * @return mixed
+     * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_password_change
      */
-    public function createPasswordChangeTicketRaw(
-        $user_id = null,
-        $email = null,
-        $new_password = null,
-        $result_url = null,
-        $connection_id = null
-    )
-    {
-        $body = [];
+    public function createPasswordChange(
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        if ($user_id) {
-            $body['user_id'] = $user_id;
-        }
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
 
-        if ($email) {
-            $body['email'] = $email;
-        }
-
-        if ($new_password) {
-            $body['new_password'] = $new_password;
-        }
-
-        if ($result_url) {
-            $body['result_url'] = $result_url;
-        }
-
-        if ($connection_id) {
-            $body['connection_id'] = $connection_id;
-        }
-
-        return $this->apiClient->method('post')
-            ->addPath('tickets')
-            ->addPath('password-change')
-            ->withBody(json_encode($body))
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('tickets', 'password-change')
+            ->withBody((object) $body)
+            ->withOptions($options)
             ->call();
     }
 }

@@ -35,12 +35,14 @@ define('ESRI_API_KEY', '');
 
 //	Auth0 login services
 //	https://auth0.com/
-define('AUTH0_DOMAIN',           '');
-define('AUTH0_CLIENT_ID',        '');
-define('AUTH0_CLIENT_SECRET',    '');
-define('AUTH0_CALLBACK',         '');
-define('AUTH0_AUDIENCE',         '');
-define('AUTH0_LOGOUT_RETURN_URL','');
+define('AUTH0_DOMAIN',            '');
+define('AUTH0_CLIENT_ID',         '');
+define('AUTH0_CLIENT_SECRET',     '');
+define('AUTH0_CALLBACK',          '');
+define('AUTH0_AUDIENCE',         ['']);	//	This *needs* to be an array
+define('AUTH0_LOGOUT_RETURN_URL', '');
+define('AUTH0_COOKIE_SECRET',     '');		//	Long random string
+
 
 //	For sharing on Facebook
 define('FACEBOOK_APP_ID', '');

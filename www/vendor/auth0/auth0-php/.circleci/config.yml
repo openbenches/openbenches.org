@@ -1,72 +1,179 @@
 version: 2.1
 
 commands:
-  prepare:
+  setup:
     steps:
-      - checkout
-      - run: sudo composer self-update
-      - restore_cache:
-          keys:
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install -n --prefer-dist
-      - run: composer update --prefer-dist --no-interaction
-      - persist_to_workspace:
-          root: .
-          paths:
-            - composer.*
-            - .snyk
-      - save_cache:
-          key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-          paths:
-            - vendor
-  run-tests:
-    steps:
-      - run: composer test-ci
-      - store_artifacts:
-          path:  build/coverage.xml
+      - run:
+          name: Configure environment
+          command: |
+            apk update
 
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+                >&2 echo 'ERROR: Invalid installer checksum'
+                rm composer-setup.php
+                exit 1
+            fi
+
+            php composer-setup.php --quiet
+            RESULT=$?
+            rm composer-setup.php
+
+            php composer.phar install --no-interaction --prefer-dist
+
+  setup-pcov:
+    steps:
+      - run:
+          name: Configure pcov
+          command: |
+            apk add autoconf gcc make musl-dev
+            pecl install pcov
+            docker-php-ext-enable pcov
+
+  run-phpinsights:
+    steps:
+      - run:
+          name: Run code quality analysis (PHP Insights)
+          command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
+
+  run-phpstan:
+    steps:
+      - run:
+          name: Run static code analysis (PHPStan)
+          command: php -d memory_limit=-1 ./vendor/bin/phpstan analyse --ansi
+
+  run-psalm:
+    steps:
+      - run:
+          name: Run static code analysis (Psalm)
+          command: php -d memory_limit=-1 ./vendor/bin/psalm
+
+  run-pest:
+    steps:
+      - run:
+          name: Run unit tests (Pest)
+          command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
+
+  run-infection:
+    steps:
+      - run:
+          name: Run mutation tests (Infection)
+          command: php -d memory_limit=-1 ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70 --initial-tests-php-options='-d memory_limit=-1'
+
+  run-snyk:
+    steps:
+      - run:
+          name: Run vulnerabilities tests (Snyk)
+          command: |
+            apk add npm
+            npm install -g snyk
+            snyk test --dev --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
-  php_5:
+  phpinsights:
+    parameters:
+      php:
+        type: string
     docker:
-      - image: circleci/php:5.6
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
-      - run-tests
-  php_7:
+      - setup
+      - run-phpinsights
+  phpstan:
+    parameters:
+      php:
+        type: string
     docker:
-      - image: circleci/php:7.1
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
-      - run-tests
+      - setup
+      - run-phpstan
+  psalm:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - run-psalm
+  semgrep:
+    docker:
+      - image: returntocorp/semgrep:latest
+    steps:
+      - checkout
       - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
+          name: Run static code analysis (Semgrep)
+          command: semgrep --config auto
+  pest:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-pcov
+      - run-pest
   snyk:
+    parameters:
+      php:
+        type: string
     docker:
-      - image: snyk/snyk-cli:composer
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - attach_workspace:
-          at: .
-      - run: snyk test
-      - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]
-            then
-            snyk monitor --org=auth0-sdks
-            fi
-          when: always
+      - setup
+      - run-snyk
+  infection:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-pcov
+      - run-infection
 
 workflows:
-  build-and-test:
+  test:
     jobs:
-      - php_5
-      - php_7:
-          requires:
-            - php_5
+      - semgrep
+      - phpinsights:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - phpstan:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - psalm:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - pest:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - infection:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - hold:
+          type: approval
       - snyk:
-          # Must define SNYK_TOKEN env
-          context: snyk-env
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+          context:
+            - snyk-env
           requires:
-            - php_7
+            - hold

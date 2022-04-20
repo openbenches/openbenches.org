@@ -1,16 +1,24 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\SDK\API;
 
+use Auth0\SDK\API\Management\Actions;
+use Auth0\SDK\API\Management\AttackProtection;
 use Auth0\SDK\API\Management\Blacklists;
-use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\ClientGrants;
+use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\Connections;
 use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Management\EmailTemplates;
 use Auth0\SDK\API\Management\Grants;
+use Auth0\SDK\API\Management\Guardian;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
+use Auth0\SDK\API\Management\LogStreams;
+use Auth0\SDK\API\Management\Organizations;
 use Auth0\SDK\API\Management\ResourceServers;
 use Auth0\SDK\API\Management\Roles;
 use Auth0\SDK\API\Management\Rules;
@@ -20,494 +28,295 @@ use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\API\Management\ActionsInterface;
+use Auth0\SDK\Contract\API\Management\AttackProtectionInterface;
+use Auth0\SDK\Contract\API\Management\BlacklistsInterface;
+use Auth0\SDK\Contract\API\Management\ClientGrantsInterface;
+use Auth0\SDK\Contract\API\Management\ClientsInterface;
+use Auth0\SDK\Contract\API\Management\ConnectionsInterface;
+use Auth0\SDK\Contract\API\Management\DeviceCredentialsInterface;
+use Auth0\SDK\Contract\API\Management\EmailsInterface;
+use Auth0\SDK\Contract\API\Management\EmailTemplatesInterface;
+use Auth0\SDK\Contract\API\Management\GrantsInterface;
+use Auth0\SDK\Contract\API\Management\GuardianInterface;
+use Auth0\SDK\Contract\API\Management\JobsInterface;
+use Auth0\SDK\Contract\API\Management\LogsInterface;
+use Auth0\SDK\Contract\API\Management\LogStreamsInterface;
+use Auth0\SDK\Contract\API\Management\OrganizationsInterface;
+use Auth0\SDK\Contract\API\Management\ResourceServersInterface;
+use Auth0\SDK\Contract\API\Management\RolesInterface;
+use Auth0\SDK\Contract\API\Management\RulesInterface;
+use Auth0\SDK\Contract\API\Management\StatsInterface;
+use Auth0\SDK\Contract\API\Management\TenantsInterface;
+use Auth0\SDK\Contract\API\Management\TicketsInterface;
+use Auth0\SDK\Contract\API\Management\UserBlocksInterface;
+use Auth0\SDK\Contract\API\Management\UsersByEmailInterface;
+use Auth0\SDK\Contract\API\Management\UsersInterface;
+use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\Utility\HttpClient;
+use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\Utility\HttpResponsePaginator;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-
-class Management
+/**
+ * Class Management
+ */
+final class Management implements ManagementInterface
 {
+    /**
+     * Instance of SdkConfiguration, for shared configuration across classes.
+     */
+    private SdkConfiguration $configuration;
 
     /**
-     *
-     * @var string
+     * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
-    private $token;
+    private ?HttpClient $httpClient = null;
 
     /**
+     * Cache of Management singletons.
      *
-     * @var string
+     * @var array<object>
      */
-    private $domain;
-
-    /**
-     *
-     * @var ApiClient
-     */
-    private $apiClient;
-
-    /**
-     *
-     * @var array
-     */
-    private $guzzleOptions;
-
-    /**
-     *
-     * @var string
-     */
-    private $returnType;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->blacklists() instead.
-     *
-     * @var Blacklists
-     */
-    public $blacklists;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->clients() instead.
-     *
-     * @var Clients
-     */
-    public $clients;
-
-    /**
-     * @deprecated 5.6.0, will be renamed and lose public access; use $this->clientGrants() instead.
-     *
-     * @var ClientGrants
-     */
-    public $client_grants;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->connections() instead.
-     *
-     * @var Connections
-     */
-    public $connections;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->deviceCredentials() instead.
-     *
-     * @var DeviceCredentials
-     */
-    public $deviceCredentials;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->emails() instead.
-     *
-     * @var Emails
-     */
-    public $emails;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->emailTemplates() instead.
-     *
-     * @var EmailTemplates
-     */
-    public $emailTemplates;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->jobs() instead.
-     *
-     * @var Jobs
-     */
-    public $jobs;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->grants() instead.
-     *
-     * @var Grants
-     */
-    public $grants;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->logs() instead.
-     *
-     * @var Logs
-     */
-    public $logs;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->roles() instead.
-     *
-     * @var Roles
-     */
-    public $roles;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->rules() instead.
-     *
-     * @var Rules
-     */
-    public $rules;
-
-    /**
-     * @deprecated 5.6.0, will be renamed and lose public access; use $this->resourceServers() instead.
-     *
-     * @var ResourceServers
-     */
-    public $resource_servers;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->stats() instead.
-     *
-     * @var Stats
-     */
-    public $stats;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->tenants() instead.
-     *
-     * @var Tenants
-     */
-    public $tenants;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->tickets() instead.
-     *
-     * @var Tickets
-     */
-    public $tickets;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->userBlocks() instead.
-     *
-     * @var UserBlocks
-     */
-    public $userBlocks;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->users() instead.
-     *
-     * @var Users
-     */
-    public $users;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->usersByEmail() instead.
-     *
-     * @var UsersByEmail
-     */
-    public $usersByEmail;
+    private array $instances = [];
 
     /**
      * Management constructor.
      *
-     * @param string      $token
-     * @param string      $domain
-     * @param array       $guzzleOptions
-     * @param string|null $returnType
+     * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When an invalidation `configuration` is provided.
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
-    public function __construct($token, $domain, $guzzleOptions = [], $returnType = null)
-    {
-        $this->token         = $token;
-        $this->domain        = $domain;
-        $this->guzzleOptions = $guzzleOptions;
-        $this->returnType    = $returnType;
+    public function __construct(
+        $configuration
+    ) {
+        // If we're passed an array, construct a new SdkConfiguration from that structure.
+        if (is_array($configuration)) {
+            $configuration = new SdkConfiguration($configuration);
+        }
 
-        $this->setApiClient();
+        // We only accept an SdkConfiguration type.
+        if (! $configuration instanceof SdkConfiguration) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
+        }
 
-        $this->blacklists        = new Blacklists($this->apiClient);
-        $this->clients           = new Clients($this->apiClient);
-        $this->client_grants     = new ClientGrants($this->apiClient);
-        $this->connections       = new Connections($this->apiClient);
-        $this->deviceCredentials = new DeviceCredentials($this->apiClient);
-        $this->emails            = new Emails($this->apiClient);
-        $this->emailTemplates    = new EmailTemplates($this->apiClient);
-        $this->grants            = new Grants($this->apiClient);
-        $this->jobs              = new Jobs($this->apiClient);
-        $this->logs              = new Logs($this->apiClient);
-        $this->roles             = new Roles($this->apiClient);
-        $this->rules             = new Rules($this->apiClient);
-        $this->resource_servers  = new ResourceServers($this->apiClient);
-        $this->stats             = new Stats($this->apiClient);
-        $this->tenants           = new Tenants($this->apiClient);
-        $this->tickets           = new Tickets($this->apiClient);
-        $this->userBlocks        = new UserBlocks($this->apiClient);
-        $this->users             = new Users($this->apiClient);
-        $this->usersByEmail      = new UsersByEmail($this->apiClient);
+        // Store the configuration internally.
+        $this->configuration = $configuration;
     }
 
     /**
-     * Return an instance of the Blacklists class.
+     * Return the HttpClient instance being used for management API requests.
      *
-     * @return Blacklists
+     * @param Authentication|null $authentication Optional. An Instance of Authentication for use during client credential exchange. One will be created, when necessary, if not provided.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Management Token is not able to be obtained.
      */
-    public function blacklists()
-    {
-        if (! $this->blacklists instanceof Blacklists) {
-            $this->blacklists = new Blacklists($this->apiClient);
+    public function getHttpClient(
+        ?Authentication $authentication = null
+    ): HttpClient {
+        if ($this->httpClient !== null) {
+            return $this->httpClient;
         }
 
-        return $this->blacklists;
+        // Retrieve any configured management token.
+        $managementToken = $this->configuration->getManagementToken();
+
+        // PSR-6 cache to use for management access token caching.
+        $cache = $this->configuration->getManagementTokenCache();
+
+        // If no token was provided, try to get one from cache.
+        if ($managementToken === null) {
+            if ($cache !== null) {
+                $item = $cache->getItem('managementAccessToken');
+                if ($item->isHit()) {
+                    $managementToken = $item->get();
+                }
+            }
+        }
+
+        // If no token was provided or available from cache, try to get one.
+        if ($managementToken === null && $this->configuration->hasClientSecret()) {
+            $authentication = $authentication ?? new Authentication($this->configuration);
+            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain(true) . '/api/v2/']);
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+
+                if (isset($response['access_token'])) {
+                    $managementToken = $response['access_token'];
+
+                    // If cache is available, store the token.
+                    if ($cache !== null) {
+                        $cachedKey = $cache->getItem('managementAccessToken');
+                        $cachedKey->set($managementToken);
+                        $cachedKey->expiresAfter((int) ($response['expires_in'] ?? 3600));
+
+                        $cache->save($cachedKey);
+                    }
+                }
+            }
+        }
+
+        // No management token could be acquired.
+        if ($managementToken === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
+        }
+
+        // Build the API client using the management token.
+        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
     /**
-     * Return an instance of the Clients class.
-     *
-     * @return Clients
+     * Return an instance of HttpRequest representing the last issued request.
      */
-    public function clients()
+    public function getLastRequest(): ?HttpRequest
     {
-        if (! $this->clients instanceof Clients) {
-            $this->clients = new Clients($this->apiClient);
-        }
-
-        return $this->clients;
+        return $this->getHttpClient()->getLastRequest();
     }
 
     /**
-     * Return an instance of the ClientGrants class.
-     *
-     * @return ClientGrants
+     * Return a ResponsePaginator instance configured for the last HttpRequest.
      */
-    public function clientGrants()
+    public function getResponsePaginator(): HttpResponsePaginator
     {
-        if (! $this->client_grants instanceof ClientGrants) {
-            $this->client_grants = new ClientGrants($this->apiClient);
-        }
+        return new HttpResponsePaginator($this->getHttpClient());
+    }
 
-        return $this->client_grants;
+    public function actions(): ActionsInterface
+    {
+        return $this->getClassInstance(Actions::class);
+    }
+
+    public function attackProtection(): AttackProtectionInterface
+    {
+        return $this->getClassInstance(AttackProtection::class);
+    }
+
+    public function blacklists(): BlacklistsInterface
+    {
+        return $this->getClassInstance(Blacklists::class);
+    }
+
+    public function clients(): ClientsInterface
+    {
+        return $this->getClassInstance(Clients::class);
+    }
+
+    public function connections(): ConnectionsInterface
+    {
+        return $this->getClassInstance(Connections::class);
+    }
+
+    public function clientGrants(): ClientGrantsInterface
+    {
+        return $this->getClassInstance(ClientGrants::class);
+    }
+
+    public function deviceCredentials(): DeviceCredentialsInterface
+    {
+        return $this->getClassInstance(DeviceCredentials::class);
+    }
+
+    public function emails(): EmailsInterface
+    {
+        return $this->getClassInstance(Emails::class);
+    }
+
+    public function emailTemplates(): EmailTemplatesInterface
+    {
+        return $this->getClassInstance(EmailTemplates::class);
+    }
+
+    public function grants(): GrantsInterface
+    {
+        return $this->getClassInstance(Grants::class);
+    }
+
+    public function guardian(): GuardianInterface
+    {
+        return $this->getClassInstance(Guardian::class);
+    }
+
+    public function jobs(): JobsInterface
+    {
+        return $this->getClassInstance(Jobs::class);
+    }
+
+    public function logs(): LogsInterface
+    {
+        return $this->getClassInstance(Logs::class);
+    }
+
+    public function logStreams(): LogStreamsInterface
+    {
+        return $this->getClassInstance(LogStreams::class);
+    }
+
+    public function organizations(): OrganizationsInterface
+    {
+        return $this->getClassInstance(Organizations::class);
+    }
+
+    public function roles(): RolesInterface
+    {
+        return $this->getClassInstance(Roles::class);
+    }
+
+    public function rules(): RulesInterface
+    {
+        return $this->getClassInstance(Rules::class);
+    }
+
+    public function resourceServers(): ResourceServersInterface
+    {
+        return $this->getClassInstance(ResourceServers::class);
+    }
+
+    public function stats(): StatsInterface
+    {
+        return $this->getClassInstance(Stats::class);
+    }
+
+    public function tenants(): TenantsInterface
+    {
+        return $this->getClassInstance(Tenants::class);
+    }
+
+    public function tickets(): TicketsInterface
+    {
+        return $this->getClassInstance(Tickets::class);
+    }
+
+    public function userBlocks(): UserBlocksInterface
+    {
+        return $this->getClassInstance(UserBlocks::class);
+    }
+
+    public function users(): UsersInterface
+    {
+        return $this->getClassInstance(Users::class);
+    }
+
+    public function usersByEmail(): UsersByEmailInterface
+    {
+        return $this->getClassInstance(UsersByEmail::class);
     }
 
     /**
-     * Return an instance of the Connections class.
+     * Return an instance of Api Management Class.
      *
-     * @return Connections
+     * @return mixed
      */
-    public function connections()
-    {
-        if (! $this->connections instanceof Connections) {
-            $this->connections = new Connections($this->apiClient);
+    private function getClassInstance(
+        string $className
+    ) {
+        if (! isset($this->instances[$className])) {
+            $this->instances[$className] = new $className($this->getHttpClient());
         }
 
-        return $this->connections;
-    }
-
-    /**
-     * Return an instance of the DeviceCredentials class.
-     *
-     * @return DeviceCredentials
-     */
-    public function deviceCredentials()
-    {
-        if (! $this->deviceCredentials instanceof DeviceCredentials) {
-            $this->deviceCredentials = new DeviceCredentials($this->apiClient);
-        }
-
-        return $this->deviceCredentials;
-    }
-
-    /**
-     * Return an instance of the Emails class.
-     *
-     * @return Emails
-     */
-    public function emails()
-    {
-        if (! $this->emails instanceof Emails) {
-            $this->emails = new Emails($this->apiClient);
-        }
-
-        return $this->emails;
-    }
-
-    /**
-     * Return an instance of the EmailTemplates class.
-     *
-     * @return EmailTemplates
-     */
-    public function emailTemplates()
-    {
-        if (! $this->emailTemplates instanceof EmailTemplates) {
-            $this->emailTemplates = new EmailTemplates($this->apiClient);
-        }
-
-        return $this->emailTemplates;
-    }
-
-    /**
-     * Return an instance of the Grants class.
-     *
-     * @return Grants
-     */
-    public function grants()
-    {
-        if (! $this->grants instanceof Grants) {
-            $this->grants = new Grants($this->apiClient);
-        }
-
-        return $this->grants;
-    }
-
-    /**
-     * Return an instance of the Jobs class.
-     *
-     * @return Jobs
-     */
-    public function jobs()
-    {
-        if (! $this->jobs instanceof Jobs) {
-            $this->jobs = new Jobs($this->apiClient);
-        }
-
-        return $this->jobs;
-    }
-
-    /**
-     * Return an instance of the Logs class.
-     *
-     * @return Logs
-     */
-    public function logs()
-    {
-        if (! $this->logs instanceof Logs) {
-            $this->logs = new Logs($this->apiClient);
-        }
-
-        return $this->logs;
-    }
-
-    /**
-     * Return an instance of the Roles class.
-     *
-     * @return Roles
-     */
-    public function roles()
-    {
-        if (! $this->roles instanceof Roles) {
-            $this->roles = new Roles($this->apiClient);
-        }
-
-        return $this->roles;
-    }
-
-    /**
-     * Return an instance of the Rules class.
-     *
-     * @return Rules
-     */
-    public function rules()
-    {
-        if (! $this->rules instanceof Rules) {
-            $this->rules = new Rules($this->apiClient);
-        }
-
-        return $this->rules;
-    }
-
-    /**
-     * Return an instance of the ResourceServers class.
-     *
-     * @return ResourceServers
-     */
-    public function resourceServers()
-    {
-        if (! $this->resource_servers instanceof ResourceServers) {
-            $this->resource_servers = new ResourceServers($this->apiClient);
-        }
-
-        return $this->resource_servers;
-    }
-
-    /**
-     * Return an instance of the Stats class.
-     *
-     * @return Stats
-     */
-    public function stats()
-    {
-        if (! $this->stats instanceof Stats) {
-            $this->stats = new Stats($this->apiClient);
-        }
-
-        return $this->stats;
-    }
-
-    /**
-     * Return an instance of the Tenants class.
-     *
-     * @return Tenants
-     */
-    public function tenants()
-    {
-        if (! $this->tenants instanceof Tenants) {
-            $this->tenants = new Tenants($this->apiClient);
-        }
-
-        return $this->tenants;
-    }
-
-    /**
-     * Return an instance of the Tickets class.
-     *
-     * @return Tickets
-     */
-    public function tickets()
-    {
-        if (! $this->tickets instanceof Tickets) {
-            $this->tickets = new Tickets($this->apiClient);
-        }
-
-        return $this->tickets;
-    }
-
-    /**
-     * Return an instance of the UserBlocks class.
-     *
-     * @return UserBlocks
-     */
-    public function userBlocks()
-    {
-        if (! $this->userBlocks instanceof UserBlocks) {
-            $this->userBlocks = new UserBlocks($this->apiClient);
-        }
-
-        return $this->userBlocks;
-    }
-
-    /**
-     * Return an instance of the Users class.
-     *
-     * @return Users
-     */
-    public function users()
-    {
-        if (! $this->users instanceof Users) {
-            $this->users = new Users($this->apiClient);
-        }
-
-        return $this->users;
-    }
-
-    /**
-     * Return an instance of the UsersByEmail class.
-     *
-     * @return UsersByEmail
-     */
-    public function usersByEmail()
-    {
-        if (! $this->usersByEmail instanceof UsersByEmail) {
-            $this->usersByEmail = new UsersByEmail($this->apiClient);
-        }
-
-        return $this->usersByEmail;
-    }
-
-    protected function setApiClient()
-    {
-        $apiDomain = "https://{$this->domain}";
-
-        $client = new ApiClient([
-            'domain' => $apiDomain,
-            'basePath' => '/api/v2/',
-            'guzzleOptions' => $this->guzzleOptions,
-            'returnType' => $this->returnType,
-            'headers' => [
-                new AuthorizationBearer($this->token)
-            ]
-        ]);
-
-        $this->apiClient = $client;
+        return $this->instances[$className];
     }
 }

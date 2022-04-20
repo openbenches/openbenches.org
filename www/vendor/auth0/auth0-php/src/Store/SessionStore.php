@@ -1,65 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Utility\Toolkit;
+
 /**
- * This class provides a layer to persist user access using PHP Sessions.
- *
- * @author Auth0
+ * Class SessionStore
+ * This class provides a layer to persist data using PHP Sessions.
  */
-class SessionStore implements StoreInterface
+final class SessionStore implements StoreInterface
 {
     /**
-     * Default session base name.
+     * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    const BASE_NAME = 'auth0_';
-
-    /**
-     * Default session cookie expiration.
-     */
-    const COOKIE_EXPIRES = 604800;
+    private SdkConfiguration $configuration;
 
     /**
      * Session base name, configurable on instantiation.
-     *
-     * @var string
      */
-    protected $session_base_name = self::BASE_NAME;
-
-    /**
-     * Session cookie expiration, configurable on instantiation.
-     *
-     * @var integer
-     */
-    protected $session_cookie_expires;
+    private string $sessionPrefix;
 
     /**
      * SessionStore constructor.
      *
-     * @param string  $base_name      Session base name.
-     * @param integer $cookie_expires Session expiration in seconds; default is 1 week - @deprecated 5.7.0
+     * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $sessionPrefix A string to prefix session keys with.
      */
-    public function __construct($base_name = self::BASE_NAME, $cookie_expires = self::COOKIE_EXPIRES)
-    {
-        $this->session_base_name      = (string) $base_name;
-        $this->session_cookie_expires = (int) $cookie_expires;
+    public function __construct(
+        SdkConfiguration $configuration,
+        string $sessionPrefix = 'auth0'
+    ) {
+        [$sessionPrefix] = Toolkit::filter([$sessionPrefix])->string()->trim();
+
+        Toolkit::assert([
+            [$sessionPrefix, \Auth0\SDK\Exception\ArgumentException::missing('sessionPrefix')],
+        ])->isString();
+
+        $this->configuration = $configuration;
+        $this->sessionPrefix = $sessionPrefix ?? 'auth0';
+
+        $this->start();
     }
 
     /**
-     * This basic implementation of BaseAuth0 SDK uses
-     * PHP Sessions to store volatile data.
+     * This has no effect when using sessions as the storage medium.
      *
-     * @return void
+     * @param bool $deferring Whether to defer persisting the storage state.
+     *
+     * @codeCoverageIgnore
+     *
+     * @phpstan-ignore-next-line
      */
-    private function initSession()
-    {
-        if (! session_id()) {
-            if (! empty( $this->session_cookie_expires )) {
-                session_set_cookie_params($this->session_cookie_expires);
-            }
-
-            session_start();
-        }
+    public function defer(
+        bool $deferring
+    ): void {
+        return;
     }
 
     /**
@@ -67,14 +66,12 @@ class SessionStore implements StoreInterface
      *
      * @param string $key   Session key to set.
      * @param mixed  $value Value to use.
-     *
-     * @return void
      */
-    public function set($key, $value)
-    {
-        $this->initSession();
-        $key_name            = $this->getSessionKeyName($key);
-        $_SESSION[$key_name] = $value;
+    public function set(
+        string $key,
+        $value
+    ): void {
+        $_SESSION[$this->getSessionName($key)] = $value;
     }
 
     /**
@@ -86,15 +83,37 @@ class SessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null)
-    {
-        $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
+    public function get(
+        string $key,
+        $default = null
+    ) {
+        $keyName = $this->getSessionName($key);
 
-        if (isset($_SESSION[$key_name])) {
-            return $_SESSION[$key_name];
-        } else {
-            return $default;
+        if (isset($_SESSION[$keyName])) {
+            return $_SESSION[$keyName];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Removes all persisted values.
+     */
+    public function purge(): void
+    {
+        $session = $_SESSION ?? [];
+        $prefix = $this->sessionPrefix . '_';
+
+        if (count($session) > 0) {
+            while (key($session)) {
+                $sessionKey = (string) (key($session) ?? '');
+
+                if (mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                    unset($_SESSION[$sessionKey]);
+                }
+
+                next($session);
+            }
         }
     }
 
@@ -102,30 +121,54 @@ class SessionStore implements StoreInterface
      * Removes a persisted value identified by $key.
      *
      * @param string $key Session key to delete.
-     *
-     * @return void
      */
-    public function delete($key)
-    {
-        $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
-        unset($_SESSION[$key_name]);
+    public function delete(
+        string $key
+    ): void {
+        unset($_SESSION[$this->getSessionName($key)]);
     }
 
     /**
      * Constructs a session key name.
      *
      * @param string $key Session key name to prefix and return.
-     *
-     * @return string
      */
-    public function getSessionKeyName($key)
-    {
-        $key_name = $key;
-        if (! empty( $this->session_base_name )) {
-            $key_name = $this->session_base_name.'_'.$key_name;
-        }
+    public function getSessionName(
+        string $key
+    ): string {
+        [$key] = Toolkit::filter([$key])->string()->trim();
 
-        return $key_name;
+        Toolkit::assert([
+            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
+        ])->isString();
+
+        return $this->sessionPrefix . '_' . ($key ?? '');
+    }
+
+    /**
+     * This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.
+     */
+    private function start(): void
+    {
+        $sessionId = session_id();
+
+        if ($sessionId === '' || $sessionId === false) {
+            // @codeCoverageIgnoreStart
+            if (! defined('AUTH0_TESTS_DIR')) {
+                session_set_cookie_params([
+                    'lifetime' => $this->configuration->getCookieExpires(),
+                    'domain' => $this->configuration->getCookieDomain(),
+                    'path' => $this->configuration->getCookiePath(),
+                    'secure' => $this->configuration->getCookieSecure(),
+                    'httponly' => true,
+                    'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+                ]);
+            }
+            // @codeCoverageIgnoreEnd
+
+            session_register_shutdown();
+
+            session_start();
+        }
     }
 }
