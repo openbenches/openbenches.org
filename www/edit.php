@@ -260,7 +260,7 @@ for (var i = 0; i < benches.features.length; i++) {
 map.addLayer(markers);
 
 </script>
-<script src="/libs/load-image.2.24.0/load-image.all.min.js"></script>
+<script src="/libs/load-image.5.16.0/load-image.all.min.js"></script>
 <script type="text/javascript">
 	var previewWidth = 400;
 

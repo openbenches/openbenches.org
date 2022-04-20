@@ -134,8 +134,8 @@ A lot..."></textarea>
 	</small>
 	<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
 	<script src="/libs/vision/vision.js.php?cache=2019-10-23"></script>
-	<script src="/libs/load-image.5.14.0/load-image.all.min.js"></script>
-	<script src="/libs/select2.4.0.10/select2.min.js"></script>
+	<script src="/libs/load-image.5.16.0/load-image.all.min.js"></script>
+	<script src="/libs/select2.4.0.13/select2.min.js"></script>
 	<script>
 	$(document).ready(function() {
 		$('.js-tags-multiple').select2({
