@@ -45,11 +45,6 @@ if ($session === null && isset($_GET['code']) && isset($_GET['state'])) {
     exit;
 } else {
 	// User is authenticated
-	$userInfo = $auth0->getUser();
-
-	$username = explode("|", $userInfo["sub"]);
-
-	$userID = insert_user($username[0], $username[1], $userInfo['nickname']);
 }
 
 //	Cache buster

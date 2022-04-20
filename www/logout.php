@@ -2,7 +2,8 @@
 require_once ("config.php");
 require __DIR__ . '/vendor/autoload.php';
 use Auth0\SDK\Auth0;
-use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
 
 $auth0 = new Auth0([
 	'domain'              => AUTH0_DOMAIN,

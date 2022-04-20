@@ -9,12 +9,14 @@ include("header.php");
 ?>
 
 <?php
-	[$user_provider, $user_providerID, $user_name] = get_user_details();
+	[$user_provider, $user_providerID, $user_name, $avatar] = get_user_details(false);
 
 	if(null == $user_provider) {
 		$login_html = "<a href='/login/' class='button buttonColour'>👤 Sign in</a><br>or be <strong>anonymous</strong>.";
-		} else {
-		$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
+	} else {
+		if (null == $avatar){
+			$avatar = get_user_avatar($user_provider, $user_providerID, $user_name);
+		}
 		$login_html = "You are logged in as <img src='{$avatar}' class='avatar'> $user_name from ";
 		$login_html .= ucfirst($user_provider);
 	}

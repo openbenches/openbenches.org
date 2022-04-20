@@ -64,19 +64,25 @@ function get_user_details($raw = true) {
 		return null;
 	} else {
 		// User is authenticated
+
+		//	Get the parts of the name
 		$username = explode("|", $userInfo["sub"]);
+
+		//	Create the user in the database
+		$userID = insert_user($username[0], $username[1], $userInfo['nickname']);
 
 		if ($raw) {
 			return array(
 								$username[0],
 								$username[1],
-								$userInfo['nickname']
+								$userInfo['nickname'],
 							);
 		} else {
 			return array(
 								htmlspecialchars($username[0]),
 								htmlspecialchars($username[1]),
-								htmlspecialchars($userInfo['nickname'])
+								htmlspecialchars($userInfo['nickname']),
+								htmlspecialchars($userInfo['picture'])
 							);
 		}
 
