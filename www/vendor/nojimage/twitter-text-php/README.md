@@ -6,8 +6,8 @@ and twitter-text-java projects by Matt Sanford and ported to PHP by Mike
 Cochrane, this library has been improved and made more complete by Nick Pope.
 
 <p align="center">
-    <a href="https://travis-ci.org/nojimage/twitter-text-php" target="_blank">
-        <img alt="Build Status" src="https://img.shields.io/travis/nojimage/twitter-text-php/master.svg?style=flat-square">
+    <a href="https://github.com/nojimage/twitter-text-php/actions/workflows/ci.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/nojimage/twitter-text-php/actions/workflows/ci.yml/badge.svg">
     </a>
     <a href="https://codecov.io/gh/nojimage/twitter-text-php" target="_blank">
         <img alt="Codecov" src="https://img.shields.io/codecov/c/github/nojimage/twitter-text-php.svg?style=flat-square">
@@ -32,6 +32,14 @@ You can install this library into your application using [Composer](https://getc
 ```
 composer require nojimage/twitter-text-php
 ```
+
+### Note for Older Server ###
+
+This library use intl/libICU.
+Some older server and PHP 7.2+ combinations may have deprecated warnings due to older ICU versions. [refs #32](https://github.com/nojimage/twitter-text-php/issues/32)
+
+If you are using RHEL/CentOS 6, installing PHP using [the remi repository](https://rpms.remirepo.net/) is the best choice.
+If you use remi, you can use the new ICU.
 
 ## Features ##
 

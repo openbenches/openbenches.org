@@ -31,11 +31,11 @@
       "type": "package",
       "package": {
         "name": "twitter/twitter-text",
-        "version": "3.0.0",
+        "version": "3.1.0",
         "source": {
           "url": "https://github.com/twitter/twitter-text.git",
           "type": "git",
-          "reference": "v3.0.0"
+          "reference": "v3.1.0"
         }
       }
     }
@@ -47,7 +47,7 @@
   },
   "require-dev": {
     "ext-json": "*",
-    "symfony/yaml": "~2.6.0",
+    "symfony/yaml": "^2.6.0|^3.4.0|^4.4.0|^5.0.0",
     "phpunit/phpunit": "4.8.*|5.7.*|6.5.*",
     "twitter/twitter-text": "^3.0.0"
   },
@@ -70,7 +70,7 @@
     "test": "phpunit --exclude-group deprecated,tld",
     "deprecated-test": "phpunit --group deprecated",
     "tld-test": "phpunit --group tld",
-    "cs": "phpcs -psn --standard=PSR2 --extensions=php ./lib ./tests",
-    "cs-fixer": "phpcbf --standard=PSR2 ./lib ./tests"
+    "cs": "phpcs -psn --standard=PSR12 --extensions=php ./lib ./tests",
+    "cs-fixer": "phpcbf --standard=PSR12 ./lib ./tests"
   }
 }

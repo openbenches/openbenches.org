@@ -2,7 +2,7 @@
 
 /**
  * @author     Takashi Nojima
- * @copyright  Copyright 2018, Takashi Nojima
+ * @copyright  Copyright 2020, Takashi Nojima
  * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License v2.0
  * @package    Twitter.Text
  */
@@ -651,6 +651,7 @@ final class TldLists
         'locker',
         'loans',
         'loan',
+        'llp',
         'llc',
         'lixil',
         'living',
@@ -858,6 +859,7 @@ final class TldLists
         'gea',
         'gdn',
         'gbiz',
+        'gay',
         'garden',
         'gap',
         'games',
@@ -1022,6 +1024,7 @@ final class TldLists
         'creditunion',
         'creditcard',
         'credit',
+        'cpa',
         'courses',
         'coupons',
         'coupon',
@@ -1293,6 +1296,7 @@ final class TldLists
         '中國',
         '中国',
         'გე',
+        'ລາວ',
         'ไทย',
         'ලංකා',
         'ഭാരതം',
@@ -1329,6 +1333,7 @@ final class TldLists
         'المغرب',
         'السعودية',
         'الجزائر',
+        'البحرين',
         'الاردن',
         'հայ',
         'қаз',
@@ -1340,6 +1345,7 @@ final class TldLists
         'ею',
         'бел',
         'бг',
+        'ευ',
         'ελ',
         'zw',
         'zm',
@@ -1613,7 +1619,7 @@ final class TldLists
         }
 
         $gTLD = implode('|', static::$gTLDs);
-        $regex = '(?:(?:' . $gTLD . ')(?=[^0-9a-z@]|$))';
+        $regex = '(?:(?:' . $gTLD . ')(?=[^0-9a-z@+-]|$))';
 
         return $regex;
     }
@@ -1633,7 +1639,7 @@ final class TldLists
         }
 
         $ccTLD = implode('|', static::$ccTLDs);
-        $regex = '(?:(?:' . $ccTLD . ')(?=[^0-9a-z@]|$))';
+        $regex = '(?:(?:' . $ccTLD . ')(?=[^0-9a-z@+-]|$))';
 
         return $regex;
     }

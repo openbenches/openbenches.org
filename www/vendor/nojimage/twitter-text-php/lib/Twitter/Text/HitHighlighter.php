@@ -141,7 +141,7 @@ class HitHighlighter
             $offset = 0;
             $start_in_chunk = false;
             # Flatten the multidimensional hits array:
-            $hits_flat = call_user_func_array('array_merge', $hits);
+            $hits_flat = call_user_func_array('array_merge', array_values($hits));
             $hits_flat_count = count($hits_flat);
             # Loop over the hit indices:
             for ($index = 0; $index < $hits_flat_count; $index++) {

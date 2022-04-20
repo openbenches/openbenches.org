@@ -1,5 +1,9 @@
 # Changes
 
+## 3.1.2
+
+- Hit highlighting: avoid errors with PHP 8.
+
 ## 3.0.0
 
 - Pass twitter-text conformance 3.0.0

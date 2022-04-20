@@ -6,7 +6,11 @@ require $rootDir . '/vendor/autoload.php';
 use Symfony\Component\Yaml\Yaml;
 
 $classFile = $rootDir . '/lib/Twitter/Text/TldLists.php';
-$tlds = Yaml::parse($rootDir . '/vendor/twitter/twitter-text/conformance/tld_lib.yml');
+$yamlParseMethod = 'parseFile';
+if (!method_exists('\Symfony\Component\Yaml\Yaml', $yamlParseMethod)) {
+    $yamlParseMethod = 'parse';
+}
+$tlds = Yaml::$yamlParseMethod($rootDir . '/vendor/twitter/twitter-text/conformance/tld_lib.yml');
 
 ob_start();
 echo "<?php\n";

@@ -188,13 +188,15 @@ class Validator
         list($scheme, $authority, $path, $query, $fragment) = array_pad($matches, 5, '');
 
         # Check scheme, path, query, fragment:
-        if (($require_protocol && !(
+        if (
+            ($require_protocol && !(
                 self::isValidMatch($scheme, Regex::getValidateUrlSchemeMatcher())
                 && preg_match('/^https?$/i', $scheme)
             ))
             || !self::isValidMatch($path, Regex::getValidateUrlPathMatcher())
             || !self::isValidMatch($query, Regex::getValidateUrlQueryMatcher(), true)
-            || !self::isValidMatch($fragment, Regex::getValidateUrlFragmentMatcher(), true)) {
+            || !self::isValidMatch($fragment, Regex::getValidateUrlFragmentMatcher(), true)
+        ) {
             return false;
         }
 

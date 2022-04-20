@@ -93,23 +93,11 @@ class Autolink
     protected $url_base_cash = 'https://twitter.com/search?q=%24';
 
     /**
-     * Whether to include the value 'nofollow' in the 'rel' attribute.
+     * the 'rel' attribute values.
      *
-     * @var bool
+     * @var array
      */
-    protected $nofollow = true;
-
-    /**
-     * Whether to include the value 'external' in the 'rel' attribute.
-     *
-     * Often this is used to be matched on in JavaScript for dynamically adding
-     * the 'target' attribute which is deprecated in HTML 4.01.  In HTML 5 it has
-     * been undeprecated and thus the 'target' attribute can be used.  If this is
-     * set to false then the 'target' attribute will be output.
-     *
-     * @var bool
-     */
-    protected $external = true;
+    protected $rel = array('external', 'nofollow');
 
     /**
      * The scope to open the link in.
@@ -207,6 +195,24 @@ class Autolink
         }
 
         $this->extractor = Extractor::create();
+    }
+
+    /**
+     * Set CSS class to all link types.
+     *
+     * @param string $v CSS class for links.
+     *
+     * @return Autolink Fluid method chaining.
+     */
+    public function setToAllLinkClasses($v)
+    {
+        $this->setURLClass($v);
+        $this->setUsernameClass($v);
+        $this->setListClass($v);
+        $this->setHashtagClass($v);
+        $this->setCashtagClass($v);
+
+        return $this;
     }
 
     /**
@@ -331,7 +337,7 @@ class Autolink
      */
     public function getNoFollow()
     {
-        return $this->nofollow;
+        return in_array('nofollow', $this->rel, true);
     }
 
     /**
@@ -343,7 +349,15 @@ class Autolink
      */
     public function setNoFollow($v)
     {
-        $this->nofollow = $v;
+        if ($v && !$this->getNoFollow()) {
+            $this->setRel('nofollow', true);
+        }
+        if (!$v && $this->getNoFollow()) {
+            $this->rel = array_filter($this->rel, function ($r) {
+                return $r !== 'nofollow';
+            });
+        }
+
         return $this;
     }
 
@@ -359,7 +373,7 @@ class Autolink
      */
     public function getExternal()
     {
-        return $this->external;
+        return in_array('external', $this->rel, true);
     }
 
     /**
@@ -376,7 +390,15 @@ class Autolink
      */
     public function setExternal($v)
     {
-        $this->external = $v;
+        if ($v && !$this->getExternal()) {
+            $this->setRel('external', true);
+        }
+        if (!$v && $this->getExternal()) {
+            $this->rel = array_filter($this->rel, function ($r) {
+                return $r !== 'external';
+            });
+        }
+
         return $this;
     }
 
@@ -822,15 +844,9 @@ class Autolink
      */
     public function linkToText(array $entity, $text, $attributes = array())
     {
-        $rel = array();
-        if ($this->external) {
-            $rel[] = 'external';
-        }
-        if ($this->nofollow) {
-            $rel[] = 'nofollow';
-        }
-        if (!empty($rel)) {
-            $attributes['rel'] = implode(' ', $rel);
+        $rel = $this->getRel();
+        if ($rel !== '') {
+            $attributes['rel'] = $rel;
         }
         if ($this->target) {
             $attributes['target'] = $this->target;
@@ -870,6 +886,39 @@ class Autolink
         $linkText = $symbol . $linkText;
 
         return $this->linkToText($entity, $linkText, $attributes);
+    }
+
+    /**
+     * get rel attribute
+     *
+     * @return string
+     */
+    public function getRel()
+    {
+        $rel = $this->rel;
+        $rel = array_unique($rel);
+
+        return implode(' ', $rel);
+    }
+
+    /**
+     * Set rel attribute.
+     *
+     * This method override setExternal/setNoFollow setting.
+     *
+     * @param string[]|string $rel the rel attribute
+     * @param bool $merge if true, merge rel attributes instead replace.
+     * @return $this
+     */
+    public function setRel($rel, $merge = false)
+    {
+        if (is_string($rel)) {
+            $rel = explode(' ', $rel);
+        }
+
+        $this->rel = $merge ? array_unique(array_merge($this->rel, $rel)) : $rel;
+
+        return $this;
     }
 
     /**

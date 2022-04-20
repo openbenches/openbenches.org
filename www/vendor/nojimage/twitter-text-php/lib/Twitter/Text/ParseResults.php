@@ -119,17 +119,25 @@ class ParseResults
      */
     public function __set($name, $value)
     {
-        if ($name === 'displayRangeStart'
-            && $this->lte($value, $this->displayTextRange[1], $name, 'displayRangeEnd')) {
+        if (
+            $name === 'displayRangeStart'
+            && $this->lte($value, $this->displayTextRange[1], $name, 'displayRangeEnd')
+        ) {
             $this->displayTextRange[0] = (int)$value;
-        } elseif ($name === 'displayRangeEnd'
-            && $this->gte($value, $this->displayTextRange[0], $name, 'displayRangeStart')) {
+        } elseif (
+            $name === 'displayRangeEnd'
+            && $this->gte($value, $this->displayTextRange[0], $name, 'displayRangeStart')
+        ) {
             $this->displayTextRange[1] = (int)$value;
-        } elseif ($name === 'validRangeStart'
-            && $this->lte($value, $this->validTextRange[1], $name, 'validRangeEnd')) {
+        } elseif (
+            $name === 'validRangeStart'
+            && $this->lte($value, $this->validTextRange[1], $name, 'validRangeEnd')
+        ) {
             $this->validTextRange[0] = (int)$value;
-        } elseif ($name === 'validRangeEnd'
-            && $this->gte($value, $this->validTextRange[0], $name, 'validRangeStart')) {
+        } elseif (
+            $name === 'validRangeEnd'
+            && $this->gte($value, $this->validTextRange[0], $name, 'validRangeStart')
+        ) {
             $this->validTextRange[1] = (int)$value;
         } elseif ($name === 'valid') {
             $this->result[$name] = (bool)$value;

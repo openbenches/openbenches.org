@@ -3,7 +3,7 @@
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $classFile = dirname(__DIR__) . '/lib/Twitter/Text/EmojiRegex.php';
-$emojiDataUrl = 'https://www.unicode.org/Public/emoji/11.0/emoji-test.txt';
+$emojiDataUrl = 'https://www.unicode.org/Public/emoji/12.1/emoji-test.txt';
 
 // --
 $emojiData = file($emojiDataUrl);
