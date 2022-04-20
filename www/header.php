@@ -127,13 +127,13 @@ if ("user" == $page) {
 
 	<link rel="stylesheet" href="/libs/select2.4.0.10/select2.min.css"  />
 
-	<link rel="stylesheet" href="/libs/leaflet.1.5.1/leaflet.css" />
-	<script                 src="/libs/leaflet.1.5.1/leaflet.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.1.8.0/leaflet.css" />
+	<script                 src="/libs/leaflet.1.8.0/leaflet.js"></script>
 	<script                 src='/libs/Leaflet.Sleep/Leaflet.Sleep.js'></script>
 
-	<script                 src="/libs/leaflet.markercluster.1.4.1/leaflet.markercluster.js"></script>
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.css">
-	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.4.1/MarkerCluster.Default.css">
+	<script                 src="/libs/leaflet.markercluster.1.5.3/leaflet.markercluster.js"></script>
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.5.3/MarkerCluster.css">
+	<link rel="stylesheet" href="/libs/leaflet.markercluster.1.5.3/MarkerCluster.Default.css">
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
 	<hgroup>

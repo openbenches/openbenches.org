@@ -51,7 +51,7 @@ if ($_GET["plaqueURL"])
 	echo "<script src='/api/v1.0/data.json/?longitude={$long}&latitude={$lat}&radius=10000'></script>";
 
 ?>
-<script src="/libs/jquery.3.4.1/jquery-3.4.1.min.js"></script>
+<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
 
 <?php echo get_map_javascript($lat, $long, "14"); ?>
 

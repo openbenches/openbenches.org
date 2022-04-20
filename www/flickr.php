@@ -85,7 +85,7 @@ if ($_GET["flickrID"])
 	echo "<input type='text' name='import'  size='60' value='{$import}'><br>";
 	echo "</form>";
 ?>
-<script src="/libs/jquery.3.4.1/jquery-3.4.1.min.js"></script>
+<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
 <script>
 var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=<?php echo CLOUD_VISION_KEY; ?>';
 

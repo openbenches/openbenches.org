@@ -132,7 +132,7 @@ A lot..."></textarea>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
-	<script src="/libs/jquery.3.4.1/jquery-3.4.1.min.js"></script>
+	<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
 	<script src="/libs/vision/vision.js.php?cache=2019-10-23"></script>
 	<script src="/libs/load-image.5.14.0/load-image.all.min.js"></script>
 	<script src="/libs/select2.4.0.10/select2.min.js"></script>
