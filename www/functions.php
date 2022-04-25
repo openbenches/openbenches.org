@@ -250,21 +250,24 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 
 	var Stadia_Outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
 		minZoom: 2,
-		maxZoom: 19,
+		maxNativeZoom: 19,
+		maxZoom: 22,
 		attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 		id: 'stadia.outdoors'
 	});
 
 	var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		minZoom: 2,
-		maxZoom: 19,
+		maxNativeZoom: 19,
+		maxZoom: 22,
 		attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 		id: 'osm.mapnik'
 	});
 
 	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=AAPKda6317ae879941ac8a7fef3a2198a372FZzFP0nkG-58ivR1JcgsuEhn8fB3NS62pZxG4_o1g59yEYHjqTJ1WeX_n9X_k6qS', {
 		minZoom: 2,
-		maxZoom: 19,
+		maxNativeZoom: 19,
+		maxZoom: 22,
 		attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
 		id: 'esri.satellite'
 	});
