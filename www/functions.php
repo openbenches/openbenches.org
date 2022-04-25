@@ -300,7 +300,8 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	L.control.layers(baseMaps).addTo(map);
 
 	var markers = L.markerClusterGroup({
-		maxClusterRadius: 29
+		maxClusterRadius: 29,
+		disableClusteringAtZoom: 17
 	});
 </script>
 EOT;
