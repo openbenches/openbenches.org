@@ -33,6 +33,10 @@ define('OPENCAGE_API_KEY', '');
 //	https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/basemap-layers/
 define('ESRI_API_KEY', '');
 
+//	Alternative Map Styles
+//	https://manage.thunderforest.com/dashboard
+define('THUNDERFOREST_API_KEY', '');
+
 //	Auth0 login services
 //	https://auth0.com/
 define('AUTH0_DOMAIN',            '');

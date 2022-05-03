@@ -244,7 +244,9 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 
 //	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
-	$mapbox = MAPBOX_API_KEY;
+	// $mapbox_api  = MAPBOX_API_KEY;
+	$esri_api    = ESRI_API_KEY;
+	$thunder_api = THUNDERFOREST_API_KEY;
 	$mapJavaScript = <<<EOT
 <script>
 
@@ -264,12 +266,20 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 		id: 'osm.mapnik'
 	});
 
-	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=AAPKda6317ae879941ac8a7fef3a2198a372FZzFP0nkG-58ivR1JcgsuEhn8fB3NS62pZxG4_o1g59yEYHjqTJ1WeX_n9X_k6qS', {
+	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=$esri_api', {
 		minZoom: 2,
 		maxNativeZoom: 19,
 		maxZoom: 22,
 		attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
 		id: 'esri.satellite'
+	});
+
+	var Thunderforest = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=$thunder_api', {
+		minZoom: 2,
+		maxNativeZoom: 19,
+		maxZoom: 22,
+		attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
+		id: 'thunderforest'
 	});
 
 	var map = L.map('map');
@@ -295,7 +305,8 @@ function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
 	var baseMaps = {
 		"Map View": Stadia_Outdoors,
 		"Mapnik": OpenStreetMap_Mapnik,
-		"Satellite View": ESRI_Satellite
+		"Satellite View": ESRI_Satellite,
+		"Outdoors Map": Thunderforest
 	};
 
 	// Rotate between mapping providers depending on date
