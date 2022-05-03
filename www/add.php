@@ -216,23 +216,21 @@ A lot..."></textarea>
 					$("#map-hidden").show();
 					$("#latlong-hidden").show();
 
-					var attribution = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-						'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-						'Imagery © <a href="https://mapbox.com">Mapbox</a>';
-
 					var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 						minZoom: 2,
-						maxZoom: 19,
-						attribution: attribution,
+						maxNativeZoom: 19,
+						maxZoom: 22,
+						attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 						id: 'osm.mapnik'
 					});
 
-					var satellite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?access_token=<?php echo MAPBOX_API_KEY; ?>', {
-							minZoom: 2,
-							maxZoom: 19,
-							attribution: attribution,
-							id: 'mapbox.satellite'
-						});
+					var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=<?php echo ESRI_API_KEY; ?>', {
+						minZoom: 2,
+						maxNativeZoom: 19,
+						maxZoom: 22,
+						attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
+						id: 'esri.satellite'
+					});
 
 					if (map != null){
 						map.remove();
@@ -242,7 +240,7 @@ A lot..."></textarea>
 					map.setView([latitude, longitude], 19);
 					var baseMaps = {
 						"Mapnik": OpenStreetMap_Mapnik,
-						"Satellite View": satellite
+						"Satellite View": ESRI_Satellite
 					};
 
 					OpenStreetMap_Mapnik.addTo(map);

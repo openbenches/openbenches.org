@@ -244,7 +244,6 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 
 //	Defaults to a view of the UK
 function get_map_javascript($lat = "54.5", $long="-4", $zoom = "5") {
-	// $mapbox_api  = MAPBOX_API_KEY;
 	$esri_api    = ESRI_API_KEY;
 	$thunder_api = THUNDERFOREST_API_KEY;
 	$mapJavaScript = <<<EOT
