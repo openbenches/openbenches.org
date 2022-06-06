@@ -284,19 +284,24 @@ map.addLayer(markers);
 		if (!loadingImage) {}
 
 		//	Check for GPS data
-		var exifdata = loadImage.parseMetaData(
-			e.target.files[0],
-			function (data) {
-				if (!data.imageHead) {
-					return;
-				}
-				if ( typeof data.exif == 'undefined' ) {
-					alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
-				} else if (data.exif.get("GPSLongitude") == null) {
-					alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
-				}
-			}
-		);
+		// var exifdata = loadImage.parseMetaData(
+		// 	e.target.files[0],
+		// 	function (data) {
+		// 		if (!data.imageHead) {
+		// 			return;
+		// 		}
+		// 		var gpsInfo = data.exif && data.exif.get('GPSInfo');
+		// 		// console.log(gpsInfo);
+		//
+		// 		if ( typeof gpsInfo == 'undefined' ) {
+		// 			alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+		// 			return;
+		// 		} else if (gpsInfo.get("GPSLongitude") == null) {
+		// 			alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+		// 			return;
+		// 		}
+		// 	}
+		// );
 		document.getElementById('photo2').style.display = "block";
 	};
 
