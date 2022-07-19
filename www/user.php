@@ -97,6 +97,7 @@
 		$resultsHTML = "<div id=\"search-results\">
 			<h2>Total benches found: {$total_results}.</h2>
 			<ol start='{$first}'>";
+
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
@@ -122,7 +123,9 @@
 ?>
 <div id="map"></div>
 <div id="benchImage"></div>
-
+<div class="button-bar">
+	<a href="/api/v1.0/data.json/?truncated=false&format=raw&media=true&userID=<?php echo $userID;?>" class="button buttonColour"><strong>💾</strong> Download GeoJSON</a>
+</div>
 <div id="search-results">
 
 	<?php
