@@ -437,21 +437,25 @@ function get_image($benchID, $full = false)
 	return $html;
 }
 
-function get_user_from_media($benchID) {
+function get_user_from_media($mediaID) {
+	//	Who uploaded this media?
 	global $mysqli;
 
-	$get_media = $mysqli->prepare(
-		"SELECT users.userID, users.name
+	$get_user = $mysqli->prepare(
+		"SELECT users.userID, users.name, users.provider
 		FROM media
 		INNER JOIN users ON media.userID = users.userID
-		WHERE benchID = ?");
+		WHERE mediaID = ?");
 
-	$get_media->bind_param('i',  $benchID );
-	$get_media->execute();
+	$get_user->bind_param('i',  $mediaID );
+	$get_user->execute();
 	/* bind result variables */
-	$get_media->bind_result($userID, $userName);
+	$get_user->bind_result($userID, $userName, $userProvider);
 
-	return array($userID, $userName);
+	while($get_user->fetch()) {
+		$get_user->close();
+		return array($userID, $userName, $userProvider);
+	}
 }
 
 function get_image_html($benchID, $full = true)
@@ -605,22 +609,22 @@ function get_all_media($benchID = 0)
 	if($allBenches) {
 		$get_media = $mysqli->prepare(
 			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID,
-			        media.width, media.height
+			        media.width, media.height, media.mediaID
 			 FROM `benches`
 				INNER JOIN
 			`media` ON benches.benchID = media.benchID");
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID);
 	} else {
 		$get_media = $mysqli->prepare(
-			"SELECT benchID, sha1, importURL, licence, media_type, userID, width, height
+			"SELECT benchID, sha1, importURL, licence, media_type, userID, width, height, mediaID
 			FROM media
 			WHERE benchID = ?");
 			$get_media->bind_param('i',  $benchID );
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID);
 	}
 
 	$media = array();
@@ -635,12 +639,13 @@ function get_all_media($benchID = 0)
 			$media_data["importURL"] = $importURL;
 		}
 
-		$media_data["licence"]    = $licence;
-		$media_data["media_type"] = $media_type;
-		$media_data["sha1"]       = $sha1;
-		$media_data["user"]       = $userID;
-		$media_data["width"]      = $width;
-		$media_data["height"]     = $height;
+		$media_data["mediaID"]     = $mediaID;
+		$media_data["licence"]     = $licence;
+		$media_data["media_type"]  = $media_type;
+		$media_data["sha1"]        = $sha1;
+		$media_data["user"]        = $userID;
+		$media_data["width"]       = $width;
+		$media_data["height"]      = $height;
 
 		//	Add all the media details to the response
 		if (sizeof($media_data) > 0){
@@ -649,6 +654,14 @@ function get_all_media($benchID = 0)
 	}
 
 	$get_media->close();
+
+	//	Add more user detail
+	foreach ($media[$benchID] as &$medium) {
+		list($mediaUserID, $mediaUserName, $mediaUserProvider) = get_user_from_media($medium["mediaID"]);
+		$medium["username"]    = $mediaUserName;
+		$medium["userprovider"]= $mediaUserProvider;
+	}
+
 
 	if (sizeof($media) > 0){
 		return $media;
