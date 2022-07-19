@@ -34,9 +34,9 @@ if (null != $userID) {
 
 
 if ("raw" == $format) {
-	header('Content-Type: application/json; charset=utf-8');
+	header('Content-Type: application/geo+json; charset=utf-8');
 	echo json_encode($geojson, JSON_NUMERIC_CHECK);
 } else {
-	header('Content-type: text/javascript; charset=utf-8');
+	header('Content-type: application/geo+jsont; charset=utf-8');
 	echo "var benches = " . json_encode($geojson, JSON_NUMERIC_CHECK);
 }
