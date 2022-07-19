@@ -5,9 +5,7 @@
 		<div id='map'></div>
 		<div id='benchImage' ></div>
 	</div>
-	<div class="button-bar">
-		<a href="/api/v1.0/data.json/?truncated=false&format=raw&media=true" class="button buttonColour"><strong>💾</strong> Download GeoJSON</a>
-	</div>
+	<br>
 	<?php
 		include("searchform.php");
 	?>
