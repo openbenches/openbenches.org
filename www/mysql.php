@@ -609,22 +609,28 @@ function get_all_media($benchID = 0)
 	if($allBenches) {
 		$get_media = $mysqli->prepare(
 			"SELECT benches.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID,
-			        media.width, media.height, media.mediaID
+			        media.width, media.height, media.mediaID, users.name, users.provider
 			 FROM `benches`
 				INNER JOIN
-			`media` ON benches.benchID = media.benchID");
+			`media` ON benches.benchID = media.benchID
+            INNER JOIN
+         `users` on media.userID = users.userID");
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID, $userName, $userProvider);
 	} else {
 		$get_media = $mysqli->prepare(
-			"SELECT benchID, sha1, importURL, licence, media_type, userID, width, height, mediaID
-			FROM media
-			WHERE benchID = ?");
+			"SELECT media.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID,
+			        media.width, media.height, media.mediaID, users.name, users.provider
+			FROM `media`
+				INNER JOIN
+         `users` on media.userID = users.userID
+            WHERE
+         media.benchID =  ?");
 			$get_media->bind_param('i',  $benchID );
 			$get_media->execute();
 			/* bind result variables */
-			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID);
+			$get_media->bind_result($benchID, $sha1, $importURL, $licence, $media_type, $userID, $width, $height, $mediaID, $userName, $userProvider);
 	}
 
 	$media = array();
@@ -644,6 +650,8 @@ function get_all_media($benchID = 0)
 		$media_data["media_type"]  = $media_type;
 		$media_data["sha1"]        = $sha1;
 		$media_data["user"]        = $userID;
+		$media_data["username"]    = $userName;
+		$media_data["userprovider"]= $userProvider;
 		$media_data["width"]       = $width;
 		$media_data["height"]      = $height;
 
@@ -654,14 +662,6 @@ function get_all_media($benchID = 0)
 	}
 
 	$get_media->close();
-
-	//	Add more user detail
-	foreach ($media[$benchID] as &$medium) {
-		list($mediaUserID, $mediaUserName, $mediaUserProvider) = get_user_from_media($medium["mediaID"]);
-		$medium["username"]    = $mediaUserName;
-		$medium["userprovider"]= $mediaUserProvider;
-	}
-
 
 	if (sizeof($media) > 0){
 		return $media;
@@ -1186,8 +1186,15 @@ function get_user_bench_count($userID) {
 
 function get_user_map($userID, $truncated=true, $media=false)
 {
-	global $mysqli;
 
+	//	If media have been requested
+	if($media) {
+		$media_data = get_all_media(0);
+	} else {
+		$media_data = array();
+	}
+
+	global $mysqli;
 	// $where = "WHERE published = true AND userID = {$userID}";
 
 	$get_benches = $mysqli->prepare(
@@ -1228,6 +1235,16 @@ function get_user_map($userID, $truncated=true, $media=false)
 			 $benchInscription .= " ";
 		}
 
+		if ($media) {
+			if (isset($media_data[$benchID])){
+				$mediaFeature = $media_data[$benchID];
+			} else {
+				$mediaFeature = null;
+			}
+		} else {
+			$mediaFeature = null;
+		}
+
 		$feature = array(
 			'id' => $benchID,
 			'type' => 'Feature',
@@ -1238,7 +1255,8 @@ function get_user_map($userID, $truncated=true, $media=false)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => $benchInscription
+				'popupContent' => $benchInscription,
+				'media' => $mediaFeature
 			),
 		);
 		# Add feature arrays to feature collection array
