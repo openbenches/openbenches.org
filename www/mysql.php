@@ -149,8 +149,19 @@ function insert_user($provider, $providerID, $name)
 	}
 }
 
-function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated = false)
+function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated = false, $media = false)
 {
+	//	If media have been requested
+	if($media) {
+		if(is_numeric($id)) {
+			$media_data = get_all_media($id);
+		} else {
+			$media_data = get_all_media(0);
+		}
+	} else {
+		$media_data = array();
+	}
+
 	global $mysqli;
 
 	$get_benches = $mysqli->prepare(
@@ -203,6 +214,15 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			 $benchInscription .= " ";
 		}
 
+		if ($media) {
+			if (isset($media_data[$benchID])){
+				$mediaFeature = $media_data[$benchID];
+			} else {
+				$mediaFeature = null;
+			}
+		} else {
+			$mediaFeature = null;
+		}
 		$feature = array(
 			'id' => $benchID,
 			'type' => 'Feature',
@@ -213,9 +233,11 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			),
 			# Pass other attribute columns here
 			'properties' => array(
-				'popupContent' => $benchInscription
+				'popupContent' => $benchInscription,
+				'media' => $mediaFeature
 			),
 		);
+		
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}

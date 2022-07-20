@@ -23,7 +23,7 @@ if ( "true" == $truncated or null == $truncated) {
 if (null != $userID) {
 	$geojson = get_user_map($userID, $truncated, $media);
 } else if (null != $latitude && null != $longitude && null != $radius) {
-	$geojson = get_nearest_benches($latitude, $longitude, $radius, $results, $truncated);
+	$geojson = get_nearest_benches($latitude, $longitude, $radius, $results, $truncated, $media);
 } else if (null != $benchID){
 	$geojson = get_bench($benchID, $truncated, $media);
 } else if (null != $tagText){
