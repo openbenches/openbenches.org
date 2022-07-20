@@ -76,8 +76,9 @@ if (null != $query)
 	}
 	if ( ($count * ($page+1)) < $total_results) {
 		$next = $page + 1;
-		$resultsHTML .= "<a href='/search/?search={$query_encoded}&page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a>";
+		$resultsHTML .= "<a href='/search/?search={$query_encoded}&page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a><br>";
 	}
+	$resultsHTML .= "<a href='/api/v1.0/data.json/?truncated=false&format=raw&media=true&search={$query_encoded}'     class='button buttonColour'><strong>💾</strong> Download GeoJSON</a>";
 	$resultsHTML .="</div>";
 }
 

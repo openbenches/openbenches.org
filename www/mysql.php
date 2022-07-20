@@ -237,7 +237,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 				'media' => $mediaFeature
 			),
 		);
-		
+
 		# Add feature arrays to feature collection array
 		array_push($geojson['features'], $feature);
 	}
@@ -965,6 +965,87 @@ function get_media_types_array() {
 
 	$get_media_types->close();
 	return $media_types_array;
+}
+
+function get_search_geojson($q, $truncated = false) {
+	//	If media have been requested
+	$media_data = get_all_media(0);
+
+	global $mysqli;
+
+	//	Replace spaces in query with `[[:space:]]*`
+	$q = prepare_search_query($q);
+
+		//	Query will be like
+		//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
+	$search = $mysqli->prepare(
+		"SELECT `benchID`, `latitude`, `longitude`, `inscription`
+		 FROM	`benches`
+		 WHERE  `inscription`
+		 REGEXP	?
+		 AND	 `published` = 1");
+
+	$search->bind_param('s', $q);
+
+
+	$search->execute();
+
+	/* bind result variables */
+	$search->bind_result($benchID, $benchLat, $benchLong, $benchInscription);
+
+	# Build GeoJSON feature collection array
+	$geojson = array(
+		'type'		=> 'FeatureCollection',
+		'features'  => array()
+	);
+	# Loop through rows to build feature arrays
+	while($search->fetch()) {
+
+		# some inscriptions got stored with leading/trailing whitespace
+		$benchInscription=trim($benchInscription);
+
+		# if displaying on map need to truncate inscriptions longer than
+		# 128 chars and add in <br> elements
+		# N.B. this logic is also in get_nearest_benches()
+		if ($truncated) {
+			$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+			if ($benchInscriptionTruncate !== $benchInscription) {
+				$benchInscription = $benchInscriptionTruncate . '…';
+			}
+		}
+		$benchInscription=htmlspecialchars($benchInscription);
+
+		//	Horrible hack to force numeric inscriptions to be strings
+		if (is_numeric($benchInscription)) {
+			 $benchInscription .= " ";
+		}
+
+		if (isset($media_data[$benchID])){
+			$mediaFeature = $media_data[$benchID];
+		} else {
+			$mediaFeature = null;
+		}
+
+		$feature = array(
+			'id' => $benchID,
+			'type' => 'Feature',
+			'geometry' => array(
+				'type' => 'Point',
+				# Pass Longitude and Latitude Columns here
+				'coordinates' => array($benchLong, $benchLat)
+			),
+			# Pass other attribute columns here
+			'properties' => array(
+				'popupContent' => $benchInscription,
+				'media' => $mediaFeature
+			),
+		);
+		# Add feature arrays to feature collection array
+		array_push($geojson['features'], $feature);
+	}
+
+	$search->close();
+	return $geojson;
 }
 
 function get_search_results($q, $page=0, $results=20, $soundex=false) {

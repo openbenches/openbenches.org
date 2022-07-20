@@ -13,6 +13,7 @@ if( isset($_GET["provider"]) )  { $provider  = $_GET["provider"]; }  else { $pro
 if( isset($_GET["results"]) )   { $results   = $_GET["results"]; }   else { $results   = 20;}
 if( isset($_GET["media"]) )     { $media     = filter_var($_GET['media'], FILTER_VALIDATE_BOOLEAN); } else { $media = null;}
 if( isset($_GET["tagText"]) )   { $tagText   = $_GET["tagText"]; }   else { $tagText   = null;}
+if( isset($_GET["search"]) )    { $search    = $_GET["search"]; }    else { $search    = null;}
 
 if ( "true" == $truncated or null == $truncated) {
 	$truncated = true;
@@ -28,6 +29,8 @@ if (null != $userID) {
 	$geojson = get_bench($benchID, $truncated, $media);
 } else if (null != $tagText){
 	$geojson = get_all_benches($tagText, true, $truncated, $media);
+} else if (null != $search){
+	$geojson = get_search_geojson($search);
 } else {
 	$geojson = get_all_benches(0, true, $truncated, $media);
 }
