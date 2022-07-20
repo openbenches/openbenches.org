@@ -1184,7 +1184,7 @@ function get_user_bench_count($userID) {
 	return $count;
 }
 
-function get_user_map($userID)
+function get_user_map($userID, $truncated=true, $media=false)
 {
 	global $mysqli;
 
@@ -1215,10 +1215,13 @@ function get_user_map($userID)
 		# if displaying on map need to truncate inscriptions longer than
 		# 128 chars and add in <br> elements
 		# N.B. this logic is also in get_nearest_benches()
-		$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
-		if ($benchInscriptionTruncate !== $benchInscription) {
-			$benchInscription = $benchInscriptionTruncate . '…';
+		if ($truncated) {
+			$benchInscriptionTruncate = mb_substr($benchInscription,0,128);
+			if ($benchInscriptionTruncate !== $benchInscription) {
+				$benchInscription = $benchInscriptionTruncate . '…';
+			}
 		}
+
 		$benchInscription=nl2br(htmlspecialchars($benchInscription));
 		//	Horrible hack to force numeric inscriptions to be strings
 		if (is_numeric($benchInscription)) {
