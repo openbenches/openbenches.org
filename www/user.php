@@ -52,9 +52,7 @@
 		} else if("facebook" == $provider) {
 			$userURL = "https://facebook.com/" . $providerID;
 			$userHTML .= "Facebook user <a href=\"{$userURL}\">{$username}</a>";
-		} else if("linkedin" == $provider) {
-                        $userHTML .= "LinkedIn user {$username}";
-                } else if("flickr" == $provider) {
+		} else if("flickr" == $provider) {
 			$userHTML .= "the <a href=\"https://www.flickr.com/\">Flickr importer</a>";
 		} else if("wikipedia" == $provider) {
 			$userHTML .= "the <a href=\"https://www.wikipedia.org/\">Wikipedia importer</a>";
@@ -62,6 +60,8 @@
 			$userHTML .= "the <a href=\"https://www.readtheplaque.com/\">ReadThePlaque importer</a>";
 		} else if("geograph" == $provider) {
 			$userHTML .= "the <a href=\"https://www.geograph.org.uk/\">Geograph importer</a>";
+		} else if("linkedin" == $provider) {
+			$userHTML .= "LinkedIn user {$username}";	 
 		} else {
 			$userHTML .= "an anonymous user";
 		}
