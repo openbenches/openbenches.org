@@ -54,7 +54,7 @@ include("header.php");
 			<textarea id="inscription" name="inscription" class="inscription-hidden" style="display: none;" cols="40" rows="6" placeholder="In loving memory of
 Buffy Anne Summers
 She saved the world.
-A lot..."></textarea>
+A lot..." required></textarea>
 		</div>
 		<div id="tagInput" style="">
 			<label for="tag_multiple">
@@ -330,9 +330,14 @@ A lot..."></textarea>
 		}
 		//	Disable button once clicked & let user know that the media are being uploaded
 		$("#submitButton").on('click', function() {
-			$("#submitButton").prop( "disabled", true );
-			$("#submitButton").prop( "value",   "Uploading!" );
-			uploadFile();
+			if ( $("#inscription")[0].textLength > 0) {
+				$("#submitButton").prop( "disabled", true );
+				$("#submitButton").prop( "value",   "Uploading!" );
+				uploadFile();
+			}
+			else {
+				alert("OpenBenches is only for benches with a memorial inscription.");
+			}
 		});
 
 		function uploadFile() {
