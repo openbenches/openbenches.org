@@ -203,11 +203,16 @@ if($user_provider != null){
 		</div>&nbsp;
 		<br>
 		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
-			<label for="publishedTrue" class="checkable">Publish this bench</label>
+			<label for="publishedTrue" class="checkable">Publish these changes</label>
 		<br>
-		<input type="radio" id="publishedFalse" name="published" value="false">
-			<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
-
+		<?php
+		//	Delete is hardcoded for @edent
+		if ("twitter" == $user_provider && 14054507 == $user_providerID)
+		{
+			echo '<input type="radio" id="publishedFalse" name="published" value="false">
+						<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>';
+		}
+		?>
 		<input type="hidden" name="key" value="<?php echo urlencode(get_edit_key($benchID)); ?>"/>
 		<br>&nbsp;
 		<div class="button-bar">
