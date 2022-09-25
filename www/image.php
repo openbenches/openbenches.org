@@ -13,6 +13,7 @@ if( isset($params[3]) ) {
 $sha1 = explode(".", $sha1)[0];
 
 $photo_full_path = get_path_from_hash($sha1);
+$mime = mime_content_type($photo_full_path);
 
 //	If the photo doesn't exist, stop
 if(!file_exists($photo_full_path)){
@@ -76,7 +77,8 @@ if ("exif" == $size){
 	echo var_export($exif);
 	echo "</pre>";
 	return null;
-} else if(null != $size){
+} else if(null != $size && "video/mp4" != $mime){
+	//	Not a video, not using /size
 	show_scaled_image($photo_full_path, $size);
 	return null;
 } else {
