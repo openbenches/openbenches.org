@@ -95,15 +95,13 @@ Most of the functions use the `verb_noun()` convention. For example `get_bench()
 │   ├── sharing.php - links to share a specific page
 │   └── searchform.php - form to search the site. POSTs to /search
 ├── image.php - displays an image. Called as /image/abc123
-              - where the 2nd parameter is the SHA1 hash of the media
+│             - where the 2nd parameter is the SHA1 hash of the media
 ├── benchimage.php - displays the HTML for a single image. Called as /benchimage/1234
 │                  - where 1234 is the ID of the bench.
 │                  - Used by JS functions to show a page preview
-├── flickr.php - admin page for importing images from flickr.com
 ├── edit.php - edit a bench
 ├── search.php - search the site - either by text or SOUNDEX. Paginated
 │   └── searchform.php - form to search the site. POSTs to /search
-├── search.php - search the site - either by text or SOUNDEX. Paginated
 ├── sitemap.xml.php - provides a sitemap to search engines
 ├── data.json.php - redirects users to the API
 ├── login.php - redirects users to Auth0 for log in
@@ -121,14 +119,18 @@ Most of the functions use the `verb_noun()` convention. For example `get_bench()
 |                - /#location/zoom
 ├── colophon.php - displays a list of products and services used by OpenBenches
 ├── offline.php - displays an offline page for the service worker
-
-
-
-
-
-    ├── bsg
-    └── bus
-        └── usb
-            ├── 001
-            └── 002
+├── robots.txt - a robots.txt page for search engines
+│
+├── 404.php - displays a missing image page if the bench has been deleted
+│
+├── codebird.php - Twitter library
+│   └── cacert.pem - list of SSL certificates for use with Twitter
+│
+├── duplicates.php - displays a list of all benches which might be duplicates
+├── merge.php - admin page for merging duplicates
+|
+├── flickr.php - admin page for importing images from flickr.com
+├── geograph.php - admin page for importing images from geograph
+├── readtheplaques.php - admin page for importing images from readtheplaques
+├── wikipedia.php - admin page for importing images from Wikipedia
 ```
