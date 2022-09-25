@@ -72,6 +72,63 @@ The `functions.php` file contains all the helper functions. For example, how to 
 
 There's a *lot* of stuff in there and it is pretty inconsistent. Sorry!
 
-Most of the functions use the `verb_noun()` convention. For example `get_bench()` or `save_image()
+Most of the functions use the `verb_noun()` convention. For example `get_bench()` or `save_image()`
 
-`
+## Pages
+
+```
+/
+├── config.php - all the API keys
+├── mysql.php - connection to the database
+├── functions.php - helper functions
+│
+├── header.php - page header
+├── footer.php - page footer
+│   ├── sponsor.php - links to sponsor the site
+│   └── menu.php - bottom menu
+│
+├── front.php - default page
+│   └── searchform.php - form to search the site
+├── add.php - a user adds a bench. POSTs data to upload.php
+├── footer.php - page footer
+├── bench.php - displays a bench. Called as /bench/1234
+│   ├── sharing.php - links to share a specific page
+│   └── searchform.php - form to search the site. POSTs to /search
+├── image.php - displays an image. Called as /image/abc123
+              - where the 2nd parameter is the SHA1 hash of the media
+├── benchimage.php - displays the HTML for a single image. Called as /benchimage/1234
+│                  - where 1234 is the ID of the bench.
+│                  - Used by JS functions to show a page preview
+├── flickr.php - admin page for importing images from flickr.com
+├── edit.php - edit a bench
+├── search.php - search the site - either by text or SOUNDEX. Paginated
+│   └── searchform.php - form to search the site. POSTs to /search
+├── search.php - search the site - either by text or SOUNDEX. Paginated
+├── sitemap.xml.php - provides a sitemap to search engines
+├── data.json.php - redirects users to the API
+├── login.php - redirects users to Auth0 for log in
+├── logout.php - redirects users to Auth0 for log out
+├── leaderboard.php - shows who has uploaded the most benches and photos
+├── user.php - shows an individual user's page.	Either:
+│            - /user/twitter/edent (shows external username)
+│            - or
+│            - /user/1234 (shows internal userid)
+├── rss.php - RSS feed of latest benches
+├── oembed.php - generates a json+oembed
+├── api.php - redirector for the API
+├── tag.php - shows all benches with a a specific tag /tag/cat
+├── location.php - displays the map zoomed to a specific location
+|                - /#location/zoom
+├── colophon.php - displays a list of products and services used by OpenBenches
+├── offline.php - displays an offline page for the service worker
+
+
+
+
+
+    ├── bsg
+    └── bus
+        └── usb
+            ├── 001
+            └── 002
+```
