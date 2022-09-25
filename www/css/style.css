@@ -506,3 +506,11 @@ ol.searchResults {
 #IDNewThreadSubmitLI {
 	padding: 1em;
 }
+
+.pay-icon {
+  vertical-align: top;
+  width: 4em;
+  display: inline-block;
+  padding: .4em;
+  font-size: .8em;
+}

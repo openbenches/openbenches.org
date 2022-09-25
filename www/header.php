@@ -69,6 +69,7 @@ if ("user" == $page) {
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# place: http://ogp.me/ns/place#">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="monetization" content="$ilp.uphold.com/ieELEKD7epqw">
 
 	<title>OpenBenches</title>
 
@@ -123,7 +124,7 @@ if ("user" == $page) {
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
-	<link rel="stylesheet" href="/css/style.css?cache=2021-10-02T12:05"/>
+	<link rel="stylesheet" href="/css/style.css?cache=2022-29-25T15:06"/>
 
 	<link rel="stylesheet" href="/libs/select2.4.0.13/select2.min.css"  />
 

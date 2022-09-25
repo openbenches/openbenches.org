@@ -1,4 +1,5 @@
 <footer>
+	<?php require("sponsor.php");?>
 	<?php require("menu.php");?>
 	<div class="footerIcons" itemscope itemtype="https://schema.org/Organization">
 		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/footer_twitter.svg" alt="twitter"/></a>
