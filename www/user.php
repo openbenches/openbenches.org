@@ -85,7 +85,7 @@
 		}
 	}
 
-	$page_title = " - " . strip_tags($userHTML);
+	$page_title = "- " . strip_tags($userHTML);
 	include("header.php");
 
 

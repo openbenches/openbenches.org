@@ -25,7 +25,7 @@ $location_html = rtrim($location_html, " ➡️ ");
 
 list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng) = get_bounding_box_from_name($location_string);
 
-$page_title = " - " . htmlspecialchars( urldecode($location_string) );
+$page_title = "- " . htmlspecialchars( urldecode($location_string) );
 
 include("header.php");
 

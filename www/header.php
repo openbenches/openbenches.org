@@ -88,8 +88,8 @@ if ("user" == $page) {
 	<!-- Twitter Specific Metadata https://dev.twitter.com/cards/markup -->
 	<meta name="twitter:card"                            content="summary">
 	<meta name="twitter:site"                            content="@openbenches">
-	<meta name="twitter:creator"                         content="@openbenches" />
-	<meta name="twitter:title"       property="og:title" content="OpenBenches">
+	<meta name="twitter:creator"                         content="@openbenches">
+	<meta name="twitter:title"       property="og:title" content="OpenBenches <?php echo $page_title; ?>">
 	<meta                            property="og:url"   content="https://<?php echo "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
 	<meta name="twitter:image"       property="og:image" content="https://openbenches.org<?php echo $benchImage; ?>">
 	<meta                            property="og:image:type"  content="image/jpeg">
