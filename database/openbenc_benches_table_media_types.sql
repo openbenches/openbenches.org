@@ -20,5 +20,5 @@ INSERT INTO `media_types` (`shortName`, `longName`, `displayOrder`) VALUES
 ('bench', 'Long shot of the bench', 1),
 ('inscription', 'Close-up of the inscription', 0),
 ('pano', 'Panoramic view', 3),
-('video', 'Video of the bench ', 5),
+('video', 'Video of the bench', 5),
 ('view', 'View from the bench', 2);
