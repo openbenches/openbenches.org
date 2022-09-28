@@ -403,7 +403,7 @@ function get_location_from_name($location) {
 	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
 	$geocode_api_key = OPENCAGE_API_KEY;
 	$location = urlencode($location);
-	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&key={$geocode_api_key}";
+	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
 	$options = array(
 		'http'=>array(
 			'method'=>"GET",
@@ -441,21 +441,32 @@ function get_place_name($latitude, $longitude) {
 	$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
 	$locationData = json_decode($locationJSON);
 	try {
-		$address = $locationData->results[0]->formatted;
+		//	Pre-formated address from GeoCage
+		$formatted_address = $locationData->results[0]->formatted;
+		//	Separate components
+		$address_components = (array) $locationData->results[0]->components;
+		//	Postcode needs removing in order to reduce precision when searching
+		$postcode = $address_components["postcode"];
+		//	Delete the postcode from the pre-formatted address
+		$formatted_address = str_replace($postcode, "", $formatted_address);
+		$formatted_explode = array_map('trim', explode(',', $formatted_address));
+		$formatted_explode = array_filter($formatted_explode);
+		$formatted_address = implode(", " , $formatted_explode);
+
 	} catch (Exception $e) {
 		$loc = var_export($locationData);
 		error_log("Caught $e - $loc");
 		return "";
 	}
 
-	return $address;
+	return $formatted_address;
 }
 
 function get_bounding_box_from_name($location) {
 	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
 	$geocode_api_key = OPENCAGE_API_KEY;
 	$location = urlencode($location);
-	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&key={$geocode_api_key}";
+	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
 	$options = array(
 		'http'=>array(
 			'method'=>"GET",

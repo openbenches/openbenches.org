@@ -15,6 +15,24 @@ if ($benchAddress == null){
 	$benchAddress = update_bench_address($benchID, $benchLat, $benchLong);
 }
 
+//	Format the address
+$locations = explode("," , $benchAddress);
+$locations = array_reverse( $locations );
+
+$location_html = "";
+$location_link = "/location";
+$location_html_array = [];
+foreach ($locations as $location) {
+	if (null != $location) {
+		$location_link .= "/" . urldecode(trim($location));
+		$location_html_array[] = "<a href=\"$location_link\">" . htmlspecialchars( urldecode($location) ). "</a>";
+	}
+}
+$location_html_array = array_reverse( $location_html_array );
+$benchAddress = implode(", " , $location_html_array);
+
+
+
 if (!$present) {
 	//	Has the bench been removed
 	$benchInscription = "<em>This bench has been removed from this physical location.</em><br><del>{$benchInscription}</del>";
