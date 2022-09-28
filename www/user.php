@@ -1,6 +1,7 @@
 <?php
-	include("header.php");
-
+	require_once ('config.php');
+	require_once ('mysql.php');
+	require_once ('functions.php');
 
 	//	Either
 	//	/user/twitter/edent (shows external username)
@@ -61,7 +62,7 @@
 		} else if("geograph" == $provider) {
 			$userHTML .= "the <a href=\"https://www.geograph.org.uk/\">Geograph importer</a>";
 		} else if("linkedin" == $provider) {
-			$userHTML .= "LinkedIn user {$username}";	 
+			$userHTML .= "LinkedIn user {$username}";
 		} else {
 			$userHTML .= "an anonymous user";
 		}
@@ -83,6 +84,10 @@
 			$userHTML = "Invalid User";
 		}
 	}
+
+	$page_title = " - " . strip_tags($userHTML);
+	include("header.php");
+
 
 	$results = get_user_bench_list($userID, $page, $count);
 	$total_results = get_user_bench_count($userID);

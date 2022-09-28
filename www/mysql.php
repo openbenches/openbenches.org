@@ -274,8 +274,9 @@ function get_nearest_benches_list($lat, $long, $distance=10, $limit=20) {
 
 	$results = array();
 	while($get_benches->fetch()) {
+		$inscription = htmlspecialchars($benchInscription);
 		if($address != null){
-			$inscription = htmlspecialchars($benchInscription) ."<br />Location: ". htmlspecialchars($address);
+			$inscription .= "<br />Location: ". htmlspecialchars($address);
 		}
 		$results[$benchID] = $inscription;
 	}
@@ -1118,13 +1119,14 @@ function get_search_results($q, $page=0, $results=20, $soundex=false) {
 
 	$search->execute();
 	/* bind result variables */
-	$search->bind_result($benchID, $inscription, $address);
+	$search->bind_result($benchID, $benchInscription, $address);
 
 	$results = array();
 	# Loop through rows to build feature arrays
 	while($search->fetch()) {
+		$inscription = htmlspecialchars($benchInscription);
 		if($address != null){
-			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
+			$inscription .= "<br />Location: ". htmlspecialchars($address);
 		}
 		$results[$benchID] = $inscription;
 	}
@@ -1293,12 +1295,13 @@ function get_user_bench_list($userID, $page=0, $results=20)
 	$get_user_list->bind_param('iii', $userID, $offset, $results);
 
 	$get_user_list->execute();
-	$get_user_list->bind_result($benchID, $inscription, $address);
+	$get_user_list->bind_result($benchID, $benchInscription, $address);
 
 	$results = array();
 	while($get_user_list->fetch()) {
+		$inscription = htmlspecialchars($benchInscription);
 		if($address != null){
-			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
+			$inscription .= "<br />Location: ". htmlspecialchars($address);
 		}
 		$results[$benchID] = $inscription;
 	}
@@ -1429,8 +1432,9 @@ function get_bounding_box_benches_list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $page
 
 	$results = array();
 	while($get_benches->fetch()) {
+		$inscription = htmlspecialchars($benchInscription);
 		if($address != null){
-			$inscription = htmlspecialchars($benchInscription) ."<br />Location: ". htmlspecialchars($address);
+			$inscription .= "<br />Location: ". htmlspecialchars($address);
 		}
 		$results[$benchID] = $inscription;
 	}
@@ -1590,14 +1594,15 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 	$get_benches->bind_param('ii', $offset, $results);
 
 	$get_benches->execute();
-	$get_benches->bind_result($benchID, $inscription, $address);
+	$get_benches->bind_result($benchID, $benchInscription, $address);
 
 	$results = array();
 	while($get_benches->fetch()) {
+		$inscription = htmlspecialchars($benchInscription);
 		if($address != null){
-			$inscription = htmlspecialchars($inscription) ."<br />Location: ". htmlspecialchars($address);
+			$inscription .= "<br />Location: ". htmlspecialchars($address);
 		}
-		$results[$benchID] = $inscription;
+		$results[$benchID] = $benchInscription;
 	}
 
 	$get_benches->close();

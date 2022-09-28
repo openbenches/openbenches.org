@@ -49,8 +49,7 @@ $results = get_bounding_box_benches_list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $pa
 $total_results = get_bounding_box_benches_count($lat_ne, $lng_ne, $lat_sw, $lng_sw);
 
 if (0 == count($results)){
-	$resultsHTML = "<h2>No results found</h2>";
-	// $resultsHTML .= "$lat_ne, $lng_ne, $lat_sw, $lng_sw";
+	$resultsHTML = "";//"<h2>No results found</h2>";
 }
 else {
 	$first = ($count * $page)+1;
@@ -99,7 +98,7 @@ echo "<h3>{$page_html}</h3>";
 
 <script src="/api/v1.0/data.json/?truncated=true"></script>
 
-<?php echo get_map_javascript($lat, $lng, "10"); ?>
+<?php echo get_map_javascript($lat, $lng, "15"); ?>
 
 <script>
 // map.on("moveend", function () {
