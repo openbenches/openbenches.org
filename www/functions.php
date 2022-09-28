@@ -451,6 +451,38 @@ function get_place_name($latitude, $longitude) {
 	return $address;
 }
 
+function get_bounding_box_from_name($location) {
+	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
+	$geocode_api_key = OPENCAGE_API_KEY;
+	$location = urlencode($location);
+	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&key={$geocode_api_key}";
+	$options = array(
+		'http'=>array(
+			'method'=>"GET",
+			'header'=>"User-Agent: OpenBenches.org\r\n"
+		)
+	);
+
+	$context = stream_context_create($options);
+	$locationJSON = file_get_contents($geocodeAPI, false, $context);
+	$locationData = json_decode($locationJSON);
+	try {
+		$lat_ne = $locationData->results[0]->bounds->northeast->lat;
+		$lng_ne = $locationData->results[0]->bounds->northeast->lng;
+		$lat_sw = $locationData->results[0]->bounds->southwest->lat;
+		$lng_sw = $locationData->results[0]->bounds->southwest->lng;
+
+		$lat    = $locationData->results[0]->geometry->lat;
+		$lng    = $locationData->results[0]->geometry->lng;
+	} catch (Exception $e) {
+		$loc = var_export($locationData);
+		error_log("Caught $e - $loc");
+		return "";
+	}
+
+	return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
+}
+
 function save_image($file, $media_type, $benchID, $userID) {
 	$filename = $file['name'];
 	$file =     $file['tmp_name'];

@@ -245,6 +245,45 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 	return $geojson;
 }
 
+function get_nearest_benches_list($lat, $long, $distance=10, $limit=20) {
+	global $mysqli;
+
+	$get_benches = $mysqli->prepare(
+		"SELECT
+			(
+				6371 * ACOS(COS(RADIANS(?)) *
+				COS(RADIANS(latitude)) *
+				COS(RADIANS(longitude) -
+				RADIANS(?)) +
+				SIN(RADIANS(?)) *
+				SIN(RADIANS(latitude)))
+			)
+			AS distance, benchID, latitude, longitude, inscription, address
+		FROM
+			benches
+		WHERE published = true AND present = true
+		HAVING distance < ?
+		ORDER BY distance
+		LIMIT 0 , ?");
+
+	$get_benches->bind_param('ddddd', $lat, $long, $lat, $distance, $limit );
+	$get_benches->execute();
+
+	/* bind result variables */
+	$get_benches->bind_result($dist, $benchID, $benchLat, $benchLong, $benchInscription, $address);
+
+	$results = array();
+	while($get_benches->fetch()) {
+		if($address != null){
+			$inscription = htmlspecialchars($benchInscription) ."<br />Location: ". htmlspecialchars($address);
+		}
+		$results[$benchID] = $inscription;
+	}
+
+	$get_benches->close();
+	return $results;
+}
+
 function get_bench($benchID, $truncated, $media = false){
 	return get_all_benches($benchID, false, $truncated, $media);
 }
@@ -1368,6 +1407,56 @@ function get_user_map($userID, $truncated=true, $media=false)
 
 	$get_benches->close();
 	return $geojson;
+}
+
+function get_bounding_box_benches_list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $page=0, $limit=20) {
+	global $mysqli;
+
+	$get_benches = $mysqli->prepare(
+		"SELECT `benchID`, `latitude`, `longitude`, `inscription`, `address`
+		FROM `benches`
+		WHERE
+		`latitude`  BETWEEN ? AND ? AND
+		`longitude` BETWEEN ? AND ? AND
+		`published` = true AND `present` = true
+		LIMIT ? , ?");
+
+	$get_benches->bind_param('dddddd', $lat_sw, $lat_ne, $lng_sw, $lng_ne, $page, $limit);
+	$get_benches->execute();
+
+	/* bind result variables */
+	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $address);
+
+	$results = array();
+	while($get_benches->fetch()) {
+		if($address != null){
+			$inscription = htmlspecialchars($benchInscription) ."<br />Location: ". htmlspecialchars($address);
+		}
+		$results[$benchID] = $inscription;
+	}
+
+	$get_benches->close();
+	return $results;
+}
+
+function get_bounding_box_benches_count($lat_ne, $lng_ne, $lat_sw, $lng_sw) {
+	global $mysqli;
+
+	$get_benches = $mysqli->prepare(
+		"SELECT COUNT(*)
+		FROM `benches`
+		WHERE
+		`latitude`  BETWEEN ? AND ? AND
+		`longitude` BETWEEN ? AND ? AND
+		`published` = true AND `present` = true");
+
+	$get_benches->bind_param('dddd', $lat_sw, $lat_ne, $lng_sw, $lng_ne);
+	$get_benches->execute();
+	$get_benches->bind_result($count);
+	$get_benches->fetch();
+	$get_benches->close();
+
+	return $count;
 }
 
 function merge_benches($originalID, $duplicateID) {

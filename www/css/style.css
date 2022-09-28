@@ -18,12 +18,17 @@ body {
 	overflow-x: hidden;
 }
 
+h1 {
+	font-size: 2rem !important;
+}
+
 h1 a{
 	font-size: 2rem !important;
 	color: #191E20 !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
+	text-align: center;
 	padding: 0;
 }
 
@@ -163,6 +168,7 @@ video {
 
 ol {
 	max-width: 48em;
+	margin-top: 0;
 }
 
 textarea {
