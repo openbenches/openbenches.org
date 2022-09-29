@@ -5,6 +5,7 @@ require_once ("mysql.php");
 require_once ("functions.php");
 
 //	Start the normal page
+$page_title = "- Search";
 include("header.php");
 
 $soundex = false;

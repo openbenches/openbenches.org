@@ -3,6 +3,8 @@ if(!isset($_SESSION)) { session_start(); }
 require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
+
+$page_title = "- Merge";
 include("header.php");
 
 //	Is an admin using this?

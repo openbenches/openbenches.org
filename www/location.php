@@ -11,10 +11,11 @@ foreach ($locations as $location) {
 	$location_string .= $location . ", ";
 }
 $location_string  = rtrim($location_string , ", ");
+$location_string  = ltrim($location_string , ", ");
 
 $locations = array_slice( $params, 2, null, true);
 $location_html = "🗺 ➡️ ";
-$location_link = "/location/";
+$location_link = "/location";
 foreach ($locations as $location) {
 	if (null != $location) {
 		$location_link .= "/" . urldecode($location);

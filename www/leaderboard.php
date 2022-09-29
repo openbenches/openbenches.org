@@ -1,6 +1,6 @@
 <?php
+	$page_title = "- Leaderboard";
 	include("header.php");
-
 ?>
 
 <div id="leaderboard-results">

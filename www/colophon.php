@@ -1,6 +1,6 @@
 <?php
+	$page_title = "- Colophon";
 	include("header.php");
-
 ?>
 
 

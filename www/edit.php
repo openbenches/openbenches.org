@@ -92,6 +92,7 @@ if(isset($_POST['key'])) {
 }
 
 //	Start the normal page
+$page_title = "- Edit Bench {$benchID}";
 include("header.php");
 
 if (null == $user_providerID) {

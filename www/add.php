@@ -4,6 +4,7 @@ require_once ("config.php");
 require_once ("mysql.php");
 require_once ("functions.php");
 
+$page_title = "- Add new bench";
 //	Start the normal page
 include("header.php");
 ?>
