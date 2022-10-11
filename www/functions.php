@@ -400,98 +400,252 @@ function get_path_from_hash($sha1, $full = true) {
 }
 
 function get_location_from_name($location) {
-	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
-	$geocode_api_key = OPENCAGE_API_KEY;
-	$location = urlencode($location);
-	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
-	$options = array(
-		'http'=>array(
-			'method'=>"GET",
-			'header'=>"User-Agent: OpenBenches.org\r\n"
-		)
-	);
+	//	Flip between different providers, because we're cheapskates!
+	$provider = random_int(0,1);
 
-	$context = stream_context_create($options);
-	$locationJSON = file_get_contents($geocodeAPI, false, $context);
-	$locationData = json_decode($locationJSON);
-	try {
-		$lat = $locationData->results[0]->geometry->lat;
-		$lng = $locationData->results[0]->geometry->lng;
-	} catch (Exception $e) {
-		$loc = var_export($locationData);
-		error_log("Caught $e - $loc");
-		return "";
+	if (0 == $provider) {
+		$geocode_api_key = OPENCAGE_API_KEY;
+		$location = urlencode($location);
+		$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+	
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+		try {
+			$lat = $locationData->results[0]->geometry->lat;
+			$lng = $locationData->results[0]->geometry->lng;
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+	
+		return "{$lat}/{$lng}";
 	}
-
-	return "{$lat}/{$lng}";
+	else if (1 == $provider) {
+		$geocode_api_key = GEOAPIFY_API_KEY;
+		$location = urlencode($location);
+		$geocodeAPI = "https://api.geoapify.com/v1/geocode/search?text={$location}&apiKey={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+		try {
+			$lat = $locationData->features[0]->geometry->coordinates[1];
+			$lng = $locationData->features[0]->geometry->coordinates[0];
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+	
+		return "{$lat}/{$lng}";
+	}
 }
 
 function get_place_name($latitude, $longitude) {
-	$geocode_api_key = OPENCAGE_API_KEY;
+	//	Flip between different providers, because we're cheapskates!
+	$provider = random_int(0,2);
 
-	$reverseGeocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$latitude}%2C{$longitude}&no_annotations=1&key={$geocode_api_key}";
-	$options = array(
-		'http'=>array(
-			'method'=>"GET",
-			'header'=>"User-Agent: OpenBenches.org\r\n"
-		)
-	);
+	if (0 == $provider) {
+	
+		$geocode_api_key = OPENCAGE_API_KEY;
 
-	$context = stream_context_create($options);
-	$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
-	$locationData = json_decode($locationJSON);
-	try {
-		//	Pre-formated address from GeoCage
-		$formatted_address = $locationData->results[0]->formatted;
-		//	Separate components
-		$address_components = (array) $locationData->results[0]->components;
-		//	Postcode needs removing in order to reduce precision when searching
-		$postcode = $address_components["postcode"];
-		//	Delete the postcode from the pre-formatted address
-		$formatted_address = str_replace($postcode, "", $formatted_address);
-		$formatted_explode = array_map('trim', explode(',', $formatted_address));
-		$formatted_explode = array_filter($formatted_explode);
-		$formatted_address = implode(", " , $formatted_explode);
+		$reverseGeocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$latitude}%2C{$longitude}&no_annotations=1&key={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
 
-	} catch (Exception $e) {
-		$loc = var_export($locationData);
-		error_log("Caught $e - $loc");
-		return "";
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+		try {
+			//	Pre-formated address from GeoCage
+			$formatted_address = $locationData->results[0]->formatted;
+			//	Separate components
+			$address_components = (array) $locationData->results[0]->components;
+			//	Postcode needs removing in order to reduce precision when searching
+			$postcode = $address_components["postcode"];
+			//	Delete the postcode from the pre-formatted address
+			$formatted_address = str_replace($postcode, "", $formatted_address);
+			$formatted_explode = array_map('trim', explode(',', $formatted_address));
+			$formatted_explode = array_filter($formatted_explode);
+			$formatted_address = implode(", " , $formatted_explode);
+
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+
+		return $formatted_address;
+	} 	if (1 == $provider) {
+		$geocode_api_key = GEOAPIFY_API_KEY;
+		$location = urlencode($location);
+		$geocodeAPI = "https://api.geoapify.com/v1/geocode/reverse?lat={$latitude}&lon={$longitude}&apiKey={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+
+		try {
+			//	Pre-formated address from GeoAPIfy
+			$formatted_address = $locationData->features[0]->properties->formatted;
+			//	Postcode needs removing in order to reduce precision when searching
+			$postcode = $locationData->features[0]->properties->postcode;
+			//	Delete the postcode from the pre-formatted address
+			$formatted_address = str_replace($postcode, "", $formatted_address);
+			$formatted_explode = array_map('trim', explode(',', $formatted_address));
+			$formatted_explode = array_filter($formatted_explode);
+			$formatted_address = implode(", " , $formatted_explode);
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+		return $formatted_address;
+	} if (2 == $provider) {
+		//	https://geocode.maps.co/
+		$location = urlencode($location);
+		$geocodeAPI = "https://geocode.maps.co/reverse?lat={$latitude}&lon={$longitude}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+
+		try {
+			//	Pre-formated address from maps.co
+			$formatted_address = $locationData->display_name;
+			//	Postcode needs removing in order to reduce precision when searching
+			$postcode = $locationData->address->postcode;
+			//	Delete the postcode from the pre-formatted address
+			$formatted_address = str_replace($postcode, "", $formatted_address);
+			$formatted_explode = array_map('trim', explode(',', $formatted_address));
+			$formatted_explode = array_filter($formatted_explode);
+			$formatted_address = implode(", " , $formatted_explode);
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+		return $formatted_address;
 	}
-
-	return $formatted_address;
 }
 
 function get_bounding_box_from_name($location) {
-	//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
-	$geocode_api_key = OPENCAGE_API_KEY;
-	$location = urlencode($location);
-	$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
-	$options = array(
-		'http'=>array(
-			'method'=>"GET",
-			'header'=>"User-Agent: OpenBenches.org\r\n"
-		)
-	);
+	//	Flip between different providers, because we're cheapskates!
+	$provider = 2;//random_int(0,2);
 
-	$context = stream_context_create($options);
-	$locationJSON = file_get_contents($geocodeAPI, false, $context);
-	$locationData = json_decode($locationJSON);
-	try {
-		$lat_ne = $locationData->results[0]->bounds->northeast->lat;
-		$lng_ne = $locationData->results[0]->bounds->northeast->lng;
-		$lat_sw = $locationData->results[0]->bounds->southwest->lat;
-		$lng_sw = $locationData->results[0]->bounds->southwest->lng;
+	if (0 == $provider) {
+		//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
+		$geocode_api_key = OPENCAGE_API_KEY;
+		$location = urlencode($location);
+		$geocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$location}&no_annotations=1&limit=1&key={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
 
-		$lat    = $locationData->results[0]->geometry->lat;
-		$lng    = $locationData->results[0]->geometry->lng;
-	} catch (Exception $e) {
-		$loc = var_export($locationData);
-		error_log("Caught $e - $loc");
-		return "";
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+		try {
+			$lat_ne = $locationData->results[0]->bounds->northeast->lat;
+			$lng_ne = $locationData->results[0]->bounds->northeast->lng;
+			$lat_sw = $locationData->results[0]->bounds->southwest->lat;
+			$lng_sw = $locationData->results[0]->bounds->southwest->lng;
+
+			$lat    = $locationData->results[0]->geometry->lat;
+			$lng    = $locationData->results[0]->geometry->lng;
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+
+		return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
+	} else if (1 == $provider) {
+		//	https://api.geoapify.com/v1/geocode/search?text=Oxford&apiKey=
+		$geocode_api_key = GEOAPIFY_API_KEY;
+		$geocodeAPI = "https://api.geoapify.com/v1/geocode/search?text={$location}&apiKey={$geocode_api_key}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+	
+		try {
+			$lat_ne = $locationData->features[0]->bbox[3];
+			$lng_ne = $locationData->features[0]->bbox[2];
+			$lat_sw = $locationData->features[0]->bbox[1];
+			$lng_sw = $locationData->features[0]->bbox[0];
+
+			$lat = $locationData->features[0]->geometry->coordinates[1];
+			$lng = $locationData->features[0]->geometry->coordinates[0];
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+		return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
+	} else if (2 == $provider) {
+		//	https://geocode.maps.co/search?q=Bath%20and%20North%20East%20Somerset,%20South%20West%20England,%20England,%20United%20Kingdom
+		$geocodeAPI = "https://geocode.maps.co/search?q={$location}";
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"User-Agent: OpenBenches.org\r\n"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
+	
+		try {
+			$lat_ne = $locationData[0]->boundingbox[1];
+			$lng_ne = $locationData[0]->boundingbox[3];
+			$lat_sw = $locationData[0]->boundingbox[0];
+			$lng_sw = $locationData[0]->boundingbox[2];
+
+			$lat = $locationData[0]->lat;
+			$lng = $locationData[0]->lon;
+		} catch (Exception $e) {
+			$loc = var_export($locationData);
+			error_log("Caught $e - $loc");
+			return "";
+		}
+		return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
 	}
-
-	return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
 }
 
 function save_image($file, $media_type, $benchID, $userID) {

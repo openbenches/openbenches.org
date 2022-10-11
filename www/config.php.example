@@ -25,9 +25,12 @@ define('FLICKR_API_KEY', '');
 //	https://secure.php.net/manual/en/function.crypt.php
 define('EDIT_SALT', '');
 
-//	Reverse Geocoding
+//	Geocoding
 //	https://geocoder.opencagedata.com/api
 define('OPENCAGE_API_KEY', '');
+// https://www.geoapify.com/reverse-geocoding-api
+define('GEOAPIFY_API_KEY', '');
+
 
 //	Satellite Imagery
 //	https://developers.arcgis.com/documentation/mapping-apis-and-services/maps/basemap-layers/
