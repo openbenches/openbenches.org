@@ -102,6 +102,16 @@ echo "<h3>{$page_html}</h3>";
 <?php echo get_map_javascript($lat, $lng, "15"); ?>
 
 <script>
+	<?php
+		echo "map.fitBounds([
+			[{$lat_ne}, {$lng_ne}],
+			[{$lat_sw}, {$lng_sw}]
+		 ])";
+	?>
+</script>
+
+<script>
+	
 // map.on("moveend", function () {
 // 	var stateObj = { x: "y" };
 // 	history.pushState(stateObj, "Open Benches", "/#" +
