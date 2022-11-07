@@ -87,6 +87,9 @@ if (null == $page_title) {
 	<meta name="msapplication-TileColor"    content="#ffc40d">
 	<meta name="application-name"           content="OpenBenches">
 	<meta name="apple-mobile-web-app-title" content="OpenBenches">
+ 
+	<!-- Mastodon BotsIn.Space Specific Metadata -->
+	<link rel="me" href="https://botsin.space/@openbenches">
 
 	<!-- Twitter Specific Metadata https://dev.twitter.com/cards/markup -->
 	<meta name="twitter:card"                            content="summary">
