@@ -54,7 +54,7 @@ if ($_FILES['userfile1']['tmp_name'])
 			}
 
 			//	Insert Bench
-			$benchID = insert_bench($lat,$lng, $inscription, $userID);
+			$benchID = insert_bench($lat, $lng, $inscription, $userID);
 			//	Send the user to the bench's page
 			// $response["redirect"] = $benchID;
 			// echo json_encode($response);
@@ -87,7 +87,9 @@ if ($_FILES['userfile1']['tmp_name'])
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 
-			save_tags($benchID,$tags);
+			if (!empty($tags)){
+				save_tags($benchID, $tags);
+			}
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
