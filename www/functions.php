@@ -159,6 +159,37 @@ function get_image_location($file)
 	return false;
 }
 
+function mastodon_bench( $benchID, $inscription="", $license="", $user_provider=null, $user_name=null) {
+	include_once 'Mastodon.php';
+	$status_length = 500;
+
+	if (isset($user_provider) && isset($user_name)) {
+		$from = "℅ $user_name on $user_provider";
+	}	else {
+		$from = "";
+	}
+
+	$domain = $_SERVER['SERVER_NAME'];
+	$post_url = "https://{$domain}/bench/{$benchID}";
+
+	$status_end = "\n" . $post_url . "\n\n" . $from . "\n" . $license;
+
+	$status_length = $status_length - mb_strlen($status_end);
+
+	$inscription = mb_substr($inscription, 0, $status_length + 10);
+	$status = $inscription . $status_end;
+
+	$mastodon = new MastodonAPI(MASTODON_ACCESS_TOKEN, MASTODON_INSTANCE);
+
+	$visibility = 'public';
+	$status_data = [
+		'status'      => $status,
+		'visibility'  => $visibility
+	];
+
+	$mastodon->postStatus($status_data);
+}
+
 function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
                      $latitude=null, $longitude=null, $license=null,
                      $user_provider=null, $user_name=null){

@@ -9,6 +9,11 @@ define('OAUTH_TOKEN_SECRET',    '');
 define('ADMIN_CONSUMER_KEY',    '');
 define('ADMIN_CONSUMER_SECRET', '');
 
+//	Share to Mastodon
+define('MASTODON_ACCESS_TOKEN', '');
+define('MASTODON_INSTANCE',     'https://'); // No trailing slash
+
+
 //	Database
 define('DB_IP',   '');
 define('DB_USER', '');

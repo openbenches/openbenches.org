@@ -116,6 +116,14 @@ if ($_FILES['userfile1']['tmp_name'])
 				return null;
 			}
 
+			//	Post the bench to Mastodon
+			try {
+				mastodon_bench($benchID, $inscription, "CC BY-SA 4.0", $user_provider, $user_name);
+			} catch (Exception $e) {
+				// var_export($e);
+				return null;
+			}
+
 			return null;
 		} else {
 			$error_message .= "No location metadata found in image.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
