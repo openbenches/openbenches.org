@@ -24,14 +24,13 @@ $location_link = "/location";
 $location_html_array = [];
 foreach ($locations as $location) {
 	if (null != $location) {
+		$location = html_entity_decode($location);
 		$location_link .= "/" . urldecode(trim($location));
 		$location_html_array[] = "<a href=\"$location_link\">" . htmlspecialchars( urldecode($location) ). "</a>";
 	}
 }
 $location_html_array = array_reverse( $location_html_array );
 $benchAddress = implode(", " , $location_html_array);
-
-
 
 if (!$present) {
 	//	Has the bench been removed
