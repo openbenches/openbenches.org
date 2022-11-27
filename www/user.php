@@ -98,8 +98,8 @@
 		$error_message = "No results found";
 	}
 	else {
-		$first = ($count * $page)+1;
-		$last  = ($count * ($page+1));
+		$first = ((int)$count * (int)$page)+1;
+		$last  = ((int)$count * ((int)$page+1));
 
 		$resultsHTML = "<div id=\"search-results\">
 			<h2>Total benches found: {$total_results}.</h2>
@@ -115,12 +115,12 @@
 	}
 
 	$resultsHTML .= "<div id=\"pagination\">";
-	if ($page > 0) {
-		$previous = $page - 1;
+	if ((int)$page > 0) {
+		$previous = (int)$page - 1;
 		$resultsHTML .= "<a href='{$thisURL}?page={$previous}' class='button buttonColour'><strong>⬅️</strong> Previous Results</a>&emsp;&emsp;";
 	}
-	if ( ($count * ($page+1)) < $total_results) {
-		$next = $page + 1;
+	if ( ((int)$count * ((int)$page+1)) < $total_results) {
+		$next = (int)$page + 1;
 		$resultsHTML .= "<a href='{$thisURL}?page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a>";
 	}
 ?>

@@ -326,7 +326,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 			return null;
 		}
 		$benches  = get_benches_from_tag_id($tagID);
-		$benchIDs = implode($benches,",");
+		$benchIDs = implode(",", $benches);
 		$where .= "`benchID` IN ({$benchIDs})";
 	}
 
@@ -1282,7 +1282,7 @@ function get_leadboard_media_html() {
 function get_user_bench_list($userID, $page=0, $results=20)
 {
 	global $mysqli;
-	$offset = $page * $results;
+	$offset = (int)$page * (int)$results;
 
 	$get_user_list = $mysqli->prepare(
 		"SELECT `benchID`, `inscription`, `address`
@@ -1581,7 +1581,7 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 	if(empty($benches)){
 		return array();
 	}
-	$benchIDs = implode($benches,",");
+	$benchIDs = implode(",", $benches);
 	global $mysqli;
 
 	$get_benches = $mysqli->prepare(
