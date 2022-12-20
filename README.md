@@ -44,7 +44,7 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 
 ### Tags
 * All available folksonomy tags
-	* `https://openbenches.org/api/v1.0/data.json/`
+	* `https://openbenches.org/api/v1.0/tags.json/`
 	* That last `/` is *required*.
 	* Returned in a format suitable for [Select2](https://select2.org/data-sources/arrays).
 
