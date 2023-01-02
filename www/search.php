@@ -83,6 +83,25 @@ if (null != $query)
 	$resultsHTML .="</div>";
 }
 
+//	Show merge button if only two soundexes
+//	Is an admin using this?
+[$user_provider, $user_providerID, $user_name] = get_user_details(true);
+
+//	Hardcoded for @edent
+if ("twitter" == $user_provider && 14054507 == $user_providerID)
+{
+	if ( $soundex && ( 2 == count($results)) ) {
+		$originalID  = array_keys($results)[0];
+		$duplicateID = array_keys($results)[1];
+		
+		$resultsHTML .= '<form action="/merge.php" method="post" autocomplete="off">
+		Original:  <input type="text" name="originalID"  value="' . $originalID  . '"><br>
+		Duplicate: <input type="text" name="duplicateID" value="' . $duplicateID . '"><br>
+		<input type="submit" value="Merge Two Benches">
+		</form>';
+	}	
+}
+
 echo $resultsHTML;
 
 include("searchform.php");
