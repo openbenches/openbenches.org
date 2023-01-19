@@ -6,7 +6,7 @@ require_once ("functions.php");
 
 //	Start the normal page
 include("header.php");
-//	Which iamge
+//	Which image
 if ($_GET["wikiID"])
 {
 	$wikiID = $_GET["wikiID"]; // e.g. Katherine_Mansfield_Memorial_Park_-_Park_bench_(Norman_Purdie).jpg
