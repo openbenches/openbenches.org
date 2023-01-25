@@ -432,7 +432,7 @@ function get_path_from_hash($sha1, $full = true) {
 
 function get_place_name($latitude, $longitude) {
 	//	Flip between different providers, because we're cheapskates!
-	$provider = random_int(0,2);
+	$provider = random_int(1,2);
 
 	if (0 == $provider) {
 	
@@ -534,7 +534,7 @@ function get_place_name($latitude, $longitude) {
 
 function get_bounding_box_from_name($location) {
 	//	Flip between different providers, because we're cheapskates!
-	$provider = random_int(0,2);
+	$provider = random_int(1,2);
 
 	if (0 == $provider) {
 		//	https://api.opencagedata.com/geocode/v1/json?q=Oxford&key=
