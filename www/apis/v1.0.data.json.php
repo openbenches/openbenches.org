@@ -21,20 +21,67 @@ if ( "true" == $truncated or null == $truncated) {
 	$truncated = false;
 }
 
+//	Cheap and nasty file based cacheing
+function read_cache( $type ) {
+	//	One Hour Cache
+	$cache = date("Y-m-d-H");
+	//	Make the name safe
+	$type = urlencode( $type );
+	//	Set the file name
+	$filename = "json/{$cache}-{$type}.json";
+	
+	if ( file_exists( $filename ) ) {
+		return json_decode( file_get_contents( $filename ) );
+	} else {
+		//	Delete old caches
+		foreach( glob( "json/*-{$type}.json" ) as $file ) {
+			unlink( $file );
+		}
+		return null;
+	}
+}
+
+function save_cache ( $type , $geojson ) {
+	//	One Hour Cache
+	$cache = date("Y-m-d-H");
+	$type = urlencode( $type );
+	$filename = "json/{$cache}-{$type}.json";
+	file_put_contents( $filename, json_encode($geojson, JSON_NUMERIC_CHECK) );
+}
+
 if (null != $userID) {
-	$geojson = get_user_map($userID, $truncated, $media);
+	$type = "user-{$truncated}-{$media}";
+	$geojson = read_cache( $type );
+	if ( null == $geojson ) {
+		$geojson = get_user_map($userID, $truncated, $media);
+		save_cache( $type, $geojson );
+	}
 } else if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, $results, $truncated, $media);
 } else if (null != $benchID){
-	$geojson = get_bench($benchID, $truncated, $media);
+	$type = "bench-{$benchID}-{$truncated}-{$media}";
+	$geojson = read_cache( $type );
+	if ( null == $geojson ) {
+		$geojson = get_bench($benchID, $truncated, $media);
+		save_cache( $type, $geojson );
+	}
 } else if (null != $tagText){
 	$geojson = get_all_benches($tagText, true, $truncated, $media);
 } else if (null != $search){
-	$geojson = get_search_geojson($search);
+	$type = "search-{$search}";
+	$geojson = read_cache( $type );
+	if ( null == $geojson ) {
+		$geojson = get_search_geojson($search);
+		save_cache( $type, $geojson );
+	}
 } else {
-	$geojson = get_all_benches(0, true, $truncated, $media);
+	$type = "all-{$truncated}-{$media}";
+	$geojson = read_cache( $type );
+	if ( null == $geojson ) {
+		$geojson = get_all_benches(0, true, $truncated, $media);
+		save_cache( $type, $geojson );
+	}
 }
-
 
 if ("raw" == $format) {
 	header('Content-Type: application/geo+json; charset=utf-8');
