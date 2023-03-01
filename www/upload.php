@@ -87,9 +87,9 @@ if ($_FILES['userfile1']['tmp_name'])
 				$mediaFiles[] = get_path_from_hash($sha1,true);
 			}
 
-			// if (!empty($tags)){
-			// 	save_tags($benchID, $tags);
-			// }
+			 if (!empty($tags)){
+			 	save_tags($benchID, $tags);
+			 }
 
 			//	Drop us an email
 			$key = urlencode(get_edit_key($benchID));
