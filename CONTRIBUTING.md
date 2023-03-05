@@ -1,7 +1,6 @@
 The following was written by someone using Fedora Server 37 which has PHP 8.1 MariaDB 10.5 and ImageMagick 6.9. Not all of this will work exactly as presented on other Linux distros. This does not attempt to cover macOS or Windows.
 
-Getting a copy of the code on your computer
--------------------------------------------
+## Getting a copy of the code on your computer
 
 Create a GitHub account.
 
