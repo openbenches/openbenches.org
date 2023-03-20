@@ -123,6 +123,7 @@
 		$next = (int)$page + 1;
 		$resultsHTML .= "<a href='{$thisURL}?page={$next}'     class='button buttonColour'>More Results <strong>➡️</strong></a>";
 	}
+	$resultsHTML .= "</div>";
 ?>
 
 <?php
