@@ -57,7 +57,7 @@ if (!$present) {
 			echo    "<li class='pseudo button'>Tags:</li>";
 
 			foreach ($tags as $tag) {
-				echo "<li class='pseudo button'><a href='/tag/{$tag}/'>#{$tag}</a></li>";
+				echo "<li class='pseudo button'><a href='/tag/{$tag['tagText']}/'>#{$tag['tagText']}</a></li>";
 			}
 			echo "</ul>";
 		}
