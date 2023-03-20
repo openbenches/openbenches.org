@@ -268,7 +268,7 @@ map.addLayer(markers);
 </script>
 <script src="/libs/load-image.5.16.0/load-image.all.min.js"></script>
 <script type="text/javascript">
-	var previewWidth = 400;
+	var previewWidth = 800;
 
 	document.getElementById('photoFile1').onchange = function (e) {
 		var preview1 = document.getElementById("photoPreview1");
