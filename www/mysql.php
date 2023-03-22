@@ -1640,7 +1640,8 @@ function save_tags($benchID, $tags) {
 	global $mysqli;
 	$mysqli->begin_transaction();
 	try {
-		$remove_tags = $mysqli->prepare("DELETE FROM `tag_map` WHERE `benchID`=$benchID");
+		$remove_tags = $mysqli->prepare("DELETE FROM `tag_map` WHERE `benchID`=?");
+		$remove_tags->bind_param('i', $benchID);
 		$remove_tags->execute();
 		$remove_tags->close();
 		foreach ($tags as $tagID) {
