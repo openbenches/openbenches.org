@@ -13,7 +13,48 @@ All contributions are welcome.  Before making a pull request, please:
 
 ## Open Data API
 
-You can get all the data, or partial data, from the API.  Data is returned in [geoJSON](http://geojson.org/) format.
+You can get all the data, or partial data, from the API.  Data is returned in [geoJSON](http://geojson.org/) format and has the following structure:
+
+```JSON
+{
+	"type": "FeatureCollection",
+	"features": [{
+		"id": 1234657,
+		"type": "Feature",
+		"geometry": {
+			"type": "Point",
+			"coordinates": [0.1234, 5.678]
+		},
+		"properties": {
+			"created_at": "2021-06-05T12:27:36+01:00",
+			"popupContent": "IN LOVING MEMORY OF\nBOB AND\nJANE",
+			"media": [{
+				"URL": "\/image\/3f786850e387550fdab836ed7e6dc881de23001b",
+				"mediaID": 123456789,
+				"licence": "CC BY-SA 4.0",
+				"media_type": "inscription",
+				"sha1": "3f786850e387550fdab836ed7e6dc881de23001b",
+				"user": 6143,
+				"username": "edent",
+				"userprovider": "twitter",
+				"width": 4096,
+				"height": 3072
+			}, {
+				"URL": "\/image\/89e6c98d92887913cadf06b2adb97f26cde4849b",
+				"mediaID": 43803,
+				"licence": "CC BY-SA 4.0",
+				"media_type": "bench",
+				"sha1": "89e6c98d92887913cadf06b2adb97f26cde4849b",
+				"user": 123456780,
+				"username": "edent",
+				"userprovider": "twitter",
+				"width": 4096,
+				"height": 3072
+			}]
+		}
+	}]
+}
+```
 
 ### Benches
 * All Bench Data
@@ -41,13 +82,11 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* By default, the API doesn't return media.
 	* To get media, append `&media=true`
 
-
 ### Tags
 * All available folksonomy tags
 	* `https://openbenches.org/api/v1.0/tags.json/`
 	* That last `/` is *required*.
 	* Returned in a format suitable for [Select2](https://select2.org/data-sources/arrays).
-
 
 ### Users
 * All User Data
