@@ -174,7 +174,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 				SIN(RADIANS(?)) *
 				SIN(RADIANS(latitude)))
 			)
-			AS distance, benchID, latitude, longitude, inscription, published
+			AS distance, benchID, latitude, longitude, inscription, published, added
 		FROM
 			benches
 		WHERE published = true AND present = true
@@ -186,7 +186,7 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 	$get_benches->execute();
 
 	/* bind result variables */
-	$get_benches->bind_result($dist, $benchID, $benchLat, $benchLong, $benchInscription, $published);
+	$get_benches->bind_result($dist, $benchID, $benchLat, $benchLong, $benchInscription, $published, $added);
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
@@ -233,8 +233,9 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 			),
 			# Pass other attribute columns here
 			'properties' => array(
+				'created_at'   => date_format( date_create($added ), "c" ),
 				'popupContent' => $benchInscription,
-				'media' => $mediaFeature
+				'media'        => $mediaFeature
 			),
 		);
 
@@ -333,7 +334,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	global $mysqli;
 
 	$get_benches = $mysqli->prepare(
-		"SELECT benchID, latitude, longitude, inscription, published FROM benches
+		"SELECT benchID, latitude, longitude, inscription, published, added FROM benches
 		{$where}
 		LIMIT 0 , 30000");
 
@@ -342,7 +343,7 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	$get_benches->execute();
 
 	/* bind result variables */
-	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published);
+	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published, $added);
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
@@ -390,8 +391,9 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 			),
 			# Pass other attribute columns here
 			'properties' => array(
+				'created_at'   => date_format( date_create($added ), "c" ),
 				'popupContent' => $benchInscription,
-				'media' => $mediaFeature
+				'media'        => $mediaFeature
 			),
 		);
 		# Add feature arrays to feature collection array
@@ -1019,7 +1021,7 @@ function get_search_geojson($q, $truncated = false) {
 		//	Query will be like
 		//	SELECT * FROM `benches` WHERE `inscription` REGEXP 'of[[:space:]]*Paul[[:space:]]*[[:space:]]*Willmott'
 	$search = $mysqli->prepare(
-		"SELECT `benchID`, `latitude`, `longitude`, `inscription`
+		"SELECT `benchID`, `latitude`, `longitude`, `inscription`, `added`
 		 FROM	`benches`
 		 WHERE  `inscription`
 		 REGEXP	?
@@ -1031,7 +1033,7 @@ function get_search_geojson($q, $truncated = false) {
 	$search->execute();
 
 	/* bind result variables */
-	$search->bind_result($benchID, $benchLat, $benchLong, $benchInscription);
+	$search->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $added);
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
@@ -1076,8 +1078,9 @@ function get_search_geojson($q, $truncated = false) {
 			),
 			# Pass other attribute columns here
 			'properties' => array(
+				'created_at'   => date_format( date_create($added ), "c" ),
 				'popupContent' => $benchInscription,
-				'media' => $mediaFeature
+				'media'        => $mediaFeature
 			),
 		);
 		# Add feature arrays to feature collection array
@@ -1343,7 +1346,7 @@ function get_user_map($userID, $truncated=true, $media=false)
 	// $where = "WHERE published = true AND userID = {$userID}";
 
 	$get_benches = $mysqli->prepare(
-		"SELECT benchID, latitude, Longitude, inscription, published FROM benches
+		"SELECT benchID, latitude, longitude, inscription, published, added FROM benches
 		WHERE published = true AND present = true AND userID = ?
 		LIMIT 0 , 30000");
 
@@ -1351,7 +1354,7 @@ function get_user_map($userID, $truncated=true, $media=false)
 	$get_benches->execute();
 
 	/* bind result variables */
-	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published);
+	$get_benches->bind_result($benchID, $benchLat, $benchLong, $benchInscription, $published, $added);
 
 	# Build GeoJSON feature collection array
 	$geojson = array(
@@ -1400,8 +1403,9 @@ function get_user_map($userID, $truncated=true, $media=false)
 			),
 			# Pass other attribute columns here
 			'properties' => array(
+				'created_at'   => date_format( date_create($added ), "c" ),
 				'popupContent' => $benchInscription,
-				'media' => $mediaFeature
+				'media'        => $mediaFeature
 			),
 		);
 		# Add feature arrays to feature collection array
