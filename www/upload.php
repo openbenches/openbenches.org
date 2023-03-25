@@ -16,8 +16,8 @@ $lng = $_POST['newLongitude'];
 $response = array("Open" => "Benches");
 
 //	Get any tags
-if (isset($_POST['tags'])){
-	$sentTags = $_POST['tags'][0];
+$sentTags = $_POST['tags'][0];
+if ( $sentTags != "" ) {
 	$tags = explode(",", $sentTags);
 } else {
 	$tags = null;
