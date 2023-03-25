@@ -19,7 +19,7 @@ final class TldLists
      *
      * @var array
      */
-    private static $gTLDs = array(
+    private static $gTLDs = [
         '삼성',
         '닷컴',
         '닷넷',
@@ -1279,14 +1279,14 @@ final class TldLists
         'aarp',
         'aaa',
         'onion',
-    );
+    ];
 
     /**
      * gTLDs
      *
      * @var array
      */
-    private static $ccTLDs = array(
+    private static $ccTLDs = [
         '한국',
         '香港',
         '澳門',
@@ -1602,7 +1602,7 @@ final class TldLists
         'ae',
         'ad',
         'ac',
-    );
+    ];
 
     /**
      * get valid gTLD regexp

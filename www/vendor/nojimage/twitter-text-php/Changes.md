@@ -1,5 +1,10 @@
 # Changes
 
+## 3.2.0
+
+- Add support and tests for PHP 8
+- Drop support for PHP 5.3 - 7.3
+
 ## 3.1.2
 
 - Hit highlighting: avoid errors with PHP 8.

@@ -26,7 +26,6 @@ namespace Twitter\Text;
  */
 class HitHighlighter
 {
-
     /**
      * The tag to surround hits with.
      *
@@ -122,7 +121,7 @@ class HitHighlighter
             return $tweet;
         }
         $highlightTweet = '';
-        $tags = array('<' . $this->tag . '>', '</' . $this->tag . '>');
+        $tags = ['<' . $this->tag . '>', '</' . $this->tag . '>'];
         # Check whether we can simply replace or whether we need to chunk...
         if (strpos($tweet, '<') === false) {
             $ti = 0; // tag increment (for added tags)
@@ -141,11 +140,10 @@ class HitHighlighter
             $offset = 0;
             $start_in_chunk = false;
             # Flatten the multidimensional hits array:
-            $hits_flat = call_user_func_array('array_merge', array_values($hits));
-            $hits_flat_count = count($hits_flat);
+            $hits_flat = array_merge(...array_values($hits));
             # Loop over the hit indices:
-            for ($index = 0; $index < $hits_flat_count; $index++) {
-                $hit = $hits_flat[$index];
+            foreach ($hits_flat as $index => $indexValue) {
+                $hit = $indexValue;
                 $tag = $tags[$index % 2];
                 $placed = false;
                 while ($chunk !== null && $hit >= ($i = $offset + StringUtils::strlen($chunk))) {
@@ -160,7 +158,7 @@ class HitHighlighter
                     $offset += StringUtils::strlen($chunk);
                     $chunk_cursor = 0;
                     $chunk_index += 2;
-                    $chunk = (isset($chunks[$chunk_index]) ? $chunks[$chunk_index] : null);
+                    $chunk = $chunks[$chunk_index] ?? null;
                     $start_in_chunk = false;
                 }
                 if (!$placed && $chunk !== null) {

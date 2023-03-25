@@ -28,7 +28,6 @@ namespace Twitter\Text;
  */
 class Extractor
 {
-
     /**
      * The maximum url length that the Twitter backend supports.
      */
@@ -87,7 +86,7 @@ class Extractor
      */
     public function extract($tweet)
     {
-        return array(
+        return [
             'hashtags' => $this->extractHashtags($tweet),
             'cashtags' => $this->extractCashtags($tweet),
             'urls' => $this->extractURLs($tweet),
@@ -96,7 +95,7 @@ class Extractor
             'hashtags_with_indices' => $this->extractHashtagsWithIndices($tweet),
             'urls_with_indices' => $this->extractURLsWithIndices($tweet),
             'mentions_with_indices' => $this->extractMentionedScreennamesWithIndices($tweet),
-        );
+        ];
     }
 
     /**
@@ -107,7 +106,7 @@ class Extractor
      */
     public function extractEntitiesWithIndices($tweet)
     {
-        $entities = array();
+        $entities = [];
         $entities = array_merge($entities, $this->extractURLsWithIndices($tweet));
         $entities = array_merge($entities, $this->extractHashtagsWithIndices($tweet, false));
         $entities = array_merge($entities, $this->extractMentionsOrListsWithIndices($tweet));
@@ -124,7 +123,7 @@ class Extractor
      */
     public function extractHashtags($tweet)
     {
-        $hashtagsOnly = array();
+        $hashtagsOnly = [];
         $hashtagsWithIndices = $this->extractHashtagsWithIndices($tweet);
 
         foreach ($hashtagsWithIndices as $hashtagWithIndex) {
@@ -141,7 +140,7 @@ class Extractor
      */
     public function extractCashtags($tweet)
     {
-        $cashtagsOnly = array();
+        $cashtagsOnly = [];
         $cashtagsWithIndices = $this->extractCashtagsWithIndices($tweet);
 
         foreach ($cashtagsWithIndices as $cashtagWithIndex) {
@@ -158,7 +157,7 @@ class Extractor
      */
     public function extractURLs($tweet)
     {
-        $urlsOnly = array();
+        $urlsOnly = [];
         $urlsWithIndices = $this->extractURLsWithIndices($tweet);
 
         foreach ($urlsWithIndices as $urlWithIndex) {
@@ -177,7 +176,7 @@ class Extractor
      */
     public function extractMentionedScreennames($tweet)
     {
-        $usernamesOnly = array();
+        $usernamesOnly = [];
         $mentionsWithIndices = $this->extractMentionsOrListsWithIndices($tweet);
 
         foreach ($mentionsWithIndices as $mentionWithIndex) {
@@ -216,7 +215,7 @@ class Extractor
     public function extractEmojiWithIndices($tweet)
     {
         preg_match_all(EmojiRegex::VALID_EMOJI_PATTERN, $tweet, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-        $entities = array();
+        $entities = [];
 
         foreach ($matches as $match) {
             list($emoji) = $match;
@@ -224,10 +223,10 @@ class Extractor
             $startPosition = StringUtils::strlen(substr($tweet, 0, $offset));
             $endPosition = $startPosition + StringUtils::strlen($emojiChar) - 1;
 
-            $entities[] = array(
+            $entities[] = [
                 'emoji' => $emoji[0],
-                'indices' => array($startPosition, $endPosition)
-            );
+                'indices' => [$startPosition, $endPosition]
+            ];
         }
 
         return $entities;
@@ -243,14 +242,14 @@ class Extractor
     public function extractHashtagsWithIndices($tweet, $checkUrlOverlap = true)
     {
         if (!preg_match('/[#＃]/u', $tweet)) {
-            return array();
+            return [];
         }
 
         preg_match_all(Regex::getValidHashtagMatcher(), $tweet, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-        $tags = array();
+        $tags = [];
 
         foreach ($matches as $match) {
-            list($all, $before, $hash, $hashtag, $outer) = array_pad($match, 3, array('', 0));
+            list($all, $before, $hash, $hashtag, $outer) = array_pad($match, 3, ['', 0]);
             $start_position = $hash[1] > 0 ? StringUtils::strlen(substr($tweet, 0, $hash[1])) : $hash[1];
             $end_position = $start_position + StringUtils::strlen($hash[0] . $hashtag[0]);
 
@@ -258,10 +257,10 @@ class Extractor
                 continue;
             }
 
-            $tags[] = array(
+            $tags[] = [
                 'hashtag' => $hashtag[0],
-                'indices' => array($start_position, $end_position)
-            );
+                'indices' => [$start_position, $end_position]
+            ];
         }
 
         if (!$checkUrlOverlap) {
@@ -272,7 +271,7 @@ class Extractor
         $urls = $this->extractURLsWithIndices($tweet);
         $entities = $this->removeOverlappingEntities(array_merge($tags, $urls));
 
-        $validTags = array();
+        $validTags = [];
         foreach ($entities as $entity) {
             if (empty($entity['hashtag'])) {
                 continue;
@@ -292,14 +291,14 @@ class Extractor
     public function extractCashtagsWithIndices($tweet)
     {
         if (!preg_match('/\$/u', $tweet)) {
-            return array();
+            return [];
         }
 
         preg_match_all(Regex::getValidCashtagMatcher(), $tweet, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-        $tags = array();
+        $tags = [];
 
         foreach ($matches as $match) {
-            list($all, $before, $dollar, $cash_text, $outer) = array_pad($match, 3, array('', 0));
+            list($all, $before, $dollar, $cash_text, $outer) = array_pad($match, 3, ['', 0]);
             $start_position = $dollar[1] > 0 ? StringUtils::strlen(substr($tweet, 0, $dollar[1])) : $dollar[1];
             $end_position = $start_position + StringUtils::strlen($dollar[0] . $cash_text[0]);
 
@@ -307,10 +306,10 @@ class Extractor
                 continue;
             }
 
-            $tags[] = array(
+            $tags[] = [
                 'cashtag' => $cash_text[0],
-                'indices' => array($start_position, $end_position)
-            );
+                'indices' => [$start_position, $end_position]
+            ];
         }
 
         return $tags;
@@ -326,14 +325,14 @@ class Extractor
     {
         $needle = $this->extractURLWithoutProtocol() ? '.' : ':';
         if (strpos($tweet, $needle) === false) {
-            return array();
+            return [];
         }
 
-        $urls = array();
+        $urls = [];
         preg_match_all(Regex::getValidUrlMatcher(), $tweet, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
         foreach ($matches as $match) {
-            list($all, $before, $url, $protocol, $domain, $port, $path, $query) = array_pad($match, 8, array(''));
+            list($all, $before, $url, $protocol, $domain, $port, $path, $query) = array_pad($match, 8, ['']);
             $start_position = $url[1] > 0 ? StringUtils::strlen(substr($tweet, 0, $url[1])) : $url[1];
             $end_position = $start_position + StringUtils::strlen($url[0]);
 
@@ -371,13 +370,13 @@ class Extractor
                     $asciiDomain[0] = preg_replace('/' . preg_quote($domain, '/') . '/u', $asciiDomain[0], $url);
                     $ascii_start_position = StringUtils::strpos($domain, $asciiDomain[0], $ascii_end_position);
                     $ascii_end_position = $ascii_start_position + StringUtils::strlen($asciiDomain[0]);
-                    $last_url = array(
+                    $last_url = [
                         'url' => $asciiDomain[0],
-                        'indices' => array(
+                        'indices' => [
                             $start_position + $ascii_start_position,
                             $start_position + $ascii_end_position
-                        ),
-                    );
+                        ],
+                    ];
                     if (
                         !empty($path)
                         || preg_match(Regex::getValidSpecialShortDomainMatcher(), $asciiDomain[0])
@@ -411,10 +410,10 @@ class Extractor
                     }
                 }
                 if ($this->isValidHostAndLength(StringUtils::strlen($url), $protocol, $domain)) {
-                    $urls[] = array(
+                    $urls[] = [
                         'url' => $url,
-                        'indices' => array($start_position, $end_position),
-                    );
+                        'indices' => [$start_position, $end_position],
+                    ];
                 }
             }
         }
@@ -467,7 +466,7 @@ class Extractor
      */
     public function extractMentionedScreennamesWithIndices($tweet)
     {
-        $usernamesOnly = array();
+        $usernamesOnly = [];
         $mentions = $this->extractMentionsOrListsWithIndices($tweet);
         foreach ($mentions as $mention) {
             if (isset($mention['list_slug'])) {
@@ -487,21 +486,21 @@ class Extractor
     public function extractMentionsOrListsWithIndices($tweet)
     {
         if (!preg_match('/[@＠]/u', $tweet)) {
-            return array();
+            return [];
         }
 
         preg_match_all(Regex::getValidMentionsOrListsMatcher(), $tweet, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-        $results = array();
+        $results = [];
 
         foreach ($matches as $match) {
-            list($all, $before, $at, $username, $list_slug, $outer) = array_pad($match, 6, array('', 0));
+            list($all, $before, $at, $username, $list_slug, $outer) = array_pad($match, 6, ['', 0]);
             $start_position = $at[1] > 0 ? StringUtils::strlen(substr($tweet, 0, $at[1])) : $at[1];
             $end_position = $start_position + StringUtils::strlen($at[0]) + StringUtils::strlen($username[0]);
-            $entity = array(
+            $entity = [
                 'screen_name' => $username[0],
                 'list_slug' => $list_slug[0],
-                'indices' => array($start_position, $end_position),
-            );
+                'indices' => [$start_position, $end_position],
+            ];
 
             if (preg_match(Regex::getEndMentionMatcher(), $outer[0])) {
                 continue;
@@ -541,8 +540,8 @@ class Extractor
      */
     public function removeOverlappingEntities($entities)
     {
-        $result = array();
-        usort($entities, array($this, 'sortEntities'));
+        $result = [];
+        usort($entities, [$this, 'sortEntities']);
 
         $prev = null;
         foreach ($entities as $entity) {

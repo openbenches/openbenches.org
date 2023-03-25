@@ -19,7 +19,7 @@ Cochrane, this library has been improved and made more complete by Nick Pope.
 
 ## Requirements ##
 
-- PHP 5.3 or higher
+- PHP 7.4 or higher
 - ext-mbstring
 - ext-intl
 

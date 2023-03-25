@@ -28,7 +28,6 @@ namespace Twitter\Text;
  */
 class Autolink
 {
-
     /**
      * CSS class for auto-linked URLs.
      *
@@ -97,7 +96,7 @@ class Autolink
      *
      * @var array
      */
-    protected $rel = array('external', 'nofollow');
+    protected $rel = ['external', 'nofollow'];
 
     /**
      * The scope to open the link in.
@@ -547,12 +546,12 @@ class Autolink
     public function autoLinkWithJson($tweet = null, $json = null)
     {
         // concatenate entities
-        $entities = array();
+        $entities = [];
         if (is_object($json)) {
             $json = $this->object2array($json);
         }
         if (is_array($json)) {
-            $entities = call_user_func_array('array_merge', $json);
+            $entities = array_merge(...array_values($json));
         }
 
         // map JSON entity to twitter-text entity
@@ -759,8 +758,8 @@ class Autolink
             $tweet = $this->tweet;
         }
 
-        $attributes = array();
-        $class = array();
+        $attributes = [];
+        $class = [];
         $hash = StringUtils::substr($tweet, $entity['indices'][0], 1);
         $linkText = $entity['hashtag'];
 
@@ -788,7 +787,7 @@ class Autolink
      */
     public function linkToMentionAndList($entity, $tweet)
     {
-        $attributes = array();
+        $attributes = [];
         $symbol = StringUtils::substr($tweet, $entity['indices'][0], 1);
 
         if (!empty($entity['list_slug'])) {
@@ -822,7 +821,7 @@ class Autolink
         if ($tweet === null) {
             $tweet = $this->tweet;
         }
-        $attributes = array();
+        $attributes = [];
         $dollar = StringUtils::substr($tweet, $entity['indices'][0], 1);
         $linkText = $entity['cashtag'];
         $attributes['href'] = $this->url_base_cash . $entity['cashtag'];
@@ -842,7 +841,7 @@ class Autolink
      * @return string
      * @since 1.1.0
      */
-    public function linkToText(array $entity, $text, $attributes = array())
+    public function linkToText(array $entity, $text, $attributes = [])
     {
         $rel = $this->getRel();
         if ($rel !== '') {

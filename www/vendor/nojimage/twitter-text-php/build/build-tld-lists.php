@@ -35,22 +35,22 @@ final class TldLists
      *
      * @var array
      */
-    private static $gTLDs = array(
+    private static $gTLDs = [
 <?php foreach ($tlds['generic'] as $tld) : ?>
         '<?= $tld ?>',
 <?php endforeach; ?>
-    );
+    ];
 
     /**
      * gTLDs
      *
      * @var array
      */
-    private static $ccTLDs = array(
+    private static $ccTLDs = [
 <?php foreach ($tlds['country'] as $tld) : ?>
         '<?= $tld ?>',
 <?php endforeach; ?>
-    );
+    ];
 
     /**
      * get valid gTLD regexp

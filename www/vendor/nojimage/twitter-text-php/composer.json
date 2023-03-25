@@ -41,14 +41,14 @@
     }
   ],
   "require": {
-    "php": ">=5.3.3",
+    "php": ">=7.4",
     "ext-mbstring": "*",
     "ext-intl": "*"
   },
   "require-dev": {
     "ext-json": "*",
-    "symfony/yaml": "^2.6.0|^3.4.0|^4.4.0|^5.0.0",
-    "phpunit/phpunit": "4.8.*|5.7.*|6.5.*",
+    "symfony/yaml": "^5.0.0",
+    "phpunit/phpunit": "^9.5",
     "twitter/twitter-text": "^3.0.0"
   },
   "autoload": {

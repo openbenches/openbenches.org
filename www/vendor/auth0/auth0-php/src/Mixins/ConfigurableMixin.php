@@ -4,267 +4,230 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Mixins;
 
-use Auth0\SDK\Exception\ConfigurationException;
-use Auth0\SDK\Utility\Toolkit;
+use Throwable;
 
 trait ConfigurableMixin
 {
     /**
-     * Tracks the state of the current configuration.
+     * @param  array<mixed>|null  $configuration
      *
-     * @var array<object>
+     * @psalm-suppress MissingClosureParamType,MissingClosureReturnType
      */
-    private array $configuredState = [];
-
-    /**
-     * When true, changes can no longer be applied to the configuration.
-     */
-    private bool $configurationImmutable = false;
-
-    /**
-     * Handler for get{VariableName}(), set{VariableName}(), push{VariableName}(), and has{VariableName}() "magic" functions.
-     *
-     * @param string       $functionName The name of the magic function being invoked.
-     * @param array<mixed> $arguments    Any arguments being passed to the magic function.
-     *
-     * @return mixed|void
-     *
-     * @throws ConfigurationException When a magic function is used improperly.
-     */
-    public function __call(
-        string $functionName,
-        array $arguments
-    ) {
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) <= 1) {
-            $propertyName = lcfirst(mb_substr($functionName, 3));
-
-            if (isset($this->configuredState[$propertyName])) {
-                $value = $this->configuredState[$propertyName]->value;
-
-                if (count($arguments) === 1 && $arguments[0] !== null && $this->configuredState[$propertyName]->allowsNull && $value === null) {
-                    if ($arguments[0] instanceof \Throwable) {
-                        throw $arguments[0];
-                    }
-
-                    throw \Auth0\SDK\Exception\ConfigurationException::required($propertyName);
-                }
-
-                return $value;
-            }
-
-            throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
-        }
-
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && count($arguments) !== 0) {
-            $propertyName = lcfirst(mb_substr($functionName, 3));
-            $this->changeState($propertyName, $arguments[0]);
+    private function applyConfiguration(?array $configuration): self
+    {
+        if (null === $configuration) {
             return $this;
         }
 
-        if (mb_strlen($functionName) > 5 && mb_substr($functionName, 0, 4) === 'push' && count($arguments) !== 0) {
-            $propertyName = lcfirst(mb_substr($functionName, 4));
+        $validators = $this->getPropertyValidators();
+        $defaults = $this->getPropertyDefaults();
 
-            if (isset($this->configuredState[$propertyName])) {
-                if (! is_array($arguments[0])) {
-                    $arguments[0] = [ $arguments[0] ];
-                }
-
-                $arguments = array_filter(
-                    Toolkit::filter($arguments)->array()->trim(),
-                    static function ($val): bool {
-                        return $val !== null && count($val) !== 0;
-                    }
-                );
-
-                if (count($arguments) !== 0) {
-                    if (is_array($this->configuredState[$propertyName]->value)) {
-                        $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]->value, $arguments[0]));
-                        return $this;
-                    }
-
-                    $this->changeState($propertyName, $arguments[0]);
-                    return $this;
-                }
-
-                return $this;
+        foreach ($configuration as $configKey => $configuredValue) {
+            if (! property_exists($this, $configKey) || ! \array_key_exists($configKey, $defaults)) {
+                continue;
             }
 
-            throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
-        }
-
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && count($arguments) === 0) {
-            $propertyName = lcfirst(mb_substr($functionName, 3));
-
-            if (isset($this->configuredState[$propertyName])) {
-                return $this->configuredState[$propertyName]->value !== null;
+            if (! isset($validators[$configKey]) || ! \is_callable($validators[$configKey])) {
+                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
             }
 
-            throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
+            if ($validators[$configKey]($configuredValue) === false) {
+                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
+            }
+
+            $method = 'set' . ucfirst($configKey);
+
+            if (method_exists($this, $method)) {
+                /** @phpstan-ignore-next-line */
+                $callback = function ($configuredValue) use ($method) {
+                    // @phpstan-ignore-next-line
+                    return $this->{$method}($configuredValue);
+                };
+
+                $callback($configuredValue);
+
+                continue;
+            }
+
+            // @phpstan-ignore-next-line
+            $this->{$configKey} = $configuredValue;
         }
 
-        throw \Auth0\SDK\Exception\ArgumentException::unknownMethod($functionName);
+        return $this;
     }
 
     /**
-     * Make the configuration immutable, so changes can no longer be applied. Once locked the configuration cannot be unlocked.
+     * @psalm-suppress MissingClosureParamType,MissingClosureReturnType
      */
-    public function lock(): self
+    private function validateProperties(): void
     {
-        $this->configurationImmutable = true;
-        return $this;
+        $defaults = $this->getPropertyDefaults();
+
+        foreach ($defaults as $configKey => $defaultValue) {
+            if (! property_exists($this, $configKey)) {
+                continue;
+            }
+
+            // @phpstan-ignore-next-line
+            if ($this->{$configKey} === $defaultValue) {
+                continue;
+            }
+
+            $method = 'set' . ucfirst($configKey);
+
+            if (method_exists($this, $method)) {
+                /** @phpstan-ignore-next-line */
+                $callback = function ($value) use ($method) {
+                    // @phpstan-ignore-next-line
+                    return $this->{$method}($value);
+                };
+
+                // @phpstan-ignore-next-line
+                $callback($this->{$configKey});
+
+                continue;
+            }
+        }
     }
 
     /**
-     * Restore all aspects of the configuration to it's default values.
-     *
-     * @throws ConfigurationException When the configuration has been locked.
+     * @param  mixed  $value  a value to compare against NULL
+     * @param  Throwable|null  $throwable  Optional. A Throwable exception to raise if $value is NULL.
      */
-    public function reset(): self
+    private function exceptionIfNull($value, ?Throwable $throwable = null): void
     {
-        if ($this->configurationImmutable) {
-            throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
+        if (null === $value && null !== $throwable) {
+            throw $throwable;
         }
-
-        foreach ($this->configuredState as $parameterKey => $parameterValue) {
-            $this->configuredState[$parameterKey]->value = $parameterValue->defaultValue;
-        }
-
-        return $this;
     }
 
     /**
-     * Import the configuration from an arguments array imported from a __constructor() method.
+     * @param  array<string>|null  $filtering  an array of strings to filter, or NULL
+     * @param  bool  $keepKeys  Optional. Whether to keep array keys or reindex the array appropriately.
      *
-     * @param mixed $args One or more of arguments from a class __constructor().
+     * @return array<string>|null
      *
-     * @throws \ReflectionException When the class or method does not exist.
-     * @throws ConfigurationException When the configuration is locked, or an invalid property type is used.
+     * @psalm-suppress DocblockTypeContradiction,RedundantCastGivenDocblockType
      */
-    private function setState(
-        ...$args
-    ): self {
-        $this->configuredState = [];
+    private function filterArray(?array $filtering, bool $keepKeys = false): ?array
+    {
+        if (! \is_array($filtering) || [] === $filtering) {
+            return null;
+        }
 
-        // phpcs:ignore
-        // TODO: Replace get_class() w/ ::class when 7.x support is dropped.
+        $filtered = [];
 
-        // phpcs:ignore
-        $constructor = new \ReflectionMethod(get_class($this), '__construct');
-        $parameters = $constructor->getParameters();
-        $arguments = $args[0];
-        $usingArgumentsArray = false;
-
-        if (count($parameters) !== 0) {
-            $typeName = $parameters[0]->getType();
-
-            if ($typeName instanceof \ReflectionNamedType) {
-                $typeName = $typeName->getName();
+        foreach ($filtering as $i => $s) {
+            // @phpstan-ignore-next-line
+            if (! is_scalar($s)) {
+                continue;
             }
 
-            if (
-                $parameters[0]->getName() === 'configuration' &&
-                $typeName === 'array' &&
-                $parameters[0]->getPosition() === 0 &&
-                $parameters[0]->allowsNull()
-            ) {
-                $argumentsArray = $arguments[$parameters[0]->getPosition()] ?? null;
+            $s = trim((string) $s);
 
-                if ($argumentsArray !== null) {
-                    $arguments = $arguments[$parameters[0]->getPosition()];
-                    $usingArgumentsArray = true;
-                }
-
-                array_shift($parameters);
-            }
-
-            foreach ($parameters as $parameter) {
-                $typeName = $parameter->getType();
-
-                if ($typeName instanceof \ReflectionNamedType) {
-                    $typeName = $typeName->getName();
-                }
-
-                $newProperty = [
-                    'allowsNull' => $parameter->allowsNull(),
-                    'defaultValue' => null,
-                    'type' => $typeName,
-                ];
-
-                if ($parameter->isDefaultValueAvailable()) {
-                    $newProperty['defaultValue'] = $parameter->getDefaultValue();
-                }
-
-                $newPropertyName = $parameter->getName();
-                $newPropertyValue = $newProperty['defaultValue'];
-
-                if (count($arguments) !== 0) {
-                    if ($usingArgumentsArray) {
-                        $newPropertyValue = $arguments[$parameter->getName()] ?? $parameter->getDefaultValue();
-                    } else {
-                        if (isset($arguments[$parameter->getPosition()])) {
-                            $newPropertyValue = $arguments[$parameter->getPosition()];
-                        }
-                    }
-                }
-
-                $this->configuredState[$newPropertyName] = (object) $newProperty;
-                $this->changeState($newPropertyName, $newPropertyValue);
+            if ('' !== $s && ! \in_array($s, $filtered, true)) {
+                $filtered[$i] = $s;
             }
         }
 
-        return $this;
+        if ([] === $filtered) {
+            return null;
+        }
+
+        if (! $keepKeys) {
+            return array_values($filtered);
+        }
+
+        return $filtered;
     }
 
     /**
-     * Mutates the configured state of a property. Applies checks on type, nullability and other safety measures.
-     *
-     * @param string $propertyName The name of the property being mutated.
-     * @param mixed $propertyValue The new value for the property.
-     *
-     * @throws ConfigurationException When an incompatible property value type is used.
+     * @param  array<mixed>|null  $filtering an array to filter, or NULL
+     * @param  bool  $keepKeys  Optional. Whether to keep array keys or reindex the array appropriately.
+     * @return array<mixed>|null
      */
-    private function changeState(
-        string $propertyName,
-        $propertyValue
-    ): void {
-        if ($this->configurationImmutable) {
-            throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
+    private function filterArrayMixed(?array $filtering, bool $keepKeys = false): ?array
+    {
+        if (! \is_array($filtering) || [] === $filtering) {
+            return null;
         }
 
-        if (! isset($this->configuredState[$propertyName])) {
-            throw \Auth0\SDK\Exception\ConfigurationException::setMissing($propertyName);
-        }
+        $filtered = [];
 
-        $propertyType = gettype($propertyValue);
+        foreach ($filtering as $i => $s) {
+            if (\is_string($s)) {
+                $s = trim($s);
+            }
 
-        $normalizedPropertyTypes = [
-            'boolean' => 'bool',
-            'integer' => 'int',
-        ];
-
-        $propertyType = $normalizedPropertyTypes[$propertyType] ?? $propertyType;
-
-        $allowedTypes = [$this->configuredState[$propertyName]->type];
-        $expectedType = $this->configuredState[$propertyName]->type;
-
-        if ($this->configuredState[$propertyName]->allowsNull) {
-            $allowedTypes[] = 'NULL';
-        }
-
-        if (! in_array($propertyType, $allowedTypes, true)) {
-            if (! $propertyValue instanceof $expectedType) {
-                if ($this->configuredState[$propertyName]->allowsNull) {
-                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, $expectedType, $propertyType);
-                }
-
-                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, $expectedType, $propertyType);
+            if ('' !== $s && null !== $s && ! \array_key_exists($i, $filtered)) {
+                $filtered[$i] = $s;
             }
         }
 
-        if (method_exists($this, 'onStateChange')) {
-            $propertyValue = $this->onStateChange($propertyName, $propertyValue);
+        if ([] === $filtered) {
+            return null;
         }
 
-        $this->configuredState[$propertyName]->value = $propertyValue;
+        if (! $keepKeys) {
+            return array_values($filtered);
+        }
+
+        return $filtered;
+    }
+
+    private function filterDomain(string $domain): ?string
+    {
+        $domain = $this->filterString($domain);
+
+        if ('' !== $domain) {
+            $scheme = parse_url($domain, PHP_URL_SCHEME);
+
+            if (! \is_string($scheme) || '' === $scheme) {
+                return $this->filterDomain('https://' . $domain);
+            }
+
+            $host = parse_url($domain, PHP_URL_HOST);
+
+            // @codeCoverageIgnoreStart
+            if (! \is_string($host) || '' === $host) {
+                return null;
+            }
+            // @codeCoverageIgnoreEnd
+
+            $parts = explode('.', $host);
+
+            if (\count($parts) < 2) {
+                return null;
+            }
+
+            $tld = end($parts);
+
+            if (\mb_strlen($tld) < 2) {
+                return null;
+            }
+
+            return $host;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string  $string  A string to apply sanitization filtering to.
+     * @return string
+     *
+     * @psalm-suppress UnusedFunctionCall
+     */
+    private function filterString(string $string): string
+    {
+        mb_regex_encoding('UTF-8');
+
+        $processed = trim($string);
+        $processed = trim(\htmlspecialchars_decode($processed, \ENT_QUOTES | \ENT_SUBSTITUTE));
+        $processed = trim(\strip_tags($processed));
+        $processed = trim(\htmlspecialchars($processed, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8', false));
+        $processed = mb_ereg_replace('[^\p{Ll}\p{Lu}\p{Nd}\p{Pd}\p{Pc}\p{Zs}\:\/\.\?\=]', '', $processed);
+
+        return (is_string($processed) && '' !== $processed) ? $processed : '';
     }
 }

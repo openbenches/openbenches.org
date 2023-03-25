@@ -72,7 +72,7 @@ class Parser
         $urlEntitiesMap = $this->transformEntitiesToHash($extractor->extractURLsWithIndices($normalizedTweet));
         $emojiEntitiesMap = $emojiParsingEnabled
             ? $this->transformEntitiesToHash($extractor->extractEmojiWithIndices($normalizedTweet))
-            : array();
+            : [];
 
         $hasInvalidCharacters = false;
         $weightedCount = 0;
@@ -124,8 +124,8 @@ class Parser
         $isValid = !$hasInvalidCharacters && $weightedCount <= $maxWeightedTweetLength;
 
         $normalizedTweetOffset = StringUtils::strlen($tweet) - $normalizedTweetLength;
-        $displayTextRange = array(0, $displayOffset + $normalizedTweetOffset - 1);
-        $validTextRange = array(0, $validOffset + $normalizedTweetOffset - 1);
+        $displayTextRange = [0, $displayOffset + $normalizedTweetOffset - 1];
+        $validTextRange = [0, $validOffset + $normalizedTweetOffset - 1];
 
         return new ParseResults($scaledWeightedLength, $permillage, $isValid, $displayTextRange, $validTextRange);
     }
@@ -142,7 +142,7 @@ class Parser
             $map[$entity['indices'][0]] = $entity;
 
             return $map;
-        }, array());
+        }, []);
     }
 
     /**

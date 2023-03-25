@@ -32,12 +32,12 @@ final class HttpTelemetry
     /**
      * Set the main SDK name and version.
      *
-     * @param string $name    SDK name.
-     * @param string $version SDK version number.
+     * @param  string  $name  SDK name
+     * @param  string  $version  SDK version number
      */
     public static function setPackage(
         string $name,
-        string $version
+        string $version,
     ): void {
         self::$packageName = $name;
         self::$packageVersion = $version;
@@ -48,15 +48,7 @@ final class HttpTelemetry
      */
     public static function setCorePackage(): void
     {
-        $phpVersion = phpversion();
-
-        // @codeCoverageIgnoreStart
-        // phpversion() can potentially return false in unusual circumstances; set PHP version to an empty string in those cases.
-        if ($phpVersion === false) {
-            $phpVersion = '';
-        }
-        // @codeCoverageIgnoreEnd
-
+        $phpVersion = PHP_VERSION;
         self::setPackage('auth0-php', Auth0::VERSION);
         self::setEnvProperty('php', $phpVersion);
     }
@@ -64,14 +56,14 @@ final class HttpTelemetry
     /**
      * Add an optional env property for SDK telemetry.
      *
-     * @param string $name    Property name to set, name of dependency or platform.
-     * @param string $version Version number of dependency or platform.
+     * @param  string  $name  property name to set, name of dependency or platform
+     * @param  string  $version  version number of dependency or platform
      */
     public static function setEnvProperty(
         string $name,
-        string $version
+        string $version,
     ): void {
-        if (self::$environment === null) {
+        if (null === self::$environment) {
             self::$environment = [];
         }
 
@@ -81,10 +73,10 @@ final class HttpTelemetry
     /**
      * Replace the current env data with new data.
      *
-     * @param array<mixed> $data Env data to add.
+     * @param  array<mixed>  $data  env data to add
      */
     public static function setEnvironmentData(
-        array $data
+        array $data,
     ): void {
         self::$environment = $data;
     }
@@ -96,17 +88,20 @@ final class HttpTelemetry
      */
     public static function get(): array
     {
-        if (self::$packageName === null) {
+        if (null === self::$packageName) {
             self::setCorePackage();
         }
 
-        return Toolkit::filter([
+        /** @var array<mixed> $response */
+        $response = Toolkit::filter([
             [
-                'name' => self::$packageName,
+                'name'    => self::$packageName,
                 'version' => self::$packageVersion,
-                'env' => self::$environment,
+                'env'     => self::$environment,
             ],
         ])->array()->trim()[0];
+
+        return $response;
     }
 
     /**

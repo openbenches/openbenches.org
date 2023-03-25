@@ -32,7 +32,7 @@ $codeRegexList = array_reduce($emojiCodes, function ($carry, $codes) {
     }, $codes));
 
     return $carry;
-}, array());
+}, []);
 
 $regex = implode('|', $codeRegexList);
 
@@ -40,7 +40,7 @@ echo "\n";
 
 // -- modify class file
 $classContent = file_get_contents($classFile);
-$replacedClassContent = preg_replace('/(\s+const VALID_EMOJI_PATTERN = \')(?:.*)(\';)/', '$1/' . $regex . '/u$2', $classContent);
+$replacedClassContent = preg_replace('/(\s+public const VALID_EMOJI_PATTERN = \')(?:.*)(\';)/', '$1/' . $regex . '/u$2', $classContent);
 
 echo $replacedClassContent;
 

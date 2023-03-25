@@ -32,85 +32,85 @@ class Configuration
      *
      * @var array
      */
-    private static $v3Config = array(
+    private static $v3Config = [
         'version' => 3,
         'maxWeightedTweetLength' => 280,
         'scale' => 100,
         'defaultWeight' => 200,
         'emojiParsingEnabled' => true,
         'transformedURLLength' => 23,
-        'ranges' => array(
-            array(
+        'ranges' => [
+            [
                 'start' => 0,
                 'end' => 4351,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8192,
                 'end' => 8205,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8208,
                 'end' => 8223,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8242,
                 'end' => 8247,
                 'weight' => 100,
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * configuration from v2.json
      *
      * @var array
      */
-    private static $v2Config = array(
+    private static $v2Config = [
         'version' => 2,
         'maxWeightedTweetLength' => 280,
         'scale' => 100,
         'defaultWeight' => 200,
         'transformedURLLength' => 23,
-        'ranges' => array(
-            array(
+        'ranges' => [
+            [
                 'start' => 0,
                 'end' => 4351,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8192,
                 'end' => 8205,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8208,
                 'end' => 8223,
                 'weight' => 100,
-            ),
-            array(
+            ],
+            [
                 'start' => 8242,
                 'end' => 8247,
                 'weight' => 100,
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * configuration from v1.json
      *
      * @var array
      */
-    private static $v1Config = array(
+    private static $v1Config = [
         'version' => 1,
         'maxWeightedTweetLength' => 140,
         'scale' => 1,
         'defaultWeight' => 1,
         'transformedURLLength' => 23,
-        'ranges' => array(),
-    );
+        'ranges' => [],
+    ];
 
     /**
      * @var array
@@ -139,7 +139,7 @@ class Configuration
      */
     public function __get($name)
     {
-        return isset($this->config[$name]) ? $this->config[$name] : null;
+        return $this->config[$name] ?? null;
     }
 
     /**

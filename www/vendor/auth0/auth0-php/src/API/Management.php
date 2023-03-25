@@ -60,14 +60,14 @@ use Auth0\SDK\Utility\HttpResponse;
 use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
- * Class Management
+ * Class Management.
  */
 final class Management implements ManagementInterface
 {
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private SdkConfiguration $configuration;
+    private ?SdkConfiguration $validatedConfiguration = null;
 
     /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
@@ -75,111 +75,102 @@ final class Management implements ManagementInterface
     private ?HttpClient $httpClient = null;
 
     /**
-     * Cache of Management singletons.
-     *
-     * @var array<object>
-     */
-    private array $instances = [];
-
-    /**
      * Management constructor.
      *
-     * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  array<mixed>|SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When an invalidation `configuration` is provided.
+     * @throws \Auth0\SDK\Exception\ConfigurationException when an invalidation `configuration` is provided
      *
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
-        $configuration
+        private SdkConfiguration|array $configuration,
     ) {
-        // If we're passed an array, construct a new SdkConfiguration from that structure.
-        if (is_array($configuration)) {
-            $configuration = new SdkConfiguration($configuration);
-        }
-
-        // We only accept an SdkConfiguration type.
-        if (! $configuration instanceof SdkConfiguration) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
-        }
-
-        // Store the configuration internally.
-        $this->configuration = $configuration;
+        $this->getConfiguration();
     }
 
-    /**
-     * Return the HttpClient instance being used for management API requests.
-     *
-     * @param Authentication|null $authentication Optional. An Instance of Authentication for use during client credential exchange. One will be created, when necessary, if not provided.
-     *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When a Management Token is not able to be obtained.
-     */
+    public function getConfiguration(): SdkConfiguration
+    {
+        if (null === $this->validatedConfiguration) {
+            if (\is_array($this->configuration)) {
+                return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
+            }
+
+            return $this->validatedConfiguration = $this->configuration;
+        }
+
+        return $this->validatedConfiguration;
+    }
+
     public function getHttpClient(
-        ?Authentication $authentication = null
+        ?Authentication $authentication = null,
     ): HttpClient {
-        if ($this->httpClient !== null) {
+        if (null !== $this->httpClient) {
             return $this->httpClient;
         }
 
         // Retrieve any configured management token.
-        $managementToken = $this->configuration->getManagementToken();
+        $managementToken = $this->getConfiguration()->getManagementToken();
 
         // PSR-6 cache to use for management access token caching.
-        $cache = $this->configuration->getManagementTokenCache();
+        $cache = $this->getConfiguration()->getManagementTokenCache();
 
         // If no token was provided, try to get one from cache.
-        if ($managementToken === null) {
-            if ($cache !== null) {
-                $item = $cache->getItem('managementAccessToken');
-                if ($item->isHit()) {
-                    $managementToken = $item->get();
-                }
+        if (null === $managementToken && null !== $cache) {
+            $item = $cache->getItem('managementAccessToken');
+
+            if ($item->isHit()) {
+                $managementToken = $item->get();
+                /** @var int|string|null $managementToken */
             }
         }
 
         // If no token was provided or available from cache, try to get one.
-        if ($managementToken === null && $this->configuration->hasClientSecret()) {
-            $authentication = $authentication ?? new Authentication($this->configuration);
-            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain(true) . '/api/v2/']);
+        if (null === $managementToken && $this->getConfiguration()->hasClientSecret()) {
+            $authentication ??= new Authentication($this->getConfiguration());
+            $response = $authentication->clientCredentials(['audience' => $this->getConfiguration()->formatDomain(true) . '/api/v2/']);
+            $decoded = HttpResponse::decodeContent($response);
+
+            /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
 
             if (HttpResponse::wasSuccessful($response)) {
-                $response = HttpResponse::decodeContent($response);
-
-                if (isset($response['access_token'])) {
-                    $managementToken = $response['access_token'];
+                if (isset($decoded['access_token'])) {
+                    $managementToken = $decoded['access_token'];
 
                     // If cache is available, store the token.
-                    if ($cache !== null) {
+                    if (null !== $cache) {
                         $cachedKey = $cache->getItem('managementAccessToken');
                         $cachedKey->set($managementToken);
-                        $cachedKey->expiresAfter((int) ($response['expires_in'] ?? 3600));
+                        $cachedKey->expiresAfter((int) ($decoded['expires_in'] ?? 3600));
 
                         $cache->save($cachedKey);
                     }
                 }
+            } elseif (isset($decoded['error'])) {
+                $errorMessage = (string) $decoded['error'];
+
+                if (isset($decoded['error_description'])) {
+                    $errorMessage .= ': ' . (string) $decoded['error_description'];
+                }
+
+                throw \Auth0\SDK\Exception\NetworkException::requestRejected($errorMessage);
             }
         }
 
         // No management token could be acquired.
-        if ($managementToken === null) {
+        if (null === $managementToken) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
         }
 
         // Build the API client using the management token.
-        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
+        return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
-    /**
-     * Return an instance of HttpRequest representing the last issued request.
-     */
     public function getLastRequest(): ?HttpRequest
     {
         return $this->getHttpClient()->getLastRequest();
     }
 
-    /**
-     * Return a ResponsePaginator instance configured for the last HttpRequest.
-     */
     public function getResponsePaginator(): HttpResponsePaginator
     {
         return new HttpResponsePaginator($this->getHttpClient());
@@ -187,136 +178,121 @@ final class Management implements ManagementInterface
 
     public function actions(): ActionsInterface
     {
-        return $this->getClassInstance(Actions::class);
+        return Actions::instance($this->getHttpClient());
     }
 
     public function attackProtection(): AttackProtectionInterface
     {
-        return $this->getClassInstance(AttackProtection::class);
+        return AttackProtection::instance($this->getHttpClient());
     }
 
     public function blacklists(): BlacklistsInterface
     {
-        return $this->getClassInstance(Blacklists::class);
+        return Blacklists::instance($this->getHttpClient());
     }
 
     public function clients(): ClientsInterface
     {
-        return $this->getClassInstance(Clients::class);
+        return Clients::instance($this->getHttpClient());
     }
 
     public function connections(): ConnectionsInterface
     {
-        return $this->getClassInstance(Connections::class);
+        return Connections::instance($this->getHttpClient());
     }
 
     public function clientGrants(): ClientGrantsInterface
     {
-        return $this->getClassInstance(ClientGrants::class);
+        return ClientGrants::instance($this->getHttpClient());
     }
 
     public function deviceCredentials(): DeviceCredentialsInterface
     {
-        return $this->getClassInstance(DeviceCredentials::class);
+        return DeviceCredentials::instance($this->getHttpClient());
     }
 
     public function emails(): EmailsInterface
     {
-        return $this->getClassInstance(Emails::class);
+        return Emails::instance($this->getHttpClient());
     }
 
     public function emailTemplates(): EmailTemplatesInterface
     {
-        return $this->getClassInstance(EmailTemplates::class);
+        return EmailTemplates::instance($this->getHttpClient());
     }
 
     public function grants(): GrantsInterface
     {
-        return $this->getClassInstance(Grants::class);
+        return Grants::instance($this->getHttpClient());
     }
 
     public function guardian(): GuardianInterface
     {
-        return $this->getClassInstance(Guardian::class);
+        return Guardian::instance($this->getHttpClient());
     }
 
     public function jobs(): JobsInterface
     {
-        return $this->getClassInstance(Jobs::class);
+        return Jobs::instance($this->getHttpClient());
     }
 
     public function logs(): LogsInterface
     {
-        return $this->getClassInstance(Logs::class);
+        return Logs::instance($this->getHttpClient());
     }
 
     public function logStreams(): LogStreamsInterface
     {
-        return $this->getClassInstance(LogStreams::class);
+        return LogStreams::instance($this->getHttpClient());
     }
 
     public function organizations(): OrganizationsInterface
     {
-        return $this->getClassInstance(Organizations::class);
+        return Organizations::instance($this->getHttpClient());
     }
 
     public function roles(): RolesInterface
     {
-        return $this->getClassInstance(Roles::class);
+        return Roles::instance($this->getHttpClient());
     }
 
     public function rules(): RulesInterface
     {
-        return $this->getClassInstance(Rules::class);
+        return Rules::instance($this->getHttpClient());
     }
 
     public function resourceServers(): ResourceServersInterface
     {
-        return $this->getClassInstance(ResourceServers::class);
+        return ResourceServers::instance($this->getHttpClient());
     }
 
     public function stats(): StatsInterface
     {
-        return $this->getClassInstance(Stats::class);
+        return Stats::instance($this->getHttpClient());
     }
 
     public function tenants(): TenantsInterface
     {
-        return $this->getClassInstance(Tenants::class);
+        return Tenants::instance($this->getHttpClient());
     }
 
     public function tickets(): TicketsInterface
     {
-        return $this->getClassInstance(Tickets::class);
+        return Tickets::instance($this->getHttpClient());
     }
 
     public function userBlocks(): UserBlocksInterface
     {
-        return $this->getClassInstance(UserBlocks::class);
+        return UserBlocks::instance($this->getHttpClient());
     }
 
     public function users(): UsersInterface
     {
-        return $this->getClassInstance(Users::class);
+        return Users::instance($this->getHttpClient());
     }
 
     public function usersByEmail(): UsersByEmailInterface
     {
-        return $this->getClassInstance(UsersByEmail::class);
-    }
-
-    /**
-     * Return an instance of Api Management Class.
-     *
-     * @return mixed
-     */
-    private function getClassInstance(
-        string $className
-    ) {
-        if (! isset($this->instances[$className])) {
-            $this->instances[$className] = new $className($this->getHttpClient());
-        }
-
-        return $this->instances[$className];
+        return UsersByEmail::instance($this->getHttpClient());
     }
 }

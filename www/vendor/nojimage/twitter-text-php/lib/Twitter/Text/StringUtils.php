@@ -19,7 +19,6 @@ namespace Twitter\Text;
  */
 class StringUtils
 {
-
     /**
      * alias of mb_substr
      *
@@ -31,10 +30,6 @@ class StringUtils
      */
     public static function substr($str, $start, $length = null, $encoding = 'UTF-8')
     {
-        if ($length === null) {
-            // for PHP <= 5.4.7
-            $length = mb_strlen($str, $encoding);
-        }
         return mb_substr($str, $start, $length, $encoding);
     }
 
@@ -110,12 +105,7 @@ class StringUtils
      */
     public static function idnToAscii($domain)
     {
-        // INTL_IDNA_VARIANT_UTS46 defined PHP 5.4.0 or later
-        if (defined('INTL_IDNA_VARIANT_UTS46')) {
-            return idn_to_ascii($domain, IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46);
-        }
-
-        return idn_to_ascii($domain, IDNA_ALLOW_UNASSIGNED);
+        return idn_to_ascii($domain, IDNA_ALLOW_UNASSIGNED, INTL_IDNA_VARIANT_UTS46);
     }
 
     /**
