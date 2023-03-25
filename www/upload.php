@@ -119,11 +119,13 @@ if ($_FILES['userfile1']['tmp_name'])
 			}
 
 			//	Post the bench to Mastodon
-			try {
-				mastodon_bench($benchID, $inscription, "CC BY-SA 4.0", $user_provider, $user_name);
-			} catch (Exception $e) {
-				// var_export($e);
-				return null;
+			if ( MASTODON_INSTANCE != null) {
+				try {
+					mastodon_bench($benchID, $inscription, "CC BY-SA 4.0", $user_provider, $user_name);
+				} catch (Exception $e) {
+					// var_export($e);
+					return null;
+				}
 			}
 
 			return null;
