@@ -29,6 +29,33 @@ if(isset($_POST['key'])) {
 
 	if ($valid) {
 
+		// get the tags from before edit to put in the email later
+		$oldTags=get_tags_from_bench($benchID);
+		$oldTagsText=array();
+		foreach ($oldTags as $t) {
+			$oldTagsText[]=$t['tagText'];
+		}
+		//      Get any tags sent from edit and save them
+		if (isset($_POST['tags'])){
+		      // this is different to upload.php where the tags are
+		      // received as a string from add.php which sends them
+		      // using XMLHttpRequest() so no need to explode() them
+  		      $postTags = $_POST['tags'];
+		      save_tags($benchID, $postTags);
+		} else {
+			// if all tags are removed in edit then there's
+			// no tags in POST data but still need to call
+			// save_tags so that it removes existing tags
+			save_tags($benchID, null);
+		}
+		// get the current tags to put in the email later
+		// (POST only contains the tagIDs, not the text)
+		$newTags=get_tags_from_bench($benchID);
+		$newTagsText=array();
+		foreach ($newTags as $t) {
+			$newTagsText[]=$t['tagText'];
+		}
+                 
 		if (null == $user_provider) {
 			$userID = insert_user("anon", $_SERVER['REMOTE_ADDR'], date(DateTime::ATOM));
 		} else {
@@ -70,6 +97,8 @@ if(isset($_POST['key'])) {
 			"Old: {$oldBenchInscription}\n".
 			"New: {$latitude},{$longitude}\n".
 			"Old: {$oldBenchLat},{$oldBenchLong}\n".
+			"New tags: ".implode(',',$newTagsText)."\n".
+			"Old tags: ".implode(',',$oldTagsText)."\n".
 			"New Published: {$published}\n".
 			"Old Published: {$oldPublished}\n".
 
@@ -134,7 +163,41 @@ if($user_provider != null){
 			<label for="inscription">Change Inscription?</label><br>
 			<textarea id="inscription" name="inscription" cols="40" rows="6"><?php echo $benchInscription; ?></textarea>
 		</div>&nbsp;
+        <script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
+        <script src="/libs/select2.4.0.13/select2.min.js"></script>
+        <script src="/api/v1.0/tags.json/"></script>
+        <script>
+           $(document).ready(function() {
+                $('.js-tags-multiple').select2({
+                        data: tags,
+                        closeOnSelect: false,
+                        placeholder: "tag this bench up"
+                });
+                <?php $jsArray=json_encode(get_tags_from_bench($benchID)); ?>;
+		const currentTags=<?php echo $jsArray ?>;
+                console.log("hello");
+                console.log(currentTags);
+		var currentTagsIDs=[];
+		currentTags.forEach( tag => {
+		  //console.log(tag['tagID']);
+		  currentTagsIDs.push(tag['tagID']);
+		  //console.log(currentTagsIDs);
+		}
+		)
+		$('#tag_multiple').val(currentTagsIDs);
+		$('#tag_multiple').trigger('change');
+           });
+        </script>
 
+                <div id="tagInput" style="">
+                        <label for="tag_multiple">
+                                Change tags?
+                                <select class="js-tags-multiple form-control"
+                                        name="tags[]" id="tag_multiple"
+                                        multiple="multiple"></select>
+                        </label>
+                </div>
+		<br>
 		<div id='benchImage'>
 			<?php echo get_image_html($benchID); ?>
 		</div>

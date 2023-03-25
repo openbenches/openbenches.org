@@ -1634,16 +1634,31 @@ function get_bench_tag_count($tagText) {
 	return $count;
 }
 
-function save_tags($benchID, $tags) {
-	global $mysqli;
 
-	foreach ($tags as $tagID) {
-		$save_tag = $mysqli->prepare(
-			"INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
-			VALUES                 (NULL,     ?,         ?)");
-		$save_tag->bind_param('ii', $benchID, $tagID);
-		$save_tag->execute();
-		$save_tag->close();
+function save_tags($benchID, $tags) {
+	// this function needs to work for when a bench is added or edited
+	// when a bench is edited that may mean that the number of tags
+	// increases, or decreases to as few as zero
+	// easiest way to deal with this is to remove all entries for the
+	// bench then add whatever tags were passed
+	global $mysqli;
+	$mysqli->begin_transaction();
+	try {
+		$remove_tags = $mysqli->prepare("DELETE FROM `tag_map` WHERE `benchID`=?");
+		$remove_tags->bind_param('i', $benchID);
+		$remove_tags->execute();
+		$remove_tags->close();
+		foreach ($tags as $tagID) {
+			$save_tag = $mysqli->prepare(
+				"INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
+				VALUES                 (NULL,     ?,         ?)");
+			$save_tag->bind_param('ii', $benchID, $tagID);
+			$save_tag->execute();
+			$save_tag->close();
+		}
+		$mysqli->commit();
+	} catch (mysqli_sql_exception $exception) {
+		$mysqli->rollback();
 	}
 	return true;
 }
@@ -1652,17 +1667,17 @@ function get_tags_from_bench($benchID) {
 	global $mysqli;
 
 	$get_tags = $mysqli->prepare(
-		"SELECT tags.tagText
+		"SELECT tags.tagText, tags.tagID
 		 FROM `tag_map`
 		 INNER JOIN tags ON (tags.`tagID` = tag_map.`tagID`)
 		 WHERE `benchID` = ?");
 	$get_tags->bind_param('i', $benchID);
 	$get_tags->execute();
-	$get_tags->bind_result($tag);
+	$get_tags->bind_result($tag, $tagID);
 
 	$tags = array();
 	while($get_tags->fetch()) {
-		$tags[] = $tag;
+		$tags[] = array("tagText"=>$tag, "tagID"=>$tagID);
 	}
 
 	$get_tags->close();
