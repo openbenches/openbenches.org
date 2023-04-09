@@ -130,7 +130,7 @@ if (null == $page_title) {
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
-	<link rel="stylesheet" href="/css/style.css?cache=2022-09-28T16:06"/>
+	<link rel="stylesheet" href="/css/style.css?cache=2023-04-09T16:06"/>
 
 	<link rel="stylesheet" href="/libs/select2.4.0.13/select2.min.css"  />
 

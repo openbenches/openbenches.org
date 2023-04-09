@@ -363,10 +363,21 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 	box-shadow: inset 0 0 0 99em rgba(255, 255, 255, 0.15);
 }
 
+button, .button, [type="submit"], .dropimage {
+	width: 14em;
+}
+
 #idc-container {
 	margin-left: auto !important;
 	margin-right: auto !important;
 }
+
+.idc-r {
+	padding: 1em !important;
+	background: #8C35B0;
+	display: block !important;
+	margin: .5em !important;
+ }
 
 #coordinates {
 	max-width: 20em;
