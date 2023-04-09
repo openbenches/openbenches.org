@@ -28,7 +28,7 @@ $(function () {
 
 	$("#typeButton" ).click(function() {
 		//	Unhide the inscription box
-		$('#inscription').show();
+		$('#inscription').prop('disabled', false);
 		$('#buttonBar').show();
 	});
 });
@@ -100,7 +100,7 @@ function displayJSON (data) {
 	//  Tell visitor the automatic text detection finished
 	$('#message').text('Automatically detected text is shown below.\nPlease check and edit if needed.');
 	//	Unhide the inscription box
-	$('#inscription').show();
+	$('#inscription').prop('disabled', false);
 	$('#buttonBar').show();
 	//	Get the text
 	var contents = data.responses[0].fullTextAnnotation.text;

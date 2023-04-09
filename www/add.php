@@ -52,7 +52,7 @@ include("header.php");
 
 		<div id="inscriptionBox" style="">
 			<label for="inscription" id="message"></label><br>
-			<textarea id="inscription" name="inscription" class="inscription-hidden" style="display: none;" cols="40" rows="6" placeholder="In loving memory of
+			<textarea id="inscription" name="inscription" disabled cols="40" rows="6" placeholder="In loving memory of
 Buffy Anne Summers
 She saved the world.
 A lot..." required></textarea>
@@ -136,7 +136,7 @@ A lot..." required></textarea>
 		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
 	<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
-	<script src="/libs/vision/vision.js.php?cache=2019-10-23"></script>
+	<script src="/libs/vision/vision.js.php?cache=2023-04-09"></script>
 	<script src="/libs/load-image.5.16.0/load-image.all.min.js"></script>
 	<script src="/libs/select2.4.0.13/select2.min.js"></script>
 	<script>
