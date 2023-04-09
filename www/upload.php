@@ -23,24 +23,30 @@ if ( $sentTags != "" ) {
 	$tags = null;
 }
 
-
 if ($_FILES['userfile1']['tmp_name'])
-{	//	Has a photo been posted?
-	$filename = $_FILES['userfile1']['tmp_name'];
-	$sha1 = sha1_file ($filename);
+{	
+	//	Check for duplicates
+	$duplicates = false;
+	foreach( $_FILES as $file ) {
+		$duplicate = duplicate_file( $file['tmp_name'] );
+		if ( $duplicate > 0 )
+		{
+			$error_filename = htmlspecialchars( $file['name'] );
+			$error_message .= "{$error_filename} is already attached to <a href=\"/bench/{$duplicate}\">Bench #{$duplicate}</a>.<br /><a href=\"/add\">Please reload this page and try a different photo</a><br>";
+			$duplicates = true;
+		}
+	}
 
-	//	For tweeting
-	$domain = $_SERVER['SERVER_NAME'];
-	$mediaURLs = array();
-	$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
-
-	if (duplicate_file($filename))
-	{
-		$error_filename = $_FILES['userfile1']['name'];
-		$error_message .= "{$error_filename} already exists in the database.<br /><a href=\"/add\">Please reload this page and try a different photo</a>";
-	} else {
+	if ( !$duplicates ) {
 		//	Does the first file have a GPS location?
+		$filename = $_FILES['userfile1']['tmp_name'];
 		$location = get_image_location($filename);
+
+		//	For tweeting
+		$sha1 = sha1_file ($filename);
+		$domain = $_SERVER['SERVER_NAME'];
+		$mediaURLs = array();
+		$mediaURLs[] = "https://{$domain}/image/{$sha1}/1024";
 
 		//	If there is a GPS tag on the photo
 		if (false != $location)

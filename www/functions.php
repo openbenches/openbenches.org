@@ -628,10 +628,6 @@ function save_image($file, $media_type, $benchID, $userID) {
 	$filename = $file['name'];
 	$file =     $file['tmp_name'];
 
-	if (duplicate_file($file)) {
-		return "<h3>Duplicate image: {$filename}</h3>";
-	}
-
 	//	Check to see if this has the right EXIF tags for a photosphere
 	if (is_photosphere($file)) {
 		$media_type = "360";
@@ -674,15 +670,10 @@ function save_image($file, $media_type, $benchID, $userID) {
 	}
 }
 
-function duplicate_file($filename) {
-	$sha1 = sha1_file($filename);
-	$photo_full_path = get_path_from_hash($sha1, true);
-
-	//	Does this photo already exit?
-	if(file_exists($photo_full_path)){
-		return true;
-	}
-	return false;
+function duplicate_file( $filename ) {
+	$sha1 = sha1_file( $filename );
+	$benchID = get_bench_from_sha1( $sha1 );
+	return $benchID;
 }
 
 function get_image_cache($sha1, $size=IMAGE_DEFAULT_SIZE) {

@@ -1683,3 +1683,24 @@ function get_tags_from_bench($benchID) {
 	$get_tags->close();
 	return $tags;
 }
+
+function get_bench_from_sha1( $sha1 ) {
+	global $mysqli;
+	$get_bench = $mysqli->prepare(
+		"SELECT `benchID`
+		 FROM   `media`
+		 WHERE  `sha1` = ?");
+
+	$get_bench->bind_param('s', $sha1);
+
+	$get_bench->execute();
+	$get_bench->bind_result($benchID);
+
+	$id = 0;
+	while($get_bench->fetch()) {
+		$id = $benchID;
+	}
+
+	$get_bench->close();
+	return $id;
+}
