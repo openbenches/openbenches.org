@@ -17,13 +17,13 @@ $rssXML = <<<EOT
   <channel>
     <title>OpenBenches.org</title>
     <description>An open data repository for memorial benches</description>
-    <link>https://openbenches.org/</link>
+    <link>https://{$_SERVER['HTTP_HOST']}/</link>
     <image>
-      <url>https://openbenches.org/images/icons/icon-512x512.png</url>
+      <url>https://{$_SERVER['HTTP_HOST']}/images/icons/icon-512x512.png</url>
       <title>OpenBenches.org</title>
-      <link>https://openbenches.org/</link>
+      <link>https://{$_SERVER['HTTP_HOST']}/</link>
     </image>
-    <atom:link href="https://openbenches.org/rss" rel="self" type="application/rss+xml" />
+    <atom:link href="https://{$_SERVER['HTTP_HOST']}/rss" rel="self" type="application/rss+xml" />
     <lastBuildDate>{$buildDate}</lastBuildDate>
     <language>en-gb</language>
 
@@ -46,15 +46,15 @@ foreach ($items as $item) {
 	$rssXML.=		"<br>\n";
 
 	foreach ($sha1 as $images) {
-		$rssXML.=	"<img src=\"https://openbenches.org/image/{$images}/{$imgHeight}\" height=\"{$imgHeight}\">\n";
+		$rssXML.=	"<img src=\"https://{$_SERVER['HTTP_HOST']}/image/{$images}/{$imgHeight}\" height=\"{$imgHeight}\">\n";
 		$rssXML.=	"<br>\n";
 	}
 
 	$rssXML.=		$benchAddress;
 	$rssXML.=	"]]></description>\n";
 
-	$rssXML.=	"<link>https://openbenches.org/bench/{$benchID}</link>\n";
-	$rssXML.=	"<guid isPermaLink=\"true\">https://openbenches.org/bench/{$benchID}</guid>\n";
+	$rssXML.=	"<link>https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}</link>\n";
+	$rssXML.=	"<guid isPermaLink=\"true\">https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}</guid>\n";
 	$rssXML.=	"<pubDate>".date(DATE_RSS, strtotime($benchAdded))."</pubDate>\n";
 	$rssXML.="</item>\n";
 }

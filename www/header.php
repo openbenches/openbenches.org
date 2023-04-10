@@ -36,7 +36,7 @@ if ("bench" == $page) {
 		//	https://oembed.com/
 		$oembedMeta = "<link rel='alternate'
 		type='application/json+oembed'
-		href='https://openbenches.org/oembed/?url=https%3A%2F%2Fopenbenches.org%2Fbench%2F{$benchID}%2F'
+		href='https://{$_SERVER['HTTP_HOST']}/oembed/?url=https%3A%2F%2F{$_SERVER['HTTP_HOST']}%2Fbench%2F{$benchID}%2F'
 		title='OpenBenches oEmbed Profile' />";
 	}
 
@@ -97,7 +97,7 @@ if (null == $page_title) {
 	<meta name="twitter:creator"                         content="@openbenches">
 	<meta name="twitter:title"       property="og:title" content="OpenBenches <?php echo htmlspecialchars($page_title); ?>">
 	<meta                            property="og:url"   content="https://<?php echo "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
-	<meta name="twitter:image"       property="og:image" content="https://openbenches.org<?php echo $benchImage; ?>">
+	<meta name="twitter:image"       property="og:image" content="https://<?php echo "$_SERVER[HTTP_HOST]$benchImage"; ?>">
 	<meta                            property="og:image:type"  content="image/jpeg">
 	<meta                            property="og:image:width" content="640">
 	<meta                            property="og:image:alt"   content="A photo of a bench with a memorial inscription on it.">
@@ -117,16 +117,16 @@ if (null == $page_title) {
 	{
 		"@context": "https://schema.org",
 		"@type":    "WebSite",
-		"url":      "https://openbenches.org/",
+		"url":      "https://<?php echo $_SERVER['HTTP_HOST']; ?>/",
 		"potentialAction": {
 			"@type":       "SearchAction",
-			"target":      "https://openbenches.org/search/?search={search_term_string}",
+			"target":      "https://<?php echo $_SERVER['HTTP_HOST']; ?>/search/?search={search_term_string}",
 			"query-input": "required name=search_term_string"
 		}
 	}
 	</script>
 
-	<link rel="alternate" type="application/rss+xml" href="https://openbenches.org/rss" />
+	<link rel="alternate" type="application/rss+xml" href="https://<?php echo $_SERVER["HTTP_HOST"]; ?>/rss" />
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>

@@ -18,7 +18,7 @@ if ("twitter" == $user_provider && 14054507 == $user_providerID)
 	if ($originalID != null && $duplicateID != null)
 	{
 		merge_benches($originalID, $duplicateID);
-		echo "Redirected <a href='https://openbenches.org/bench/{$duplicateID}'>{$duplicateID}</a><br>";
+		echo "Redirected <a href='https://{$_SERVER['HTTP_HOST']}/bench/{$duplicateID}'>{$duplicateID}</a><br>";
 	}
 ?>
 	<form action="merge.php" method="post" autocomplete="off">

@@ -6,6 +6,7 @@ require_once ("functions.php");
 
 //	Start the normal page
 include("header.php");
+
 //	Has a photo been posted?
 if ($_GET["flickrID"])
 {

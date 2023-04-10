@@ -17,7 +17,7 @@ $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
 $sitemap .='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
 while($get_ids->fetch()){
-	$sitemap .= "<url><loc>https://openbenches.org/bench/{$benchID}</loc></url>\n";
+	$sitemap .= "<url><loc>https://{$_SERVER['HTTP_HOST']}/bench/{$benchID}</loc></url>\n";
 }
 
 $sitemap .= "</urlset>";

@@ -133,7 +133,7 @@ A lot..." required></textarea>
 	</div>
 	<small id="cc-small">By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
 		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
-		See our <a href="https://www.openbenches.org/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
+		See our <a href="https://<?php echo $_SERVER['HTTP_HOST']; ?>/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
 	</small>
 	<script src="/libs/jquery.3.6.0/jquery-3.6.0.min.js"></script>
 	<script src="/libs/vision/vision.js.php?cache=2023-04-09"></script>
