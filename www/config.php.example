@@ -9,10 +9,13 @@ define('OAUTH_TOKEN_SECRET',    '');
 define('ADMIN_CONSUMER_KEY',    '');
 define('ADMIN_CONSUMER_SECRET', '');
 
+// Admin's ID
+define('ADMIN_PROVIDER',        ''); //eg 'twitter'
+define('ADMIN_ID',              123456); //eg 123456
+
 //	Share to Mastodon
 define('MASTODON_ACCESS_TOKEN', '');
 define('MASTODON_INSTANCE',     'https://'); // No trailing slash
-
 
 //	Database
 define('DB_IP',   '');

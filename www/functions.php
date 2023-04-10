@@ -89,6 +89,11 @@ function get_user_details($raw = true) {
 	}
 }
 
+function is_admin_user() {
+	[$user_provider, $user_providerID, $user_name] = get_user_details(true);
+	return (ADMIN_PROVIDER == $user_provider && ADMIN_ID == $user_providerID);
+}
+
 function get_edit_key($benchID){
 	$hash = crypt($benchID,EDIT_SALT);
 	$key = explode("$",$hash)[3];
