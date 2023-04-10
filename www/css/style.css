@@ -377,6 +377,7 @@ button, .button, [type="submit"], .dropimage {
 	background: #8C35B0;
 	display: block !important;
 	margin: .5em !important;
+	border-radius: .2em;
  }
 
 #coordinates {
