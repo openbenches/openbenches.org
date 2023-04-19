@@ -87,4 +87,5 @@ if ("exif" == $size){
 	header("Content-type: {$mime}");
 	ob_clean();
 	readfile($photo_full_path);
+	exit;
 }

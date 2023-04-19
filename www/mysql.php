@@ -463,43 +463,43 @@ function get_latest_bench(){
 	}
 }
 
-function get_image($benchID, $full = false)
-{
-	global $mysqli;
+// function get_image($benchID, $full = false)
+// {
+// 	global $mysqli;
 
-	$get_media = $mysqli->prepare(
-		"SELECT sha1, userID, importURL, licence FROM media
-		WHERE benchID = ?
-		LIMIT 0 , 1");
+// 	$get_media = $mysqli->prepare(
+// 		"SELECT sha1, userID, importURL, licence, width FROM media
+// 		WHERE benchID = ?
+// 		LIMIT 0 , 1");
 
-	$get_media->bind_param('i',  $benchID );
-	$get_media->execute();
-	/* bind result variables */
-	$get_media->bind_result($sha1, $userID, $importURL, $licence);
+// 	$get_media->bind_param('i',  $benchID );
+// 	$get_media->execute();
+// 	/* bind result variables */
+// 	$get_media->bind_result($sha1, $userID, $importURL, $licence, $width);
 
-	$html = "";
+// 	$html = "";
 
-	# Loop through rows to build feature arrays
-	while($get_media->fetch()) {
-		$get_media->close();
-		// $userString = get_user($userID);
-		if(null != $importURL) {
-			$source = "<a href='{$importURL}'>Image Source</a>";
-		}
-		$licenceHTML = get_licence($licence);
+// 	# Loop through rows to build feature arrays
+// 	while($get_media->fetch()) {
+// 		$get_media->close();
+// 		// $userString = get_user($userID);
+// 		if(null != $importURL) {
+// 			$source = "<a href='{$importURL}'>Image Source</a>";
+// 		}
+// 		$licenceHTML = get_licence($licence);
 
-		if ($full) {
-			$imageLink = "/image/{$sha1}";
-		} else {
-			$imageLink = "/bench/{$benchID}";
-		}
+// 		if ($full) {
+// 			$imageLink = get_image_cache($sha1, $width);
+// 		} else {
+// 			$imageLink = "/bench/{$benchID}";
+// 		}
 
-		$html .= "<a href='{$imageLink}'><img src='".get_image_cache($sha1)."' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
-		break;
-	}
+// 		$html .= "<a href='{$imageLink}'><img src='".get_image_cache($sha1)."' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
+// 		break;
+// 	}
 
-	return $html;
-}
+// 	return $html;
+// }
 
 function get_user_from_media($mediaID) {
 	//	Who uploaded this media?
@@ -532,7 +532,7 @@ function get_image_html($benchID, $full = true)
 	global $mysqli;
 
 	$get_media = $mysqli->prepare(
-		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type, datetime, make, model
+		"SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type, datetime, make, model, width
 		FROM media
 		INNER JOIN users ON media.userID = users.userID
 		WHERE benchID = ?");
@@ -540,7 +540,7 @@ function get_image_html($benchID, $full = true)
 	$get_media->bind_param('i',  $benchID );
 	$get_media->execute();
 	/* bind result variables */
-	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type, $datetime, $make, $model);
+	$get_media->bind_result($sha1, $userID, $userName, $userProvider, $userProviderID, $importURL, $licence, $media_type, $datetime, $make, $model, $width);
 
 	$html = '';
 
@@ -585,7 +585,7 @@ function get_image_html($benchID, $full = true)
 
 		//	Where to link the image to
 		if($full) {
-			$link = "/image/{$sha1}";
+			$link = get_image_cache($sha1, $width);
 		} else {
 			$link = "/bench/{$benchID}";
 		}
