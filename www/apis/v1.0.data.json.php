@@ -50,7 +50,7 @@ function save_cache ( $type , $geojson ) {
 }
 
 if (null != $userID) {
-	$type = "user-{$truncated}-{$media}";
+	$type = "user-{$userID}-{$truncated}-{$media}";
 	$geojson = read_cache( $type );
 	if ( null == $geojson ) {
 		$geojson = get_user_map($userID, $truncated, $media);
