@@ -32,9 +32,13 @@ function insert_bench($lat, $long, $inscription, $userID)
 	$resultID = $insert_bench->insert_id;
 	if ($resultID) {
 		$insert_bench->free_result();
+		$insert_bench->close();
+		unset($mysqli);
 		return $resultID;
 	} else {
 		$insert_bench->free_result();
+		$insert_bench->close();
+		unset($mysqli);
 		return $mysqli->error;
 	}
 }
@@ -56,6 +60,8 @@ function edit_bench($lat, $long, $inscription, $benchID, $published=true, $userI
 	$edit_bench->bind_param('ddssisi', $lat, $long, $address, $inscription, $published, $userID, $benchID);
 	$edit_bench->execute();
 	$edit_bench->free_result();
+	$edit_bench->close();
+	unset($mysqli);
 
 	return true;
 }
@@ -70,6 +76,8 @@ function update_bench_address($benchID, $benchLat, $benchLong) {
 	$edit_bench->bind_param('si', $address, $benchID);
 	$edit_bench->execute();
 	$edit_bench->free_result();
+	$edit_bench->close();
+	unset($mysqli);
 
 	return $address;
 }
@@ -90,9 +98,13 @@ function insert_media($benchID, $userID, $sha1, $licence="CC BY-SA 4.0", $import
 	$resultID = $insert_media->insert_id;
 	if ($resultID) {
 		$insert_media->free_result();
+		$insert_media->close();
+		unset($mysqli);
 		return $resultID;
 	} else {
 		$insert_media->free_result();
+		$insert_media->close();
+		unset($mysqli);
 		return $mysqli->error;
 	}
 }
@@ -106,6 +118,8 @@ function edit_media_type($mediaID, $media_type) {
 	$edit_media->bind_param('ss', $media_type, $mediaID);
 	$edit_media->execute();
 	$edit_media->free_result();
+	$edit_media->close();
+	unset($mysqli);
 
 	return true;
 }
@@ -130,6 +144,8 @@ function insert_user($provider, $providerID, $name)
 			}
 		}
 		$search_user->free_result();
+		$search_user->close();
+		unset($mysqli);
 	}
 
 	$insert_user = $mysqli->prepare("INSERT INTO `users`
@@ -142,6 +158,8 @@ function insert_user($provider, $providerID, $name)
 
 	$resultID = $insert_user->insert_id;
 	$insert_user->free_result();
+	$insert_user->close();
+	unset($mysqli);
 	if ($resultID) {
 		return $resultID;
 	} else {
@@ -243,6 +261,8 @@ function get_nearest_benches($lat, $long, $distance=0.5, $limit=20, $truncated =
 		array_push($geojson['features'], $feature);
 	}
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $geojson;
 }
 
@@ -283,6 +303,8 @@ function get_nearest_benches_list($lat, $long, $distance=10, $limit=20) {
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -401,6 +423,8 @@ function get_all_benches($id = 0, $only_published = true, $truncated = false, $m
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $geojson;
 }
 
@@ -421,6 +445,9 @@ function get_bench_details($benchID){
 
 	while($get_bench->fetch()) {
 		$get_bench->free_result();
+		$get_bench->close();
+		unset($mysqli);
+
 		return array ($benchID, $benchLat, $benchLong, htmlspecialchars($benchAddress), htmlspecialchars($benchInscription), $published, $present, htmlspecialchars($description));
 	}
 }
@@ -439,8 +466,8 @@ function get_random_bench(){
 	$get_bench->bind_result($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 
 	while($get_bench->fetch()) {
-		// $get_bench->free_result();
 		$get_bench->free_result();
+		$get_bench->close();
 		unset($mysqli);
 		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 	}
@@ -461,47 +488,12 @@ function get_latest_bench(){
 
 	while($get_bench->fetch()) {
 		$get_bench->free_result();
+		$get_bench->close();
+		unset($mysqli);
+
 		return array ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published);
 	}
 }
-
-// function get_image($benchID, $full = false)
-// {
-// 	global $mysqli;
-
-// 	$get_media = $mysqli->prepare(
-// 		"SELECT sha1, userID, importURL, licence, width FROM media
-// 		WHERE benchID = ?
-// 		LIMIT 0 , 1");
-
-// 	$get_media->bind_param('i',  $benchID );
-// 	$get_media->execute();
-// 	/* bind result variables */
-// 	$get_media->bind_result($sha1, $userID, $importURL, $licence, $width);
-
-// 	$html = "";
-
-// 	# Loop through rows to build feature arrays
-// 	while($get_media->fetch()) {
-// 		$get_media->free_result();
-// 		// $userString = get_user($userID);
-// 		if(null != $importURL) {
-// 			$source = "<a href='{$importURL}'>Image Source</a>";
-// 		}
-// 		$licenceHTML = get_licence($licence);
-
-// 		if ($full) {
-// 			$imageLink = get_image_cache($sha1, $width);
-// 		} else {
-// 			$imageLink = "/bench/{$benchID}";
-// 		}
-
-// 		$html .= "<a href='{$imageLink}'><img src='".get_image_cache($sha1)."' id='proxy-image' class='proxy-image' /></a><br>{$licenceHTML} {$source}";
-// 		break;
-// 	}
-
-// 	return $html;
-// }
 
 function get_user_from_media($mediaID) {
 	//	Who uploaded this media?
@@ -520,6 +512,8 @@ function get_user_from_media($mediaID) {
 
 	while($get_user->fetch()) {
 		$get_user->free_result();
+		$get_user->close();
+		unset($mysqli);
 		return array($userID, $userName, $userProvider);
 	}
 }
@@ -633,6 +627,8 @@ function get_image_html($benchID, $full = true)
 	}
 
 	$get_media->free_result();
+	$get_media->close();
+	unset($mysqli);
 	return $html;
 }
 
@@ -655,6 +651,8 @@ function get_image_thumb($benchID, $size = IMAGE_THUMB_SIZE)
 	# Loop through rows to build feature arrays
 	while($get_media->fetch()) {
 		$get_media->free_result();
+		$get_media->close();
+		unset($mysqli);
 
 		$thumb = get_image_cache($sha1, $size);
 		break;
@@ -728,6 +726,8 @@ function get_all_media($benchID = 0)
 	}
 
 	$get_media->free_result();
+	$get_media->close();
+	unset($mysqli);
 
 	if (sizeof($media) > 0){
 		return $media;
@@ -772,6 +772,8 @@ function get_rss($items = 10) {
 	}
 
 	$get_rss->free_result();
+	$get_rss->close();
+	unset($mysqli);
 	return $rssItems;
 }
 
@@ -795,6 +797,8 @@ function get_image_url($benchID)
 	while($get_media->fetch()) {
 		$url = "/image/{$sha1}";
 		$get_media->free_result();
+		$get_media->close();
+		unset($mysqli);
 		break;
 	}
 
@@ -816,6 +820,8 @@ function get_user_from_bench($benchID) {
 	# Loop through rows to build feature arrays
 	while($get_user_from_bench->fetch()) {
 		$get_user_from_bench->free_result();
+		$get_user_from_bench->close();
+		unset($mysqli);
 		return get_user($userID)["name"];
 	}
 }
@@ -850,6 +856,8 @@ function get_user($userID)
 		}
 	}
 	$get_user->free_result();
+	$get_user->close();
+	unset($mysqli);
 	return $user;
 }
 
@@ -879,6 +887,8 @@ function get_all_users()
 		}
 	}
 	$get_user->free_result();
+	$get_user->close();
+	unset($mysqli);
 	return $users;
 }
 
@@ -906,6 +916,8 @@ function get_user_id($provider, $username, $is_id = false) {
 	# Loop through rows to build feature arrays
 	while($get_user_id->fetch()) {
 		$get_user_id->free_result();
+		$get_user_id->close();
+		unset($mysqli);
 		return $userID;
 	}
 }
@@ -930,6 +942,8 @@ function get_licence($licenceID)
 	# Loop through rows to build feature arrays
 	while($get_licence->fetch()) {
 		$get_licence->free_result();
+		$get_licence->close();
+		unset($mysqli);
 		$longName = htmlspecialchars($longName);
 		$licenceID = htmlspecialchars($licenceID);
 		$html .= "<small><a href='{$url}' title='{$longName}'>{$licenceID}</a></small>";
@@ -961,6 +975,8 @@ function get_admin_list()
 	}
 
 	$get_list->free_result();
+	$get_list->close();
+	unset($mysqli);
 	return $html .= "</ul>";
 }
 
@@ -988,6 +1004,8 @@ function get_media_types_html($name = "") {
 	}
 
 	$get_media->free_result();
+	$get_media->close();
+	unset($mysqli);
 	return $html .= "</select>";
 }
 
@@ -1008,6 +1026,8 @@ function get_media_types_array() {
 	}
 
 	$get_media_types->free_result();
+	$get_media_types->close();
+	unset($mysqli);
 	return $media_types_array;
 }
 
@@ -1090,6 +1110,8 @@ function get_search_geojson($q, $truncated = false) {
 	}
 
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 	return $geojson;
 }
 
@@ -1137,6 +1159,8 @@ function get_search_results($q, $page=0, $results=20, $soundex=false) {
 	}
 
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1158,6 +1182,8 @@ function get_search_count($q) {
 	$search->bind_result($count);
 	$search->fetch();
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 
 	return $count;
 }
@@ -1189,6 +1215,8 @@ function get_duplicates_results() {
 	}
 
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1206,6 +1234,8 @@ function get_duplicates_count($inscription) {
 	$search->bind_result($count);
 	$search->fetch();
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 
 	return $count;
 }
@@ -1221,6 +1251,8 @@ function get_soundex($inscription) {
 	$search->bind_result($soundex);
 	$search->fetch();
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 
 	return $soundex;
 }
@@ -1231,6 +1263,8 @@ function get_bench_count() {
 	$result = $mysqli->query("SELECT COUNT(*) FROM `benches` WHERE published = true AND present = true ");
 	$row = $result->fetch_row();
 	$result->free_result();
+	// $result->close();
+	unset($mysqli);
 	return $row[0];
 }
 
@@ -1256,6 +1290,8 @@ function get_leadboard_benches_html() {
 		}
 	}
 	$get_leaderboard->free_result();
+	$get_leaderboard->close();
+	unset($mysqli);
 	return $html .= "</ul>";
 }
 
@@ -1281,6 +1317,8 @@ function get_leadboard_media_html() {
 		}
 	}
 	$get_leaderboard->free_result();
+	$get_leaderboard->close();
+	unset($mysqli);
 	return $html .= "</ul>";
 }
 
@@ -1312,6 +1350,8 @@ function get_user_bench_list($userID, $page=0, $results=20)
 	}
 
 	$get_user_list->free_result();
+	$get_user_list->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1330,6 +1370,8 @@ function get_user_bench_count($userID) {
 	$search->bind_result($count);
 	$search->fetch();
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 
 	return $count;
 }
@@ -1415,6 +1457,8 @@ function get_user_map($userID, $truncated=true, $media=false)
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $geojson;
 }
 
@@ -1446,6 +1490,8 @@ function get_bounding_box_benches_list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $page
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1465,6 +1511,8 @@ function get_bounding_box_benches_count($lat_ne, $lng_ne, $lat_sw, $lng_sw) {
 	$get_benches->bind_result($count);
 	$get_benches->fetch();
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 
 	return $count;
 }
@@ -1478,6 +1526,7 @@ function merge_benches($originalID, $duplicateID) {
 	$merge_two_benches->bind_param('i', $duplicateID);
 	$merge_two_benches->execute();
 	$merge_two_benches->free_result();
+	$merge_two_benches->close();
 
 	//	Redirect duplicate bench
 	$merge_two_benches = $mysqli->prepare(
@@ -1485,6 +1534,7 @@ function merge_benches($originalID, $duplicateID) {
 	$merge_two_benches->bind_param('ii', $duplicateID, $originalID);
 	$merge_two_benches->execute();
 	$merge_two_benches->free_result();
+	$merge_two_benches->close();
 
 	//	Merge photos
 	$merge_two_benches = $mysqli->prepare(
@@ -1492,6 +1542,8 @@ function merge_benches($originalID, $duplicateID) {
 	$merge_two_benches->bind_param('ii', $originalID, $duplicateID);
 	$merge_two_benches->execute();
 	$merge_two_benches->free_result();
+	$merge_two_benches->close();
+	unset($mysqli);
 
 	return true;
 }
@@ -1511,6 +1563,8 @@ function get_merged_bench($benchID) {
 	# Loop through rows to build feature arrays
 	while($get_merge_from_bench->fetch()) {
 		$get_merge_from_bench->free_result();
+		$get_merge_from_bench->close();
+		unset($mysqli);
 		return $mergedID;
 	}
 }
@@ -1530,6 +1584,8 @@ function get_tags() {
 	}
 
 	$get_tags->free_result();
+	$get_tags->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1552,6 +1608,8 @@ function get_tagID($tagText) {
 	}
 
 	$get_tags->free_result();
+	$get_tags->close();
+	unset($mysqli);
 	return $id;
 }
 
@@ -1572,6 +1630,8 @@ function get_benches_from_tag_id($tagID) {
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1612,6 +1672,8 @@ function get_benches_from_tag_text($tagText, $page=0, $results=20)
 	}
 
 	$get_benches->free_result();
+	$get_benches->close();
+	unset($mysqli);
 	return $results;
 }
 
@@ -1632,6 +1694,8 @@ function get_bench_tag_count($tagText) {
 	$search->bind_result($count);
 	$search->fetch();
 	$search->free_result();
+	$search->close();
+	unset($mysqli);
 
 	return $count;
 }
@@ -1650,6 +1714,8 @@ function save_tags($benchID, $tags) {
 		$remove_tags->bind_param('i', $benchID);
 		$remove_tags->execute();
 		$remove_tags->free_result();
+		$remove_tags->close();
+		
 		foreach ($tags as $tagID) {
 			$save_tag = $mysqli->prepare(
 				"INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
@@ -1657,11 +1723,13 @@ function save_tags($benchID, $tags) {
 			$save_tag->bind_param('ii', $benchID, $tagID);
 			$save_tag->execute();
 			$save_tag->free_result();
+			$save_tag->close();
 		}
 		$mysqli->commit();
 	} catch (mysqli_sql_exception $exception) {
 		$mysqli->rollback();
 	}
+	unset($mysqli);
 	return true;
 }
 
@@ -1683,6 +1751,8 @@ function get_tags_from_bench($benchID) {
 	}
 
 	$get_tags->free_result();
+	$get_tags->close();
+	unset($mysqli);
 	return $tags;
 }
 
@@ -1704,5 +1774,7 @@ function get_bench_from_sha1( $sha1 ) {
 	}
 
 	$get_bench->free_result();
+	$get_bench->close();
+	unset($mysqli);
 	return $id;
 }
