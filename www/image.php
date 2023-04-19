@@ -63,7 +63,7 @@ function show_scaled_image($imagePath, $size)
 		$imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
 	} catch (Exception $e) {
 		$refer = $_SERVER["HTTP_REFERER"];
-		error_log("Image error! {$imagePath} - from {$refer} - {$e}" , 0);
+		error_log("Image error! {$imagePath} - from {$refer} - size={$size} {$e}" , 0);
 		$imagick->clear();
 		return null;
 	}
