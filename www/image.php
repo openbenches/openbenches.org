@@ -91,9 +91,11 @@ if ("exif" == $size){
 	return null;
 } else {
 	//	Return the full image (preserves EXIF)
-	$mime = mime_content_type($photo_full_path);
-	header("Content-type: {$mime}");
-	ob_clean();
-	readfile($photo_full_path);
+	// $mime = mime_content_type($photo_full_path);
+	// header("Content-type: {$mime}");
+	// ob_clean();
+	// readfile($photo_full_path);
+	// 302 Found
+	header("Location: /{$photo_full_path}", true, 302);
 	exit;
 }
