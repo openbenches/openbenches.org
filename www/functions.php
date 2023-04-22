@@ -690,7 +690,6 @@ function get_image_cache($sha1, $size=IMAGE_DEFAULT_SIZE) {
 
 	//	https://images.weserv.nl/docs/
 	return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "&w={$size}&q=" . IMAGE_CACHE_QUALITY . "&output=webp&il";
-
 }
 
 function prepare_search_query($q) {

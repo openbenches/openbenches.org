@@ -126,7 +126,7 @@ if (null == $page_title) {
 	}
 	</script>
 
-	<link rel="alternate" type="application/rss+xml" href="https://<?php echo $_SERVER["HTTP_HOST"]; ?>/rss" />
+	<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://<?php echo $_SERVER["HTTP_HOST"]; ?>/rss" />
 	<?php echo $oembedMeta; ?>
 
 	<link rel="stylesheet" href="/css/picnic.css?cache=2019-09-19T08:40"/>
