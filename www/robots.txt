@@ -2,9 +2,11 @@ User-agent: *
 Disallow:/edit/*
 
 User-agent: AhrefsBot 
+Disallow:/location/*
 crawl-delay: 100
 
 User-agent: SemrushBot
+Disallow:/location/*
 crawl-delay: 100
 
 sitemap: https://openbenches.org/sitemap.xml
