@@ -31,7 +31,7 @@ function read_cache( $type ) {
 	$filename = "json/{$cache}-{$type}.json";
 	
 	if ( file_exists( $filename ) ) {
-		return json_decode( file_get_contents( $filename ) );
+		return file_get_contents( $filename );
 	} else {
 		//	Delete old caches
 		foreach( glob( "json/*-{$type}.json" ) as $file ) {
@@ -55,15 +55,18 @@ if (null != $userID) {
 	if ( null == $geojson ) {
 		$geojson = get_user_map($userID, $truncated, $media);
 		save_cache( $type, $geojson );
+		$geojson = json_encode($geojson, JSON_NUMERIC_CHECK);
 	}
 } else if (null != $latitude && null != $longitude && null != $radius) {
 	$geojson = get_nearest_benches($latitude, $longitude, $radius, $results, $truncated, $media);
+	$geojson = json_encode($geojson, JSON_NUMERIC_CHECK);
 } else if (null != $benchID){
 	$type = "bench-{$benchID}-{$truncated}-{$media}";
 	$geojson = read_cache( $type );
 	if ( null == $geojson ) {
 		$geojson = get_bench($benchID, $truncated, $media);
 		save_cache( $type, $geojson );
+		$geojson = json_encode($geojson, JSON_NUMERIC_CHECK);
 	}
 } else if (null != $tagText){
 	$geojson = get_all_benches($tagText, true, $truncated, $media);
@@ -73,6 +76,7 @@ if (null != $userID) {
 	if ( null == $geojson ) {
 		$geojson = get_search_geojson($search);
 		save_cache( $type, $geojson );
+		$geojson = json_encode($geojson, JSON_NUMERIC_CHECK);
 	}
 } else {
 	$type = "all-{$truncated}-{$media}";
@@ -80,13 +84,16 @@ if (null != $userID) {
 	if ( null == $geojson ) {
 		$geojson = get_all_benches(0, true, $truncated, $media);
 		save_cache( $type, $geojson );
+		$geojson = json_encode($geojson, JSON_NUMERIC_CHECK);
 	}
 }
 
 if ("raw" == $format) {
 	header('Content-Type: application/geo+json; charset=utf-8');
-	echo json_encode($geojson, JSON_NUMERIC_CHECK);
+	echo $geojson;
 } else {
 	header('Content-type: application/geo+json; charset=utf-8');
-	echo "var benches = " . json_encode($geojson, JSON_NUMERIC_CHECK);
+	echo "var benches = " . $geojson;
 }
+
+unset($geojson);

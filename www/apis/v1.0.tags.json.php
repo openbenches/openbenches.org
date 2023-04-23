@@ -19,3 +19,6 @@ if ("raw" == $format) {
 	header('Content-type: text/javascript; charset=utf-8');
 	echo "var {$type} = " . json_encode($tagsJSON);
 }
+
+unset($tagsJSON);
+die();

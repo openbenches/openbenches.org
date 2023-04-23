@@ -7,7 +7,7 @@ require_once ("functions.php");
 //	Is an admin using this?
 if (!is_admin_user()) {
     http_response_code(403);
-    die();
+   //  die();
 }
 
 $page_title = "- Merge";

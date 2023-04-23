@@ -1,6 +1,13 @@
 <?php
 	require_once ("config.php");
 	require_once ("mysql.php");
+
+	function convertToReadableSize( $size ) {
+		$base = log($size) / log(1024);
+		$suffix = array("B", "KB", "MB", "GB", "TB");
+		$f_base = floor($base);
+		return round(pow(1024, $base - floor($base)), 1) . $suffix[$f_base];
+	}
 	//	Routing page
 	// Requests come in like example.com/bench/1234
 	//	Strip out any gets
@@ -15,8 +22,12 @@
 
 	if(in_array($params[1], $pages)) {
 		include($params[1].".php");
-		die();
 	} else {
 		include("front.php");
-		die();
 	}
+
+	//	Memory logger
+	$mem = "\n\n". $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
+	$mem .= "\nPkm = ". convertToReadableSize( memory_get_peak_usage() );
+	file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
+	die();
