@@ -55,6 +55,6 @@ $data = array(
 	"licence"       => "{$licence}",
 );
 
-header("Content-Type: application/json+oembed");
+header("Content-Type: application/json");
 echo json_encode($data);
 unset($data);
