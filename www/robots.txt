@@ -1,4 +1,10 @@
 User-agent: *
 Disallow:/edit/*
 
+User-agent: AhrefsBot 
+crawl-delay: 100
+
+User-agent: SemrushBot
+crawl-delay: 100
+
 sitemap: https://openbenches.org/sitemap.xml
