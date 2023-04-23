@@ -1,5 +1,8 @@
 Options -Indexes
 
+Header always set X-Robots-Tag "noimageai"
+Header always set X-Robots-Tag "noai"
+
 #	Force HTTPS
 RewriteEngine On
 RewriteCond %{HTTPS} off
