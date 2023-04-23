@@ -2,8 +2,6 @@
 require_once ('config.php');
 require_once ('functions.php');
 
-$MAX_LIMIT = "30000";	//	Temporary limit. But might need optimisation later
-
 //	Set up the database connection
 $mysqli = new mysqli(DB_IP, DB_USER, DB_PASS, DB_TABLE);
 if ($mysqli->connect_errno) {
