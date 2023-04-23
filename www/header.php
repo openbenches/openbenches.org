@@ -26,26 +26,26 @@ $benchImage = "/android-chrome-512x512.png";
 
 $oembedMeta = null;
 
-if ("bench" == $page) {
+if ( "bench" == $page &&  is_numeric( $params[2] ) ) {
 	$benchID = $params[2];
 
-	if($benchID != null){
+	if( $benchID != null ) {
 		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published, $present, $description) = get_bench_details($benchID);
 
-		//	Get the first bench image
-		$benchMedia  = get_all_media($benchID)[$benchID][0];
-		$sha1        = $benchMedia["sha1"];
+		if( $benchID != null ) {
+			//	Get the first bench image
+			$benchMedia = get_all_media($benchID)[$benchID][0];
+			$sha1       = $benchMedia["sha1"];
 
-		//	Calculate image thumbnail parameters
-		$benchImage     = get_image_cache($sha1, 640);
+			//	Calculate image thumbnail parameters
+			$benchImage = get_image_cache($sha1, 640);
 
-		// $benchImage = get_image_url($benchID) . "/640";
-
-		//	https://oembed.com/
-		$oembedMeta = "<link rel='alternate'
-		type='application/json+oembed'
-		href='https://{$_SERVER['HTTP_HOST']}/oembed/?url=https%3A%2F%2F{$_SERVER['HTTP_HOST']}%2Fbench%2F{$benchID}%2F'
-		title='OpenBenches oEmbed Profile' />";
+			//	https://oembed.com/
+			$oembedMeta = "<link rel='alternate'
+					type='application/json+oembed'
+					href='https://{$_SERVER['HTTP_HOST']}/oembed/?url=https%3A%2F%2F{$_SERVER['HTTP_HOST']}%2Fbench%2F{$benchID}%2F'
+					title='OpenBenches oEmbed Profile' />";
+		}
 	}
 
 	//	Unpublished benches
