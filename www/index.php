@@ -32,6 +32,7 @@
 	}
 
 	//	Memory logger
-	$mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . date('Y-m-d H:i:s') . " ".  $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
-	file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
+	// $mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . date('Y-m-d H:i:s') . " ".  $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'] . " " . $_SERVER['HTTP_REFERER'];
+	// file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
+
 	die();
