@@ -20,13 +20,18 @@
 	               "leaderboard", "user", "rss", "oembed", "api", "tag",
 	               "location", "colophon", "offline");
 
-	if(in_array($params[1], $pages)) {
-		include($params[1].".php");
+	if ( "" != $params[1] ) {
+		if(in_array($params[1], $pages)) {
+			include($params[1].".php");
+		} else {
+			header("HTTP/1.1 404 Not Found");
+			header("Refresh:0; url=/bench/404/");
+		}	
 	} else {
 		include("front.php");
 	}
 
 	//	Memory logger
-	$mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
+	$mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . date('Y-m-d H:i:s') . " ".  $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
 	file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
 	die();
