@@ -27,7 +27,6 @@
 	}
 
 	//	Memory logger
-	$mem = "\n\n". $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
-	$mem .= "\nPkm = ". convertToReadableSize( memory_get_peak_usage() );
+	$mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
 	file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
 	die();
