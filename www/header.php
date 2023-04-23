@@ -31,7 +31,15 @@ if ("bench" == $page) {
 
 	if($benchID != null){
 		list ($benchID, $benchLat, $benchLong, $benchAddress, $benchInscription, $published, $present, $description) = get_bench_details($benchID);
-		$benchImage = get_image_url($benchID) . "/640";
+
+		//	Get the first bench image
+		$benchMedia  = get_all_media($benchID)[$benchID][0];
+		$sha1        = $benchMedia["sha1"];
+
+		//	Calculate image thumbnail parameters
+		$benchImage     = get_image_cache($sha1, 640);
+
+		// $benchImage = get_image_url($benchID) . "/640";
 
 		//	https://oembed.com/
 		$oembedMeta = "<link rel='alternate'
@@ -97,7 +105,7 @@ if (null == $page_title) {
 	<meta name="twitter:creator"                         content="@openbenches">
 	<meta name="twitter:title"       property="og:title" content="OpenBenches <?php echo htmlspecialchars($page_title); ?>">
 	<meta                            property="og:url"   content="https://<?php echo "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
-	<meta name="twitter:image"       property="og:image" content="https://<?php echo "$_SERVER[HTTP_HOST]$benchImage"; ?>">
+	<meta name="twitter:image"       property="og:image" content="<?php echo $benchImage; ?>">
 	<meta                            property="og:image:type"  content="image/jpeg">
 	<meta                            property="og:image:width" content="640">
 	<meta                            property="og:image:alt"   content="A photo of a bench with a memorial inscription on it.">
