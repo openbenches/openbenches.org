@@ -92,8 +92,12 @@ if ("raw" == $format) {
 	header('Content-Type: application/geo+json; charset=utf-8');
 	echo $geojson;
 } else {
-	header('Content-type: application/geo+json; charset=utf-8');
+	header('Content-type: application/javascript; charset=utf-8');
 	echo "var benches = " . $geojson;
 }
 
 unset($geojson);
+
+	//	Memory logger
+	$mem = "\n\n". convertToReadableSize( memory_get_peak_usage() ) . " | " . $_SERVER["QUERY_STRING"] . " " . $_SERVER['HTTP_USER_AGENT'];
+	file_put_contents( "json/mem.log", $mem, FILE_APPEND); 
