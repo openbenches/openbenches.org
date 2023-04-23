@@ -13,7 +13,6 @@ if( isset($params[3]) ) {
 $sha1 = explode(".", $sha1)[0];
 
 $photo_full_path = get_path_from_hash($sha1);
-$mime = mime_content_type($photo_full_path);
 
 //	If the photo doesn't exist, stop
 if(!file_exists($photo_full_path)){
@@ -85,17 +84,16 @@ if ("exif" == $size){
 	echo var_export($exif);
 	echo "</pre>";
 	return null;
-} else if(null != $size && "video/mp4" != $mime){
-	//	Not a video, not using /size
-	show_scaled_image($photo_full_path, $size);
-	return null;
-} else {
-	//	Return the full image (preserves EXIF)
-	// $mime = mime_content_type($photo_full_path);
-	// header("Content-type: {$mime}");
-	// ob_clean();
-	// readfile($photo_full_path);
-	// 302 Found
-	header("Location: /{$photo_full_path}", true, 302);
-	exit;
+} else if( null != $size && "video/mp4" != $mime ) {
+	if ( "video/mp4" != mime_content_type($photo_full_path) ) {
+		//	Not a video, not using /size
+		show_scaled_image($photo_full_path, $size);
+		return null;
+	}
 }
+
+//	Return the full image (preserves EXIF) or video
+	
+// 302 Found
+header("Location: /{$photo_full_path}", true, 302);
+// exit;
