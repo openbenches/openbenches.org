@@ -205,22 +205,22 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 	$cb->setToken(OAUTH_ACCESS_TOKEN, OAUTH_TOKEN_SECRET);
 
 	//	Add the images
-	if(null!=$mediaURLs){
+	// if(null!=$mediaURLs){
 
-		$media_ids = array();
+	// 	$media_ids = array();
 
-		foreach ($mediaURLs as $file) {
-			try {
-				// upload all media files
-				$reply = $cb->media_upload(['media' => $file]);
-				// and collect their IDs
-				$media_ids[] = $reply->media_id_string;
-			} catch (\Exception $e) {
-				error_log("Twitter Upload $e");
-			}
-		}
-		$media_ids = implode(',', $media_ids);
-	}
+	// 	foreach ($mediaURLs as $file) {
+	// 		try {
+	// 			// upload all media files
+	// 			$reply = $cb->media_upload(['media' => $file]);
+	// 			// and collect their IDs
+	// 			$media_ids[] = $reply->media_id_string;
+	// 		} catch (\Exception $e) {
+	// 			error_log("Twitter Upload $e");
+	// 		}
+	// 	}
+	// 	$media_ids = implode(',', $media_ids);
+	// }
 
 	//	Tweet length is now 280
 	$tweet_length = 280;
@@ -260,7 +260,7 @@ function tweet_bench($benchID, $mediaURLs=null, $inscription=null,
 		'status'    => $tweet_text,
 		'lat'       => $latitude,
 		'long'      => $longitude,
-		'media_ids' => $media_ids,
+		// 'media_ids' => $media_ids,
 		'weighted_character_count' => 'true'
 	];
 	try {
