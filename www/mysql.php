@@ -608,7 +608,7 @@ function get_image_html($benchID, $full = true)
 			$height = round($height * $ratio);
 
 			$html .= "<a href='{$link}'>
-							<img src='".get_image_cache($sha1)."' class='proxy-image' alt='{$alt}' width='{$default_width}' height='{$height}' />
+							<img src='".get_image_cache($sha1)."' class='proxy-image' alt='{$alt}' width='{$default_width}' height='{$height}'  loading='lazy' />
 						</a>";
 		}
 

@@ -2,14 +2,14 @@
 	<?php require("sponsor.php");?>
 	<?php require("menu.php");?>
 	<div class="footerIcons" itemscope itemtype="https://schema.org/Organization">
-		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/footer_twitter.svg" alt="twitter"/></a>
-	  <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org" title="Github"><img src="/images/svg/footer_github.svg" alt="github"/></a>
+		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/footer_twitter.svg" alt="twitter" loading="lazy"/></a>
+	  <a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org" title="Github"><img src="/images/svg/footer_github.svg" alt="github" loading="lazy"/></a>
 	</div>
 	Thanks to <a href="https://krystal.uk/">Krystal Hosting</a>
 	<br>
 	<a itemprop="license"
 		rel="license"
-		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc/cc-by-sa.svg" id="cc-by-sa-logo" alt="Creative Commons Attribution Share-alike"/></a>
+		href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="/images/cc/cc-by-sa.svg" id="cc-by-sa-logo" alt="Creative Commons Attribution Share-alike" loading="lazy"/></a>
 	<br>
 		Made with 💖 by<br>
 	<a itemprop="creator" href="https://shkspr.mobi/blog">Terence Eden</a> and

@@ -12,7 +12,7 @@ $broken_image = $broken_images[array_rand($broken_images,1)];
 $image = get_image_cache($broken_image, 600)
 ?>
 <h2>404 - Bench Not Found</h2>
-<img src="<?php echo $image; ?>" class="proxy-image" alt="Photograph of a bench with a removed plaque">
+<img src="<?php echo $image; ?>" class="proxy-image" alt="Photograph of a bench with a removed plaque" loading="lazy">
 <?php
 	include("searchform.php");
 	include("footer.php");

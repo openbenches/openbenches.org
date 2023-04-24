@@ -59,7 +59,7 @@ if (null != $query)
 		foreach ($results as $key => $value) {
 			$thumb = get_image_thumb($key);
 			$thumb_width = IMAGE_THUMB_SIZE;
-			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\" alt=\"\">";
+			$thumb_html = "<img src=\"{$thumb}\" class=\"search-thumb\" width=\"{$thumb_width}\" alt=\"\" loading=\"lazy\" />";
 			if (mb_strlen($value)>300){
 				$value = mb_substr($value, 0, 300)."...";
 			}

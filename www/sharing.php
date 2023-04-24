@@ -14,27 +14,27 @@ $telegram  = "https://telegram.me/share/url?url={$URL}";
 <fieldset id="sharing" style="display:none;">
 
 	<a href="<?php echo $facebook; ?>" target="_blank">
-		<img src="/images/svg/facebook.svg" class="share" alt="Share on Facebook"/>
+		<img src="/images/svg/facebook.svg" class="share" alt="Share on Facebook" loading="lazy"/>
 	</a>
 
 	<a href="<?php echo $twitter; ?>" target="_blank">
-		<img src="/images/svg/twitter.svg" class="share" alt="Share on Twitter"/>
+		<img src="/images/svg/twitter.svg" class="share" alt="Share on Twitter" loading="lazy"/>
 	</a>
 
 	<a href="<?php echo $pinterest; ?>" target="_blank">
-		<img src="/images/svg/pinterest.svg" class="share" alt="Share on Pinterest"/>
+		<img src="/images/svg/pinterest.svg" class="share" alt="Share on Pinterest" loading="lazy"/>
 	</a>
 
 	<a href="<?php echo $whatsapp; ?>" target="_blank">
-		<img src="/images/svg/whatsapp.svg" class="share" alt="Share on Whatsapp"/>
+		<img src="/images/svg/whatsapp.svg" class="share" alt="Share on Whatsapp" loading="lazy"/>
 	</a>
 
 	<a href="<?php echo $email; ?>" target="_blank">
-		<img src="/images/svg/gmail.svg" class="share" alt="Share on email"/>
+		<img src="/images/svg/gmail.svg" class="share" alt="Share on email" loading="lazy"/>
 	</a>
 
 	<a href="<?php echo $telegram; ?>" target="_blank">
-		<img src="/images/svg/telegram.svg" class="share" alt="Share on Telegram"/>
+		<img src="/images/svg/telegram.svg" class="share" alt="Share on Telegram" loading="lazy"/>
 	</a>
 
 </fieldset>
