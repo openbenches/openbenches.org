@@ -80,7 +80,6 @@ if (null == $page_title) {
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# place: http://ogp.me/ns/place#">
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="monetization" content="$ilp.uphold.com/ieELEKD7epqw">
 
 	<title>OpenBenches <?php echo $page_title; ?></title>
 
