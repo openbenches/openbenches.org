@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+<div id="map"></div>
+{{ map_javascript("/api/benches/?truncated=true&media=false" ) }}
+
+{% include 'searchform.html.twig' %}
+<script>
+	//	TODO: Doesn't work on Zoom scroll
+	//	Was on moveend - but it overrid the "get benches near this"
+	map.on("mouseup", function () {
+		var stateObj = { x: "y" };
+		history.pushState(stateObj, "Open Benches", "/#" +
+			map.getCenter().lat.toPrecision(7) + "/" +
+			map.getCenter().lng.toPrecision(7) + "/" +
+			map.getZoom().toString()
+		);
+	});
+</script>
+{% endblock %}

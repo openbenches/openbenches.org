@@ -1,0 +1,144 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block     title %}{{ inscription }}{% endblock %}
+{% block longitude %}{{ longitude }}{% endblock %}
+{% block  latitude %}{{ latitude }}{% endblock %}
+
+{% block body %}
+<div itemscope="" itemtype="http://schema.org/Place">
+	<h2 id="benchInscription" itemprop="description">{{ inscription|nl2br }}</h2>
+	{% if medias is defined %}
+		{% for media in medias %}
+		<div itemprop="photo" class="benchImage">
+
+			<img src="{{ media.url }}"
+				  alt="{{ media.alt }}"
+				width="{{ media.width}}"
+			  height="{{ media.height }}"
+				class="proxy-image"
+			 loading="lazy" />
+
+			<span class='caption'>
+				{% if media.importURL is not null %}
+				<a href="{{ media.importURL }}">
+					<img src="/images/cc/{{ media.licenceIcon }}"
+						class="cc-icon"
+							alt="{{ media.licence }}"/>
+				</a>
+				{% else %}
+				<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+					<img src="/images/cc/{{ media.licenceIcon }}"
+						class="cc-icon"
+							alt="Creative Commons Attribution Share-Alike"/>
+				</a>
+				{% endif %}
+				{{ media.formattedDate }}<br>
+				{{ media.make }} {{ media.model }}
+				{% if media.userName != "" %}
+				<a href='/user/{{ media.userID }}'>℅ {{ media.userName }}</a>
+				{% endif %}
+			</span>
+		</div>
+		{% endfor %}
+	{% endif %}
+	<div itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
+		{% if addresses is defined %}
+		<div id="address" itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+			{% for address in addresses %}
+				<a class="address" href="{{ address.url }}/">{{ address.location }}</a>
+			{% endfor %}
+		</div>
+		{% endif %}
+
+		<div id="map"></div>
+
+		<script>
+			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})
+			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+			map.setView([{{ latitude }},{{ longitude }}], 17);
+			let url = '/api/bench/{{ bench_id }}';
+			const response = fetch(url).then(response => response.json()).then(response => {
+				L.geoJson(response).addTo(map);
+			})
+		</script>
+
+		<meta itemprop="latitude"  content="{{ longitude }}">
+		<meta itemprop="longitude" content="{{ latitude }}">
+	</div>
+	{% if tags is defined %}
+	<div id="taglist">
+		<ul>
+			<li class="pseudo button">Tags:</li>
+			{% for tag in tags %}
+			<li class="pseudo button">
+				<a href="/tag/{{ tag.text }}/">#{{ tag.text }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+	<div class="button-bar">
+		<a class="button buttonColour" href="/#{{ latitude }}/{{ longitude }}/16"><strong>🌍</strong> Benches near this</a>
+		<a href="/add" class="button buttonColour"><strong>+</strong> Add new bench</a>
+		<a href="/edit/{{ bench_id }}" class="button buttonColour"><strong>✏️</strong> Edit this bench</a>
+		<a href="/api/bench/{{ bench_id }}" class="button buttonColour"><strong>💾</strong> Download GeoJSON</a>
+		<button class="button buttonColour" type="button" id="shareButton">📤 Share this bench</button>
+	</div>
+
+	<script>
+		document.getElementById("shareButton").addEventListener('click', event => {
+			if (navigator.share) {
+				navigator.share({
+					url: ''
+				}).then(() => {
+					console.log('Thanks for sharing!');
+				})
+				.catch(console.error);
+			} else {
+				console.log('No native sharing!');
+				document.getElementById("shareButton").style.display="none";
+				document.getElementById("sharing").style.display="block";
+			}
+		});
+	</script>
+	
+	<fieldset id="sharing" style="display:none;">
+
+		<a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri|url_encode }}" target="_blank">
+			<img src="/images/svg/facebook.svg" class="share" alt="Share on Facebook" loading="lazy"/>
+		</a>
+
+		<a href="https://twitter.com/intent/tweet?url={{ app.request.uri|url_encode }}&via=openbenches" target="_blank">
+			<img src="/images/svg/twitter.svg" class="share" alt="Share on Twitter" loading="lazy"/>
+		</a>
+
+		<a href="https://api.whatsapp.com/send?text={{ app.request.uri|url_encode }}" target="_blank">
+			<img src="/images/svg/whatsapp.svg" class="share" alt="Share on Whatsapp" loading="lazy"/>
+		</a>
+
+		<a href="mailto:?&body={{ app.request.uri|url_encode }}" target="_blank">
+			<img src="/images/svg/gmail.svg" class="share" alt="Share on email" loading="lazy"/>
+		</a>
+
+		<a href="https://telegram.me/share/url?url={{ app.request.uri|url_encode }}" target="_blank">
+			<img src="/images/svg/telegram.svg" class="share" alt="Share on Telegram" loading="lazy"/>
+		</a>
+
+	</fieldset>
+
+	{% include 'searchform.html.twig' %}
+
+	<div id="comments">
+		<script>
+			var idcomments_acct = "{{ app.request.server.get('INTENSE_DEBATE_KEY') }} ";
+			var idcomments_post_id;
+			var idcomments_post_url;
+		</script>
+		<span id="IDCommentsPostTitle" style="display:none"></span>
+		<script src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+	</div>
+
+
+{% endblock %}
+

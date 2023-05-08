@@ -1,0 +1,17 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    
+login: # Send the user to Auth0 for authentication.
+  path: /login
+  controller: Auth0\Symfony\Controllers\AuthenticationController::login
+
+callback: # This user will be returned here from Auth0 after authentication; this is a special route that completes the authentication process. After this, the user will be redirected to the route configured as `AUTH0_ROUTE_SUCCESS` in your .env file.
+  path: /callback
+  controller: Auth0\Symfony\Controllers\AuthenticationController::callback
+
+logout: # This route will clear the user's session and return them to the route configured as `AUTH0_ROUTE_LOGOUT` in your .env file.
+  path: /logout
+  controller: Auth0\Symfony\Controllers\AuthenticationController::logout

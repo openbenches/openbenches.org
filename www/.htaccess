@@ -3,14 +3,15 @@ Options -Indexes
 Header always set X-Robots-Tag "noimageai"
 Header always set X-Robots-Tag "noai"
 
-#	Force HTTPS
-RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+<IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /
 
-#	Pretty URL Structure
-Options +FollowSymLinks -MultiViews
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+        RewriteCond %{HTTPS} off
+        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+        RewriteCond %{THE_REQUEST} /public/([^\s?]*) [NC]
+        RewriteRule ^ %1 [L,NE,R=302]
+
+        RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
+</IfModule>

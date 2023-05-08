@@ -1,3 +1,4 @@
 # Credentials
 config.php
 key.js
+.env.local

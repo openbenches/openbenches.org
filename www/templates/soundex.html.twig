@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Search {{ soundex }}{% endblock %}
+
+
+{% block body %}
+	{% if benches is defined %}
+	<h3>Search results for "{{ soundex }}"</h3> 
+
+	<div id="search-results">
+		<h2>Total benches found: {{ benches_count }}.</h2>
+		<ol>
+		{% for bench in benches %}
+			<li>
+				<a href="/bench/{{ bench.benchID }}">
+					<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" />
+					{{ bench.inscription }}<br>{{ bench.address }}
+				</a>
+			</li>
+		{% endfor %}
+		</ol>
+	</div>
+		{% if ( benches_count == 2) %}
+		{# TODO - Test if this works #}
+		<form action="/merge" method="post" autocomplete="off">
+			Original:  <input type="text" name="originalID"  value="{{ benches[0]["benchID"] }}"><br>
+			Duplicate: <input type="text" name="duplicateID" value="{{ benches[1]["benchID"] }}"><br>
+			<input type="submit" value="Merge Two Benches">
+		</form>
+		{% endif %}
+	{% endif %}
+
+	{% if duplicateID is defined %}
+		<h3>Redirected <a href="/bench/{{ duplicateID }}">{{ duplicateID }}</a></h3>
+	{% endif %}
+
+{% endblock %}

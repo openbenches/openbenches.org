@@ -1,0 +1,551 @@
+@font-face {
+	font-family: 'varela_roundregular';
+	src: url('/fonts/varelaround-regular-webfont.woff2') format('woff2'),
+	     url('/fonts/varelaround-regular-webfont.woff')  format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: 'varela_roundregular', sans-serif;
+	font-size: 1.25em;
+	background-color: #e1ffe9;
+	margin: 0;
+	color: #191E20;
+	text-align: center;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	overflow-x: hidden;
+}
+
+h1 {
+	font-size: 2rem !important;
+}
+
+h1 a{
+	font-size: 2rem !important;
+	color: #191E20 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-align: center;
+	padding: 0;
+}
+
+canvas {
+	width: 800px;
+	max-width: 100%;
+}
+
+#map{
+	width: 100%;
+	height: 400px;
+	max-width: 100%;
+	z-index: 1;
+	margin-left: auto;
+	margin-right: auto;
+	border-top:1px solid #aaa;
+	border-bottom:1px solid #aaa;
+	overflow-wrap: normal;
+	word-break: normal !important;
+}
+
+iframe{
+	max-width: 100%;
+	border: 0.1rem solid #191E20;
+}
+
+fieldset {
+	width: 0;
+	text-align: left;
+	margin: auto;
+	max-width: 100%;
+}
+
+.button-bar {
+	margin-bottom: 0.5em;
+}
+
+.button-form {
+	display: inline;
+}
+
+.button strong {
+	margin-right: .1em;
+}
+
+.searchbox {
+	display: flex;
+	max-width: 1024px;
+	margin: auto;
+	align-items: center;
+}
+
+.searchbox_other {
+	margin-top: .1em;
+}
+
+.searchbox button[type="submit"]{
+	flex-shrink: 0;
+	white-space: nowrap;
+}
+
+.search {
+	max-width: 100%;
+	margin: .5em;
+}
+
+#search-results {
+	max-width: 1024px;
+	display: inline-block;
+	text-align: left;
+}
+
+#search-results h2 {
+	font-weight: bold;
+}
+
+#search-results ul {
+	margin: 1em 0;
+	list-style: none;
+	padding-left: 0;
+}
+
+#search-results li {
+	margin: 0;
+	border-bottom: 1px solid #666;
+	padding: .5em .1em;
+	width: 100%;
+	display: flex;
+	transition: 0.25s background-color;
+}
+
+#search-results li .number {
+	margin-right: 1em;
+	flex-shrink: 0;
+}
+
+#search-results a {
+	color: #191E20;
+	display: flex;
+	align-items: flex-start;
+}
+
+#search-results a .text {
+	margin-top: -.1em;
+	line-height: 1.3;
+}
+
+#search-results li:hover {
+	background-color: rgba(0,0,0,0.05);
+}
+
+.search-thumb {
+	margin-right: 1em;
+	flex-shrink: 0;
+}
+
+#header-image {
+	width: 1.5em;
+	vertical-align: middle;
+}
+
+.proxy-image {
+	max-width: 100%;
+	min-height: 100px;
+	height: auto;
+	border: 0.1rem solid #191E20;
+	border-radius: 1rem;
+}
+
+video {
+	max-width: 100%;
+	min-height: 100px;
+	height: auto;
+	border: 0.1rem solid #191E20;
+	border-radius: 1rem;
+}
+
+ol {
+	max-width: 48em;
+	margin-top: 0;
+}
+
+textarea {
+	max-width: 100%;
+	width: 800px;
+	border-radius: 1rem;
+}
+
+h2 {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+a {
+	color: #8C35B0;
+}
+
+hr {
+	clear: both;
+}
+
+.leaflet-control-layers-base{
+	text-align: left;
+}
+
+.benchImage{
+	position: relative;
+	text-align: center;
+}
+
+#benchImage{
+	position: relative;
+	text-align: center;
+}
+
+.caption-heading {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0.5em;
+}
+
+
+.caption {
+	color: white;
+	background: rgba(0, 0, 0, 0.5);
+	padding: 0.4em;
+	font-size: 0.5em;
+	max-width: 590px;
+	border-radius: 1em;
+	margin: auto;
+	position: absolute;
+	bottom: 1em;
+	left: 0;
+	right: 0;
+	width: max-content;
+}
+
+.caption a {
+	color: white;
+}
+
+input[type="file"] {
+	/* font-size: 1rem;
+	margin-bottom: 1em; */
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	opacity: 0;
+	background: #fff;
+}
+
+input, select {
+	max-width: 20em;
+}
+
+.photo-group {
+	overflow-x: auto;
+	display: block;
+	max-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.file_input_button {
+	position: relative;
+	padding: .25em;
+	background-color: #DDD;
+	margin: 1em 0;
+}
+
+.upload-prompt {
+	border: 0.25em dashed #403F41;
+	padding: 0.5em;
+	text-align: center;
+}
+
+#media_type1 {
+	background-position: calc(100% - 15px) 11px;
+	margin-left: 5px;
+}
+
+#tagInput .select2 {
+	margin-left: 5px;
+}
+
+#tagInput .select2 ul {
+	display: block;
+}
+
+#tagInput .select2 li {
+	margin-bottom: 0;
+}
+
+/* Fix rendering of tag bar */
+.select2-selection {
+	text-align: left !important;
+}
+.select2-selection__choice__remove {
+	width: auto;
+}
+
+small {
+	/* padding: 1em; */
+}
+
+#leaderboard-results {
+	display: inline-block;
+	text-align: left;
+}
+
+.avatar {
+	vertical-align: middle;
+	padding: 0.25rem;
+	width: 2em;
+}
+
+.leaderboard-list {
+	list-style-type: none;
+}
+
+#sharing {
+	width: 100%;
+	text-align: center;
+	min-width: 0;
+}
+
+.share {
+	width: 10%;
+	max-width: 3em;
+}
+
+#sharing a {
+	text-decoration: none;
+}
+
+a[rel*="license"] {
+	text-decoration: none;
+}
+
+#cc-by-sa-logo {
+	height: 1.5em;
+	margin-top: 0.5em;
+}
+
+.colophon-logo {
+	vertical-align: middle;
+	height: 2.25em;
+	margin: .5em;
+}
+
+input[type="search"]::placeholder {
+	text-align: center;
+}
+
+/* https://picnicss.com/documentation#buttons */
+.buttonColour, .idc-btn_l {
+	background: #8C35B0;
+	color: #FFF;
+	min-width: 12em;
+	text-shadow: .1em .1em #000;
+}
+
+.cc-icon {
+	vertical-align: middle;
+}
+
+#homeIcon {
+	vertical-align: middle;
+	width: 2em;
+}
+
+button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:focus, .button:focus, [type="submit"]:focus, .dropimage:focus {
+	/* Keep WCAG contrast level high enough on hover */
+	box-shadow: inset 0 0 0 99em rgba(255, 255, 255, 0.15);
+}
+
+button, .button, [type="submit"], .dropimage {
+	width: 14em;
+}
+
+#idc-container {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.idc-r {
+	padding: 1em !important;
+	background: #8C35B0;
+	display: block !important;
+	margin: .5em !important;
+	border-radius: .2em;
+ }
+
+#coordinates {
+	max-width: 20em;
+	text-align: center;
+	font-family: monospace;
+}
+
+#progressBar {
+	width: 100%;
+}
+
+output {
+	font-family: monospace;
+}
+
+#ocr-icon {
+	vertical-align: middle;
+}
+
+#cc-small {
+	display: inline-block;
+	max-width: 34em;
+}
+
+footer {
+	background-color: #e8e8a0;;
+	padding: .1em 0;
+}
+
+ul.menu {
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+ul.menu li:not(:last-of-type)::after {
+	content: " · ";
+}
+
+ul.menu li {
+	display: inline-block;
+}
+
+ul.menu li a {
+}
+
+ul.menu a.addBench {
+	border:1px solid #8C35B0;
+	background-color: #8C35B0;
+	margin-left: 1em;
+	white-space: nowrap;
+}
+footer ul.menu {
+	margin-bottom: 0;
+}
+
+footer ul.menu li a {
+	padding: 0 .1em;
+}
+
+footer ul.menu a.addBench {
+	background-color: transparent;
+	border: 0;
+	margin-left: 0;
+}
+
+footer ul.menu a.addBench strong {
+	display: none;
+}
+
+footer ul.menu a.addBench:hover {
+	background: none;
+}
+
+footer .footerIcons img {
+	width: 2em;
+	height: 2em;
+	margin-right: .5em;
+}
+
+footer .footerIcons a:last-child img{
+	margin-right: 0;
+}
+
+ul.menu a.addBench:hover {
+	color: #8C35B0;
+	background-color: #fff;
+	text-decoration: none;
+}
+
+hgroup {
+	background-color: #11b0a3;
+	padding: 1em 0 0 0;
+}
+
+hgroup h1 {
+	display: inline-block
+}
+
+hgroup h1 a {
+	display: flex;
+	justify-content: center;
+}
+hgroup h1 a:hover {
+	text-decoration: none;
+}
+
+hgroup h1 img {
+	margin-right: .5rem;
+}
+hgroup h2 {
+}
+
+hgroup a, hgroup a:visited {
+	color: #fff;
+}
+hgroup a:hover {
+}
+
+ol.searchResults {
+	padding: 0;
+	list-style: decimal inside none;
+}
+
+#comments {
+	margin: 0 .1em 0 .1em;
+}
+
+@media (max-width: 768px) {
+	.searchbox {
+		flex-direction: column;
+	}
+}
+
+/* Fixes to IntenseDebate styles for Accessibility */
+#idc-container-parent #idc-container .idc-c-m .idc-form-info {
+	color: #6F6F6E; /* 70% Grey */
+	font-size: 1em;
+}
+#idc-container-parent #idc-container textarea.idc-text_noresize {
+	color: #3C3C3B !important; /* 90% Grey */
+	font-size: 1em;
+}
+/* END Fixes to IntenseDebate styles for Accessibility */
+
+#IDNewThreadSubmitLI {
+	padding: 1em;
+}
+
+.pay-icon {
+	vertical-align: top;
+	width: 4em;
+	display: inline-block;
+	padding: .4em;
+	font-size: .8em;
+}
+
+/* Show a comma after each address element except the last one */
+.address:not(:last-of-type)::after {
+	content: ",";
+}

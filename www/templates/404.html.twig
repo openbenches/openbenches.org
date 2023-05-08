@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}{{ inscription }}{% endblock %}
+
+{% block body %}
+<h2>{{ inscription }}</h2>
+
+<img src="{{ url }}" class="proxy-image" alt="Photograph of a bench with a removed plaque" loading="lazy">
+{% include 'searchform.html.twig' %}
+
+{% endblock %}

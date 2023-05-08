@@ -1,7 +1,0 @@
-{
-    "require": {
-        "auth0/auth0-php": "^8.1",
-        "nojimage/twitter-text-php": "^3.0",
-        "guzzlehttp/guzzle": "^7.4"
-    }
-}

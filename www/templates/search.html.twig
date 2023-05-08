@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Search {{ query }}{% endblock %}
+
+
+{% block body %}
+<h3>Search results for "{{ query }}"</h3> 
+
+	<div id="map"></div>
+	{{ map_javascript( "/api/search/?search=", query ) }}
+
+	<div id="benchImage"></div>
+
+	{% if benches is defined %}
+	<div id="search-results">
+		<h2>Total benches found: {{ benches_count }}.</h2>
+		<ol>
+		{% for bench in benches %}
+			<li>
+				<a href="/bench/{{ bench.benchID }}">
+					<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" />
+					<div>
+						{{ bench.inscription }}<br>
+						<small>{{ bench.address }}</small>
+					</div>
+				</a>
+			</li>
+		{% endfor %}
+		</ol>
+	</div>
+	{% endif %}
+
+	<div id="pagination">
+	{% if previous_url is not null %}
+		<a href="{{ previous_url }}" class="button buttonColour"><strong>⬅️</strong> Previous Results</a>&emsp;&emsp;
+	{% endif %}
+		{% if next_url is not null %}
+		<a href="{{ next_url }}" class="button buttonColour">More Results <strong>➡️</strong></a>&emsp;&emsp;
+	{% endif %}
+	</div>
+
+	{% include 'searchform.html.twig' %}
+
+{% endblock %}
