@@ -94,4 +94,97 @@ class UploadFunctions
 		//	Get the ID of the row which was just inserted
 		return $conn->lastInsertId();
 	}
+
+	public function mastodonPost( $benchID, $inscription="", $license="CC BY-SA 4.0", $user_provider=null, $user_name=null ) {
+		$mastodon = new \MastodonAPI($_ENV["MASTODON_ACCESS_TOKEN"], $_ENV["MASTODON_INSTANCE"]);
+
+		$status_length = 500;
+
+		if ( "anon" != $user_provider ) {
+			$from = "℅ $user_name on $user_provider";
+		}	else {
+			$from = "";
+		}
+	
+		$domain = $_SERVER['SERVER_NAME'];
+		$post_url = "https://{$domain}/bench/{$benchID}";
+	
+		$status_end = "\n" . $post_url . "\n\n" . $from . "\n" . $license;
+	
+		$status_length = $status_length - mb_strlen($status_end);
+	
+		$inscription = mb_substr($inscription, 0, $status_length + 10);
+		$status = $inscription . $status_end;
+
+		$visibility = "public";
+		$status_data = [
+			"status"      => $status,
+			"visibility"  => "public"
+		];
+
+		$result = $mastodon->postStatus($status_data);
+	}
+
+	public function twitterPost( $benchID, $inscription=null, $latitude=null, $longitude=null, $license="CC BY-SA 4.0", $user_provider=null, $user_name=null ) {
+		//	Send Tweet
+		\Codebird\Codebird::setConsumerKey($_ENV["OAUTH_CONSUMER_KEY"], $_ENV["OAUTH_CONSUMER_SECRET"]);
+		$cb = \Codebird\Codebird::getInstance();
+		$cb->setToken($_ENV["OAUTH_ACCESS_TOKEN"], $_ENV["OAUTH_TOKEN_SECRET"]);
+
+		//	Tweet length is now 280
+		// $tweet_length = 280;
+
+		//	Tweet will end with "℅ @twittername"
+		if ("twitter" == $user_provider) {
+			$from = "℅ @{$user_name}   "; //	Paranoia. A few spaces of padding which will be trimmed before tweeting.
+		} else {
+			//	Might use this for Github / Facebook names in future
+			$from = "   ";
+		}
+
+		$domain = $_SERVER['SERVER_NAME'];
+		$tweet_url = "https://{$domain}/bench/{$benchID}";
+
+		// To go after the inscription
+		$tweet_text = "{$tweet_url}\n{$license}\n{$from}";
+
+		$params = [
+			'status'    => $tweet_text,
+			'lat'       => $latitude,
+			'long'      => $longitude,
+			'weighted_character_count' => 'true'
+		];
+
+		try {
+			$reply = $cb->statuses_update($params);
+		} catch (\Exception $e) {
+			error_log("Twitter: $e");
+			error_log(print_r($reply, TRUE));
+			error_log("Status: {$tweet_text}");
+		}
+
+		//	Error code back from Twitter
+		if ($reply->httpstatus != 200 ) {
+			error_log(print_r($reply, TRUE));
+			error_log("Status: {$tweet_text}");
+		}
+	}
+
+	public function emailAdmin( $benchID, $inscription, $provider, $name ) {
+		$benchFunctions = new BenchFunctions();
+		$duplicate_count = $benchFunctions->getDuplicateCount( $inscription );
+		$soundex         = $benchFunctions->getSoundex( $inscription );
+		$domain = $_SERVER['SERVER_NAME'];
+		$provider = $user["provider"];
+		$name     = $user["name"];
+
+		mail($_ENV["NOTIFICATION_EMAIL"],
+			"Bench {$benchID}",
+			"Possible duplicates {$duplicate_count}\n" .
+			"{$inscription}\n" .
+			"https://{$domain}/bench/{$benchID}\n\n" .
+			"Duplicates: https://{$domain}/soundex/?soundex={$soundex}\n" .
+			"From {$provider} / {$name}"
+		);
+	}
 }

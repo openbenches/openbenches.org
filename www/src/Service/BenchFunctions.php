@@ -168,4 +168,44 @@ class BenchFunctions
 
 		return $image_url;
 	}
+
+	public function getDuplicateCount( $inscription ): int {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		$sql = "SELECT  COUNT(*)
+		        FROM   `benches`
+		        WHERE  SOUNDEX(`inscription`) = SOUNDEX(?)
+		        AND    `published` = true";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $inscription);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+
+		if (false != $results_array) {
+			//	There should always be at least one result - the bench which was just uploaded
+			return $results_array["COUNT(*)"] -1;
+		} else {
+			return 0;
+		}
+	}
+
+	public function getSoundex( $inscription ): string {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		$sql = "SELECT SOUNDEX(?)";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $inscription);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+
+		if (false != $results_array) {
+			return $results_array["SOUNDEX(?)"];
+		} else {
+			return "";
+		}
+	}
 }

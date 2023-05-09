@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\MediaFunctions;
 use App\Service\UserFunctions;
 use App\Service\UploadFunctions;
+use App\Service\BenchFunctions;
 
 
 class UploadController extends AbstractController
@@ -49,14 +50,19 @@ class UploadController extends AbstractController
 		if ( isset( $metadata["latitude"] ) )
 		{
 			$uploadFunctions = new UploadFunctions();
-			$userFunctions = new UserFunctions();
+			$userFunctions   = new UserFunctions();
 
+			//	Is the user authenticated?
 			$user = $this->getUser();
 			if( isset( $user ) ) {
 				$userID = $userFunctions->addUser($user);
 			} else {
 				$userID = $userFunctions->addUser(null);
 			}
+
+			$user     = $userFunctions->getUserDetails( $userID );
+			$provider = $user["provider"];
+			$name     = $user["name"];
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	
@@ -75,6 +81,13 @@ class UploadController extends AbstractController
 					$uploadFunctions->addMedia( $metadata, $media_type, $benchID, $userID );	
 				}	
 			}
+
+			//	Send admin email
+			$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
+			//	Post to Mastodon
+			// $uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
+			// Post to Twitter
+			// $uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
 
 			$response = new Response(
 				"{$benchID}",

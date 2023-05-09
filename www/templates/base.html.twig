@@ -8,20 +8,22 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+		{% if block("ogimage") is defined %}
 		<!-- Twitter Specific Metadata https://dev.twitter.com/cards/markup -->
-		<meta name="twitter:card"                            content="summary">
+		<meta name="twitter:card"                            content="summary_large_image">
 		<meta name="twitter:site"                            content="@openbenches">
 		<meta name="twitter:creator"                         content="@openbenches">
-		<meta name="twitter:title"       property="og:title" content="OpenBenches {{ block('title') }}">
+		<meta name="twitter:title"       property="og:title" content="{{ block('title') }}">
 		<meta                            property="og:url"   content="{{ app.request.uri }}">
-		<meta name="twitter:image"       property="og:image" content="">
+		<meta name="twitter:image"       property="og:image" content="{{ block("ogimage") }}">
 		<meta                            property="og:image:type"  content="image/jpeg">
-		<meta                            property="og:image:width" content="640">
+		<meta                            property="og:image:width" content="600">
 		<meta                            property="og:image:alt"   content="A photo of a bench with a memorial inscription on it.">
+		<meta name="twitter:description" property="og:description" content="{{ block('title') }}">
+		{% endif %}
 
 		<!-- Pinterest Specific https://developers.pinterest.com/docs/rich-pins/articles/? -->
 		<meta                            property="og:type"         content="place">
-		<meta name="twitter:description" property="og:description"  content="{{ block('title') }}">
 
 		<!-- Facebook Specific Metadata https://developers.facebook.com/docs/sharing/opengraph/object-properties -->
 		{% if latitude is defined %}
@@ -29,7 +31,7 @@
 		<meta                            property="place:location:longitude" content="{{ block('longitude') }}">
 		{% endif %}
 		<meta                            property="og:rich_attachment"       content="true">
-		<meta                            property="fb:app_id"                content="807959736076021" />
+		<meta                            property="fb:app_id"                content="{{ app.request.server.get("FACEBOOK_APP_ID") }}" />
 
 		<link rel="stylesheet" href="/css/picnic.css?cache=2023-04-09T16:06"/>
 		<link rel="stylesheet" href="/css/style.css?cache=2023-04-09T16:06"/>
@@ -58,15 +60,6 @@
 			}
 		}
 		</script>
-
-		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-		{% block stylesheets %}
-			{{ encore_entry_link_tags('app') }}
-		{% endblock %}
-
-		{% block javascripts %}
-			{{ encore_entry_script_tags('app') }}
-		{% endblock %}
 	</head>
 	<body itemscope itemtype="https://schema.org/WebPage">
 		<hgroup>
