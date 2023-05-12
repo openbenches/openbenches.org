@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Service\LocationFunctions;
 use App\Service\MediaFunctions;
+use App\Service\TagsFunctions;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -37,6 +38,39 @@ class UploadFunctions
 		
 		//	Get the ID of the row which was just inserted
 		return $conn->lastInsertId();
+	}
+
+	public function updateBench( $benchID, $inscription, $latitude, $longitude, $userID, $published=true ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get the address from the location
+		$locationFunctions = new LocationFunctions();
+		$address = $locationFunctions->getAddress($latitude, $longitude);
+
+		//	Trim errant whitespace from the end before inserting
+		$inscription = rtrim($inscription);
+
+		$sql = "UPDATE `benches`
+		        SET `latitude`   = ?,
+		            `longitude`  = ?,
+		            `address`    = ?,
+		            `inscription`= ?,
+		            `published`  = ?,
+		            `userID`     = ?
+		         WHERE `benches`.`benchID` = ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $latitude);
+		$stmt->bindValue(2, $longitude);
+		$stmt->bindValue(3, $address);
+		$stmt->bindValue(4, $inscription);
+		$stmt->bindValue(5, $published);
+		$stmt->bindValue(6, $userID);
+		$stmt->bindValue(7, $benchID);
+		
+		//	Run the query
+		$results = $stmt->executeQuery();
 	}
 
 	public function addMedia( $metadata, $media_type, $benchID, $userID ) : int {
@@ -94,6 +128,39 @@ class UploadFunctions
 		//	Get the ID of the row which was just inserted
 		return $conn->lastInsertId();
 	}
+
+	public function saveTags( $benchID, $tags ) {
+		// this function needs to work for when a bench is added or edited
+		// when a bench is edited that may mean that the number of tags
+		// increases, or decreases to as few as zero
+		// easiest way to deal with this is to remove all entries for the
+		// bench then add whatever tags were passed
+
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Delete Old Tags
+		$sql = "DELETE FROM `tag_map` WHERE `benchID`=?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $benchID);
+		$stmt->executeQuery();
+		
+		//	Find the IDs of the tags
+		$tagsFunctions = new TagsFunctions();
+		$tagIDs = $tagsFunctions->getTags();
+
+		foreach ($tags as $tag) {
+			$tagID = array_search($tag, $tagIDs);
+
+			$sql = "INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
+						VALUES                (NULL,     ?,         ?)";
+			$stmt = $conn->prepare($sql);
+			$stmt->bindValue(1, $benchID);
+			$stmt->bindValue(2, $tagID);
+			$stmt->executeQuery();
+		}
+	} 
 
 	public function mastodonPost( $benchID, $inscription="", $license="CC BY-SA 4.0", $user_provider=null, $user_name=null ) {
 		$mastodon = new \MastodonAPI($_ENV["MASTODON_ACCESS_TOKEN"], $_ENV["MASTODON_INSTANCE"]);
@@ -174,9 +241,7 @@ class UploadFunctions
 		$benchFunctions = new BenchFunctions();
 		$duplicate_count = $benchFunctions->getDuplicateCount( $inscription );
 		$soundex         = $benchFunctions->getSoundex( $inscription );
-		$domain = $_SERVER['SERVER_NAME'];
-		$provider = $user["provider"];
-		$name     = $user["name"];
+		$domain = $_SERVER["SERVER_NAME"];
 
 		mail($_ENV["NOTIFICATION_EMAIL"],
 			"Bench {$benchID}",

@@ -24,7 +24,8 @@ class UploadController extends AbstractController
 		$longitude   = $request->request->get( "newLongitude" );
 		$latitude    = $request->request->get( "newLatitude" );
 
-		$tags        = $request->request->get( "tags[]" );
+		$tags        = $request->request->get( "tags" );
+
 		if ( $tags != "" ) {
 			$tags = explode(",", $tags);
 		} else {
@@ -66,7 +67,7 @@ class UploadController extends AbstractController
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	
-			// $tagsID  = $uploadFunctions->addTags();
+			$uploadFunctions->saveTags( $benchID, $tags);
 
 			$metadata["tmp_name"] = $filename;
 			$uploadFunctions->addMedia( $metadata, $media_type1, $benchID, $userID );
@@ -83,7 +84,7 @@ class UploadController extends AbstractController
 			}
 
 			//	Send admin email
-			$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
+			// $uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
 			//	Post to Mastodon
 			// $uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
 			// Post to Twitter

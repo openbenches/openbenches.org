@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <meta charset=utf-8 />
+  <title>Leaflet.Sleep</title>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<!--  <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />-->
+  <link href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' rel='stylesheet' />
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src='Leaflet.Sleep.js'></script>
+  <style>
+  .mapContainer {
+    width: 100%;
+    height:300px;
+  }
+  .crop-box {
+    margin-top: 15px;
+    width: 70px;
+    height: 50px;
+    overflow: hidden;
+  }
+  .crop-box img {
+    max-height: 50px;
+    max-width: 70px;
+    margin: 10px 0px 0px 0px;
+    float:right;
+  }
+  </style>
+</head>
+
+<body>
+  <div class='container'>
+    <span class="crop-box">
+      <a href="http://www.cliffcloud.com"><img class="topImage" src="https://avatars0.githubusercontent.com/u/6981666?v=3&s=200" /></a>
+    </span>
+    <span class="crop-box">
+      <a href="https://github.com/CliffCloud/Leaflet.Sleep"><img class="topImage" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" /></a>
+    </span>
+    <h1>
+      Leaflet.Sleep
+      <small>remove&nbsp;scroll-sucking&nbsp;maps&nbsp;on&nbsp;content&nbsp;intensive&nbsp;pages</small>
+    </h1>
+    <p>I know what's gonna happen, take me to <a href="#summary">the end.</a></p>
+  </div>
+  <div class='testing-area'>
+    <div class='container'>
+      <hr/>
+      <p>Bushwick ethical trust fund disrupt, butcher gastropub master cleanse locavore biodiesel mustache before they sold out craft beer keffiyeh swag hella. Salvia High Life crucifix, quinoa actually pop-up post-ironic tousled artisan lo-fi craft beer. Tofu vegan try-hard Truffaut, photo booth normcore slow-carb seitan before they sold out salvia fingerstache single-origin coffee kale chips. Bicycle rights sriracha bespoke McSweeney's try-hard Pinterest. Occupy keffiyeh Godard Marfa fixie tofu. Sustainable chambray Carles shabby chic four loko, vegan tattooed lomo Kickstarter Tonx mixtape sartorial. Viral wolf Pitchfork single-origin coffee salvia, fixie bitters chambray biodiesel Intelligentsia wayfarers.</p>
+      <p>Retro 3 wolf moon fanny pack, squid tote bag flannel Echo Park church-key banh mi. Messenger bag yr mlkshk, four loko Wes Anderson Shoreditch locavore. Biodiesel sustainable farm-to-table, Godard bitters skateboard Intelligentsia. Retro Carles dreamcatcher Tonx butcher. Banksy wayfarers aesthetic, stumptown street art synth bicycle rights gentrify roof party. Plaid kitsch chillwave direct trade. Cliche sustainable 90's leggings drinking vinegar, direct trade Bushwick disrupt flannel fanny pack synth Thundercats messenger bag.</p>
+      <p>Thundercats Tonx mlkshk fap fashion axe farm-to-table slow-carb. Cliche paleo meggings tousled Godard, Pinterest brunch banjo photo booth sustainable YOLO church-key fanny pack. Polaroid irony asymmetrical Pitchfork, umami biodiesel locavore lomo. Literally sriracha disrupt Brooklyn roof party, shabby chic tote bag post-ironic Cosby sweater pop-up gentrify paleo art party try-hard trust fund. Semiotics McSweeney's you probably haven't heard of them flexitarian tofu. Trust fund banjo meggings, semiotics YOLO chambray master cleanse. Banksy chambray flannel, messenger bag mixtape keffiyeh raw denim kale chips Williamsburg.</p>
+      <p>Pitchfork ethical disrupt 3 wolf moon jean shorts, squid seitan mustache Truffaut bespoke tattooed gentrify small batch fanny pack. American Apparel selvage Blue Bottle, food truck hoodie bicycle rights mumblecore lomo McSweeney's leggings irony keytar flexitarian swag Cosby sweater. DIY Bushwick hoodie, before they sold out farm-to-table Intelligentsia plaid 3 wolf moon put a bird on it retro Austin bicycle rights. Selfies synth selvage photo booth jean shorts, Portland slow-carb banjo Williamsburg Intelligentsia bitters. Brooklyn wayfarers meh, fanny pack bitters narwhal kitsch viral Kickstarter Intelligentsia Pitchfork cornhole chambray chillwave Marfa. Tousled Truffaut cliche, jean shorts YOLO fixie stumptown direct trade. Tousled synth lomo, wolf kogi flannel XOXO pork belly.</p>
+    </div>
+    <div id='map1' class='mapContainer img-responsive'></div>
+    <div class='container'>
+      <h1>Frig.<small> the map's scroll-sucking clutches stymied my skimming</small></h1>
+      <p>Bushwick ethical trust fund disrupt, butcher gastropub master cleanse locavore biodiesel mustache before they sold out craft beer keffiyeh swag hella. Salvia High Life crucifix, quinoa actually pop-up post-ironic tousled artisan lo-fi craft beer. Tofu vegan try-hard Truffaut, photo booth normcore slow-carb seitan before they sold out salvia fingerstache single-origin coffee kale chips. Bicycle rights sriracha bespoke McSweeney's try-hard Pinterest. Occupy keffiyeh Godard Marfa fixie tofu. Sustainable chambray Carles shabby chic four loko, vegan tattooed lomo Kickstarter Tonx mixtape sartorial. Viral wolf Pitchfork single-origin coffee salvia, fixie bitters chambray biodiesel Intelligentsia wayfarers.</p>
+      <p>Retro 3 wolf moon fanny pack, squid tote bag flannel Echo Park church-key banh mi. Messenger bag yr mlkshk, four loko Wes Anderson Shoreditch locavore. Biodiesel sustainable farm-to-table, Godard bitters skateboard Intelligentsia. Retro Carles dreamcatcher Tonx butcher. Banksy wayfarers aesthetic, stumptown street art synth bicycle rights gentrify roof party. Plaid kitsch chillwave direct trade. Cliche sustainable 90's leggings drinking vinegar, direct trade Bushwick disrupt flannel fanny pack synth Thundercats messenger bag.</p>
+      <p>Thundercats Tonx mlkshk fap fashion axe farm-to-table slow-carb. Cliche paleo meggings tousled Godard, Pinterest brunch banjo photo booth sustainable YOLO church-key fanny pack. Polaroid irony asymmetrical Pitchfork, umami biodiesel locavore lomo. Literally sriracha disrupt Brooklyn roof party, shabby chic tote bag post-ironic Cosby sweater pop-up gentrify paleo art party try-hard trust fund. Semiotics McSweeney's you probably haven't heard of them flexitarian tofu. Trust fund banjo meggings, semiotics YOLO chambray master cleanse. Banksy chambray flannel, messenger bag mixtape keffiyeh raw denim kale chips Williamsburg.</p>
+      <p>Pitchfork ethical disrupt 3 wolf moon jean shorts, squid seitan mustache Truffaut bespoke tattooed gentrify small batch fanny pack. American Apparel selvage Blue Bottle, food truck hoodie bicycle rights mumblecore lomo McSweeney's leggings irony keytar flexitarian swag Cosby sweater. DIY Bushwick hoodie, before they sold out farm-to-table Intelligentsia plaid 3 wolf moon put a bird on it retro Austin bicycle rights. Selfies synth selvage photo booth jean shorts, Portland slow-carb banjo Williamsburg Intelligentsia bitters. Brooklyn wayfarers meh, fanny pack bitters narwhal kitsch viral Kickstarter Intelligentsia Pitchfork cornhole chambray chillwave Marfa. Tousled Truffaut cliche, jean shorts YOLO fixie stumptown direct trade. Tousled synth lomo, wolf kogi flannel XOXO pork belly.</p>
+    </div>
+    <div id='map2' class='mapContainer img-responsive'></div>
+    <div class='container'>
+      <h3>Cripes... again</h3>
+      <p>Bushwick ethical trust fund disrupt, butcher gastropub master cleanse locavore biodiesel mustache before they sold out craft beer keffiyeh swag hella. Salvia High Life crucifix, quinoa actually pop-up post-ironic tousled artisan lo-fi craft beer. Tofu vegan try-hard Truffaut, photo booth normcore slow-carb seitan before they sold out salvia fingerstache single-origin coffee kale chips. Bicycle rights sriracha bespoke McSweeney's try-hard Pinterest. Occupy keffiyeh Godard Marfa fixie tofu. Sustainable chambray Carles shabby chic four loko, vegan tattooed lomo Kickstarter Tonx mixtape sartorial. Viral wolf Pitchfork single-origin coffee salvia, fixie bitters chambray biodiesel Intelligentsia wayfarers.</p>
+      <p>Retro 3 wolf moon fanny pack, squid tote bag flannel Echo Park church-key banh mi. Messenger bag yr mlkshk, four loko Wes Anderson Shoreditch locavore. Biodiesel sustainable farm-to-table, Godard bitters skateboard Intelligentsia. Retro Carles dreamcatcher Tonx butcher. Banksy wayfarers aesthetic, stumptown street art synth bicycle rights gentrify roof party. Plaid kitsch chillwave direct trade. Cliche sustainable 90's leggings drinking vinegar, direct trade Bushwick disrupt flannel fanny pack synth Thundercats messenger bag.</p>
+      <p>Thundercats Tonx mlkshk fap fashion axe farm-to-table slow-carb. Cliche paleo meggings tousled Godard, Pinterest brunch banjo photo booth sustainable YOLO church-key fanny pack. Polaroid irony asymmetrical Pitchfork, umami biodiesel locavore lomo. Literally sriracha disrupt Brooklyn roof party, shabby chic tote bag post-ironic Cosby sweater pop-up gentrify paleo art party try-hard trust fund. Semiotics McSweeney's you probably haven't heard of them flexitarian tofu. Trust fund banjo meggings, semiotics YOLO chambray master cleanse. Banksy chambray flannel, messenger bag mixtape keffiyeh raw denim kale chips Williamsburg.</p>
+      <p>Pitchfork ethical disrupt 3 wolf moon jean shorts, squid seitan mustache Truffaut bespoke tattooed gentrify small batch fanny pack. American Apparel selvage Blue Bottle, food truck hoodie bicycle rights mumblecore lomo McSweeney's leggings irony keytar flexitarian swag Cosby sweater. DIY Bushwick hoodie, before they sold out farm-to-table Intelligentsia plaid 3 wolf moon put a bird on it retro Austin bicycle rights. Selfies synth selvage photo booth jean shorts, Portland slow-carb banjo Williamsburg Intelligentsia bitters. Brooklyn wayfarers meh, fanny pack bitters narwhal kitsch viral Kickstarter Intelligentsia Pitchfork cornhole chambray chillwave Marfa. Tousled Truffaut cliche, jean shorts YOLO fixie stumptown direct trade. Tousled synth lomo, wolf kogi flannel XOXO pork belly.</p>
+    </div>
+    <div id='map3' class='mapContainer img-responsive'></div>
+    <div class='container'>
+      <div class="text-center">
+        <h2 id="summary">wait, I didn't get trapped...</h2>
+        <p>All because</p>
+        <code>&lt;script src="Leaflet.Sleep.js"&gt;&lt;/script&gt;</code>
+        <p>was on this page</p>
+      </div>
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <h3>new L.map Options<small> and the defaults</small></h3>
+
+          <pre>
+{
+  // true by default, false if you want a wild map
+  sleep: true,
+
+  // time(ms) for the map to fall asleep upon mouseout
+  sleepTime: 750,
+
+  // time(ms) until map wakes on mouseover
+  wakeTime: 750,
+
+  // defines whether or not the user is prompted oh how to wake map
+  sleepNote: true,
+
+  // should hovering wake the map? (clicking always will)
+  hoverToWake: true,
+
+  // opacity (between 0 and 1) of inactive map
+  sleepOpacity: .5
+
+}
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  var osm = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      map1 = L.map('map1', {sleep: false}).setView([37.8, -96], 4).addLayer(L.tileLayer(osm)),
+      map2 = L.map('map2', {sleep: false}).setView([37.8, -96], 4).addLayer(L.tileLayer(osm)),
+      map3 = L.map('map3', {
+          // true by default, false if you want a wild map
+          sleep: true,
+          // time(ms) for the map to fall asleep upon mouseout
+          sleepTime: 750,
+          // time(ms) until map wakes on mouseover
+          wakeTime: 750,
+          // defines whether or not the user is prompted oh how to wake map
+          sleepNote: true,
+          // allows ability to override note styling
+          sleepNoteStyle: { color: 'red' },
+          // should hovering wake the map? (clicking always will)
+          hoverToWake: true,
+          // opacity (between 0 and 1) of inactive map
+          sleepOpacity: .7
+
+      }).setView([37.8, -96], 4).addLayer(L.tileLayer(osm));
+</script>
+</body>
+
+</html>

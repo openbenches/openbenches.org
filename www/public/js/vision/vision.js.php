@@ -19,7 +19,8 @@ header("Content-Type: text/javascript");
 'use strict';
 
 var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=<?php 
-echo $_ENV["CLOUD_VISION_KEY"]; 
+//echo $_ENV["CLOUD_VISION_KEY"] ; 
+echo "AIzaSyByw1_dOhJgyZL20nLa2UR2ObRlC-gyfIk";
 ?>';
 
 $(function () {

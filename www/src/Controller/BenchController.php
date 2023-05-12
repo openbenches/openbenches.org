@@ -29,6 +29,7 @@ class BenchController extends AbstractController
 				"latitude"    => $bench["latitude"],
 				"addresses"   => $bench["addresses"],
 				"medias"      => $bench["medias"],
+				"tags"        => $bench["tags"],
 			]);
 		}
 		else {

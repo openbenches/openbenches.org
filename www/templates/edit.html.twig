@@ -13,7 +13,7 @@
 	{% endif %}
 	</h3>
 	<p>You can edit this bench's inscription, change location, or add more photos.</p>
-	<form action="/edit/{{benchID}}" enctype="multipart/form-data" method="post">
+	<form action="{{ uploadURL }}" enctype="multipart/form-data" method="post">
 		
 		<div style="clear:both;">
 			<h3>Drag pin to change bench location, then press "Save Changes"</h3>
@@ -27,6 +27,7 @@
 			<input type="text"   id="coordinates"  value="{{ latitude }},{{ longitude }}" disabled="true" />
 			<input type="hidden" id="newLongitude" name="newLongitude" value="{{ longitude }}"/>
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="{{ latitude }}"/>
+			<input type="hidden" id="benchID"      name="benchID"      value="{{ benchID }}"/>
 			<input type="submit" class='button buttonColour' value="💾 Save Changes" />
 		</div>&nbsp;
 
@@ -35,35 +36,21 @@
 			<textarea id="inscription" name="inscription" cols="40" rows="6">{{ inscription }}</textarea>
 		</div>&nbsp;
 		<script src="/js/jquery.3.6.4/jquery-3.6.4.min.js"></script>
-		<script src="/js/select2-4.1.0-rc.0/select2.min.js"></script>
-		<script src="/api/tags"></script>
 		<script>
 			$(document).ready(function() {
-					$('.js-tags-multiple').select2({
-							data: tags,
-							closeOnSelect: false,
-							placeholder: "tag this bench up"
-					});
-				const currentTags={{ tags_json }};
-				var currentTagsIDs=[];
-				currentTags.forEach( tag => {
-					//console.log(tag['tagID']);
-					currentTagsIDs.push(tag['tagID']);
-					//console.log(currentTagsIDs);
-					}
-				)
-				$('#tag_multiple').val(currentTagsIDs);
-				$('#tag_multiple').trigger('change');
 			});
-		</script>
-
-		<div id="tagInput" style="">
-			<label for="tag_multiple">
-				Change tags?
-				<select class="js-tags-multiple form-control"
-							name="tags[]" id="tag_multiple"
-							multiple="multiple"></select>
-			</label>
+		</script>		
+		
+		<div id="tagInput">
+		{% if all_tags is defined %}
+				<h2>Choose some tags</h2>
+				{% for tag in all_tags %}
+				<label>
+					<input {% if tag in bench_tags %} checked {% endif %} type="checkbox" id="{{ tag }}" name="tags" value="{{ tag }}">
+					<span class="toggle pseudo button">{{ tag }}</span>
+				</label>
+				{% endfor %}
+		{% endif %}
 		</div>
 		<br>
 		<div id='benchImage'>
@@ -199,20 +186,21 @@
 			</div>
 		</div>&nbsp;
 		<br>
-		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
-			<label for="publishedTrue" class="checkable">Publish these changes</label>
-		<br>
+		{# Hardcoded for only @edent to be able to delete benches #}
+
 		{% if provider == "twitter" %}
 			{% if providerID == "14054507" %}
+				<input type="radio" id="publishedTrue"  name="published" value="true" checked>
+				<label for="publishedTrue" class="checkable">Publish these changes</label>
+				<br>
 				<input type="radio" id="publishedFalse" name="published" value="false">
 				<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
 			{% endif %}
 		{% endif %}
 		
-		<input type="hidden" name="key" value=""/>
 		<br>&nbsp;
 		<div class="button-bar">
-			<input type="submit" class='button buttonColour' value="💾 Save Changes" />
+			<input type="submit" name="submitButton" id="submitButton" class='button buttonColour' value="💾 Save Changes" />
 		</div>
 	</form>
 
@@ -304,6 +292,81 @@
 		);
 		if (!loadingImage) {}
 	}
+
+	//	Disable button once clicked & let user know that the media are being uploaded
+		$("#submitButton").on('click', function() {
+			if ( $("#inscription")[0].textLength > 0) {
+				$("#submitButton").prop( "disabled", true );
+				$("#submitButton").prop( "value",   "Uploading!" );
+				uploadFile();
+			}
+			else {
+				alert("OpenBenches is only for benches with a memorial inscription.");
+			}
+		});
+
+		function uploadFile() {
+			//	Show the progress bar
+			$("#progressInfo").show();
+			//	Prepare the data
+			var formdata = new FormData();
+			formdata.append("userfile1",    $("#photoFile1").prop('files')[0]);
+			formdata.append("media_type1",  $("#media_type1").val());
+
+			formdata.append("userfile2",    $("#photoFile2").prop('files')[0]);
+			formdata.append("media_type2",  $("#media_type2").val());
+
+			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
+			formdata.append("media_type3",  $("#media_type3").val());
+
+			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
+			formdata.append("media_type4",  $("#media_type4").val());
+
+			formdata.append("benchID",      $("#benchID").val());
+			formdata.append("inscription",  $("#inscription").val());
+			formdata.append("newLongitude", $("#newLongitude").val());
+			formdata.append("newLatitude",  $("#newLatitude").val());
+
+			formdata.append("tags",         $.map($("input[name='tags']:checked"), function(c){ return c.value; }).join());
+
+			//	Send the file
+			var ajax = new XMLHttpRequest();
+			ajax.upload.addEventListener("progress", progressHandler);
+			ajax.addEventListener("load",  completeHandler);
+			ajax.addEventListener("error", errorHandler);
+			ajax.addEventListener("abort", abortHandler);
+			ajax.open("POST", "{{ uploadURL }}");
+			ajax.send(formdata);
+		}
+
+		function progressHandler(event) {
+			$("#loaded_n_total").html("Uploaded <output>" + event.loaded.toLocaleString() + " bytes of " + event.total.toLocaleString() + "</output>");
+			var percent = (event.loaded / event.total) * 100;
+			$("#progressBar").val(Math.round(percent));
+			$("#status").html(Math.round(percent) + "% uploaded");
+
+			if (100 == Math.round(percent)) {
+				$("#status").html("Upload complete. Redirecting you.");
+			}
+		}
+
+		function completeHandler(event) {
+			var reply = event.target.responseText;
+			if (isNaN(reply)) {
+				$("#status").html(reply);
+			} else {
+				$("#status").html("Redirecting you.");
+				window.location.replace("/bench/"+reply);
+			}
+		}
+
+		function errorHandler(event) {
+			$("#status").html("Upload Failed");
+		}
+
+		function abortHandler(event) {
+			$("#status").html("Upload Aborted");
+		}
 	</script>
 	{% endblock %}
 

@@ -19,23 +19,23 @@ use Doctrine\DBAL\Tools\DsnParser;
 
 class ApiController extends AbstractController
 {
-	#[Route('/api/bench/{bench_id}', name: 'api_bench')]
+	#[Route("/api/bench/{bench_id}", name: "api_bench")]
 	public function api_bench(int $bench_id): JsonResponse {
 		$request = Request::createFromGlobals();
-		if ( $request->query->get('truncated') == "false") {
+		if ( $request->query->get("truncated") == "false") {
 			$get_truncated = false;
 		} else {
 			$get_truncated = true;
 		}
 		
-		if ( $request->query->get('media') == "true" ) {
+		if ( $request->query->get("media") == "true" ) {
 			$get_media = true;
 		} else {
 			$get_media = false;
 		}
 		
 		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
 		$conn = DriverManager::getConnection($connectionParams);
 
 		//	Inscription
@@ -57,8 +57,8 @@ class ApiController extends AbstractController
 
 			# Build GeoJSON feature collection array
 			$geojson = array(
-				'type'		=> 'FeatureCollection',
-				'features'  => array()
+				"type"		=> "FeatureCollection",
+				"features"  => array()
 			);
 
 			# some inscriptions got stored with leading/trailing whitespace
@@ -70,7 +70,7 @@ class ApiController extends AbstractController
 			if ( true == $get_truncated ) {
 				$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
 				if ( $inscriptionTruncate !== $inscription ) {
-					$inscription = $inscriptionTruncate . '…';
+					$inscription = $inscriptionTruncate . "…";
 				}
 				$inscription=nl2br( $inscription );
 			}
@@ -130,22 +130,22 @@ class ApiController extends AbstractController
 
 			//	Create GeoJSON
 			$feature = array(
-				'id'       => $benchID,
-				'type'     => 'Feature',
-				'geometry' => array(
-					'type' => 'Point',
+				"id"       => $benchID,
+				"type"     => "Feature",
+				"geometry" => array(
+					"type" => "Point",
 					# Pass Longitude and Latitude Columns here
-					'coordinates' => array($longitude, $latitude)
+					"coordinates" => array($longitude, $latitude)
 				),
 				# Pass other attribute columns here
-				'properties' => array(
-					'created_at'   => date_format( date_create($added ), "c" ),
-					'popupContent' => $inscription,
-					'media'        => $mediaFeature
+				"properties" => array(
+					"created_at"   => date_format( date_create($added ), "c" ),
+					"popupContent" => $inscription,
+					"media"        => $mediaFeature
 				),
 			);
 			# Add feature arrays to feature collection array
-			array_push($geojson['features'], $feature);
+			array_push($geojson["features"], $feature);
 		}
 
 		//	Render the page
@@ -153,147 +153,170 @@ class ApiController extends AbstractController
 		return $response;
 	}
 
-	#[Route('/api/benches/', name: 'api_all_benches')]
+	#[Route("/api/benches/", name: "api_all_benches")]
 	public function api_all_benches(): JsonResponse {
 		$request = Request::createFromGlobals();
-		if ( $request->query->get('truncated') == "false") {
+
+		$cache = new FilesystemAdapter( "cache_all_benches" );
+		$cache_name = "all_benches";
+
+		if ( $request->query->get( "truncated" ) == "false" ) {
 			$get_truncated = false;
+			$cache_name .= "full";
 		} else {
 			$get_truncated = true;
+			$cache_name .= "truncated";
 		}
 		
-		if ( $request->query->get('media') == "true" ) {
+		if ( $request->query->get( "media" ) == "true" ) {
 			$get_media = true;
+			$cache_name .= "media";
 		} else {
 			$get_media = false;
+			$cache_name .= "nomedia";
 		}
 
-		$mediaFunctions = new MediaFunctions();
+		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+			//	Cache length in seconds
+			$item->expiresAfter(600); //	10 minutes
 
-		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
-		$conn = DriverManager::getConnection($connectionParams);
-
-		$queryBuilder = $conn->createQueryBuilder();
-
-		$queryBuilder
-			->select("benches.benchID", "benches.inscription", "benches.latitude", "benches.longitude", "benches.added", "media.sha1", "media.licence", "media.media_type", "media.importURL", "media.width", "media.height")
-			->from("benches")
-			->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
-			->where("benches.published = true AND benches.present = true");
-			// ->setFirstResult(0)
-		   // ->setMaxResults(2000);
-		$results = $queryBuilder->executeQuery();
-
-		//	Build GeoJSON feature collection array
-		$geojson = array(
-			'type'		=> 'FeatureCollection',
-			'features'  => array()
-		);
-
-		//	Loop through the results to create an array of benches
-		$benches_array = array();
-		while (($row = $results->fetchAssociative()) !== false) {
-
-			//	If the bench has already been added, add the media to it
-			if( isset( $benches_array[$row["benchID"]] ) && $get_media != false ) {
-				$media_data = array();
-
-				$media_data["URL"] = "/image/{$row["sha1"]}";
-
-				if( null != $row["importURL"] ) {
-					$media_data["importURL"] = $row["importURL"];
-				}
-
-				$media_data["licence"]     = $row["licence"];
-				$media_data["media_type"]  = $row["media_type"];
-				$media_data["sha1"]        = $row["sha1"];
-				$media_data["width"]       = $row["width"];
-				$media_data["height"]      = $row["height"];
-
-				//	Add all the media details to the response
-				array_push( $benches_array[$row["benchID"]]["properties"]["media"], $media_data);				
-
+			$request = Request::createFromGlobals();
+			if ( $request->query->get("truncated") == "false") {
+				$get_truncated = false;
 			} else {
-				//	Some inscriptions got stored with leading/trailing whitespace
-				$inscription=trim( $row["inscription"] );
+				$get_truncated = true;
+			}
+			
+			if ( $request->query->get("media") == "true" ) {
+				$get_media = true;
+			} else {
+				$get_media = false;
+			}
 
-				// If displaying on map need to truncate inscriptions longer than
-				// 128 chars and add in <br> elements
-				if ( true == $get_truncated ) {
-					$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
-					if ( $inscriptionTruncate !== $inscription ) {
-						$inscription = $inscriptionTruncate . '…';
-					}
-					$inscription=nl2br( $inscription );
-				}
+			$mediaFunctions = new MediaFunctions();
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
+			$conn = DriverManager::getConnection($connectionParams);
+			$queryBuilder = $conn->createQueryBuilder();
 
-				//	Horrible hack to force numeric inscriptions to be strings
-				if ( is_numeric( $inscription ) ) {
-					$inscription .= " ";
-				}
+			$queryBuilder
+				->select("benches.benchID", "benches.inscription", "benches.latitude", "benches.longitude", "benches.added", "media.sha1", "media.licence", "media.media_type", "media.importURL", "media.width", "media.height")
+				->from("benches")
+				->innerJoin("benches", "media", "media", "benches.benchID = media.benchID")
+				->where("benches.published = true AND benches.present = true");
+			$results = $queryBuilder->executeQuery();
 
-				$media_data = array();
-				if( $get_media != false ) {
+			//	Build GeoJSON feature collection array
+			$geojson = array(
+				"type"		=> "FeatureCollection",
+				"features"  => array()
+			);
+
+			//	Loop through the results to create an array of benches
+			$benches_array = array();
+			while (($row = $results->fetchAssociative()) !== false) {
+
+				//	If the bench has already been added, add the media to it
+				if( isset( $benches_array[$row["benchID"]] ) && $get_media != false ) {
+					$media_data = array();
 
 					$media_data["URL"] = "/image/{$row["sha1"]}";
-	
+
 					if( null != $row["importURL"] ) {
 						$media_data["importURL"] = $row["importURL"];
 					}
-	
+
 					$media_data["licence"]     = $row["licence"];
 					$media_data["media_type"]  = $row["media_type"];
 					$media_data["sha1"]        = $row["sha1"];
 					$media_data["width"]       = $row["width"];
 					$media_data["height"]      = $row["height"];
+
+					//	Add all the media details to the response
+					array_push( $benches_array[$row["benchID"]]["properties"]["media"], $media_data);				
+
+				} else {
+					//	Some inscriptions got stored with leading/trailing whitespace
+					$inscription=trim( $row["inscription"] );
+
+					// If displaying on map need to truncate inscriptions longer than
+					// 128 chars and add in <br> elements
+					if ( true == $get_truncated ) {
+						$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
+						if ( $inscriptionTruncate !== $inscription ) {
+							$inscription = $inscriptionTruncate . "…";
+						}
+						$inscription=nl2br( $inscription );
+					}
+
+					//	Horrible hack to force numeric inscriptions to be strings
+					if ( is_numeric( $inscription ) ) {
+						$inscription .= " ";
+					}
+
+					$media_data = array();
+					if( $get_media != false ) {
+
+						$media_data["URL"] = "/image/{$row["sha1"]}";
+		
+						if( null != $row["importURL"] ) {
+							$media_data["importURL"] = $row["importURL"];
+						}
+		
+						$media_data["licence"]     = $row["licence"];
+						$media_data["media_type"]  = $row["media_type"];
+						$media_data["sha1"]        = $row["sha1"];
+						$media_data["width"]       = $row["width"];
+						$media_data["height"]      = $row["height"];
+					}
+
+					//	Create GeoJSON
+					$feature = array(
+						"id"       => $row["benchID"],
+						"type"     => "Feature",
+						"geometry" => array(
+							"type" => "Point",
+							// Pass Longitude and Latitude Columns here
+							"coordinates" => array($row["longitude"], $row["latitude"])
+						),
+						// Pass other attribute columns here
+						"properties" => array(
+							"created_at"   => date_format( date_create($row["added"] ), "c" ),
+							"popupContent" => $inscription,
+							"media" => array(),
+						),
+					);
+					//	Add all the media details to the response
+					array_push( $feature["properties"]["media"], $media_data);
+
+					// Add feature to collection array
+					$benches_array[$row["benchID"]] = $feature;
 				}
-
-				//	Create GeoJSON
-				$feature = array(
-					'id'       => $row["benchID"],
-					'type'     => 'Feature',
-					'geometry' => array(
-						'type' => 'Point',
-						// Pass Longitude and Latitude Columns here
-						'coordinates' => array($row["longitude"], $row["latitude"])
-					),
-					// Pass other attribute columns here
-					'properties' => array(
-						'created_at'   => date_format( date_create($row["added"] ), "c" ),
-						'popupContent' => $inscription,
-						"media" => array(),
-					),
-				);
-				//	Add all the media details to the response
-				array_push( $feature["properties"]["media"], $media_data);
-
-				// Add feature to collection array
-				$benches_array[$row["benchID"]] = $feature;
 			}
-		}
 
-		foreach( $benches_array as $bench ){
-			array_push($geojson["features"], $bench);
-		}
+			foreach( $benches_array as $bench ){
+				array_push($geojson["features"], $bench);
+			}
+			return $geojson;
+		});
 
-		$response = new JsonResponse($geojson);	
+		$response = new JsonResponse($value);	
 		return $response;
 	}
 
-	#[Route('/api/user/{user_id}', name: 'api_user')]
+	#[Route("/api/user/{user_id}", name: "api_user")]
 	public function api_user(int $user_id): JsonResponse {
 		$mediaFunctions = new MediaFunctions();
 		$userFunctions  = new UserFunctions();
 
 		$request = Request::createFromGlobals();
-		if ( $request->query->get('truncated') == "false") {
+		if ( $request->query->get("truncated") == "false") {
 			$get_truncated = false;
 		} else {
 			$get_truncated = true;
 		}
 		
-		if ( $request->query->get('media') == "true" ) {
+		if ( $request->query->get("media") == "true" ) {
 			$get_media = true;
 		} else {
 			$get_media = false;
@@ -303,8 +326,8 @@ class ApiController extends AbstractController
 
 		# Build GeoJSON feature collection array
 		$geojson = array(
-			'type'		=> 'FeatureCollection',
-			'features'  => array()
+			"type"		=> "FeatureCollection",
+			"features"  => array()
 		);
 
 		foreach( $benches_array as $bench ) {
@@ -323,7 +346,7 @@ class ApiController extends AbstractController
 			if ( true == $get_truncated ) {
 				$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
 				if ( $inscriptionTruncate !== $inscription ) {
-					$inscription = $inscriptionTruncate . '…';
+					$inscription = $inscriptionTruncate . "…";
 				}
 				$inscription = nl2br( $inscription );
 			}
@@ -335,22 +358,22 @@ class ApiController extends AbstractController
 
 			//	Create GeoJSON
 			$feature = array(
-				'id'       => $benchID,
-				'type'     => 'Feature',
-				'geometry' => array(
-					'type' => 'Point',
+				"id"       => $benchID,
+				"type"     => "Feature",
+				"geometry" => array(
+					"type" => "Point",
 					# Pass Longitude and Latitude Columns here
-					'coordinates' => array($longitude, $latitude)
+					"coordinates" => array($longitude, $latitude)
 				),
 				# Pass other attribute columns here
-				'properties' => array(
-					'created_at'   => date_format( date_create($added ), "c" ),
-					'popupContent' => $inscription,
-					'media'        => array(["url" => $image]),
+				"properties" => array(
+					"created_at"   => date_format( date_create($added ), "c" ),
+					"popupContent" => $inscription,
+					"media"        => array(["url" => $image]),
 				),
 			);
 			# Add feature arrays to feature collection array
-			array_push($geojson['features'], $feature);
+			array_push($geojson["features"], $feature);
 		}
 
 		//	Render the page
@@ -358,23 +381,23 @@ class ApiController extends AbstractController
 		return $response;
 	}
 
-	#[Route('/api/search/', name: 'api_search')]
+	#[Route("/api/search/", name: "api_search")]
 	public function api_search(): JsonResponse {
 		$mediaFunctions = new MediaFunctions();
 		$searchFunctions  = new SearchFunctions();
 
 		$request = Request::createFromGlobals();
 		$query         = $request->query->get("search");
-		$get_truncated = $request->query->get('truncated');
-		$get_media     = $request->query->get('media');
+		$get_truncated = $request->query->get("truncated");
+		$get_media     = $request->query->get("media");
 
 		//	Get the benches associated with this query
 		$benches_array = $searchFunctions->getSearchBenches( $query, 0, 20000 );
 		
 		# Build GeoJSON feature collection array
 		$geojson = array(
-			'type'		=> 'FeatureCollection',
-			'features'  => array()
+			"type"		=> "FeatureCollection",
+			"features"  => array()
 		);
 
 		foreach( $benches_array as $bench ) {
@@ -393,7 +416,7 @@ class ApiController extends AbstractController
 			if ( true == $get_truncated ) {
 				$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
 				if ( $inscriptionTruncate !== $inscription ) {
-					$inscription = $inscriptionTruncate . '…';
+					$inscription = $inscriptionTruncate . "…";
 				}
 				$inscription = nl2br( $inscription );
 			}
@@ -405,22 +428,22 @@ class ApiController extends AbstractController
 
 			//	Create GeoJSON
 			$feature = array(
-				'id'       => $benchID,
-				'type'     => 'Feature',
-				'geometry' => array(
-					'type' => 'Point',
+				"id"       => $benchID,
+				"type"     => "Feature",
+				"geometry" => array(
+					"type" => "Point",
 					# Pass Longitude and Latitude Columns here
-					'coordinates' => array($longitude, $latitude)
+					"coordinates" => array($longitude, $latitude)
 				),
 				# Pass other attribute columns here
-				'properties' => array(
-					'created_at'   => date_format( date_create($added ), "c" ),
-					'popupContent' => $inscription,
-					'media'        => array(["url" => $image]),
+				"properties" => array(
+					"created_at"   => date_format( date_create($added ), "c" ),
+					"popupContent" => $inscription,
+					"media"        => array(["url" => $image]),
 				),
 			);
 			# Add feature arrays to feature collection array
-			array_push($geojson['features'], $feature);
+			array_push($geojson["features"], $feature);
 		}
 
 		//	Render the page
@@ -428,7 +451,7 @@ class ApiController extends AbstractController
 		return $response;
 	}
 
-	#[Route('/api/tags/', name: 'api_tags')]
+	#[Route("/api/tags/", name: "api_tags")]
 	public function api_tags(): JsonResponse {
 
 		$cache = new FilesystemAdapter("cache_tags");
@@ -436,7 +459,7 @@ class ApiController extends AbstractController
 			//	Cache length in seconds
 			$item->expiresAfter(3600);
 			$dsnParser = new DsnParser();
-			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
 			$conn = DriverManager::getConnection($connectionParams);
 
 			$queryBuilder = $conn->createQueryBuilder();
@@ -458,6 +481,28 @@ class ApiController extends AbstractController
 		//	Render the page
 		$response = new JsonResponse($value);	
 		return $response;
+	}	
+
+	#[Route("/api/cache/", name: "api_cache")]
+	public function api_cache(): JsonResponse {
+		//	Tests whether the cache is working
+		$cache = new FilesystemAdapter("cache_time");
+
+		$value = $cache->get("cache_time", function (ItemInterface $item) {
+			$item->expiresAfter(600);
+
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
+			$conn = DriverManager::getConnection($connectionParams);
+
+			$queryBuilder = $conn->createQueryBuilder();
+
+			$queryBuilder->select("CURRENT_TIMESTAMP()");
+			$results = $queryBuilder->executeQuery();
+	  
+			return $results->fetchAllAssociative();
+		});
+		
+		return new JsonResponse( $value );
 	}
-	
 }

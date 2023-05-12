@@ -31,14 +31,15 @@ class MediaFunctions
 	}
 
 	public function getProxyImageURL( $sha1, $size=600 ): string {
-		// if (IMAGE_CACHE_PREFIX == "") {
-		// 	return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
-		// }
+		if ( $_ENV["IMAGE_CACHE_PREFIX"] == "" ) {
+			return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
+		}
 	
 		// //	https://images.weserv.nl/docs/
-		// return IMAGE_CACHE_PREFIX . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/" . "&w={$size}&q=" . IMAGE_CACHE_QUALITY . "&output=webp&il";
 
-		return "https://images.weserv.nl/?url=openbenches.org/image/{$sha1}/&w={$size}&q=60&output=webp&il";
+		return $_ENV["IMAGE_CACHE_PREFIX"] .  
+		       $_SERVER['SERVER_NAME'] . 
+		       "/image/{$sha1}/&w={$size}&q=" . $_ENV["IMAGE_CACHE_QUALITY"] . "&output=webp&il";
 	}
 
 	// public function getMediaLocation( $file ) {
@@ -152,9 +153,9 @@ class MediaFunctions
 					$metadata["longitude"] = round($lng,10);
 				}
 			}
+			$img->clear();
 		}
 		
-		$img->clear();
 		return $metadata;
 	}
 

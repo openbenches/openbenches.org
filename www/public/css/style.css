@@ -56,10 +56,10 @@ iframe{
 }
 
 fieldset {
-	width: 0;
+	/* width: 0;
 	text-align: left;
 	margin: auto;
-	max-width: 100%;
+	max-width: 100%; */
 }
 
 .button-bar {
@@ -276,24 +276,9 @@ input, select {
 	margin-left: 5px;
 }
 
-#tagInput .select2 {
-	margin-left: 5px;
-}
-
-#tagInput .select2 ul {
-	display: block;
-}
-
-#tagInput .select2 li {
-	margin-bottom: 0;
-}
-
-/* Fix rendering of tag bar */
-.select2-selection {
-	text-align: left !important;
-}
-.select2-selection__choice__remove {
-	width: auto;
+#tagInput  {
+	max-width: 800px;
+	margin: 0 auto;
 }
 
 small {
@@ -337,6 +322,10 @@ a[rel*="license"] {
 #cc-by-sa-logo {
 	height: 1.5em;
 	margin-top: 0.5em;
+}
+
+.colophon {
+	list-style: none;
 }
 
 .colophon-logo {
@@ -548,4 +537,23 @@ ol.searchResults {
 /* Show a comma after each address element except the last one */
 .address:not(:last-of-type)::after {
 	content: ",";
+}
+
+/* For checkboxes */
+.toggle {
+	width: auto !important;
+	border: 1px black solid;
+}
+.pseudo.button:hover {
+	border: 1px black solid;
+}
+:checked + .toggle::before {
+	content: "✅ ";
+	font-size: .75em;
+	display: contents !important;
+}
+:not(:checked) + .toggle::before {
+	content: "⬜ ";
+	font-size: .75em;
+	display: contents !important;
 }

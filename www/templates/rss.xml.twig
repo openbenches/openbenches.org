@@ -1,0 +1,21 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>{{ title }}</title>
+		<link>{{ url }}</link>
+		<description>Latest benches.</description>
+		<language>en-GB</language>
+		<pubDate>{{ benches|first.added|date("D, d M Y H:i:s O") }}</pubDate>
+		<lastBuildDate>{{ benches|first.added|date("D, d M Y H:i:s O") }}</lastBuildDate>
+		<ttl>30</ttl>
+		<atom:link href="{{ url }}rss" rel="self" type="application/rss+xml" />
+	  {% for bench in benches %}
+		<item>
+			<title>Bench {{ bench.benchID }}</title>
+			<link>{{ url }}bench/{{ bench.benchID }}</link>
+			<description><![CDATA[{{ bench.inscription }}<br><img src="{{ url }}{{ bench.image }}" />]]></description>
+			<pubDate>{{ bench.added|date("D, d M Y H:i:s O") }}</pubDate>
+			<guid>{{ url }}bench/{{ bench.benchID }}</guid>
+		</item>
+	  {% endfor %}
+  </channel>
+</rss>

@@ -7,8 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
 
-use App\Service\MediaFunctions;
-use App\Service\UserFunctions;
+use App\Service\TagsFunctions;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -33,11 +32,22 @@ class AddController extends AbstractController
 			$providerID = null;
 		}
 
+		$tagsFunctions = new TagsFunctions();
+		$tags_array = $tagsFunctions->getTagsNames();
+
 		return $this->render('add.html.twig', [
 			"username"   => $username,
 			"avatar"     => $avatar,
 			"provider"   => $provider,
 			"providerID" => $providerID,
+			"tags_array" => $tags_array,
 		]);
 	}
+
+	#[Route(["/tags"], name: "tags")]
+	public function tags() {
+		$tagsFunctions = new TagsFunctions();
+		$tagsFunctions->getTags();
+	}
+
 }

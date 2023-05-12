@@ -63,11 +63,15 @@ She saved the world.
 A lot..." required></textarea>
 		</div>
 		<div id="tagInput">
-			<label for="tag_multiple" id="tags_label">Choose some tags:
-				<select class="js-tags-multiple form-control"
-				        name="tags[]" id="tag_multiple"
-				        multiple="multiple" form="fileform"></select>
-			</label>
+		{% if tags_array is defined %}
+				<h2>Choose some suitable tags:</h2>
+				{% for tag in tags_array %}
+				<label>
+					<input type="checkbox" id="{{ tag }}" name="tags" value="{{ tag }}">
+					<span class="toggle pseudo button">{{ tag }}</span>
+				</label>
+				{% endfor %}
+		{% endif %}
 		</div>
 		<div id="map-hidden" style="clear:both;display: none;">
 			<h3>Drag pin if you need to adjust the bench's location</h3>
@@ -163,26 +167,10 @@ A lot..." required></textarea>
 	<script src="/js/jquery.3.6.4/jquery-3.6.4.min.js"></script>
 	<script src="/js/vision/vision.js.php"></script>
 	<script src="/js/JavaScript-Load-Image-5.16.0/js/load-image.all.min.js"></script>
-	<script src="/js/select2-4.1.0-rc.0/select2.min.js"></script>
 	<script>
 	$(document).ready(function() {
-		//	Get the tags for the selection box
-		getTagsJSON();	
-	});
-	
-	async function getTagsJSON() {
-		//	Get the tags from the API
-		const response = await fetch("/api/tags");
-		const tags = await response.json();
 
-		//	Add the tags to the select2 box
-		$('.js-tags-multiple').select2({
-			theme: "classic",
-			data: tags,
-			closeOnSelect: false,
-			placeholder: "tag your bench up"
-		});
-	}
+	});
 	</script>
 
 	<script type="text/javascript">
@@ -402,7 +390,7 @@ A lot..." required></textarea>
 			formdata.append("newLongitude", $("#newLongitude").val());
 			formdata.append("newLatitude",  $("#newLatitude").val());
 
-			formdata.append("tags[]",       $("#tag_multiple").val());
+			formdata.append("tags",         $.map($("input[name='tags']:checked"), function(c){ return c.value; }).join());
 
 			//	Send the file
 			var ajax = new XMLHttpRequest();
@@ -443,5 +431,6 @@ A lot..." required></textarea>
 			$("#status").html("Upload Aborted");
 		}
 	</script>
+	<script src="/js/multi-input/multi-input.js"></script>
 {% endblock %}
 

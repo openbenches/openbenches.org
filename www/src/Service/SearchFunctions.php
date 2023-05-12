@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\MediaFunctions;
+use App\Service\TagsFunctions;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -102,6 +103,91 @@ class SearchFunctions
 				"image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
 			);
 		}
+		return $benches_array;
+	}
+
+	public function getTagBenches( $tag, $start=0, $count=20 ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+		// $offset = $page * $results;
+
+		$tagFunctions = new TagsFunctions();
+		$tagIDs = $tagFunctions->getTags();
+		$tagID = array_search($tag, $tagIDs);
+
+		if (null == $tagID) {
+			return array();
+		}
+
+		$queryBuilder = $conn->createQueryBuilder();
+		$queryBuilder
+			->select("MAX(benches.benchID)", "benches.benchID", "benches.inscription", "benches.address", "benches.latitude", "benches.longitude", "benches.added", "MIN(media.sha1)", "MAX(tag_map.tagID)")
+			->from("benches")
+			->innerJoin('benches', 'media',   'media',   'benches.benchID = media.benchID')
+			->innerJoin('benches', 'tag_map', 'tag_map', 'benches.benchID = tag_map.benchID')
+			->where("tag_map.tagID = ? AND benches.published = 1")
+			->orderBy("benches.benchID", 'DESC')
+			->groupBy("benches.benchID")
+			->setFirstResult( $start )
+			->setMaxResults( $count )
+			->setParameter( 0, $tagID );
+		$results = $queryBuilder->executeQuery();
+
+		$mediaFunctions = new MediaFunctions();
+
+		//	Loop through the results to create an array of media
+		$benches_array = array();
+		while ( ( $row = $results->fetchAssociative() ) !== false) {
+			//	Add the details to the array
+			$benches_array[$row["benchID"]] = array(
+				"benchID"     => $row["benchID"],
+				"inscription" => $row["inscription"],
+				"address"     => $row["address"],
+				"latitude"    => $row["latitude"],
+				"longitude"   => $row["longitude"],
+				"added"       => $row["added"],
+				"image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
+			);
+		}
+		return $benches_array;
+	}
+
+	public function getLatestBenches( $count=20 ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		$queryBuilder = $conn->createQueryBuilder();
+		$queryBuilder
+			->select("MAX(benches.benchID)", "benches.benchID", "benches.inscription", "benches.address", "benches.latitude", "benches.longitude", "benches.added", "benches.userID", "users.name", "MIN(media.sha1)")
+			->from("benches")
+			->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
+			->innerJoin('benches', 'users', 'users', 'benches.userID  = users.userID')
+			->where("benches.published = 1")
+			->orderBy("benches.benchID", 'DESC')
+			->groupBy("benches.benchID")
+			->setMaxResults( $count );
+		$results = $queryBuilder->executeQuery();
+
+		$mediaFunctions = new MediaFunctions();
+
+		//	Loop through the results to create an array of media
+		$benches_array = array();
+		while ( ( $row = $results->fetchAssociative() ) !== false) {
+			//	Add the details to the array
+			$benches_array[$row["benchID"]] = array(
+				"benchID"     => $row["benchID"],
+				"inscription" => $row["inscription"],
+				"address"     => $row["address"],
+				"latitude"    => $row["latitude"],
+				"longitude"   => $row["longitude"],
+				"added"       => $row["added"],
+				"name"        => $row["name"],
+				"image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
+			);
+		}
+
 		return $benches_array;
 	}
 }

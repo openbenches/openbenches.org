@@ -99,4 +99,22 @@ class SearchController extends AbstractController
 			"benches_count" => count( $benches_array ),
 		]);
 	}
+
+	#[Route(["/tag/{tag}"], name: 'tag_page')]
+	public function tag_page( string $tag ): Response {
+		//	TODO - add pagination
+		$request = Request::createFromGlobals();
+		//	/tag/cat
+		$tag = strtolower($tag);
+		$searchFunctions = new searchFunctions();
+		$benches_array = $searchFunctions->getTagBenches( $tag );
+		//	Render the page
+		return $this->render('tag.html.twig', [
+			"benches"       => $benches_array,
+			"tag"           => $tag,
+			"benches_count" => count( $benches_array ),
+			"previous_url"  => null,
+			"next_url"      => null,
+		]);
+	}
 }

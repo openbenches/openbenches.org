@@ -1,0 +1,30 @@
+name: Node CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run lint
+
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: mocha
+        run: docker-compose run --rm mocha
+      - name: docker-compose logs
+        if: always()
+        run: docker-compose logs nginx
+      - name: docker-compose down
+        if: always()
+        run: docker-compose down -v

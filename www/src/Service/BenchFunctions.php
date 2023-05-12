@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\MediaFunctions;
+use App\Service\TagsFunctions;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -135,7 +136,11 @@ class BenchFunctions
 						 "importURL" => $importURL,				 
 				);
 			}
-			
+
+			//	Get any tags
+			$tagsFunctions = new TagsFunctions();
+			$tags_array = $tagsFunctions->getTagsFromBench($bench_id);
+
 			//	Render the page
 			return [
 				"bench_id"    => $bench_id,
@@ -144,6 +149,7 @@ class BenchFunctions
 				"latitude"    => $latitude,
 				"addresses"   => $address_array,
 				"medias"      => $media_array,
+				"tags"        => $tags_array,
 			];
 		} else {
 			return array();
