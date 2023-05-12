@@ -6,10 +6,14 @@
 	font-style: normal;
 }
 
+:root {
+	--bg: #e1ffe9;
+ }
+
 body {
 	font-family: 'varela_roundregular', sans-serif;
 	font-size: 1.25em;
-	background-color: #e1ffe9;
+	background-color: var(--bg);
 	margin: 0;
 	color: #191E20;
 	text-align: center;
@@ -286,8 +290,15 @@ small {
 }
 
 #leaderboard-results {
-	display: inline-block;
+	display: inline-flex;
+	flex-wrap: wrap;
 	text-align: left;
+}
+
+.leaderboard-title {
+	position: sticky;
+	top: 0;
+	background-color: var(--bg);
 }
 
 .avatar {

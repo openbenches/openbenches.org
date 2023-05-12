@@ -6,24 +6,26 @@
 {% block body %}
 <div id="leaderboard-results">
 	<div id="leaderboard-benches">
-		<h3>Most added and edited benches</h3> 
+		<h3 class="leaderboard-title">Most added and edited benches</h3> 
 		<ol class="leaderboard-list">
 		{% for user in benches %}
 			<li>
 				<a href="/user/{{ user.userID }}">
-					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32">{{ user.username }}
+					<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="" loading="lazy" width="32" />
+					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32" />{{ user.username }}
 				</a> {{ user.count|number_format }}
 			</li>
 		{% endfor %}
 		</ol>
 	</div>
 	<div id="leaderboard-media">
-		<h3>Most added photos</h3>
+		<h3 class="leaderboard-title">Most added photos</h3>
 		<ol class="leaderboard-list">
 		{% for user in media %}
 			<li>
 				<a href="/user/{{ user.userID }}">
-					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32">{{ user.username }}
+					<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="" loading="lazy" width="32" />
+					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32" />{{ user.username }}
 				</a> {{ user.count|number_format }}
 			</li>
 		{% endfor %}

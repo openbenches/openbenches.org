@@ -188,14 +188,12 @@
 		<br>
 		{# Hardcoded for only @edent to be able to delete benches #}
 
-		{% if provider == "twitter" %}
-			{% if providerID == "14054507" %}
-				<input type="radio" id="publishedTrue"  name="published" value="true" checked>
-				<label for="publishedTrue" class="checkable">Publish these changes</label>
-				<br>
-				<input type="radio" id="publishedFalse" name="published" value="false">
-				<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
-			{% endif %}
+		{% if admin == true %}
+		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
+		<label for="publishedTrue" class="checkable">Publish these changes</label>
+		<br>
+		<input type="radio" id="publishedFalse" name="published" value="false">
+		<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
 		{% endif %}
 		
 		<br>&nbsp;

@@ -2,6 +2,9 @@
 // src/Service/UserFunctions.php
 namespace App\Service;
 
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
 use App\Service\MediaFunctions;
 
 use Doctrine\DBAL\DriverManager;
@@ -50,13 +53,19 @@ class UserFunctions
 
 		switch ( $provider ) {
 			case "twitter" :
-				$user_avatar = "https://res.cloudinary.com/" . $_ENV['CLOUDINARY_KEY'] . "/image/twitter/{$providerID}.jpg";
+				$user_avatar = "https://res.cloudinary.com/{$_ENV['CLOUDINARY_KEY']}/image/twitter/{$providerID}.jpg";
 				break;
 			case "facebook" :
-				$user_avatar = "https://res.cloudinary.com/" . $_ENV['CLOUDINARY_KEY'] . "/image/facebook/{$providerID}.jpg";
+				$user_avatar = "https://res.cloudinary.com/{$_ENV['CLOUDINARY_KEY']}/image/facebook/{$providerID}.jpg";
 				break;
 			case "github" :
 				$user_avatar = "https://avatars0.githubusercontent.com/u/{$providerID}?v=4&amp;s=48";
+				break;
+			case "flickr" :
+				$user_avatar = "/images/svg/flickr.svg";
+				break;
+			case "wikipedia" :
+				$user_avatar = "/images/svg/wikipedia.svg";
 				break;
 			default :
 				$user_avatar = null;
@@ -139,67 +148,84 @@ class UserFunctions
 	}
 
 	public function getLeaderboardBenches(): array {
-		$userFunctions = new UserFunctions();
 
-		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
-		$conn = DriverManager::getConnection($connectionParams);
+		$cache = new FilesystemAdapter( "cache_leaderboard" );
+		$cache_name = "leaderboard_benches";
+		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+			//	Cache length in seconds
+			$item->expiresAfter(60); //	1 minute
+			$userFunctions = new UserFunctions();
 
-		$queryBuilder = $conn->createQueryBuilder();
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
 
-		$queryBuilder
-			->select("users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT")
-			->from("benches")
-			->innerJoin('benches', 'users', 'users', 'benches.userID = users.userID')
-			->where("benches.published = true AND benches.present = true AND users.provider != 'anon'")
-			->orderBy("USERCOUNT", 'DESC')
-			->groupBy("users.userID");
-		$results = $queryBuilder->executeQuery();
+			$queryBuilder = $conn->createQueryBuilder();
 
-		$leaderboard_array = array();
-		while ( ( $row = $results->fetchAssociative() ) !== false) {
-			//	Add the details to the array
-			$leaderboard_array[$row["userID"]] = array(
-				"userID"     => $row["userID"],
-				"username"   => $row["name"],
-				"avatar"     => $userFunctions->getUserAvatar( $row["provider"], $row["providerID"], "" ),
-				"count"      => $row["USERCOUNT"],
-			);
-		}
-		return $leaderboard_array;
+			$queryBuilder
+				->select("users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT")
+				->from("benches")
+				->innerJoin('benches', 'users', 'users', 'benches.userID = users.userID')
+				->where("benches.published = true AND benches.present = true AND users.provider != 'anon'")
+				->orderBy("USERCOUNT", 'DESC')
+				->groupBy("users.userID");
+			$results = $queryBuilder->executeQuery();
+
+			$leaderboard_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$leaderboard_array[$row["userID"]] = array(
+					"userID"     => $row["userID"],
+					"username"   => $row["name"],
+					"provider"   => $row["provider"],
+					"avatar"     => $userFunctions->getUserAvatar( $row["provider"], $row["providerID"], "" ),
+					"count"      => $row["USERCOUNT"],
+				);
+			}
+			return $leaderboard_array;
+		});
+		return $value;
 	}
 
 	public function getLeaderboardMedia(): array {
-		$userFunctions = new UserFunctions();
+		$cache = new FilesystemAdapter( "cache_leaderboard" );
+		$cache_name = "leaderboard_media";
+		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+			//	Cache length in seconds
+			$item->expiresAfter(60); //	1 minute
+			$userFunctions = new UserFunctions();
 
-		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
-		$conn = DriverManager::getConnection($connectionParams);
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+	
+			$queryBuilder = $conn->createQueryBuilder();
+	
+			//	TODO: This doesn't detect if a media is associated with a bench which has been deleted
+			$queryBuilder
+				->select("users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT")
+				->from("media")
+				->innerJoin('media', 'users', 'users', 'media.userID = users.userID')
+				->where("users.provider != 'anon'")
+				->orderBy("USERCOUNT", 'DESC')
+				->groupBy("users.userID");
+			$results = $queryBuilder->executeQuery();
+	
+			$leaderboard_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$leaderboard_array[$row["userID"]] = array(
+					"userID"     => $row["userID"],
+					"username"   => $row["name"],
+					"provider"   => $row["provider"],
+					"avatar"     => $userFunctions->getUserAvatar( $row["provider"], $row["providerID"], "" ),
+					"count"      => $row["USERCOUNT"],
+				);
+			}
+			return $leaderboard_array;	
+		});
 
-		$queryBuilder = $conn->createQueryBuilder();
-
-		//	TODO: This doesn't detect if a media is associated with a bench which has been deleted
-		$queryBuilder
-			->select("users.userID, users.name, users.provider, users.providerID, COUNT(*) AS USERCOUNT")
-			->from("media")
-			->innerJoin('media', 'users', 'users', 'media.userID = users.userID')
-			->where("users.provider != 'anon'")
-			->orderBy("USERCOUNT", 'DESC')
-			->groupBy("users.userID");
-		$results = $queryBuilder->executeQuery();
-
-		$leaderboard_array = array();
-		while ( ( $row = $results->fetchAssociative() ) !== false) {
-			//	Add the details to the array
-			$leaderboard_array[$row["userID"]] = array(
-				"userID"     => $row["userID"],
-				"username"   => $row["name"],
-				"avatar"     => $userFunctions->getUserAvatar( $row["provider"], $row["providerID"], "" ),
-				"count"      => $row["USERCOUNT"],
-			);
-		}
-		// var_dump($leaderboard_array);die();
-		return $leaderboard_array;
+		return $value;
 	}
 
 	public function addUser( $user ): int {

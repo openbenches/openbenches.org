@@ -19,6 +19,8 @@ class EditController extends AbstractController
 	public function edit(int $benchID): Response {
 
 		$user = $this->getUser();
+		$userFunctions = new UserFunctions();
+		$userID   = $userFunctions->addUser($user);
 
 		if( isset( $user ) ) {
 			$username   = $user->getNickname();
@@ -36,6 +38,8 @@ class EditController extends AbstractController
 		$bench_tags = $tagsFunctions->getTagsFromBench( $benchID );
 		$all_tags   = $tagsFunctions->getTagsNames();
 
+		$admin = ( array_search( $userID, explode(",", $_ENV["ADMIN_USERIDS"])) !== false );
+
 		if ( isset($bench["bench_id"]) ) {
 			return $this->render("edit.html.twig", [
 				"benchID"     => $bench["bench_id"],
@@ -50,6 +54,7 @@ class EditController extends AbstractController
 				"all_tags"    => $all_tags,
 				"bench_tags"  => $bench_tags,
 				"uploadURL"   => "/update",
+				"admin"       => $admin,
 			]);
 		}
 	}
