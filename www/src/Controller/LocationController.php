@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\LocationFunctions;
+use App\Service\BenchFunctions;
 use App\Service\MediaFunctions;
 
 class LocationController extends AbstractController
