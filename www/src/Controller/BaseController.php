@@ -18,4 +18,10 @@ class BaseController extends AbstractController
 
 		return $this->render('colophon.html.twig');
 	}
+
+	#[Route(["/offline", "/offline.php"], name: "offline")]
+	public function offline(): Response {
+
+		return $this->render('offline.html.twig');
+	}
 }

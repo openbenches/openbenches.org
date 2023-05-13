@@ -56,7 +56,7 @@ if ("serviceWorker" in navigator) {
 		console.log("[PWA Builder] active service worker found, no need to register");
 	} else {
 		// Register the service worker
-		navigator.serviceWorker.register("/sw.js?cache=2020-02-10", {
+		navigator.serviceWorker.register("/sw.js", {
 			scope: "./"
 		})
 		.then(function (reg) {
