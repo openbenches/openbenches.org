@@ -8,7 +8,7 @@
 
 :root {
 	--bg: #e1ffe9;
- }
+}
 
 body {
 	font-family: 'varela_roundregular', sans-serif;
@@ -543,6 +543,10 @@ ol.searchResults {
 	display: inline-block;
 	padding: .4em;
 	font-size: .8em;
+}
+
+#pagination {
+	margin-left: 2em;
 }
 
 /* Show a comma after each address element except the last one */
