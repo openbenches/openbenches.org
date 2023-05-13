@@ -200,4 +200,39 @@ class SearchFunctions
 
 		return $cachedResult;
 	}
+
+	public function getSitemapBenches() {
+		$cache = new FilesystemAdapter("cache_sitemap");
+		$cacheName = "sitemapxml";
+
+		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) {
+			$item->expiresAfter(3600);
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+
+			$queryBuilder = $conn->createQueryBuilder();
+			$queryBuilder
+				->select("benches.benchID")
+				->from("benches")
+				->where("benches.published = 1")
+				->orderBy("benches.benchID", 'DESC')
+				->groupBy("benches.benchID")
+				->setFirstResult( 0 )
+				->setMaxResults( 1000000 );
+			$results = $queryBuilder->executeQuery();
+
+			//	Loop through the results to create an array of media
+			$benches_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$benches_array[$row["benchID"]] = array(
+					"benchID"     => $row["benchID"],
+				);
+			}
+			return $benches_array;
+		});
+
+		return $cachedResult;
+	}
 }

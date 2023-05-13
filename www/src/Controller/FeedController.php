@@ -41,4 +41,26 @@ class FeedController extends AbstractController
 
 		return $response;
 	}
+
+	#[Route("/sitemap.xml", name: "sitemap_page")]
+	public function sitemap_page(Request $request): Response {
+		
+		$searchFunctions = new searchFunctions();
+
+		//	Get the benches associated with this query
+		$benches_array = $searchFunctions->getSitemapBenches();
+		
+		//	Render the page
+		$contents = $this->renderView("sitemap.xml.twig", [
+			"url"     => $_ENV["DOMAIN"],
+			"benches" => $benches_array,
+		]);
+
+		//	Create response with correct content type
+		$response = new Response();
+		$response->setContent( $contents );
+		$response->headers->set( "Content-Type", "application/atom+xml" );
+
+		return $response;
+	}
 }
