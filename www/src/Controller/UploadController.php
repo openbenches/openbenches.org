@@ -67,7 +67,9 @@ class UploadController extends AbstractController
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	
-			$uploadFunctions->saveTags( $benchID, $tags);
+			if ( isset( $tags ) ){
+				$uploadFunctions->saveTags( $benchID, $tags);
+			}
 
 			$metadata["tmp_name"] = $filename;
 			$uploadFunctions->addMedia( $metadata, $media_type1, $benchID, $userID );
