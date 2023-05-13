@@ -5,10 +5,11 @@
 -- Table structure for table `licences`
 --
 
+DROP TABLE IF EXISTS `licences`;
 CREATE TABLE `licences` (
-  `shortName` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CC BY-SA 4.0',
-  `longName` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Creative Commons Attribution-ShareAlike 4.0 International',
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'https://creativecommons.org/licenses/by-sa/4.0/'
+  `shortName` varchar(32) NOT NULL DEFAULT 'CC BY-SA 4.0',
+  `longName` varchar(512) NOT NULL DEFAULT 'Creative Commons Attribution-ShareAlike 4.0 International',
+  `url` varchar(1024) NOT NULL DEFAULT 'https://creativecommons.org/licenses/by-sa/4.0/'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

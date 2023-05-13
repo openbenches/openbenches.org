@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.7
+-- version 4.9.11
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 28, 2022 at 10:03 PM
--- Server version: 10.3.36-MariaDB-log-cll-lve
--- PHP Version: 7.4.30
+-- Generation Time: May 13, 2023 at 10:02 PM
+-- Server version: 10.3.38-MariaDB-log-cll-lve
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,3 +21,5 @@ SET time_zone = "+00:00";
 --
 -- Database: `openbenc_benches`
 --
+CREATE DATABASE IF NOT EXISTS `openbenc_benches` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `openbenc_benches`;

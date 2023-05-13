@@ -5,9 +5,10 @@
 -- Table structure for table `tags`
 --
 
+DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `tagID` bigint(20) NOT NULL,
-  `tagText` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+  `tagText` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -15,8 +16,8 @@ CREATE TABLE `tags` (
 --
 
 INSERT INTO `tags` (`tagID`, `tagText`) VALUES
-(15, '18th Century'),
-(14, '19th Century'),
+(15, '18th century'),
+(14, '19th century'),
 (18, 'beach'),
 (1, 'cat'),
 (17, 'colleague'),
@@ -37,4 +38,4 @@ INSERT INTO `tags` (`tagID`, `tagText`) VALUES
 (7, 'stone'),
 (21, 'train station'),
 (44, 'twinned'),
-(5, 'wood');
+(5, 'wooden');

@@ -5,9 +5,10 @@
 -- Table structure for table `media_types`
 --
 
+DROP TABLE IF EXISTS `media_types`;
 CREATE TABLE `media_types` (
-  `shortName` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `longName` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `shortName` varchar(32) NOT NULL,
+  `longName` varchar(512) NOT NULL,
   `displayOrder` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
