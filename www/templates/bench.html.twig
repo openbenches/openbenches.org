@@ -16,6 +16,8 @@
 			<iframe width="600" height="400" allowfullscreen src="/js/pannellum/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true"></iframe>
 			{% elseif media.mediaType == "pano" %}
 			<iframe width="600" height="400" allowfullscreen src="/js/pannellum/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60&amp;autoLoad=true"></iframe>
+			{% elseif media.mediaType == "video" %}
+			<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 			{% else %}
 			<img src="{{ media.url }}"
 				  alt="{{ media.alt }}"
