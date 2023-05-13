@@ -173,7 +173,7 @@ class LocationFunctions
 				//	Pre-formated address from GeoAPIfy
 				$formatted_address = $locationData->features[0]->properties->formatted;
 				//	Postcode needs removing in order to reduce precision when searching
-				$postcode = $locationData->features[0]->properties->postcode;
+				$postcode = $locationData->features[0]->properties->postcode ?? "";
 				//	Delete the postcode from the pre-formatted address
 				$formatted_address = str_replace($postcode, "", $formatted_address);
 				$formatted_explode = array_map('trim', explode(',', $formatted_address));
