@@ -5,6 +5,9 @@ namespace App\Service;
 use App\Service\MediaFunctions;
 use App\Service\TagsFunctions;
 
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Connection;
@@ -153,41 +156,48 @@ class SearchFunctions
 		return $benches_array;
 	}
 
-	public function getLatestBenches( $count=20 ) {
-		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
-		$conn = DriverManager::getConnection($connectionParams);
+	public function getLatestBenches() {
+		$cache = new FilesystemAdapter("cache_recent");
+		$cacheName = "latest";
 
-		$queryBuilder = $conn->createQueryBuilder();
-		$queryBuilder
-			->select("MAX(benches.benchID)", "benches.benchID", "benches.inscription", "benches.address", "benches.latitude", "benches.longitude", "benches.added", "benches.userID", "users.name", "MIN(media.sha1)")
-			->from("benches")
-			->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
-			->innerJoin('benches', 'users', 'users', 'benches.userID  = users.userID')
-			->where("benches.published = 1")
-			->orderBy("benches.benchID", 'DESC')
-			->groupBy("benches.benchID")
-			->setMaxResults( $count );
-		$results = $queryBuilder->executeQuery();
+		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) {
+			$item->expiresAfter(300);	//	5 minutes
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
 
-		$mediaFunctions = new MediaFunctions();
+			$queryBuilder = $conn->createQueryBuilder();
+			$queryBuilder
+				->select("MAX(benches.benchID)", "benches.benchID", "benches.inscription", "benches.address", "benches.latitude", "benches.longitude", "benches.added", "benches.userID", "users.name", "MIN(media.sha1)")
+				->from("benches")
+				->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
+				->innerJoin('benches', 'users', 'users', 'benches.userID  = users.userID')
+				->where("benches.published = 1")
+				->orderBy("benches.benchID", 'DESC')
+				->groupBy("benches.benchID")
+				->setMaxResults( 100 );
+			$results = $queryBuilder->executeQuery();
 
-		//	Loop through the results to create an array of media
-		$benches_array = array();
-		while ( ( $row = $results->fetchAssociative() ) !== false) {
-			//	Add the details to the array
-			$benches_array[$row["benchID"]] = array(
-				"benchID"     => $row["benchID"],
-				"inscription" => $row["inscription"],
-				"address"     => $row["address"],
-				"latitude"    => $row["latitude"],
-				"longitude"   => $row["longitude"],
-				"added"       => $row["added"],
-				"name"        => $row["name"],
-				"image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
-			);
-		}
+			$mediaFunctions = new MediaFunctions();
 
-		return $benches_array;
+			//	Loop through the results to create an array of media
+			$benches_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$benches_array[$row["benchID"]] = array(
+					"benchID"     => $row["benchID"],
+					"inscription" => $row["inscription"],
+					"address"     => $row["address"],
+					"latitude"    => $row["latitude"],
+					"longitude"   => $row["longitude"],
+					"added"       => $row["added"],
+					"name"        => $row["name"],
+					"image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
+				);
+			}
+			return $benches_array;
+		});
+
+		return $cachedResult;
 	}
 }

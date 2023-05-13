@@ -58,84 +58,39 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 
 ### Benches
 * All Bench Data
-	* `https://openbenches.org/api/v1.0/data.json/`
-	* That last `/` is *required*.
+	* `https://openbenches.org/api/benches`
+	* Cached for 10 minutes - changes may not appear immediately
 * Specific Bench
-	* `https://openbenches.org/api/v1.0/data.json/?bench=123`
-* Geographic Area (Haversine)
-	* `https://openbenches.org/api/v1.0/data.json/?latitude=51.234&longitude=-1.234&radius=20&results=5`
-	* `latitude` and `longitude` in [WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System).
-	* `radius` in Kilometres.
-	* `results` maximum number of benches returned. By defaults, 20 results are returned.
-* Tags
-	* `https://openbenches.org/api/v1.0/data.json/?tagText=cat`
-	* Returns all the benches with a specific tag.
-* Inscriptions
-	* By default, the inscriptions are truncated to 128 characters.
-	* To get the full inscriptions, append `&truncated=false`
-	* `https://openbenches.org/api/v1.0/data.json/?truncated=false`
-* Formats
-	* By default, the JSON starts with `var benches = `
-	* To get pure JSON, append `&format=raw`
-	* `https://openbenches.org/api/v1.0/data.json/?bench=123&format=raw`
-* Media
-	* By default, the API doesn't return media.
-	* To get media, append `&media=true`
+	* `https://openbenches.org/api/bench/123`
+* Benches from a specific user
+	* `https://openbenches.org/api/user/5678`
+* Search Results
+	* `https://openbenches.org/api/search?search=in%20loving%20memory`
+
+#### Inscriptions
+* By default, the inscriptions are truncated to 128 characters.
+* To get the full inscriptions, append `&truncated=false`
+* `https://openbenches.org/api/benches?truncated=false`
+
+#### Media
+* By default, the API doesn't return media.
+* To get media, append `https://openbenches.org/api/benches?media=true`
 
 ### Tags
 * All available folksonomy tags
-	* `https://openbenches.org/api/v1.0/tags.json/`
-	* That last `/` is *required*.
-	* Returned in a format suitable for [Select2](https://select2.org/data-sources/arrays).
-
-### Users
-* All User Data
-	* `https://openbenches.org/api/v1.0/users.json/`
-	* That last `/` is *required*.
-* Specific User
-	* `https://openbenches.org/api/v1.0/users.json/?userID=1234`
-* Formats
-	* By default, the JSON starts with `var users = `
-	* To get pure JSON, append `&format=raw`
-	* `https://openbenches.org/api/v1.0/users.json/?userID=1234&format=raw`
-
-### Alexa Skill
-There is an Alexa Skill which allows you to interact with the site via your voice. This functionality is provided by an API.
-* How many benches have been uploaded
-	* `https://openbenches.org/api/v1.0/alexa.json/?count`
-* The latest bench
-	* `https://openbenches.org/api/v1.0/alexa.json/?latest`
-* Details of a random bench
-	* `https://openbenches.org/api/v1.0/alexa.json/?random`
-* Formats
-	* By default, the JSON starts with `var alexa = `
-	* To get pure JSON, append `&format=raw`
-	* `https://openbenches.org/api/v1.0/users.json/?format=raw&count`
+	* `https://openbenches.org/api/tags`
 
 ## Running Locally
 
-This is a simple PHP and MySQL website. No need for node, complicated deploys, or spinning up containerised virtual machines in the cloud.
+This is a Symfony PHP and MySQL website. No need for node, complicated deploys, or spinning up containerised virtual machines in the cloud.
 
 ### Requirements
 
-* PHP 7 or greater.
+* PHP 8 or greater.
 * MySQL 5.5 or greater with innodb.
 * ImageMagick 6.9.4-10 or greater.
 
-### External APIs
-
-You will need to sign up to some external API providers:
-
-* Map display requires a [Stadia Maps account](https://stadiamaps.com/)
-* Reverse Geocoding requires an [OpenCage API key](https://geocoder.opencagedata.com/)
-* Flickr Import requires a [Flickr API key](https://www.flickr.com/services/api/)
-* Tweeting requires a [Twitter Developer API key](https://apps.twitter.com/)
-* Text detection requires a [Google Cloud Vision API key](https://cloud.google.com/vision/)
-* Image resizing and caching requires a [CloudImage.io account](https://www.cloudimage.io). (But note: this requires your development webserver to be accessible from the internet)
-* **Optional** Login requires a free [Auth0.com](https://auth0.com/) account.
-* **Optional** Satellite Map display requires a free [Mapbox](https://www.mapbox.com/) account
-
-Add them to `config.php.example` - rename that to `config.php`
+For more, see CONTRIBUTING.md
 
 ### Database Structure
 
@@ -161,7 +116,7 @@ Hopefully, the tables are self explanatory:
 Originally we were going to force people to sign in with Twitter / Facebook / GitHub. But that discourages use - so users are now pseudo-anonymous. Hence this weird structure!
 
 * `userID`
-* `provider` could be Twitter, GitHub, Facebook etc.
+* `provider` could be Twitter, GitHub, Facebook, anon etc.
 * `providerID` user ID number on the provider's service.  Anonymous users stores their IP address.
 * `name` their display name. Anonymous users stores the time they added a bench.
 
@@ -227,13 +182,11 @@ Everything we do builds on someone else's hard work.
 * Twitter integration by [CodeBird](https://github.com/jublonet/codebird-php) [GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 * Maps by [Leaflet](https://github.com/Leaflet/Leaflet) [BSD 2-clause "Simplified" License](https://opensource.org/licenses/BSD-2-Clause).
 * Cluster library by [Leaflet](https://github.com/Leaflet/Leaflet.markercluster) [MIT](https://github.com/Leaflet/Leaflet.markercluster/blob/master/MIT-LICENCE.txt).
-* Map tiles by [MapBox](https://www.mapbox.com/).
 * GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
 * JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) ([MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt)).
-* Login services provided by [Auth0.com's PHP library](https://github.com/auth0/auth0-PHP) [MIT](https://github.com/auth0/auth0-PHP/blob/master/LICENSE.txt).
+* Login services provided by [Auth0.com's PHP library](https://github.com/auth0/symfony) [MIT](https://github.com/auth0/symfony/blob/main/LICENSE.txt).
 * CSS based on [PicniCSS](https://github.com/franciscop/picnic) [MIT](https://github.com/franciscop/picnic/blob/master/LICENSE) (chosen mostly because we like picnic benches!)
-* Tagging library by [Select2](https://select2.org/) [MIT](https://github.com/select2/select2/blob/master/LICENSE.md)
 * Animated OCR icon by [Loading.io](https://loading.io/spinner/magnify/-searching-for-loading-icon) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Mastodon Library by [Eleirbag89/MastodonBotPHP](https://github.com/Eleirbag89/MastodonBotPHP) [MIT](https://github.com/Eleirbag89/MastodonBotPHP/blob/master/LICENSE)
 
