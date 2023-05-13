@@ -77,6 +77,10 @@ class EditController extends AbstractController
 				$tags = null;
 			}
 
+			//	Old bench details for email
+			$benchFunctions = new BenchFunctions();
+			$oldBench = $benchFunctions->getBench($benchID);
+
 			//	Is the user authenticated?
 			$user = $this->getUser();
 
@@ -90,7 +94,7 @@ class EditController extends AbstractController
 
 				//	Update the bench
 				$uploadFunctions = new UploadFunctions();
-				$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $userID, $published );
+				$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $published );
 
 				//	Update the tags
 				$uploadFunctions->saveTags( $benchID, $tags);
@@ -115,6 +119,23 @@ class EditController extends AbstractController
 					["content-type" => "text/html"]
 				);
 			}
+
+			$domain = $_ENV["DOMAIN"];
+
+			mail($_ENV["NOTIFICATION_EMAIL"],
+				"Edit to Bench {$benchID}",
+				"https://{$domain}/bench/{$benchID}\n\n" .
+				"Old Inscription:\n" . $oldBench["inscription"]  . "\n" .
+				"New Inscription:\n" . $inscription              . "\n" . 
+				"Old Lat:\n"   . $oldBench["latitude"]           . "\n" .
+				"New Lat:\n"   . $latitude                       . "\n" .
+				"Old Long:\n"  . $oldBench["longitude"]          . "\n" .
+				"New Long:\n"  . $longitude                      . "\n" .
+				"Old Tags:\n"  . implode(",", $oldBench["tags"]) . "\n" .
+				"New Tags:\n"  . implode(",", $tags)             . "\n" .
+				"New Images: " . count($_FILES)                  . "\n" .
+				"From {$provider} / {$name}"
+			);
 
 			$response = new Response(
 				"{$benchID}",

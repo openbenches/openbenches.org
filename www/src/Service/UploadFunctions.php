@@ -40,7 +40,7 @@ class UploadFunctions
 		return $conn->lastInsertId();
 	}
 
-	public function updateBench( $benchID, $inscription, $latitude, $longitude, $userID, $published=true ) {
+	public function updateBench( $benchID, $inscription, $latitude, $longitude, $published=true ) {
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
 		$conn = DriverManager::getConnection($connectionParams);
@@ -57,8 +57,7 @@ class UploadFunctions
 		            `longitude`  = ?,
 		            `address`    = ?,
 		            `inscription`= ?,
-		            `published`  = ?,
-		            `userID`     = ?
+		            `published`  = ?
 		         WHERE `benches`.`benchID` = ?";
 		$stmt = $conn->prepare($sql);
 		$stmt->bindValue(1, $latitude);
@@ -66,8 +65,7 @@ class UploadFunctions
 		$stmt->bindValue(3, $address);
 		$stmt->bindValue(4, $inscription);
 		$stmt->bindValue(5, $published);
-		$stmt->bindValue(6, $userID);
-		$stmt->bindValue(7, $benchID);
+		$stmt->bindValue(6, $benchID);
 		
 		//	Run the query
 		$results = $stmt->executeQuery();
@@ -241,7 +239,7 @@ class UploadFunctions
 		$benchFunctions = new BenchFunctions();
 		$duplicate_count = $benchFunctions->getDuplicateCount( $inscription );
 		$soundex         = $benchFunctions->getSoundex( $inscription );
-		$domain = $_SERVER["SERVER_NAME"];
+		$domain = $_ENV["DOMAIN"];
 
 		mail($_ENV["NOTIFICATION_EMAIL"],
 			"Bench {$benchID}",
