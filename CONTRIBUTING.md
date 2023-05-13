@@ -54,8 +54,6 @@ You may need to update CodeBird's certificates.
 * Find the directory `/vendor/jublonet/codebird-php/src/`
 * Place cacert.pem in that directory - overwriting the old file
 
-The following was written by someone using Fedora Server 37 which has PHP 8.1 MariaDB 10.5 and ImageMagick 6.9. Not all of this will work exactly as presented on other Linux distros. This does not attempt to cover macOS or Windows.
-
 ## Getting a copy of the code on your computer
 
 * Create an account on https://GitHub.com/
@@ -121,7 +119,7 @@ benchID	latitude	longitude	address	inscription	description	present	published	add
 
 Make a copy of `.env` called `.env.local`
 
-Open it, and add database variables as follows:
+Open it and add the database variables:
 
 ```
 DATABASE_URL="mysqli://openbenches:badpassword@127.0.0.1:3306/openbenches_db?&charset=utf8mb4"
@@ -146,7 +144,7 @@ php -i  | grep -i upload_max_filesize
 php -i  | grep -i post_max_size
 ```
 
-upload_max_filesize needs to bigger than any photo you want to add and post_max_size needs to be bigger than the total size of any photos you want to add for a given bench. You can increase the values like so
+The setting `upload_max_filesize` needs to bigger than any photo you want to add and `post_max_size` needs to be bigger than the total size of any photos you want to add for a given bench. You can increase the values like so
 
 ```
 echo "upload_max_filesize = 10M" > /etc/php.d/99-mine.ini
@@ -161,15 +159,14 @@ mkdir photos
 setfacl -m u:apache:rwx photos
 ```
 
-By default, SELinux will still block the apache user writing to the directory so change the SELinux type of the directory to something SELinux lets the apache user write to
+If you use SELinux it will still block the apache user writing to the directory. Change the SELinux type of the directory to something SELinux lets the apache user write to:
 
 ```
 semanage fcontext -a -t httpd_sys_rw_content_t /var/www/html/photos
 restorecon -v /var/www/html/photos/
 ```
 
-OpenBenches uses cloudimg.io for image caching, so by default after you add a bench to your own instance it will try to show you the images for it from cloudimg.io and that won't work. In `.env.local set `IMAGE_CACHE_PREFIX` to a zero length string.
-
+OpenBenches uses https://images.weserv.nl/ for image caching, so after you add a bench to your own instance it will try to show you the images for it from the cloud and that won't work. In `.env.local` set `IMAGE_CACHE_PREFIX` to an empty string.
 
 Try going to https://localhost/add and adding a bench. You will find that automatic detection of the inscription text fails. If you want that to work you need to get a Google Cloud Vision account and set `CLOUD_VISION_KEY` in `.env.local`
 
