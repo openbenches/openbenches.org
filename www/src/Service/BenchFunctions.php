@@ -74,7 +74,8 @@ class BenchFunctions
 			//	Loop through the results to create an array of media
 			$media_array = array();
 			while ( ( $row = $results->fetchAssociative() ) !== false) {
-				$image_url = $mediaFunctions->getProxyImageURL( $row["sha1"] );
+				$sha1 = $row["sha1"];
+				$image_url = $mediaFunctions->getProxyImageURL( $sha1 );
 	
 				//	Who took the photo?
 				$userProvider = $row["provider"];
@@ -99,6 +100,9 @@ class BenchFunctions
 				$make = ucwords($make);
 				$model = $row["model"];
 				$model = ucwords($model);
+
+				//	What sort of media is it?
+				$mediaType = $row["media_type"];
 	
 				//	Scale the image for display
 				$width  = $row["width"];
@@ -123,12 +127,14 @@ class BenchFunctions
 				//	Add the details to the array
 				$media_array[] = array(
 								 "url" => $image_url,
+								"sha1" => $sha1,
 								 'alt' => $alt,
 							 "userID" => $userID,
 						  "userName" => $userName,
 					"formattedDate" => $formatted_date,
 								"make" => $make,
 							  "model" => $model,
+						 "mediaType" => $mediaType,
 							  "width" => 600,
 							 "height" => $newHeight,
 							"licence" => $licence,
