@@ -1,4 +1,13 @@
 <?php
+//	TODO - fix this ugly hack
+$env = file_get_contents("../../../.env.local");
+$env = explode("\n", $env);
+foreach($env as $e) {
+        if (str_starts_with($e, "CLOUD_VISION_KEY") ) {
+                $key = str_replace(["CLOUD_VISION_KEY=", "\""], "", $e);
+        }
+}
+
 header("Content-Type: text/javascript");
 ?>
 // Copyright 2015, Google, Inc.
@@ -19,8 +28,7 @@ header("Content-Type: text/javascript");
 'use strict';
 
 var CV_URL = 'https://vision.googleapis.com/v1/images:annotate?key=<?php 
-//echo $_ENV["CLOUD_VISION_KEY"] ; 
-echo "AIzaSyByw1_dOhJgyZL20nLa2UR2ObRlC-gyfIk";
+echo $key ; 
 ?>';
 
 $(function () {
