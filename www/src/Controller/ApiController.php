@@ -157,7 +157,7 @@ class ApiController extends AbstractController
 	public function api_all_benches(): JsonResponse {
 		$request = Request::createFromGlobals();
 
-		$cache = new FilesystemAdapter( "cache_all_benches" );
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_all_benches" );
 		$cache_name = "all_benches";
 
 		if ( $request->query->get( "truncated" ) == "false" ) {
@@ -454,7 +454,7 @@ class ApiController extends AbstractController
 	#[Route("/api/tags/", name: "api_tags")]
 	public function api_tags(): JsonResponse {
 
-		$cache = new FilesystemAdapter("cache_tags");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] ."cache_tags");
 		$value = $cache->get("tags", function (ItemInterface $item) {
 			//	Cache length in seconds
 			$item->expiresAfter(3600);
@@ -486,7 +486,7 @@ class ApiController extends AbstractController
 	#[Route("/api/cache/", name: "api_cache")]
 	public function api_cache(): JsonResponse {
 		//	Tests whether the cache is working
-		$cache = new FilesystemAdapter("cache_time");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] ."cache_time");
 
 		$value = $cache->get("cache_time", function (ItemInterface $item) {
 			$item->expiresAfter(600);
