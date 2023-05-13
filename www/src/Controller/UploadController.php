@@ -86,11 +86,17 @@ class UploadController extends AbstractController
 			}
 
 			//	Send admin email
-			$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
+			if ( isset($_ENV["NOTIFICATION_EMAIL"]) ){
+				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
+			}
 			//	Post to Mastodon
-			$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
+			if ( isset($_ENV["MASTODON_ACCESS_TOKEN"]) ){
+				$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
+			}
 			//	Post to Twitter
-			$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
+			if ( isset($_ENV["OAUTH_CONSUMER_KEY"]) ){
+				$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
+			}
 
 			$response = new Response(
 				"{$benchID}",
