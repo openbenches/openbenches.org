@@ -245,8 +245,8 @@ class UploadFunctions
 			"Bench {$benchID}",
 			"Possible duplicates {$duplicate_count}\n" .
 			"{$inscription}\n" .
-			"https://{$domain}/bench/{$benchID}\n\n" .
-			"Duplicates: https://{$domain}/soundex/?soundex={$soundex}\n" .
+			"{$domain}bench/{$benchID}\n\n" .
+			"Duplicates: {$domain}soundex/?soundex={$soundex}\n" .
 			"From {$provider} / {$name}"
 		);
 	}
