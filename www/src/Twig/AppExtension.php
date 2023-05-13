@@ -24,7 +24,7 @@ class AppExtension extends AbstractExtension
 
 	public function get_number_of_benches() {
 
-		$cache = new FilesystemAdapter("count_cache");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "count_cache");
 
 		$value = $cache->get('number_of_benches', function (ItemInterface $item) {
 			$item->expiresAfter(300);

@@ -11,7 +11,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 class LocationFunctions
 {
 	public function getBoundingBox( string $address_string ): array {
-		$cache = new FilesystemAdapter("cache_location");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_location");
 		//	Cache name is the address string
 		$value = $cache->get($address_string, function (ItemInterface $item) use( $address_string) {
 			//	Cache length in seconds

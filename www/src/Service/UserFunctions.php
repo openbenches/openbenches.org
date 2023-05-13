@@ -149,7 +149,7 @@ class UserFunctions
 
 	public function getLeaderboardBenches(): array {
 
-		$cache = new FilesystemAdapter( "cache_leaderboard" );
+		$cache = new FilesystemAdapter($_ENV["CACHE"] .  "cache_leaderboard" );
 		$cache_name = "leaderboard_benches";
 		$value = $cache->get( $cache_name, function (ItemInterface $item) {
 			//	Cache length in seconds
@@ -188,7 +188,7 @@ class UserFunctions
 	}
 
 	public function getLeaderboardMedia(): array {
-		$cache = new FilesystemAdapter( "cache_leaderboard" );
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_leaderboard" );
 		$cache_name = "leaderboard_media";
 		$value = $cache->get( $cache_name, function (ItemInterface $item) {
 			//	Cache length in seconds

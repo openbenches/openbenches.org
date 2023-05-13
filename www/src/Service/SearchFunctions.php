@@ -157,7 +157,7 @@ class SearchFunctions
 	}
 
 	public function getLatestBenches() {
-		$cache = new FilesystemAdapter("cache_recent");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_recent");
 		$cacheName = "latest";
 
 		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) {
@@ -202,7 +202,7 @@ class SearchFunctions
 	}
 
 	public function getSitemapBenches() {
-		$cache = new FilesystemAdapter("cache_sitemap");
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_sitemap");
 		$cacheName = "sitemapxml";
 
 		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) {
