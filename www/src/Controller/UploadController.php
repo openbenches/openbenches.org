@@ -87,7 +87,7 @@ class UploadController extends AbstractController
 			$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
 			//	Post to Mastodon
 			$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
-			// Post to Twitter
+			//	Post to Twitter
 			$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
 
 			$response = new Response(
