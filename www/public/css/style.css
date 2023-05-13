@@ -203,6 +203,7 @@ hr {
 .benchImage{
 	position: relative;
 	text-align: center;
+	display: inline-block;
 }
 
 #benchImage{
