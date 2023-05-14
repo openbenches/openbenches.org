@@ -134,29 +134,31 @@ class UploadFunctions
 		// easiest way to deal with this is to remove all entries for the
 		// bench then add whatever tags were passed
 
-		$dsnParser = new DsnParser();
-		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
-		$conn = DriverManager::getConnection($connectionParams);
-
-		//	Delete Old Tags
-		$sql = "DELETE FROM `tag_map` WHERE `benchID`=?";
-		$stmt = $conn->prepare($sql);
-		$stmt->bindValue(1, $benchID);
-		$stmt->executeQuery();
-		
-		//	Find the IDs of the tags
-		$tagsFunctions = new TagsFunctions();
-		$tagIDs = $tagsFunctions->getTags();
-
-		foreach ($tags as $tag) {
-			$tagID = array_search($tag, $tagIDs);
-
-			$sql = "INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
-						VALUES                (NULL,     ?,         ?)";
+		if ( null != $tags ) {
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+	
+			//	Delete Old Tags
+			$sql = "DELETE FROM `tag_map` WHERE `benchID`=?";
 			$stmt = $conn->prepare($sql);
 			$stmt->bindValue(1, $benchID);
-			$stmt->bindValue(2, $tagID);
 			$stmt->executeQuery();
+			
+			//	Find the IDs of the tags
+			$tagsFunctions = new TagsFunctions();
+			$tagIDs = $tagsFunctions->getTags();
+	
+			foreach ($tags as $tag) {
+				$tagID = array_search($tag, $tagIDs);
+	
+				$sql = "INSERT INTO `tag_map` (`mapID`, `benchID`, `tagID`)
+							VALUES                (NULL,     ?,         ?)";
+				$stmt = $conn->prepare($sql);
+				$stmt->bindValue(1, $benchID);
+				$stmt->bindValue(2, $tagID);
+				$stmt->executeQuery();
+			}	
 		}
 	} 
 

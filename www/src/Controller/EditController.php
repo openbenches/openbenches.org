@@ -97,7 +97,7 @@ class EditController extends AbstractController
 				$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $published );
 
 				//	Update the tags
-				$uploadFunctions->saveTags( $benchID, $tags);
+				$uploadFunctions->saveTags( $benchID, $tags );
 
 				//	Upload any added images
 				$mediaFunctions = new MediaFunctions();
@@ -105,10 +105,12 @@ class EditController extends AbstractController
 				for ( $i = 1; $i <= 4; $i++ ) {
 					if ( isset( $_FILES["userfile{$i}"]["tmp_name"] ) ) {
 						$filename = $_FILES["userfile{$i}"]["tmp_name"];
-						$metadata = $mediaFunctions->getMediaMetadata( $filename );
-						$media_type = $request->request->get( "media_type{$i}" );
-						$metadata["tmp_name"] = $filename;
-						$uploadFunctions->addMedia( $metadata, $media_type, $benchID, $userID );	
+						if( "" != $filename ){
+							$metadata = $mediaFunctions->getMediaMetadata( $filename );
+							$media_type = $request->request->get( "media_type{$i}" );
+							$metadata["tmp_name"] = $filename;
+							$uploadFunctions->addMedia( $metadata, $media_type, $benchID, $userID );	
+						}
 					}	
 				}
 
@@ -132,7 +134,7 @@ class EditController extends AbstractController
 				"Old Long:\n"  . $oldBench["longitude"]          . "\n" .
 				"New Long:\n"  . $longitude                      . "\n" .
 				"Old Tags:\n"  . implode(",", $oldBench["tags"]) . "\n" .
-				"New Tags:\n"  . implode(",", $tags)             . "\n" .
+				"New Tags:\n"  . $tags                           . "\n" .
 				"New Images: " . count($_FILES)                  . "\n" .
 				"From {$provider} / {$name}"
 			);

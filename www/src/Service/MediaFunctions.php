@@ -154,9 +154,10 @@ class MediaFunctions
 				}
 			}
 			$img->clear();
+			return $metadata;
 		}
 		
-		return $metadata;
+		return null;
 	}
 
 	public function isPhotosphere( $filename ) : bool {
