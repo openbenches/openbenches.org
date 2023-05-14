@@ -34,7 +34,7 @@ class BenchFunctions
 		$conn = DriverManager::getConnection($connectionParams);
 
 		//	Bench
-		$sql = "SELECT * FROM `benches` WHERE `benchID` =  ?";
+		$sql = "SELECT * FROM `benches` WHERE `benchID` =  ? AND `published` = true";
 		$stmt = $conn->prepare($sql);
 		$stmt->bindValue(1, $bench_id);
 		$results = $stmt->executeQuery();
