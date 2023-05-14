@@ -72,9 +72,9 @@ class EditController extends AbstractController
 			$tags        = $request->request->get( "tags" );
 
 			if ( $tags != "" ) {
-				$tags = explode(",", $tags);
+				$tags_array = explode(",", $tags);
 			} else {
-				$tags = null;
+				$tags_array = array();
 			}
 
 			//	Old bench details for email
@@ -97,7 +97,9 @@ class EditController extends AbstractController
 				$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $published );
 
 				//	Update the tags
-				$uploadFunctions->saveTags( $benchID, $tags );
+				if ( !empty( $tags_array ) ) {
+					$uploadFunctions->saveTags( $benchID, $tags_array );
+				}
 
 				//	Upload any added images
 				$mediaFunctions = new MediaFunctions();
@@ -134,7 +136,7 @@ class EditController extends AbstractController
 				"Old Long:\n"  . $oldBench["longitude"]          . "\n" .
 				"New Long:\n"  . $longitude                      . "\n" .
 				"Old Tags:\n"  . implode(",", $oldBench["tags"]) . "\n" .
-				"New Tags:\n"  . $tags                           . "\n" .
+				"New Tags:\n"  . implode(",", $tags_array)       . "\n" .
 				"New Images: " . count($_FILES)                  . "\n" .
 				"From {$provider} / {$name}"
 			);
