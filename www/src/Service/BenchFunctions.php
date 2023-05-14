@@ -54,7 +54,7 @@ class BenchFunctions
 			$location_link = "/location";
 			foreach ( $locations as $location ) {
 				if ( null != $location ) {
-					$location_link .= "/" . urldecode( trim( $location ) );
+					$location_link .= "/" . urlencode( trim( $location ) );
 					$address_array[] = array( "url" => "{$location_link}", "location" => $location);
 				}
 			}
