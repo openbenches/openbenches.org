@@ -5,6 +5,8 @@
 
 
 {% block body %}
+
+{% if query != "" %}
 <h3>Search results for "{{ query }}"</h3> 
 
 	<div id="map"></div>
@@ -39,7 +41,8 @@
 		<a href="{{ next_url }}" class="button buttonColour">More Results <strong>➡️</strong></a>&emsp;&emsp;
 	{% endif %}
 	</div>
+{% endif %}
 
-	{% include 'searchform.html.twig' %}
+{% include 'searchform.html.twig' %}
 
 {% endblock %}
