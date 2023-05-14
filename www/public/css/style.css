@@ -577,3 +577,7 @@ ol.searchResults {
 	font-size: .75em;
 	display: contents !important;
 }
+
+address {
+	font-style: normal;
+}

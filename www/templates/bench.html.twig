@@ -66,11 +66,13 @@
 		<div id="map"></div>
 
 		{% if addresses is defined %}
-		<div id="address" itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+		<address id="address" itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+			<span itemprop="description">
 			{% for address in addresses %}
 				<a class="address" href="{{ address.url }}/">{{ address.location }}</a>
 			{% endfor %}
-		</div>
+			</span>
+		</address>
 		{% endif %}
 
 		<script>
