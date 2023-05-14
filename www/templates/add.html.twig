@@ -1,11 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% if username is not null %}
-	{# Users who are logged in get a special upload route #}
-	{% set uploadURL = "/upload/logged_in" %}
-{% else %}
-	{% set uploadURL = "/upload" %}
-{% endif %}
+{% set uploadURL = "/upload" %}
 
 {# For inclusion in the base #}
 {% block title %}Add New Bench{% endblock %}
