@@ -18,10 +18,8 @@ class EditController extends AbstractController
 	#[Route('/edit/{benchID}', name: 'edit')]
 	public function edit(int $benchID): Response {
 
+		//	Get user from Auth0
 		$user = $this->getUser();
-		$userFunctions = new UserFunctions();
-		$userID   = $userFunctions->addUser($user);
-
 		if( isset( $user ) ) {
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
@@ -30,6 +28,9 @@ class EditController extends AbstractController
 		} else {
 			die();
 		}
+
+		$userFunctions = new UserFunctions();
+		$userID = $userFunctions->addUser( $username, $provider, $providerID );
 
 		$benchFunctions = new BenchFunctions();
 		$bench = $benchFunctions->getBench( $benchID );

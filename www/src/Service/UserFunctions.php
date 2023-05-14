@@ -228,16 +228,12 @@ class UserFunctions
 		return $value;
 	}
 
-	public function addUser( $user ): int {
+	public function addUser( $username=null, $provider=null, $providerID=null ): int {
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
 		$conn = DriverManager::getConnection($connectionParams);
 
-		if( isset( $user ) ) {
-			$username   = $user->getNickname();
-			$provider   = explode("|", $user->getUserIdentifier())[0];
-			$providerID = explode("|", $user->getUserIdentifier())[1];
-
+		if( isset( $username ) ) {
 			//	Does the user exist?
 			$queryBuilder = $conn->createQueryBuilder();
 			$queryBuilder

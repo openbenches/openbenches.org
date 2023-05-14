@@ -56,11 +56,24 @@ class UploadController extends AbstractController
 			//	Is the user authenticated?
 			$user = $this->getUser();
 			if( isset( $user ) ) {
-				$userID = $userFunctions->addUser($user);
+				//	Use Auth0 to get user data
+				$username   = $user->getNickname();
+				$provider   = explode("|", $user->getUserIdentifier())[0];
+				$providerID = explode("|", $user->getUserIdentifier())[1];	
+			} else if ( isset( $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ) ) {
+				//	Hack to get Auth0 user data from the session
+				$user = $_SESSION["_sf2_attributes"]["auth0_session"]["user"];
+				$username   = $user["nickname"];
+				$provider   = explode("|", $user["sub"])[0];
+				$providerID = explode("|", $user["sub"])[1];
 			} else {
-				$userID = $userFunctions->addUser(null);
+				$username   = null;
+				$provider   = null;
+				$providerID = null;
 			}
 
+			$userID = $userFunctions->addUser( $username, $provider, $providerID );
+			
 			$user     = $userFunctions->getUserDetails( $userID );
 			$provider = $user["provider"];
 			$name     = $user["name"];
@@ -86,15 +99,15 @@ class UploadController extends AbstractController
 			}
 
 			//	Send admin email
-			if ( isset($_ENV["NOTIFICATION_EMAIL"]) ){
+			if ( !empty($_ENV["NOTIFICATION_EMAIL"]) ){
 				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
 			}
 			//	Post to Mastodon
-			if ( isset($_ENV["MASTODON_ACCESS_TOKEN"]) ){
+			if ( !empty($_ENV["MASTODON_ACCESS_TOKEN"]) ){
 				$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
 			}
 			//	Post to Twitter
-			if ( isset($_ENV["OAUTH_CONSUMER_KEY"]) ){
+			if ( !empty($_ENV["OAUTH_CONSUMER_KEY"]) ){
 				$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
 			}
 
