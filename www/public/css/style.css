@@ -208,6 +208,7 @@ hr {
 	position: relative;
 	text-align: center;
 	display: inline-block;
+	vertical-align: middle;
 }
 
 #benchImage{
