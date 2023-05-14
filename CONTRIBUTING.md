@@ -16,6 +16,7 @@ Install the following packages:
 
 ```
 ./composer.phar require "twig/twig:^3.0"
+./composer.phar require symfony/twig-pack
 ./composer.phar require symfony/twig-bundle
 ./composer.phar require doctrine/dbal
 ./composer.phar require symfony/cache

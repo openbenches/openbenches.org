@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="robots" content="noindex,nofollow,noarchive" />
+	<title>An Error Occurred: Internal Server Error</title>
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>❌</text></svg>">
+	<style>body { background-color: #fff; color: #222; }
+</style>
+</head>
+<body>
+	<h1>An Error Occurred</h1>
+	<p>"{{ status_code }} - {{ status_text }}"</p>
+
+	<p>
+		Something is broken. Please <a href="https://github.com/openbenches/openbenches.org/issues/new">let us know what you were doing when this error occurred</a>.
+	</p>
+	<p>
+		I will fix it as soon as possible. Sorry for any inconvenience caused.
+	</p>
+	<details>
+		<summary>Details</summary>
+		<pre>{{ exception.traceAsString }}</pre>
+	</details>
+</body>
+</html>
