@@ -175,6 +175,10 @@ ol {
 	margin-top: 0;
 }
 
+#search-results ol {
+	padding-left: 0;
+}
+
 textarea {
 	max-width: 100%;
 	width: 800px;
