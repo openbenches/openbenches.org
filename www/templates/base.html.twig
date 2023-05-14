@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-GB">
 	<head>
 		<meta charset="UTF-8">
 		<title>OpenBenches {{ block('title') }}</title>
@@ -68,8 +68,10 @@
 			<h1>
 				<a href="/"><img src="/images/openbencheslogo.svg" id="header-image" alt="">Open<wbr>Benches</a>
 			</h1>
-			<h2 itemprop="description">A map of {{ number_of_benches() }} memorial benches - added by people like you</h2>
-			<a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a>
+			<p itemprop="description">A map of {{ number_of_benches() }} memorial benches - added by people like you</p>
+			<p>
+				<a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a>
+			</p>
 		</hgroup>
 		{% block body %}{% endblock %}
 		{% include 'footer.html.twig' %}

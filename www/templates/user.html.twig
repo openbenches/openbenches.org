@@ -11,7 +11,7 @@
 	{% endif %}
 	<a href="{{ user_external_url }}">
 	{% if avatar_url is not null %}
-		<img src="{{ avatar_url }}" class="avatar" alt="" loading="lazy" width="32" />
+		<img src="{{ avatar_url }}" class="avatar" alt="" loading="lazy" width="32">
 	{% endif %} {{ user_name }}</a></h3> 
 
 	<div id="map"></div>
@@ -26,7 +26,7 @@
 		{% for bench in benches %}
 			<li>
 				<a href="/bench/{{ bench.benchID }}">
-					<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" />
+					<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" alt="">
 					<div>
 						{{ bench.inscription }}<br>
 						<small>{{ bench.address }}</small>
