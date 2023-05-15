@@ -66,6 +66,8 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* `https://openbenches.org/api/user/5678`
 * Search Results
 	* `https://openbenches.org/api/search?search=in%20loving%20memory`
+* Tagged Benches
+	* `https://openbenches.org/api/tag/dog`
 
 #### Inscriptions
 * By default, the inscriptions are truncated to 128 characters.

@@ -13,6 +13,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use App\Service\MediaFunctions;
 use App\Service\UserFunctions;
 use App\Service\SearchFunctions;
+use App\Service\TagsFunctions;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -448,6 +449,167 @@ class ApiController extends AbstractController
 
 		//	Render the page
 		$response = new JsonResponse($geojson);	
+		return $response;
+	}
+
+	#[Route("/api/tag/{tag_name}", name: "api_tagged_benches")]
+	public function api_tagged_benches(string $tag_name): JsonResponse {
+		$request = Request::createFromGlobals();
+
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_api_tagged_benches" );
+		$cache_name = "{$tag_name}_tagged_benches";
+
+		if ( $request->query->get( "truncated" ) == "false" ) {
+			$get_truncated = false;
+			$cache_name .= "full";
+		} else {
+			$get_truncated = true;
+			$cache_name .= "truncated";
+		}
+		
+		if ( $request->query->get( "media" ) == "true" ) {
+			$get_media = true;
+			$cache_name .= "media";
+		} else {
+			$get_media = false;
+			$cache_name .= "nomedia";
+		}
+
+		$value = $cache->get( $cache_name, function (ItemInterface $item) use($tag_name)  {
+			//	Cache length in seconds
+			$item->expiresAfter(60); //	1 minute
+
+			$request = Request::createFromGlobals();
+			if ( $request->query->get("truncated") == "false") {
+				$get_truncated = false;
+			} else {
+				$get_truncated = true;
+			}
+			
+			if ( $request->query->get("media") == "true" ) {
+				$get_media = true;
+			} else {
+				$get_media = false;
+			}
+
+			$tagFunctions = new TagsFunctions();
+			$tagIDs = $tagFunctions->getTags();
+			$tagID = array_search($tag_name, $tagIDs);
+
+			if (false === $tagID) {
+				return array();
+			}
+
+			$mediaFunctions = new MediaFunctions();
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
+			$conn = DriverManager::getConnection($connectionParams);
+			$queryBuilder = $conn->createQueryBuilder();
+
+			$queryBuilder
+				->select("benches.benchID", "benches.inscription", "benches.latitude", "benches.longitude", "benches.added", "media.sha1", "media.licence", "media.media_type", "media.importURL", "media.width", "media.height")
+				->from("benches")
+				->innerJoin("benches", "media", "media", "benches.benchID = media.benchID")
+				->innerJoin('benches', 'tag_map', 'tag_map', 'benches.benchID = tag_map.benchID')
+				->where("tag_map.tagID = ? AND benches.published = true AND benches.present = true")
+				->setParameter( 0, $tagID );
+			$results = $queryBuilder->executeQuery();
+
+			//	Build GeoJSON feature collection array
+			$geojson = array(
+				"type"		=> "FeatureCollection",
+				"features"  => array()
+			);
+
+			//	Loop through the results to create an array of benches
+			$benches_array = array();
+			while (($row = $results->fetchAssociative()) !== false) {
+
+				//	If the bench has already been added, add the media to it
+				if( isset( $benches_array[$row["benchID"]] ) && $get_media != false ) {
+					$media_data = array();
+
+					$media_data["URL"] = "/image/{$row["sha1"]}";
+
+					if( null != $row["importURL"] ) {
+						$media_data["importURL"] = $row["importURL"];
+					}
+
+					$media_data["licence"]     = $row["licence"];
+					$media_data["media_type"]  = $row["media_type"];
+					$media_data["sha1"]        = $row["sha1"];
+					$media_data["width"]       = $row["width"];
+					$media_data["height"]      = $row["height"];
+
+					//	Add all the media details to the response
+					array_push( $benches_array[$row["benchID"]]["properties"]["media"], $media_data);				
+
+				} else {
+					//	Some inscriptions got stored with leading/trailing whitespace
+					$inscription=trim( $row["inscription"] );
+
+					// If displaying on map need to truncate inscriptions longer than
+					// 128 chars and add in <br> elements
+					if ( true == $get_truncated ) {
+						$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
+						if ( $inscriptionTruncate !== $inscription ) {
+							$inscription = $inscriptionTruncate . "…";
+						}
+						$inscription=nl2br( $inscription );
+					}
+
+					//	Horrible hack to force numeric inscriptions to be strings
+					if ( is_numeric( $inscription ) ) {
+						$inscription .= " ";
+					}
+
+					$media_data = array();
+					if( $get_media != false ) {
+
+						$media_data["URL"] = "/image/{$row["sha1"]}";
+		
+						if( null != $row["importURL"] ) {
+							$media_data["importURL"] = $row["importURL"];
+						}
+		
+						$media_data["licence"]     = $row["licence"];
+						$media_data["media_type"]  = $row["media_type"];
+						$media_data["sha1"]        = $row["sha1"];
+						$media_data["width"]       = $row["width"];
+						$media_data["height"]      = $row["height"];
+					}
+
+					//	Create GeoJSON
+					$feature = array(
+						"id"       => $row["benchID"],
+						"type"     => "Feature",
+						"geometry" => array(
+							"type" => "Point",
+							// Pass Longitude and Latitude Columns here
+							"coordinates" => array($row["longitude"], $row["latitude"])
+						),
+						// Pass other attribute columns here
+						"properties" => array(
+							"created_at"   => date_format( date_create($row["added"] ), "c" ),
+							"popupContent" => $inscription,
+							"media" => array(),
+						),
+					);
+					//	Add all the media details to the response
+					array_push( $feature["properties"]["media"], $media_data);
+
+					// Add feature to collection array
+					$benches_array[$row["benchID"]] = $feature;
+				}
+			}
+
+			foreach( $benches_array as $bench ){
+				array_push($geojson["features"], $bench);
+			}
+			return $geojson;
+		});
+
+		$response = new JsonResponse($value);	
 		return $response;
 	}
 
