@@ -7,9 +7,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
 
-use App\Service\MediaFunctions;
-
-
 class ImageController extends AbstractController
 {
 	#[Route(["/image/{sha1}", "/media/{sha1}"], name: 'show_media')]
