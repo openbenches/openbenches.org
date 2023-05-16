@@ -83,17 +83,17 @@ class LocationController extends AbstractController
 
 		//	Render the page
 		return $this->render('location.html.twig', [
-			"title"  => $address_string,
-			"count"  => $benches_count,
-			"benches"=> $benches,
-			"lat_ne" => $lat_ne,
-			"lng_ne" => $lng_ne,
-			"lat_sw" => $lat_sw,
-			"lng_sw" => $lng_sw,
-			"lat"    => $lat,
-			"lng"    => $lng,
-			"next_url"=>$next_url,
-			"previous_url"=>$previous_url,
+			"title"        => $address_string,
+			"count"        => $benches_count,
+			"benches"      => $benches,
+			"lat_ne"       => $lat_ne,
+			"lng_ne"       => $lng_ne,
+			"lat_sw"       => $lat_sw,
+			"lng_sw"       => $lng_sw,
+			"lat"          => $lat,
+			"lng"          => $lng,
+			"next_url"     => $next_url,
+			"previous_url" => $previous_url,
 		]);
 	}
 }

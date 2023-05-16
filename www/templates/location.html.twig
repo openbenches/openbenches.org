@@ -7,10 +7,10 @@
 {% block body %}
 <h3>{{ count|number_format }} Benches near "{{ title }}"</h3> 
 
-{#
+
 	<div id="map"></div>
-	{{ map_javascript( "/api/search/?search=", query ) }}
-#}
+	{{ map_javascript( "/api/benches/?truncated=true&media=false", "", lat, lng, "13" ) }}
+	
 	{% if benches is defined %}
 	<div id="search-results">
 		<ol>
