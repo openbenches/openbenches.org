@@ -37,15 +37,17 @@
 			</div>
 			<div>
 				<label for="media_type1">This photo is a:</label>
-				{# TODO: Get these values from the database #}
 				<select name="media_type1" id="media_type1">
-					<option value="inscription" selected="">Close-up of the inscription</option>
-					<option value="bench">Long shot of the bench</option>
-					<option value="view">View from the bench</option>
-					<option value="pano">Panoramic view</option>
-					<option value="360">VR 360 panoramic </option>
-					<option value="video">Video of the bench</option>
-				</select>	
+				{% set selected = "inscription" %}
+				{% set media_types_array = media_types() %}
+				{% for type in media_types_array %}
+					{% if type.shortName == selected %}
+					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+					{% else %}
+					<option value="{{ type.shortName }}">{{ type.longName }}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
 			</div>
 		</div>
 
@@ -90,12 +92,15 @@ A lot..." required></textarea>
 			<div>
 				<label for="media_type2">This photo is a:</label>
 				<select name="media_type2" id="media_type2">
-					<option value="inscription">Close-up of the inscription</option>
-					<option value="bench" selected="">Long shot of the bench</option>
-					<option value="view">View from the bench</option>
-					<option value="pano">Panoramic view</option>
-					<option value="360">VR 360 panoramic </option>
-					<option value="video">Video of the bench</option>
+				{% set selected = "bench" %}
+				{% set media_types_array = media_types() %}
+				{% for type in media_types_array %}
+					{% if type.shortName == selected %}
+					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+					{% else %}
+					<option value="{{ type.shortName }}">{{ type.longName }}</option>
+					{% endif %}
+				{% endfor %}
 				</select>	
 			</div>
 		</div>&nbsp;
@@ -112,12 +117,15 @@ A lot..." required></textarea>
 			<div>
 				<label for="media_type3">This photo is a:</label>
 				<select name="media_type3" id="media_type3">
-					<option value="inscription">Close-up of the inscription</option>
-					<option value="bench">Long shot of the bench</option>
-					<option value="view" selected="">View from the bench</option>
-					<option value="pano">Panoramic view</option>
-					<option value="360">VR 360 panoramic </option>
-					<option value="video">Video of the bench</option>
+				{% set selected = "view" %}
+				{% set media_types_array = media_types() %}
+				{% for type in media_types_array %}
+					{% if type.shortName == selected %}
+					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+					{% else %}
+					<option value="{{ type.shortName }}">{{ type.longName }}</option>
+					{% endif %}
+				{% endfor %}
 				</select>	
 			</div>
 		</div>&nbsp;
@@ -134,12 +142,15 @@ A lot..." required></textarea>
 			<div>
 				<label for="media_type4">This photo is a:</label>
 				<select name="media_type4" id="media_type4">
-					<option value="inscription">Close-up of the inscription</option>
-					<option value="bench">Long shot of the bench</option>
-					<option value="view">View from the bench</option>
-					<option value="pano" selected="">Panoramic view</option>
-					<option value="360">VR 360 panoramic </option>
-					<option value="video">Video of the bench</option>
+				{% set selected = "pano" %}
+				{% set media_types_array = media_types() %}
+				{% for type in media_types_array %}
+					{% if type.shortName == selected %}
+					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+					{% else %}
+					<option value="{{ type.shortName }}">{{ type.longName }}</option>
+					{% endif %}
+				{% endfor %}
 				</select>	
 			</div>
 		</div>&nbsp;

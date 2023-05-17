@@ -17,8 +17,9 @@ class AppExtension extends AbstractExtension
 	{
 		return [
 			new TwigFunction('number_of_benches', [$this, 'get_number_of_benches']),
-			new TwigFunction('cached_date', [$this, 'get_date']),
-			new TwigFunction('map_javascript', [$this, 'map_javascript']),
+			new TwigFunction('cached_date',       [$this, 'get_date']),
+			new TwigFunction('map_javascript',    [$this, 'map_javascript']),
+			new TwigFunction('media_types',       [$this, 'get_media_types']),
 		];
 	}
 
@@ -39,6 +40,40 @@ class AppExtension extends AbstractExtension
 		});
 
 		return number_format($value);
+	}
+
+	public function get_media_types() {
+		
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_media_types" );
+		$cache_name = "media_types";
+		$cachedResult = $cache->get( $cache_name, function (ItemInterface $item) { 
+			//	Cache length in seconds
+			$item->expiresAfter(600);
+
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+			$queryBuilder = $conn->createQueryBuilder();
+
+			$queryBuilder
+				->select("shortName", "longName")
+				->from("media_types")
+				->orderBy("displayOrder", 'ASC');
+			$results = $queryBuilder->executeQuery();
+			
+			$media_types = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$media_types[] = array(
+					"shortName" => $row["shortName"],
+					"longName"  => $row["longName"],
+				);
+			}
+			return $media_types;
+
+		});
+
+		return $cachedResult;
 	}
 
 	public function get_date() {
