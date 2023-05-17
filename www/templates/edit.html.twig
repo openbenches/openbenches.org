@@ -54,9 +54,9 @@
 		<br>
 		<div id='benchImage'>
 			{% if medias is defined %}
+				{% set media_types_array = media_types() %}
 				{% for media in medias %}
 				<div itemprop="photo" class="benchImage">
-
 					<img src="{{ media.url }}"
 						alt="{{ media.alt }}"
 						width="{{ media.width}}"
@@ -85,6 +85,15 @@
 						{% endif %}
 					</span>
 				</div>
+				<select id="media_{{ media.mediaID }}" name="media_{{ media.mediaID }}">
+				{% for type in media_types_array %}
+					{% if type.shortName == media.mediaType %}
+					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+					{% else %}
+					<option value="{{ type.shortName }}">{{ type.longName }}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
 				{% endfor %}
 			{% endif %}
 		</div>
@@ -325,6 +334,12 @@
 			formdata.append("newLatitude",  $("#newLatitude").val());
 
 			formdata.append("tags",         $.map($("input[name='tags']:checked"), function(c){ return c.value; }).join());
+
+			{% if medias is defined %}
+			{% for media in medias %}
+			formdata.append("media_{{ media.mediaID }}",      $("#media_{{ media.mediaID }}").val());
+			{% endfor %}
+			{% endif %}
 
 			//	Send the file
 			var ajax = new XMLHttpRequest();

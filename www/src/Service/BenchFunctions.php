@@ -61,7 +61,7 @@ class BenchFunctions
 			$address_array = array_reverse( $address_array );
 	
 			//	Media
-			$sql = "SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type, datetime, make, model, width, height, media_types.longName
+			$sql = "SELECT sha1, users.userID, users.name, users.provider, users.providerID, importURL, licence, media_type, datetime, make, model, width, height, media_types.longName, mediaID
 			FROM media
 			INNER JOIN users ON media.userID = users.userID
 			LEFT JOIN media_types on media.media_type = media_types.shortname
@@ -95,6 +95,8 @@ class BenchFunctions
 					$formatted_date = "";
 				}
 	
+				//	Media ID
+				$mediaID = $row["mediaID"];
 				//	What camera was used?
 				$make = $row["make"];
 				$make = ucwords($make);
@@ -125,8 +127,9 @@ class BenchFunctions
 				$alt = $row["longName"];
 	
 				//	Add the details to the array
-				$media_array[] = array(
+				$media_array[$mediaID] = array(
 								 "url" => $image_url,
+						   "mediaID" => $mediaID,
 								"sha1" => $sha1,
 								 'alt' => $alt,
 							 "userID" => $userID,

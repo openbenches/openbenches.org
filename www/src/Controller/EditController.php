@@ -84,52 +84,60 @@ class EditController extends AbstractController
 
 			//	Is the user authenticated?
 			$user = $this->getUser();
-
-			if( null !== $user ) {
-				//	Who is this?
-				$userFunctions = new UserFunctions();
-				$userID   = $userFunctions->addUser($user);
-				$user     = $userFunctions->getUserDetails( $userID );
-				$provider = $user["provider"];
-				$name     = $user["name"];
-
-				//	Update the bench
-				$uploadFunctions = new UploadFunctions();
-				$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $published );
-
-				//	Update the tags
-				if ( !empty( $tags_array ) ) {
-					$uploadFunctions->saveTags( $benchID, $tags_array );
-				}
-
-				//	Upload any added images
-				$mediaFunctions = new MediaFunctions();
-
-				for ( $i = 1; $i <= 4; $i++ ) {
-					if ( isset( $_FILES["userfile{$i}"]["tmp_name"] ) ) {
-						$filename = $_FILES["userfile{$i}"]["tmp_name"];
-						if( "" != $filename ){
-							$metadata = $mediaFunctions->getMediaMetadata( $filename );
-							$media_type = $request->request->get( "media_type{$i}" );
-							$metadata["tmp_name"] = $filename;
-							$uploadFunctions->addMedia( $metadata, $media_type, $benchID, $userID );	
-						}
-					}	
-				}
-
+			//	Get user from Auth0
+			$user = $this->getUser();
+			if( isset( $user ) ) {
+				$username   = $user->getNickname();
+				$avatar     = $user->getPicture();
+				$provider   = explode("|", $user->getUserIdentifier())[0];
+				$providerID = explode("|", $user->getUserIdentifier())[1];	
 			} else {
-				$response = new Response(
-					"An error occured",
-					Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-					["content-type" => "text/html"]
-				);
+				die();
+			}
+
+			$userFunctions = new UserFunctions();
+			$userID = $userFunctions->addUser( $username, $provider, $providerID );
+
+			//	Update the bench
+			$uploadFunctions = new UploadFunctions();
+			$uploadFunctions->updateBench( $benchID, $inscription, $latitude, $longitude, $published );
+
+			//	Update the tags
+			if ( !empty( $tags_array ) ) {
+				$uploadFunctions->saveTags( $benchID, $tags_array );
+			}
+
+			//	Update the media types
+			$medias = $oldBench["medias"];
+			$mediaTypes = "";
+			foreach ( $medias as $media ) {
+				$mediaID = $media["mediaID"];
+				$oldType = $medias[$mediaID]["mediaType"];
+				$newMediaType = $request->request->get( "media_{$mediaID}" );
+				$uploadFunctions->updateMedia( $mediaID, $newMediaType );
+				$mediaTypes .= "{$mediaID}: Old {$oldType}, New {$newMediaType}.\n";
+			}
+
+			//	Upload any added images
+			$mediaFunctions = new MediaFunctions();
+
+			for ( $i = 1; $i <= 4; $i++ ) {
+				if ( isset( $_FILES["userfile{$i}"]["tmp_name"] ) ) {
+					$filename = $_FILES["userfile{$i}"]["tmp_name"];
+					if( "" != $filename ){
+						$metadata = $mediaFunctions->getMediaMetadata( $filename );
+						$media_type = $request->request->get( "media_type{$i}" );
+						$metadata["tmp_name"] = $filename;
+						$uploadFunctions->addMedia( $metadata, $media_type, $benchID, $userID );	
+					}
+				}	
 			}
 
 			$domain = $_ENV["DOMAIN"];
 
 			mail($_ENV["NOTIFICATION_EMAIL"],
 				"Edit to Bench {$benchID}",
-				"https://{$domain}/bench/{$benchID}\n\n" .
+				"{$domain}/bench/{$benchID}\n\n" .
 				"Old Inscription:\n" . $oldBench["inscription"]  . "\n" .
 				"New Inscription:\n" . $inscription              . "\n" . 
 				"Old Lat:\n"   . $oldBench["latitude"]           . "\n" .
@@ -139,7 +147,8 @@ class EditController extends AbstractController
 				"Old Tags:\n"  . implode(",", $oldBench["tags"]) . "\n" .
 				"New Tags:\n"  . implode(",", $tags_array)       . "\n" .
 				"New Images: " . count($_FILES)                  . "\n" .
-				"From {$provider} / {$name}"
+				"Media Types: ". $mediaTypes                     . "\n" .   
+				"From {$provider} / {$username}"
 			);
 
 			$response = new Response(

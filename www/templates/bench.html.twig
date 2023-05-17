@@ -4,7 +4,7 @@
 {% block     title %}{{ inscription|replace({'\r\n': " "})|slice(0, 49)|title|e("html") }}{% endblock %}
 {% block longitude %}{{ longitude }}{% endblock %}
 {% block  latitude %}{{ latitude }}{% endblock %}
-{% block   ogimage %}{{ medias[0].url }}{% endblock %}
+{% block   ogimage %}{{ medias|first.url }}{% endblock %}
 
 {% block body %}
 <div itemscope="" itemtype="http://schema.org/Place">

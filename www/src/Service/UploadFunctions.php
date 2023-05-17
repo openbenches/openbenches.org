@@ -71,6 +71,23 @@ class UploadFunctions
 		$results = $stmt->executeQuery();
 	}
 
+	public function updateMedia( $mediaID, $mediaType ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		$sql = "UPDATE media
+		        SET media_type = ?
+		        WHERE mediaID = ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $mediaType);
+		$stmt->bindValue(2, $mediaID);
+		
+		//	Run the query
+		$stmt->executeQuery();
+	}
+
+
 	public function addMedia( $metadata, $media_type, $benchID, $userID ) : int {
 		$mediaFunctions = new MediaFunctions();
 
