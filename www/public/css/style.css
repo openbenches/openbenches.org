@@ -204,6 +204,11 @@ hr {
 	text-align: left;
 }
 
+#benchInscription {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
 .benchImage{
 	position: relative;
 	text-align: center;
