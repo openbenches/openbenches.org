@@ -80,7 +80,7 @@
 						{% endif %}
 						{{ media.formattedDate }}<br>
 						{{ media.make }} {{ media.model }}
-						{% if media.importURL is not null %}
+						{% if media.userName != "" %}
 						<a href='/user/{{ media.userID }}'>℅ {{ media.userName }}</a>
 						{% endif %}
 					</span>
