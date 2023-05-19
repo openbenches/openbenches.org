@@ -21,6 +21,7 @@
 
 <form id="fileform" action="{{ uploadURL }}" enctype="multipart/form-data" method="post" onsubmit="true;">
 		<div>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
+		<div id="ios"></div>
 		</div>
 
 		<div id="photo1" class="photo-group">
@@ -175,7 +176,10 @@ A lot..." required></textarea>
 	<script src="/js/JavaScript-Load-Image-5.16.0/js/load-image.all.min.js"></script>
 	<script>
 	$(document).ready(function() {
-
+		if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+			$instructions = '<a href="https://www.openbenches.org/blog/2023/05/iphone-instructions/" target="_blank">➡️ Instructions for Apple devices ⬅️</a>.';
+			$('#ios').html($instructions);
+		} 
 	});
 	</script>
 
