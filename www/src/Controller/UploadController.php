@@ -27,9 +27,9 @@ class UploadController extends AbstractController
 		$tags        = $request->request->get( "tags" );
 
 		if ( $tags != "" ) {
-			$tags = explode(",", $tags);
+			$tags_array = explode(",", $tags);
 		} else {
-			$tags = null;
+			$tags_array = array();
 		}
 		
 		//	Get metadata about 1st image
@@ -80,8 +80,8 @@ class UploadController extends AbstractController
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	
-			if ( isset( $tags ) ){
-				$uploadFunctions->saveTags( $benchID, $tags);
+			if ( isset( $tags_array ) ){
+				$uploadFunctions->saveTags( $benchID, $tags_array );
 			}
 
 			$metadata["tmp_name"] = $filename;
@@ -100,7 +100,7 @@ class UploadController extends AbstractController
 
 			//	Send admin email
 			if ( !empty($_ENV["NOTIFICATION_EMAIL"]) ){
-				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name );
+				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name, $tags_array );
 			}
 			//	Post to Mastodon
 			if ( !empty($_ENV["MASTODON_ACCESS_TOKEN"]) ){
