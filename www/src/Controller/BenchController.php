@@ -33,13 +33,8 @@ class BenchController extends AbstractController
 			]);
 		}
 		else {
-			$image_url = $benchFunctions->get404();
-
-			//	Render the page
-			return $this->render('404.html.twig', [
-				'inscription' => "Bench Not Found!",
-				'url' => $image_url,
-			]);
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException('The bench does not exist');
 		}
 	}
 }

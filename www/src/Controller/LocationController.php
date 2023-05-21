@@ -51,13 +51,8 @@ class LocationController extends AbstractController
 		list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng) = $locationFunctions->getBoundingBox( $address_string );
 
 		if( $lat_ne == "" ) {
-			//	404 Page
-			$benchFunctions = new BenchFunctions();
-			$image_url = $benchFunctions->get404();
-			return $this->render('404.html.twig', [
-				'inscription' => "Location Not Found!",
-				'url' => $image_url,
-			]);
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException("Location not found");
 		}
 
 		//	Get how many benches are in the box

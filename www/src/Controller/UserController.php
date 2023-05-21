@@ -91,15 +91,8 @@ class UserController extends AbstractController
 				
 			]);
 		} else {
-			//	404 Page
-			$benchFunctions = new BenchFunctions();
-			$image_url = $benchFunctions->get404();
-
-			//	Render the page
-			return $this->render('404.html.twig', [
-				'inscription' => "User Not Found!",
-				'url' => $image_url,
-			]);
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException("The user does not exist");
 		}
 
 		return $this->render('user.html.twig', [
