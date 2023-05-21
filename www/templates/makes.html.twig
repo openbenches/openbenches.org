@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Statistics - Makes of Camera{% endblock %}
+
+
+{% block body %}
+<h3>Cameras used to take bench photos</h3> 
+
+	{% if makes is defined %}
+	<div id="search-results">
+		<table>
+			<thead>
+				<tr>
+					<th>Make</th><th class="count">Photos</th>
+				</tr>
+			</thead>
+    		<tbody>
+			{% for make in makes %}
+				<tr>
+					<td><a href="cameras/{{ make.make }}/">{{ make.make }}</a></td>
+					<td class="count">{{ make.CountOf|number_format }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% endif %}
+
+	{% include 'searchform.html.twig' %}
+
+{% endblock %}

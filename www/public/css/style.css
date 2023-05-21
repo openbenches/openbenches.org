@@ -591,3 +591,13 @@ address {
 p {
 	margin: 0;
 }
+
+th.count {
+	text-align:right;
+	padding-right: .5em;
+}
+
+td.count {
+	text-align:right;
+	font-family: monospace;
+}

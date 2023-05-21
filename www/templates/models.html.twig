@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Statistics - {{ make }} models{% endblock %}
+
+
+{% block body %}
+<h3>{{ make }} models used to take bench photos</h3> 
+
+	{% if models is defined %}
+	<div id="search-results">
+		<table>
+			<thead>
+				<tr>
+					<th>Model</th><th class="count">Photos</th>
+				</tr>
+			</thead>
+    		<tbody>
+			{% for model in models %}
+				<tr>
+					<td>{{ model.model }}</td>
+					<td class="count">{{ model.CountOf|number_format }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% endif %}
+
+	{% include 'searchform.html.twig' %}
+
+{% endblock %}
