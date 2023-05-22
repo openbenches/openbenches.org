@@ -11,7 +11,8 @@
 		{
 			"src": "/images/openbencheslogo.svg",
 			"sizes": "any",
-			"type": "image/svg"
+			"type": "image/svg",
+			"purpose": "any"
 		},
 		{
 			"src": "/images/icons/icon-72x72.png",
@@ -54,5 +55,8 @@
 			"type": "image/png"
 		}
 	],
-	"splash_pages": null
+	"splash_pages": null,
+	"dir": "ltr",
+	"orientation": "natural",
+	"scope": "https://openbenches.org"
 }

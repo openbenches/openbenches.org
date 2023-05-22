@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Service\BenchFunctions;
+use App\Service\SearchFunctions;
 
 class BenchController extends AbstractController
 {
@@ -32,9 +33,17 @@ class BenchController extends AbstractController
 				"tags"        => $bench["tags"],
 			]);
 		}
+
+		//	Has it been merged?
+		$searchFunctions = new SearchFunctions();
+		$mergedBenchID = $searchFunctions->getMergedBench( $bench_id );
+
+		if ( null != $mergedBenchID ) {
+			return $this->redirect( "/bench/{$mergedBenchID}" );
+		}
 		else {
 			//	Generate an HTTP 404 response
-			throw $this->createNotFoundException('The bench does not exist');
+			throw $this->createNotFoundException( "The bench does not exist" );
 		}
 	}
 }

@@ -87,7 +87,7 @@ class SearchFunctions
 			->where("SOUNDEX(`inscription`) = ? AND `published` = true")
 			->orderBy("benches.benchID", 'DESC')
 			->groupBy("benches.benchID")
-			->setParameter(0, "%{$soundex}%");
+			->setParameter(0, "$soundex");
 		$results = $queryBuilder->executeQuery();
 
 		$mediaFunctions = new MediaFunctions();
@@ -234,5 +234,21 @@ class SearchFunctions
 		});
 
 		return $cachedResult;
+	}
+
+	public function getMergedBench(int $benchID) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get ID of merge
+		$sql = "SELECT mergedID FROM merged_benches
+		WHERE benchID = ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $benchID);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+		$mergedBenchID = $results_array["mergedID"] ?? null;
+		return $mergedBenchID;
 	}
 }

@@ -179,6 +179,37 @@ class UploadFunctions
 		}
 	} 
 
+	public function mergeBenches( $originalID, $duplicateID ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Unpublish duplicate bench
+		$sql = "UPDATE benches
+			SET published = '0'
+			WHERE benches.benchID = ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $duplicateID);
+		$stmt->executeQuery();
+
+		//	Redirect duplicate bench
+		$sql = "INSERT INTO merged_benches (benchID, mergedID)
+			VALUES (?, ?)";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $duplicateID);
+		$stmt->bindValue(2, $originalID);
+		$stmt->executeQuery();
+
+		//	Merge photos
+		$sql = "UPDATE media 
+			SET benchID = ? 
+			WHERE media.benchID = ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $originalID);
+		$stmt->bindValue(2, $duplicateID);
+		$stmt->executeQuery();
+	}
+
 	public function mastodonPost( $benchID, $inscription="", $license="CC BY-SA 4.0", $user_provider=null, $user_name=null ) {
 		$mastodon = new \MastodonAPI($_ENV["MASTODON_ACCESS_TOKEN"], $_ENV["MASTODON_INSTANCE"]);
 

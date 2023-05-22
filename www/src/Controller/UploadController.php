@@ -132,11 +132,10 @@ class UploadController extends AbstractController
 		$originalID  = $request->request->get("originalID");
 		$duplicateID = $request->request->get("duplicateID");
 		if ($originalID != null && $duplicateID != null) {
-			merge_benches($originalID, $duplicateID);
-			return $this->render('soundex.html.twig', [
-				"duplicateID"       => $duplicateID,
-				"soundex"           => "",
-			]);
+			$uploadFunctions = new UploadFunctions();
+
+			$uploadFunctions->mergeBenches($originalID, $duplicateID);
+			return $this->redirect("/bench/{$duplicateID}");
 		}
 	}
 }
