@@ -57,17 +57,23 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 ```
 
 ### Benches
-* All Bench Data
+* All Bench Data (GeoJSON)
 	* `https://openbenches.org/api/benches`
 	* Cached for 10 minutes - changes may not appear immediately
-* Specific Bench
+* Specific Bench (GeoJSON)
 	* `https://openbenches.org/api/bench/123`
 * Benches from a specific user
 	* `https://openbenches.org/api/user/5678`
-* Search Results
+* Search Results (GeoJSON)
 	* `https://openbenches.org/api/search?search=in%20loving%20memory`
-* Tagged Benches
+* Tagged Benches (GeoJSON)
 	* `https://openbenches.org/api/tag/dog`
+* Benches near a location (GeoJSON)
+	* `https://openbenches.org/api/nearest/?latitude=46.67583&longitude=8.245239&distance=200`
+	* Distance is in Km
+	* Uses the Haversine formula
+* Benches near a location (GPX)
+	* `https://openbenches.org/api/nearest/gpx?latitude=46.67583&longitude=8.245239&distance=200`
 
 #### Inscriptions
 * By default, the inscriptions are truncated to 128 characters.
