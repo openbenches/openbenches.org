@@ -52,16 +52,14 @@ function geoFindMe() {
 </script>
 <script>
 if ("serviceWorker" in navigator) {
-	if (navigator.serviceWorker.controller) {
-		console.log("[PWA Builder] active service worker found, no need to register");
-	} else {
-		// Register the service worker
-		navigator.serviceWorker.register("/sw.js", {
-			scope: "./"
-		})
-		.then(function (reg) {
-			console.log("[PWA Builder] Service worker has been registered for scope: " + reg.scope);
-		});
-	}
+	
+	// Register the service worker
+	navigator.serviceWorker.register("/sw.js?cache=2023-05-23T22:00", {
+		scope: "./"
+	})
+	.then(function (reg) {
+		console.log("[PWA Builder] 2023-05-23 Service worker has been registered for scope: " + reg.scope);
+	});
+
 }
 </script>
