@@ -452,6 +452,123 @@ class ApiController extends AbstractController
 		return $response;
 	}
 
+	#[Route("/api/nearest/", name: "api_nearest")]
+	public function api_nearest(): JsonResponse {
+		$mediaFunctions = new MediaFunctions();
+		$searchFunctions  = new SearchFunctions();
+
+		$request = Request::createFromGlobals();
+		$latitude      = $request->query->get("latitude");
+		$longitude     = $request->query->get("longitude");
+		$distance      = $request->query->get("distance") ?? 0.5;
+		$limit         = $request->query->get("limit") ?? 20;
+		$get_truncated = $request->query->get("truncated") ?? false;
+		$get_media     = $request->query->get("media") ?? true;
+
+		//	Get the benches associated with this query
+		$benches_array = $searchFunctions->getNearestBenches( $latitude, $longitude, $distance, $limit, $get_truncated, $get_media);
+		
+		# Build GeoJSON feature collection array
+		$geojson = array(
+			"type"		=> "FeatureCollection",
+			"features"  => array()
+		);
+
+		foreach( $benches_array as $bench ) {
+			$benchID     = $bench["benchID"];
+			$inscription = $bench["inscription"];
+			$latitude    = $bench["latitude"];
+			$longitude   = $bench["longitude"];
+			$added       = $bench["added"];
+			// $image       = $bench["image"];
+
+			# some inscriptions got stored with leading/trailing whitespace
+			$inscription=trim($inscription);
+
+			// If displaying on map need to truncate inscriptions longer than
+			// 128 chars and add in <br> elements
+			if ( true == $get_truncated ) {
+				$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
+				if ( $inscriptionTruncate !== $inscription ) {
+					$inscription = $inscriptionTruncate . "…";
+				}
+				$inscription = nl2br( $inscription );
+			}
+
+			//	Horrible hack to force numeric inscriptions to be strings
+			if ( is_numeric( $inscription ) ) {
+				$inscription .= " ";
+			}
+
+			//	Create GeoJSON
+			$feature = array(
+				"id"       => $benchID,
+				"type"     => "Feature",
+				"geometry" => array(
+					"type" => "Point",
+					# Pass Longitude and Latitude Columns here
+					"coordinates" => array($longitude, $latitude)
+				),
+				# Pass other attribute columns here
+				"properties" => array(
+					"created_at"   => date_format( date_create($added ), "c" ),
+					"popupContent" => $inscription,
+					// "media"        => array(["url" => $image]),
+				),
+			);
+			# Add feature arrays to feature collection array
+			array_push($geojson["features"], $feature);
+		}
+
+		//	Render the page
+		$response = new JsonResponse($geojson);	
+		return $response;
+	}
+
+	#[Route("/api/nearest/gpx/", name: "api_gpx")]
+	public function api_gpx() {
+		$searchFunctions  = new SearchFunctions();
+
+		$request = Request::createFromGlobals();
+		$latitude      = $request->query->get("latitude");
+		$longitude     = $request->query->get("longitude");
+		$distance      = $request->query->get("distance") ?? 0.5;
+		$limit         = $request->query->get("limit") ?? 20;
+
+		//	Get the benches associated with this query
+		$benches_array = $searchFunctions->getNearestBenches( $latitude, $longitude, $distance, $limit, true, false);
+		
+		//	GPX
+		$gpx = '<?xml version="1.0" encoding="utf-8"?>'.
+		'<gpx version="1.1" creator="L-36.com" '.
+		'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '.
+		'xmlns="http://www.topografix.com/GPX/1/1" '.
+		'xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">';
+
+		foreach($benches_array as $bench) {
+			$inscription = $bench["inscription"];
+			$latitude    = $bench["latitude"];
+			$longitude   = $bench["longitude"];
+			
+			# some inscriptions got stored with leading/trailing whitespace
+			$inscription=trim($inscription);
+
+			// Short inscriptions
+			$inscription = mb_substr($inscription, 0, 128);
+
+			//	Horrible hack to force numeric inscriptions to be strings
+			if (is_numeric($inscription)) {
+				$inscription .= " ";
+			}
+			$gpx .= '<wpt lat="' . $latitude . '" lon="' . $longitude . '"><name>'. htmlspecialchars( $inscription ) . '</name><sym>Waypoint</sym></wpt>';
+		}
+		$gpx .= '</gpx>';
+		//	Render the page
+		header("Content-type: application/gpx+xml; charset=utf-8");
+		echo $gpx;
+		die();
+	}
+
 	#[Route("/api/tag/{tag_name}", name: "api_tagged_benches")]
 	public function api_tagged_benches(string $tag_name): JsonResponse {
 		$request = Request::createFromGlobals();

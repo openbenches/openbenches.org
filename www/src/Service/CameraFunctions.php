@@ -44,7 +44,7 @@ class CameraFunctions
 		$cacheName = "model";
 
 		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) use( $make ) {
-			$item->expiresAfter(3);
+			$item->expiresAfter(300);
 			$dsnParser = new DsnParser();
 			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
 			$conn = DriverManager::getConnection($connectionParams);

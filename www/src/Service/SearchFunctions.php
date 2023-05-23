@@ -251,4 +251,60 @@ class SearchFunctions
 		$mergedBenchID = $results_array["mergedID"] ?? null;
 		return $mergedBenchID;
 	}
+
+	public function getNearestBenches( $latitude, $longitude, $distance=0.5, $limit=20, $truncated = false, $media = false ) {
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_nearest");
+		$cacheName = "nearest_{$latitude}_{$longitude}_{$distance}_{$limit}_{$truncated}_{$media}";
+
+		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) use( $latitude, $longitude, $distance, $limit, $truncated, $media ) {
+			$item->expiresAfter(300);
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+	
+			//	Haversine formula
+			$sql = "SELECT
+				(
+					6371 * ACOS(COS(RADIANS(?)) *
+					COS(RADIANS(latitude)) *
+					COS(RADIANS(longitude) -
+					RADIANS(?)) +
+					SIN(RADIANS(?)) *
+					SIN(RADIANS(latitude)))
+				)
+				AS distance, benchID, latitude, longitude, inscription, published, address, added
+				FROM benches
+				WHERE published = true AND present = true
+				HAVING distance < ?
+				ORDER BY distance
+				LIMIT 0 , ?";
+	
+			$stmt = $conn->prepare($sql);
+			$stmt->bindValue(1, $latitude);
+			$stmt->bindValue(2, $longitude);
+			$stmt->bindValue(3, $latitude);
+			$stmt->bindValue(4, $distance);
+			$stmt->bindValue(5, $limit);
+
+			$results = $stmt->executeQuery();
+
+			//	Loop through the results to create an array of benches
+			$benches_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$benches_array[$row["benchID"]] = array(
+					"benchID"     => $row["benchID"],
+					"inscription" => $row["inscription"],
+					"address"     => $row["address"],
+					"latitude"    => $row["latitude"],
+					"longitude"   => $row["longitude"],
+					"added"       => $row["added"],
+					// "name"        => $row["name"],
+					// "image"       => $mediaFunctions->getProxyImageURL($row["MIN(media.sha1)"]),
+				);
+			}
+			return $benches_array;
+		});
+		return $cachedResult;
+	}
 }
