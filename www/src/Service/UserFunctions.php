@@ -29,6 +29,24 @@ class UserFunctions
 		return $results_array;
 	}
 
+	public function getUserDetailsFromSocial( $user_service, $user_name ): array {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get user's name and details
+		$sql = "SELECT `providerID`, `userID` 
+		        FROM `users`
+		        WHERE `provider` = ? AND `name` = ?
+		        LIMIT 0 , 1";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $user_service);
+		$stmt->bindValue(2, $user_name);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+		return $results_array;
+	}
+
 	public function getUserBenchCount( $userID ): int {
 
 		$dsnParser = new DsnParser();
