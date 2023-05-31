@@ -29,7 +29,7 @@ class UserFunctions
 		return $results_array;
 	}
 
-	public function getUserDetailsFromSocial( $user_service, $user_name ): array {
+	public function getUserDetailsFromSocial( $user_service, $user_name ) {
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
 		$conn = DriverManager::getConnection($connectionParams);
