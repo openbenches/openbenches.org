@@ -85,7 +85,7 @@ class SearchFunctions
 			->from("benches")
 			->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
 			->where("SOUNDEX(`inscription`) = ? AND `published` = true")
-			->orderBy("benches.benchID", 'DESC')
+			->orderBy("benches.benchID", 'ASC')
 			->groupBy("benches.benchID")
 			->setParameter(0, "$soundex");
 		$results = $queryBuilder->executeQuery();
