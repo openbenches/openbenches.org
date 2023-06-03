@@ -134,6 +134,7 @@ class AppExtension extends AbstractExtension
 		sleepOpacity: 1,
 		minZoom: 2,
 		maxZoom: 19,
+		worldCopyJump: true
 	})
 
 	//	Placeholder for last (or only) marker
