@@ -198,11 +198,10 @@
 		{# Hardcoded for only @edent to be able to delete benches #}
 
 		{% if admin == true %}
-		<input type="radio" id="publishedTrue"  name="published" value="true" checked>
-		<label for="publishedTrue" class="checkable">Publish these changes</label>
-		<br>
-		<input type="radio" id="publishedFalse" name="published" value="false">
-		<label for="publishedFalse" class="checkable">⚠️ Delete this bench ⚠️</label>
+		<input type="checkbox" id="delete" name="delete">
+		<label for="delete" class="checkable">⚠️ Delete this bench ⚠️</label>
+		{% else %}
+		<input type="hidden"   id="delete" name="delete">
 		{% endif %}
 		
 		<br>&nbsp;
@@ -343,6 +342,8 @@
 			formdata.append("newLatitude",  $("#newLatitude").val());
 
 			formdata.append("tags",         $.map($("input[name='tags']:checked"), function(c){ return c.value; }).join());
+
+			formdata.append("delete",       $("#delete").is(":checked"));
 
 			{% if medias is defined %}
 			{% for media in medias %}

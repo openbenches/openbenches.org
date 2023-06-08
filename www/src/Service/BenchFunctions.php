@@ -165,6 +165,19 @@ class BenchFunctions
 		}
 	}
 
+	public function deleteBench($bench_id) {
+
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse($_ENV['DATABASE_URL']);
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Unpublish the bench
+		$sql = "UPDATE `benches` SET `published` = false WHERE `benchID` =  ?";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $bench_id);
+		$results = $stmt->executeQuery();
+	}
+
 	public function getDuplicateCount( $inscription ): int {
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
