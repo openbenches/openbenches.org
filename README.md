@@ -4,6 +4,15 @@
 
 https://OpenBenches.org/ - an open data repository for memorial benches.
 
+## Supporters
+
+You can [sponsor OpenBenches on GitHub](https://github.com/sponsors/openbenches/).
+
+We'd like to thank the following sponsors for their generosity:
+
+* [Richard Leyton](https://leyton.org/)
+* [Ben Smith](https://bensmith.uk/)
+
 ## Contributing
 
 All contributions are welcome.  Before making a pull request, please:
