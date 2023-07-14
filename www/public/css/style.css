@@ -99,9 +99,13 @@ fieldset {
 	margin: .5em;
 }
 
-#search-results {
+#search-results, .text {
 	max-width: 1024px;
 	display: inline-block;
+	text-align: left;
+}
+
+.text h4 {
 	text-align: left;
 }
 
@@ -383,7 +387,7 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 }
 
 button, .button, [type="submit"], .dropimage {
-	width: 14em;
+	width: 15em;
 }
 
 #idc-container {

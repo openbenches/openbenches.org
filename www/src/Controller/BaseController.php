@@ -19,6 +19,12 @@ class BaseController extends AbstractController
 		return $this->render('colophon.html.twig');
 	}
 
+	#[Route(['/support', '/sponsor'], name: 'support')]
+	public function support(): Response {
+
+		return $this->render('support.html.twig');
+	}
+
 	#[Route(["/offline", "/offline.php"], name: "offline")]
 	public function offline(): Response {
 
