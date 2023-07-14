@@ -105,6 +105,10 @@ fieldset {
 	text-align: left;
 }
 
+.text {
+	margin: .5em
+}
+
 .text h4 {
 	text-align: left;
 }
