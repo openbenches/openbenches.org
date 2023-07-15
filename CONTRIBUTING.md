@@ -46,14 +46,8 @@ If you want to post to social media (Mastodon and Twitter):
 
 ```
 ./composer.phar require eleirbag89/mastodonbotphp
-./composer.phar require jublonet/codebird-php
+./composer.phar require ferrysyahrinal/twifer
 ```
-
-You may need to update CodeBird's certificates.
-
-* Download the file https://curl.se/ca/cacert.pem
-* Find the directory `/vendor/jublonet/codebird-php/src/`
-* Place cacert.pem in that directory - overwriting the old file
 
 ## Getting a copy of the code on your computer
 

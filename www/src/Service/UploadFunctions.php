@@ -242,13 +242,7 @@ class UploadFunctions
 
 	public function twitterPost( $benchID, $inscription=null, $latitude=null, $longitude=null, $license="CC BY-SA 4.0", $user_provider=null, $user_name=null ) {
 		//	Send Tweet
-		\Codebird\Codebird::setConsumerKey($_ENV["OAUTH_CONSUMER_KEY"], $_ENV["OAUTH_CONSUMER_SECRET"]);
-		$cb = \Codebird\Codebird::getInstance();
-		$cb->setToken($_ENV["OAUTH_ACCESS_TOKEN"], $_ENV["OAUTH_TOKEN_SECRET"]);
-
-		//	Tweet length is now 280
-		// $tweet_length = 280;
-
+		
 		//	Tweet will end with "℅ @twittername"
 		if ("twitter" == $user_provider) {
 			$from = "℅ @{$user_name}   "; //	Paranoia. A few spaces of padding which will be trimmed before tweeting.
@@ -263,15 +257,13 @@ class UploadFunctions
 		// To go after the inscription
 		$tweet_text = "{$tweet_url}\n{$license}\n{$from}";
 
-		$params = [
-			'status'    => $tweet_text,
-			'lat'       => $latitude,
-			'long'      => $longitude,
-			'weighted_character_count' => 'true'
-		];
+		//	Set up API connection
+		$twitterAPI = new \Twifer\API($_ENV["OAUTH_CONSUMER_KEY"], $_ENV["OAUTH_CONSUMER_SECRET"], $_ENV["OAUTH_ACCESS_TOKEN"], $_ENV["OAUTH_TOKEN_SECRET"]);
+
+		$params = ['status' => $tweet_text];
 
 		try {
-			$reply = $cb->statuses_update($params);
+			$reply = $twitterAPI->request('POST', 'statuses/update', $params);
 		} catch (\Exception $e) {
 			error_log("Twitter: $e");
 			error_log(print_r($reply, TRUE));
