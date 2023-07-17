@@ -1,0 +1,238 @@
+// _partial/_rtl.scss
+
+.cmtx_ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+.cmtx_rtl {
+    direction: rtl;
+    text-align: right;
+
+    .cmtx_message {
+        background-position: right 5px center;
+        padding: 5px 25px 5px 5px;
+    }
+
+    .cmtx_search {
+        padding: 0 25px 0 0 !important;
+    }
+
+    .cmtx_field {
+        text-align: right !important;
+    }
+
+    .cmtx_select_field {
+        text-align: right !important;
+    }
+
+    .cmtx_comment_field_active {
+        text-align: right !important;
+    }
+
+    .cmtx_bb_code_container, .cmtx_smilies_container {
+        float: right;
+    }
+
+    .cmtx_icons_separator {
+        float: right;
+    }
+
+    .cmtx_comment_field {
+        padding: 8px 6px !important;
+    }
+
+    .cmtx_avatar_area {
+        float: right;
+        margin-left: 10px;
+        margin-right: 0;
+    }
+
+    .cmtx_bio {
+        left: auto;
+        right: 20%;
+    }
+
+    .cmtx_bio_info {
+        text-align: right;
+    }
+
+    .cmtx_bio_info label {
+        padding-left: 10px;
+        padding-right: 0;
+        text-align: right;
+    }
+
+    .reply_indent_0 {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .reply_indent_1 {
+        margin-left: 0;
+        margin-right: 25px;
+    }
+
+    .reply_indent_2 {
+        margin-left: 0;
+        margin-right: 50px;
+    }
+
+    .reply_indent_3 {
+        margin-left: 0;
+        margin-right: 75px;
+    }
+
+    .reply_indent_4 {
+        margin-left: 0;
+        margin-right: 100px;
+    }
+
+    .reply_indent_5 {
+        margin-left: 0;
+        margin-right: 125px;
+    }
+
+    .cmtx_icons_container .cmtx_smiley:not(:first-child) {
+        margin-left: 0;
+    }
+
+    .cmtx_icons_container .cmtx_smiley:not(:last-child) {
+        margin-left: 15px;
+    }
+
+    .cmtx_bb_code:not(:first-child) {
+        margin-left: 0;
+    }
+
+    .cmtx_bb_code:not(:last-child) {
+        margin-left: 15px;
+    }
+
+    .cmtx_action_area div:not(:last-of-type) {
+        margin-right: 0;
+    }
+
+    .cmtx_action_area div:not(:first-of-type) {
+        margin-right: 15px;
+    }
+
+    .cmtx_social_block a:not(:first-child) {
+        margin-left: 0;
+    }
+
+    .cmtx_social_block a:not(:last-child) {
+        margin-left: 10px;
+    }
+
+    .cmtx_share_box a:not(:first-child) {
+        margin-left: 0;
+    }
+
+    .cmtx_share_box a:not(:last-child) {
+        margin-left: 12px;
+    }
+
+    .cmtx_captcha_refresh {
+        margin-left: 0;
+        margin-right: 5px;
+    }
+
+    .cmtx_button_row [class*='cmtx_col_'] {
+        float: right;
+    }
+
+    .cmtx_button_row [class*='cmtx_col_']:first-child {
+        padding-left: 15px;
+        padding-right: 0;
+    }
+
+    .cmtx_rating_area {
+        direction: ltr;
+        left: 0;
+        right: auto;
+    }
+
+    .cmtx_quick_reply_name_holder + .cmtx_quick_reply_email_holder {
+        margin-left: 0;
+        margin-right: 8px;
+    }
+
+    @media all and (max-width: 800px) {
+        .quick_reply .cmtx_message, .quick_reply .cmtx_error {
+            text-align: right;
+        }
+
+        .edit_comment .cmtx_message, .edit_comment .cmtx_error {
+            text-align: right;
+        }
+    }
+
+    @media all and (max-width: 600px) {
+        .cmtx_avatar_area {
+            float: none;
+            margin-left: 0;
+        }
+
+        .cmtx_content_area {
+            margin-right: 0 !important;
+        }
+    }
+
+    .cmtx_user_container {
+        .cmtx_message {
+            padding: 8px 25px 8px 8px;
+        }
+
+        .cmtx_avatar_image_container {
+            margin-left: 30px;
+            margin-right: 0;
+        }
+
+        .cmtx_notifications_area {
+            margin-left: 15px;
+            margin-right: 0;
+        }
+
+        .cmtx_format_area {
+            margin-left: 0;
+            margin-right: 15px;
+        }
+
+        .cmtx_table td, th {
+            text-align: right;
+        }
+
+        .cmtx_table .cmtx_no_results {
+            text-align: center;
+        }
+
+        .cmtx_modal_box header div {
+            padding-right: 20px;
+        }
+
+        @media all and (max-width: 800px) {
+            .cmtx_format_area {
+                margin-right: 0;
+            }
+
+            .cmtx_notifications_area {
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+.cmtx_rtl ~ .cmtx_modal_box {
+    direction: rtl;
+    text-align: right;
+}
+
+.cmtx_rtl ~ .cmtx_modal_box header div {
+    padding-right: 20px;
+}
+
+.cmtx_rtl ~ #cmtx_bullet_modal span, .cmtx_rtl ~ #cmtx_numeric_modal span {
+    padding-left: 15px;
+    padding-right: 0;
+}

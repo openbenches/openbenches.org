@@ -1,0 +1,181 @@
+<?php
+namespace Commentics;
+
+class ManageSitesModel extends Model
+{
+    public function getSites($data, $count = false)
+    {
+        if ($count) {
+            $sql = "SELECT COUNT(`s`.`id`)";
+        } else {
+            $sql = "SELECT `s`.*,";
+
+            $sql .= " (SELECT COUNT(`c`.`id`) FROM `" . CMTX_DB_PREFIX . "comments` `c`
+                       LEFT JOIN `" . CMTX_DB_PREFIX . "pages` `p` ON `p`.`id` = `c`.`page_id`
+                       WHERE `p`.`site_id` = `s`.`id`) AS `comments`,";
+
+            $sql .= " (SELECT COUNT(DISTINCT `p`.`id`) FROM `" . CMTX_DB_PREFIX . "pages` `p`
+                       LEFT JOIN `" . CMTX_DB_PREFIX . "comments` `c` ON `c`.`page_id` = `p`.`id`
+                       WHERE `p`.`site_id` = `s`.`id`
+                       AND `c`.`page_id` = `p`.`id`
+                       ) AS `pages`";
+        }
+
+        $sql .= " FROM `" . CMTX_DB_PREFIX . "sites` `s`";
+
+        $sql .= " WHERE 1 = 1";
+
+        if ($data['filter_id']) {
+            $sql .= " AND `s`.`id` = '" . (int) $data['filter_id'] . "'";
+        }
+
+        if ($data['filter_name']) {
+            $sql .= " AND `s`.`name` LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if ($data['filter_domain']) {
+            $sql .= " AND `s`.`domain` LIKE '%" . $this->db->escape($data['filter_domain']) . "%'";
+        }
+
+        if ($data['filter_date']) {
+            $sql .= " AND `s`.`date_added` LIKE '%" . $this->db->escape($data['filter_date']) . "%'";
+        }
+
+        if ($data['group_by']) {
+            $sql .= " GROUP BY " . $this->db->backticks($data['group_by']);
+        } else {
+            $sql .= " GROUP BY `s`.`id`";
+        }
+
+        if (!$count) {
+            $sql .= " ORDER BY " . $this->db->backticks($data['sort']);
+
+            if ($data['order'] == 'asc') {
+                $sql .= " ASC";
+            } else {
+                $sql .= " DESC";
+            }
+
+            $sql .= " LIMIT " . (int) $data['start'] . ", " . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        if ($count) {
+            return $this->db->numRows($query);
+        } else {
+            return $this->db->rows($query);
+        }
+    }
+
+    public function sortUrl()
+    {
+        $url = '';
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->url->encode($this->security->decode($this->request->get['filter_name']));
+        }
+
+        if (isset($this->request->get['filter_domain'])) {
+            $url .= '&filter_domain=' . $this->url->encode($this->security->decode($this->request->get['filter_domain']));
+        }
+
+        if (isset($this->request->get['filter_date'])) {
+            $url .= '&filter_date=' . $this->url->encode($this->security->decode($this->request->get['filter_date']));
+        }
+
+        if (isset($this->request->get['order'])) {
+            if ($this->request->get['order'] == 'desc') {
+                $url .= '&order=asc';
+            } else {
+                $url .= '&order=desc';
+            }
+        } else {
+            $url .= '&order=asc';
+        }
+
+        return $url;
+    }
+
+    public function paginateUrl()
+    {
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->url->encode($this->security->decode($this->request->get['filter_name']));
+        }
+
+        if (isset($this->request->get['filter_domain'])) {
+            $url .= '&filter_domain=' . $this->url->encode($this->security->decode($this->request->get['filter_domain']));
+        }
+
+        if (isset($this->request->get['filter_date'])) {
+            $url .= '&filter_date=' . $this->url->encode($this->security->decode($this->request->get['filter_date']));
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        return $url;
+    }
+
+    public function singleDelete($id)
+    {
+        return $this->site->deleteSite($id);
+    }
+
+    public function bulkDelete($ids)
+    {
+        $success = $failure = 0;
+
+        foreach ($ids as $id) {
+            if ($this->singleDelete($id)) {
+                $success++;
+            } else {
+                $failure++;
+            }
+        }
+
+        return array(
+            'success' => $success,
+            'failure' => $failure
+        );
+    }
+
+    public function getPageCookie()
+    {
+        $sort = $order = '';
+
+        if ($this->cookie->exists('Commentics-Manage-Sites')) {
+            $content = $this->cookie->get('Commentics-Manage-Sites');
+
+            $content = explode('|', $content);
+
+            if (isset($content[0]) && in_array($content[0], array('s.name', 's.domain', 's.url', 's.date_added'))) {
+                $sort = $content[0];
+            }
+
+            if (isset($content[1]) && in_array($content[1], array('asc', 'desc'))) {
+                $order = $content[1];
+            }
+        }
+
+        $page_cookie = array('sort' => $sort, 'order' => $order);
+
+        return $page_cookie;
+    }
+
+    public function setPageCookie($sort, $order)
+    {
+        $this->cookie->set('Commentics-Manage-Sites', $sort . '|' . $order, 60 * 60 * 24 * $this->setting->get('admin_cookie_days') + time());
+    }
+}

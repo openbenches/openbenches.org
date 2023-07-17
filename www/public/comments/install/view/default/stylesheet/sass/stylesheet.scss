@@ -1,0 +1,430 @@
+/* Font Awesome (3rd party) */
+@import 'partial/fontawesome';
+
+/* Normalize (3rd party) */
+@import 'partial/normalize';
+
+header, main {
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+header {
+    border-bottom: 0;
+    border-radius: 15px 15px 0 0;
+    padding: 30px 30px 0;
+
+}
+
+main {
+    border-radius: 0 0 15px 15px;
+    border-top: 0;
+    padding: 1px 30px 30px;
+}
+
+body {
+    background-color: #f1f1f1;
+    background-color: #f5f5f5;
+    color: #2c2c2c;
+    font-family: arial;
+    font-size: 13px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+}
+
+img {
+    border: 0;
+}
+
+a {
+    color: #00f;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+a:link {
+    color: #00f;
+}
+
+a:visited {
+    color: #00f;
+}
+
+a:active {
+    color: #00f;
+}
+
+a:hover {
+    color: #00f;
+}
+
+.logo {
+    height: auto;
+    margin-bottom: 15px;
+    margin-left: -3px;
+    max-width: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+/*********************** Headings ********************/
+
+.heading {
+    color: #27408b;
+    font-size: 1.2em;
+}
+
+.heading_note {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+/*********************** Steps ***********************/
+
+.steps {
+    color: #adac9c;
+    display: flex;
+    font-family: 'Century Gothic', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    font-size: 1.3em;
+    font-weight: bold;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    text-align: justify;
+}
+
+.steps .active {
+    color: #f54409;
+}
+
+/*********************** Forms ***********************/
+
+input[type='text'], input[type='email'], input[type='password'], select {
+    box-sizing: border-box;
+}
+
+.field_heading {
+    color: #333;
+}
+
+.required_symbol {
+    color: #f00;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+.note {
+    font-size: 0.75em;
+}
+
+.button {
+    background: url('../../image/button/gradient.png') repeat-x scroll 0 100% #ffac47;
+    border-color: #ed6502 #a04300 #a04300 #ed6502;
+    border-style: solid;
+    border-width: 1px;
+    color: #fff;
+    cursor: pointer;
+    font: bold 12px arial,helvetica,sans-serif;
+    padding: 1px 7px 2px;
+    text-align: center !important;
+    white-space: nowrap;
+}
+
+/******************* Messages ************************/
+
+.success, .info, .error, .warning, .failure {
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    border: 1px solid;
+    box-shadow: 3px 3px 5px #888;
+    margin-top: 17px;
+    padding: 5px 5px 5px 25px;
+    position: relative;
+}
+
+.success {
+    background-color: #e8fcdc;
+    background-image: url('../../image/message/success.png');
+    color: #4f8a10;
+}
+
+.info {
+    background-color: #bde5f8;
+    background-image: url('../../image/message/information.png');
+    color: #00529b;
+}
+
+.error {
+    background-color: #ffbaba;
+    background-image: url('../../image/message/error.png');
+    color: #d8000c;
+}
+
+.warning {
+    background-color: #feefb3;
+    background-image: url('../../image/message/warning.png');
+    color: #9f6000;
+}
+
+.failure {
+    background-color: #ffbaba;
+    background-image: url('../../image/message/error.png');
+    color: #d8000c;
+}
+
+/******************* Database Page *******************/
+
+#database_page {
+    input, select {
+        margin-bottom: 15px;
+    }
+
+    input[type='text'], input[type='password'], select {
+        width: 250px;
+    }
+}
+
+/******************** System Page ********************/
+
+#system_page {
+    .row {
+        margin-bottom: 5px;
+    }
+
+    .item {
+        float: left;
+        width: 250px;
+    }
+
+    .green, .amber, .red {
+        background-color: #999;
+        border-radius: 3px;
+        color: #fff;
+        display: inline-block;
+        font-size: 11.844px;
+        font-weight: bold;
+        line-height: 12px;
+        min-width: 29px;
+        padding: 2px 4px;
+        text-align: center;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        vertical-align: baseline;
+        white-space: nowrap;
+    }
+
+    .green {
+        background-color: #060;
+    }
+
+    .amber {
+        background-color: #ffac00;
+    }
+
+    .red {
+        background-color: #c00;
+    }
+
+    .error {
+        margin-bottom: 20px;
+    }
+
+    .note {
+        background-color: #fef6e0;
+        border: 1px solid #efe1b9;
+        color: #555;
+        font-size: 0.8em;
+        margin-left: 15px;
+        padding: 2px 0 3px 3px;
+    }
+
+    .button {
+        margin-top: 17px;
+    }
+}
+
+/********************* Menu Page *********************/
+
+#menu_page {
+    .choice:first-of-type {
+        margin-bottom: 5px;
+    }
+
+    .button {
+        margin-top: 15px;
+    }
+}
+
+/******************** Install 1 Page *****************/
+
+#install_1_page {
+    form {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    input[type='text'], input[type='password'], input[type='email'], select {
+        width: 250px;
+    }
+
+    input, select {
+        margin-bottom: 15px;
+    }
+
+    .field_error {
+        color: #f00;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        margin-top: -14px;
+    }
+
+    .button {
+        display: block;
+        margin-top: 5px;
+    }
+}
+
+/******************** Upgrade 1 Page *****************/
+
+#upgrade_1_page {
+    .version {
+        color: #27408b;
+        float: left;
+        font-weight: bold;
+        width: 130px;
+    }
+
+    .button {
+        margin-top: 10px;
+    }
+}
+
+/******************** Media Queries ******************/
+
+@media all and (max-width: 1700px) {
+    #install_1_page .note {
+        display: none;
+    }
+}
+
+@media all and (max-width: 1200px) {
+    #install_1_page .heading_note {
+        display: none;
+    }
+}
+
+@media all and (max-width: 1000px) {
+    body {
+        margin: 10px;
+        padding: 0;
+        width: 95%;
+    }
+
+    .note {
+        display: none;
+    }
+
+    input[type='text'], input[type='email'], input[type='password'], select {
+        width: 100% !important;
+    }
+
+    #install_1_page form {
+        display: block;
+    }
+}
+
+@media all and (max-width: 500px) {
+    input[type='submit'] {
+        margin-top: 5px;
+        width: 100%;
+    }
+
+    #system_page .item {
+        float: none;
+        width: auto;
+    }
+
+    #system_page .green, #system_page .amber, #system_page .red {
+        float: right;
+    }
+}
+
+/****************** Password Strength ***************/
+
+#password_strength {
+    display: block;
+    height: 5px;
+}
+
+#password_description {
+    display: block;
+    font-size: 0.8em;
+    line-height: 15px;
+    margin-bottom: 12px;
+}
+
+.strength_0 {
+    background: #ccc;
+    width: 250px;
+}
+
+.strength_1 {
+    background: #f00;
+    width: 41px;
+}
+
+.strength_2 {
+    background: #ff5f5f;
+    width: 82px;
+}
+
+.strength_3 {
+    background: #ffcbcb;
+    width: 123px;
+}
+
+.strength_4 {
+    background: #56e500;
+    width: 164px;
+}
+
+.strength_5 {
+    background: #4dcd00;
+    width: 205px;
+}
+
+.strength_6 {
+    background: #399800;
+    width: 250px;
+}
+
+@media all and (max-width: 1000px) {
+    .strength_0 {
+        width: 100%;
+    }
+
+    .strength_1 {
+        width: 16%;
+    }
+
+    .strength_2 {
+        width: 33%;
+    }
+
+    .strength_3 {
+        width: 50%;
+    }
+
+    .strength_4 {
+        width: 66%;
+    }
+
+    .strength_5 {
+        width: 83%;
+    }
+
+    .strength_6 {
+        width: 100%;
+    }
+}

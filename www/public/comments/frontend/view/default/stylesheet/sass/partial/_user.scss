@@ -1,0 +1,295 @@
+// _partial/_user.scss
+
+.cmtx_user_body {
+    background-color: #f5f5f5;
+}
+
+.cmtx_user_container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1140px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+
+    * {
+        box-sizing: border-box;
+        font-weight: normal;
+        line-height: normal;
+    }
+
+    *::before {
+        box-sizing: border-box;
+    }
+
+    *::after {
+        box-sizing: border-box;
+    }
+
+    h1 {
+        color: $grey-dark;
+        font-size: 32px;
+        font-weight: normal;
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+
+    a {
+        color: #00f;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    a:link {
+        color: #00f;
+    }
+
+    a:visited {
+        color: #00f;
+    }
+
+    a:active {
+        color: #00f;
+    }
+
+    a:hover {
+        color: #00f;
+    }
+
+    .cmtx_message {
+        display: block;
+        margin-bottom: 20px;
+        padding: 8px 8px 8px 25px;
+    }
+
+    .cmtx_avatar_container {
+        margin-bottom: 30px;
+    }
+
+    .cmtx_avatar_image_container {
+        display: inline-block;
+        margin-right: 30px;
+    }
+
+    .cmtx_avatar_image {
+        height: 72px;
+        width: 72px;
+    }
+
+    .cmtx_avatar_image_input {
+        display: none;
+    }
+
+    .cmtx_avatar_image_links {
+        display: none;
+        text-align: center;
+    }
+
+    .cmtx_avatar_text_container {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .cmtx_avatar_text {
+        padding-top: 25px;
+    }
+
+    .cmtx_avatar_selection_img {
+        cursor: pointer;
+        height: 72px;
+        margin-right: 5px;
+        width: 72px;
+    }
+
+    .cmtx_avatar_selection_attribution {
+        background-color: $grey;
+        color: $white;
+        margin-bottom: 10px;
+        padding: 3px;
+        text-align: center;
+    }
+
+    .cmtx_settings_container {
+        display: flex;
+    }
+
+    .cmtx_area {
+        background-color: $white;
+        border: 1px solid $grey-light;
+        padding: 30px;
+    }
+
+    .cmtx_area_heading {
+        color: $black;
+        font-size: 20px;
+        font-weight: bold;
+        height: 25px;
+        padding-top: 5px;
+    }
+
+    .cmtx_area_body {
+        margin-top: 25px;
+    }
+
+    .cmtx_avatar_container .cmtx_area_body {
+        margin-top: 0;
+    }
+
+    .cmtx_notifications_area, .cmtx_format_area {
+        width: 50%;
+    }
+
+    .cmtx_notifications_area {
+        margin-right: 15px;
+    }
+
+    .cmtx_notifications_area .cmtx_mobile {
+        display: none;
+    }
+
+    .cmtx_notifications_area .cmtx_notifications_area_custom {
+        margin-top: 15px;
+    }
+
+    .cmtx_custom_text {
+        color: $grey;
+        font-size: 0.8em;
+        margin-bottom: 8px;
+    }
+
+    .cmtx_format_area {
+        margin-left: 15px;
+    }
+
+    .cmtx_subscriptions_area {
+        margin-top: 30px;
+        width: 100%;
+    }
+
+    .cmtx_table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .cmtx_table tr:nth-of-type(odd) {
+        background: $grey-lightest;
+    }
+
+    .cmtx_table th {
+        background: $white;
+        color: $grey-dark;
+        font-weight: bold;
+    }
+
+    .cmtx_table td, th {
+        border: 1px solid $grey-lighter;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .cmtx_table td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .cmtx_table tbody tr:hover {
+        background-color: $beige;
+    }
+
+    .cmtx_table td:last-of-type a {
+        outline: none;
+    }
+
+    .cmtx_table .cmtx_no_results {
+        text-align: center;
+    }
+
+    .cmtx_trash_icon::before {
+        color: $red;
+        content: '\f014';
+        cursor: pointer;
+        display: inline-block;
+        font-family: FontAwesome;
+    }
+
+    .cmtx_subscriptions_area_delete {
+        margin-bottom: 5px;
+        margin-top: 35px;
+    }
+
+    .cmtx_subscriptions_area_delete .cmtx_area_heading {
+        font-size: 16px;
+    }
+
+    .cmtx_subscriptions_area_delete .cmtx_area_body {
+        margin-top: 10px;
+    }
+
+    input[type='radio'] {
+        margin-bottom: 15px;
+    }
+
+    input[type='checkbox'] {
+        margin-bottom: 10px;
+    }
+
+    @media all and (max-width: 1300px) {
+        max-width: none;
+        width: 90%;
+    }
+
+    @media all and (max-width: 1000px) {
+        .cmtx_notifications_area .cmtx_desktop {
+            display: none;
+        }
+
+        .cmtx_notifications_area .cmtx_mobile {
+            display: block;
+        }
+    }
+
+    @media all and (max-width: 800px) {
+        .cmtx_settings_container {
+            display: block;
+        }
+
+        .cmtx_notifications_area, .cmtx_format_area {
+            width: 100%;
+        }
+
+        .cmtx_format_area {
+            margin-top: 30px;
+        }
+
+        .cmtx_notifications_area {
+            margin-right: 0;
+        }
+
+        .cmtx_format_area {
+            margin-left: 0;
+        }
+    }
+
+    @media all and (max-width: 750px) {
+        .cmtx_table, .cmtx_table thead, .cmtx_table tbody, .cmtx_table th, .cmtx_table td, .cmtx_table tr {
+            display: block;
+        }
+
+        .cmtx_table tr {
+            border: 1px solid $grey-lighter;
+            margin-bottom: 10px;
+        }
+
+        .cmtx_table td {
+            border: 0;
+            border-bottom: 1px solid $grey-lighter;
+        }
+    }
+
+    @media all and (max-width: 700px) {
+        .cmtx_avatar_text_container {
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,57 @@
+// _partial/_reset.scss
+
+.cmtx_container {
+    * {
+        box-sizing: border-box;
+        font-weight: normal;
+        line-height: normal;
+    }
+
+    *::before {
+        box-sizing: border-box;
+    }
+
+    *::after {
+        box-sizing: border-box;
+    }
+
+    h3, b {
+        font-weight: bold;
+    }
+
+    ul, ol {
+        padding-left: 30px;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    li {
+        display: list-item;
+        padding: 2px;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    input, select, textarea, label {
+        height: auto;
+        margin: 0;
+    }
+
+    img {
+        border: 0;
+        border-radius: 0;
+        display: inline-block !important;
+        float: none;
+        margin: 0;
+        padding: 0;
+        width: auto;
+    }
+}

@@ -1,0 +1,153 @@
+// _partial/_modal.scss
+
+.cmtx_modal_box {
+    background: $white;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid $grey;
+    border-radius: 4px;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    color: $black !important;
+    display: none;
+    left: 50%;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    z-index: $z-index-modal;
+}
+
+.cmtx_form_container .cmtx_modal_box {
+    min-width: 400px;
+}
+
+.cmtx_modal_box header {
+    border-bottom: 1px solid $grey-lighter;
+    box-sizing: content-box;
+    height: auto !important;
+    min-height: 25px;
+    padding: 10px;
+    width: auto !important;
+}
+
+.cmtx_modal_box header div {
+    font-weight: bold;
+    padding: 5px;
+}
+
+.cmtx_modal_box .cmtx_modal_body {
+    max-height: 500px;
+    overflow: auto;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.cmtx_modal_box .cmtx_button {
+    width: auto;
+}
+
+.cmtx_modal_box footer {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid $grey-lighter;
+    padding: 10px;
+    text-align: right;
+}
+
+.cmtx_modal_box header a {
+    color: $grey-light !important;
+    font-size: 23px;
+    line-height: 1;
+    position: absolute;
+    right: 10px;
+    text-decoration: none;
+}
+
+.cmtx_modal_box header a:hover {
+    color: $grey-dark;
+    transition: color 1s ease;
+}
+
+.cmtx_modal_body {
+    margin-bottom: 10px;
+    margin-top: 8px;
+}
+
+.cmtx_modal_body p {
+    margin-bottom: 16px !important;
+    margin-top: 16px !important;
+}
+
+#cmtx_privacy_modal .cmtx_modal_body, #cmtx_terms_modal .cmtx_modal_body, #cmtx_autodetect_modal .cmtx_modal_body {
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+#cmtx_autodetect_modal .cmtx_modal_body a {
+    text-decoration: none;
+}
+
+.cmtx_modal_box input[type='text'], .cmtx_modal_box input[type='url'], .cmtx_modal_box input[type='email'] {
+    background-color: $white;
+    border: 1px solid $grey-light;
+    border-radius: 4px;
+    height: 25px;
+    margin: 0;
+    padding-left: 2px;
+    width: 100%;
+}
+
+.cmtx_modal_box input[type='button'] {
+    padding: 6px;
+}
+
+#cmtx_bullet_modal .cmtx_modal_body div:first-child, #cmtx_numeric_modal .cmtx_modal_body div:first-child {
+    margin-bottom: 8px;
+}
+
+#cmtx_bullet_modal span, #cmtx_numeric_modal span {
+    line-height: 22px;
+    padding-right: 15px;
+}
+
+#cmtx_bullet_modal .cmtx_modal_body div:not(:first-of-type), #cmtx_numeric_modal .cmtx_modal_body div:not(:first-of-type) {
+    display: flex;
+}
+
+#cmtx_link_modal .cmtx_modal_body div:nth-of-type(3), #cmtx_email_modal .cmtx_modal_body div:nth-of-type(3) {
+    margin-top: 10px;
+}
+
+.cmtx_alert_icon::before {
+    color: $grey-dark;
+    content: '\f071';
+    margin-right: 2px;
+}
+
+.cmtx_overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: $z-index-overlay;
+}
+
+@media all and (max-width: 500px) {
+    .cmtx_form_container .cmtx_modal_box {
+        min-width: 0;
+    }
+
+    .cmtx_form_container .cmtx_modal_box {
+        width: 80%;
+    }
+}
+
+@media all and (max-width: 400px) {
+    .cmtx_comment_container .cmtx_modal_box {
+        width: 80%;
+    }
+}

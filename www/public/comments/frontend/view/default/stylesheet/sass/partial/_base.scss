@@ -1,0 +1,92 @@
+// _partial/_base.scss
+
+$beige:  #fdfcdc;
+$black:  #000;
+$blue:   #00f;
+$green:  #008000;
+$orange: #e97013;
+$red:    #f00;
+$white:  #fff;
+
+$grey-lightest: lighten($black, 99%);
+$grey-lighter:  lighten($black, 90%);
+$grey-light:    lighten($black, 80%);
+$grey:          lighten($black, 50%);
+$grey-dark:     lighten($black, 30%);
+$grey-darker:   lighten($black, 20%);
+$grey-darkest:  lighten($black, 10%);
+
+$star-full:  #ffd700;
+$star-hover: #ffed85;
+$star-empty: $grey-lighter;
+
+$green-dark: darken($green, 5%);
+$red-dark:   darken($red, 5%);
+
+.cmtx_button {
+    background-color: #e7e7e7;
+    border: 0;
+    color: $black;
+    display: inline-block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    height: auto;
+    min-width: 50px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition-duration: 0.4s;
+    width: 100%;
+
+    &:hover {
+        background-color: darken(#e7e7e7, 5%);
+    }
+
+    &::-moz-focus-inner {
+        border: 0;
+    }
+}
+
+.cmtx_button_primary {
+    background-color: #3f6f95;
+    color: $white;
+
+    &:hover {
+        background-color: darken(#3f6f95, 10%);
+    }
+}
+
+.cmtx_button_disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.cmtx_button_row input[type='button'], .cmtx_more_button_row input[type='button'] {
+    border-radius: 5px;
+}
+
+.cmtx_divider_section {
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.cmtx_iframe_body {
+    margin: 0 0 50px;
+}
+
+.cmtx_hide {
+    display: none;
+}
+
+.cmtx_m-0 {
+    margin: 0 !important;
+}
+
+.cmtx_clear::before, .cmtx_clear::after {
+    content: ' ';
+    display: table;
+}
+
+.cmtx_clear::after {
+    clear: both;
+}

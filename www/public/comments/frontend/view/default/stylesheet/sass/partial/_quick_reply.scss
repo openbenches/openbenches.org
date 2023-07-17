@@ -1,0 +1,69 @@
+// _partial/_quick_reply.scss
+
+.quick_reply {
+    border: 1px solid $grey-lighter;
+    border-radius: 10px;
+    margin-top: 18px;
+    padding: 10px;
+
+    textarea {
+        height: 60px !important;
+    }
+
+    .cmtx_quick_reply_user {
+        display: flex;
+        margin-top: 8px;
+    }
+
+    .cmtx_quick_reply_user div {
+        flex: 1;
+    }
+
+    .cmtx_quick_reply_name_holder + .cmtx_quick_reply_email_holder {
+        margin-left: 8px;
+    }
+
+    .cmtx_quick_reply_lower {
+        display: flex;
+        margin-top: 8px;
+    }
+
+    .cmtx_quick_reply_lower div {
+        flex: 1;
+    }
+
+    .cmtx_quick_reply_link a {
+        text-decoration: none !important;
+    }
+
+    .cmtx_quick_reply_agree {
+        color: $grey;
+    }
+
+    .cmtx_quick_reply_agree a {
+        text-decoration: none !important;
+    }
+
+    .cmtx_quick_reply_button input {
+        border-radius: 5px;
+    }
+
+    @media all and (max-width: 800px) {
+        .cmtx_quick_reply_lower {
+            display: block;
+            text-align: center;
+        }
+
+        .cmtx_quick_reply_link, .cmtx_quick_reply_agree {
+            margin-top: 10px;
+        }
+
+        .cmtx_quick_reply_button {
+            margin-top: 14px;
+        }
+
+        .cmtx_message, .cmtx_error {
+            text-align: left;
+        }
+    }
+}

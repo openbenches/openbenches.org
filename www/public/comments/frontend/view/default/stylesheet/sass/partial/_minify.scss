@@ -1,0 +1,9 @@
+// _partial/_minify.scss
+
+.cmtx_star::after, .cmtx_like_icon::after, .cmtx_dislike_icon::after, .cmtx_sort_by_text::after, .cmtx_name_text::after, .cmtx_geo::after, .cmtx_pagination_url::before, .cmtx_pagination_url::after {
+    content: ' ';
+}
+
+.cmtx_modal_box .cmtx_button_secondary {
+    margin-left: 3px;
+}

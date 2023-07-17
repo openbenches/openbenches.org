@@ -1,0 +1,90 @@
+// _partial/_upload.scss
+
+.cmtx_upload_container {
+    border: 3px dotted $grey-lighter;
+    position: relative;
+}
+
+.cmtx_upload_container.cmtx_dragging {
+    border: 3px dotted $green;
+}
+
+.cmtx_upload_container.cmtx_dragging .cmtx_drag_text div {
+    color: $green;
+}
+
+.cmtx_drag_text {
+    text-align: center;
+}
+
+.cmtx_drag_text div {
+    color: $grey;
+    padding: 25px 0;
+}
+
+#cmtx_upload {
+    cursor: pointer;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.cmtx_image_upload {
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.cmtx_image_section {
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.cmtx_image_section img {
+    height: 100px;
+    max-width: 200px;
+    min-width: 70px;
+}
+
+.cmtx_image_overlay {
+    background: linear-gradient(to top, $black 0, rgba(0, 0, 0, 0) 100%);
+    bottom: 0;
+    color: $white;
+    height: 50%;
+    left: 0;
+    line-height: 60px;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    transition: all 0.5s ease;
+    width: 100%;
+    z-index: $z-index-upload;
+}
+
+.cmtx_image_section:hover .cmtx_image_overlay {
+    opacity: 1;
+}
+
+.cmtx_button_remove {
+    background-color: #d22828;
+    border-radius: 5px;
+    color: $white;
+    min-width: 70px;
+    padding: 5px;
+
+    &:hover {
+        background-color: darken(#d22828, 10%);
+    }
+}
+
+.cmtx_remove_image:hover {
+    background: #c13b2a;
+    color: $white;
+    transition: all 0.2s ease;
+}
