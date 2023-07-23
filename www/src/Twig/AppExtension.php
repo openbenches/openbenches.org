@@ -96,6 +96,8 @@ class AppExtension extends AbstractExtension
 		$mapJavaScript = <<<EOT
 <script>
 
+	var api_url = '$api_url';
+
 	// Set up tile layers
 	var Stadia_Outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
 		minZoom: 2,
@@ -151,10 +153,24 @@ class AppExtension extends AbstractExtension
 	
 	//	Load benches from API
 	async function load_benches() {
-		let url = '$api_url';
-		const response = await fetch(url)
-		var benches_json = await response.json();
-		return benches_json;
+		if (api_url == '') {
+			//	No search set - use TSV
+			let url = '/api/benches.tsv';
+			const response = await fetch(url)
+			var benches_text = await response.text();
+			var rows = benches_text.split(/\\n/);
+			var benches_json = {'features':[]};
+			for(let i = 1; i < rows.length; i++){
+				let cols = rows[i].split(/\\t/);
+				benches_json.features.push({'id':cols[0],'type':'Feature','properties':{'popupContent':cols[3]},'geometry':{'type':'Point','coordinates':[cols[1],cols[2]]}});
+			}
+			return benches_json;
+		} else {
+			let url = '$api_url';
+			const response = await fetch(url)
+			var benches_json = await response.json();
+			return benches_json;
+		}
 	}
 
 	async function main() {
@@ -177,31 +193,17 @@ class AppExtension extends AbstractExtension
 			var longt = bench.geometry.coordinates[0];
 			var benchID = bench.id;
 			var title = bench.properties.popupContent + "<br><a href='/bench/"+bench.id+"/'>View details</a>";
+			if(typeof lat !== "undefined" && typeof longt !== "undefined"){
+				//	Check for strange values in TSV
+				marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: false });
 		
-			marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: $draggable });
-		
-			marker.bindPopup(title);
-			markers.addLayer(marker);
-		}
-
-		//	If this is editable
-		if ( $draggable == true ) {
-			var coordinates = document.getElementById('coordinates');
-			var longitude   = document.getElementById('newLongitude');
-			var latitude    = document.getElementById('newLatitude');
-
-			marker.on('dragend', function(event){
-				newLat =  event.target._latlng.lat.toPrecision(7);
-				newLong = event.target._latlng.lng.toPrecision(7);
-				coordinates.value = newLat + ',' + newLong;
-				longitude.value   = newLong;
-				latitude.value    = newLat;
-			});
+				marker.bindPopup(title);
+				markers.addLayer(marker);	
+			}
 		}
 
 		//	Add the clusters to the map
 		map.addLayer(markers);
-
 		
 		//	Add the tiles layers
 		var baseMaps = {
