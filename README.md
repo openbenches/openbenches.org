@@ -10,6 +10,7 @@ You can [sponsor OpenBenches on GitHub](https://github.com/sponsors/openbenches/
 
 We'd like to thank the following sponsors for their generosity:
 
+* [decoded.legal](https://decoded.legal/)
 * [Richard Leyton](https://leyton.org/)
 * [Ben Smith](https://bensmith.uk/)
 
