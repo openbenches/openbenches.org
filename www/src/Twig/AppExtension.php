@@ -89,8 +89,9 @@ class AppExtension extends AbstractExtension
 	}
 
 	public function map_javascript( $api_url="", $api_query="", $lat = "16.3", $long="0", $zoom = "2", $draggable = "false" ) {
-		$esri_api    = $_ENV['ESRI_API_KEY'];
-		$thunder_api = $_ENV['THUNDERFOREST_API_KEY'];
+		$esri_api     = $_ENV['ESRI_API_KEY'];
+		$thunder_api  = $_ENV['THUNDERFOREST_API_KEY'];
+		$maptiler_api = $_ENV['MAPTILER_API_KEY'];
 		$api_url .= $api_query;
 		$mapJavaScript = <<<EOT
 <script>
@@ -126,6 +127,14 @@ class AppExtension extends AbstractExtension
 		maxZoom: 22,
 		attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
 		id: 'thunderforest'
+	});
+
+	var MapTiler = L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=$maptiler_api', {
+		minZoom: 2,
+		maxNativeZoom: 19,
+		maxZoom: 22,
+		attribution: '© <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
+		id: 'maptiler'
 	});
 
 	//	Settings for map		
@@ -199,16 +208,36 @@ class AppExtension extends AbstractExtension
 			"Map View": Stadia_Outdoors,
 			"Mapnik": OpenStreetMap_Mapnik,
 			"Satellite View": ESRI_Satellite,
-			"Outdoors Map": Thunderforest
+			"Outdoors Map": Thunderforest,
+			"Street Map": MapTiler
 		};
 	
 		// Rotate between mapping providers depending on date
-		var day = new Date().getDate();
-		if (day % 2 == 1) {
-			Stadia_Outdoors.addTo(map);
-		} else {
-			OpenStreetMap_Mapnik.addTo(map);
-		}
+		switch (new Date().getDay()) {
+			case 0:
+				//	Sunday
+				OpenStreetMap_Mapnik.addTo(map);
+				break;
+			case 1:
+				MapTiler.addTo(map);
+				break;
+			case 2:
+				Thunderforest.addTo(map);
+				break;
+			case 3:
+				OpenStreetMap_Mapnik.addTo(map);
+				break;
+			case 4:
+				MapTiler.addTo(map);
+				break;
+			case 5:
+				Thunderforest.addTo(map);
+				break;
+			case 6:
+				//	Saturday
+				MapTiler.addTo(map);
+				//Stadia_Outdoors.addTo(map);
+		 }
 	
 		L.control.layers(baseMaps).addTo(map);
 	
