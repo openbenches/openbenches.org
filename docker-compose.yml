@@ -1,0 +1,32 @@
+version: "3.6"
+services:
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: openbenc_benches
+      MARIADB_USER: openbenches
+      MYSQL_PASSWORD: badpassword
+      MARIADB_ROOT_PASSWORD: badpassword
+    volumes:
+      - ./database:/scripts:ro
+      - ./db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh:ro
+  php:
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www/symfony_docker
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - ./www:/var/www/symfony_docker
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - database
