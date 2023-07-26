@@ -1,12 +1,11 @@
-FROM php:8.1-fpm
+FROM php:8.2-fpm-bookworm
 
 RUN apt update \
-    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip \
-    && docker-php-ext-install intl opcache pdo pdo_mysql \
-    && pecl install apcu \
-    && docker-php-ext-enable apcu \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install zip
+    && apt-get install -y git libmagickwand-dev zip
+RUN pecl install imagick
+RUN docker-php-ext-enable imagick
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-enable pdo_mysql
 
 WORKDIR /var/www/symfony_docker
 
@@ -16,8 +15,8 @@ RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 
 COPY ./www .
-RUN composer installer
 
+# RUN composer install
 # RUN ./composer.phar require symfony/twig-pack
 # RUN ./composer.phar require symfony/twig-bundle
 # RUN ./composer.phar require doctrine/dbal

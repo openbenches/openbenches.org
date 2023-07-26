@@ -3,6 +3,8 @@ services:
   database:
     image: mariadb
     restart: always
+    ports:
+      - 3306:3306
     environment:
       MARIADB_DATABASE: openbenc_benches
       MARIADB_USER: openbenches
