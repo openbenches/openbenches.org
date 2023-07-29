@@ -117,7 +117,7 @@ Make a copy of `.env` called `.env.local`
 Open it and add the database variables:
 
 ```
-DATABASE_URL="mysqli://openbenches:badpassword@127.0.0.1:3306/openbenches_db?&charset=utf8mb4"
+DATABASE_URL="mysqli://openbenches:badpassword@127.0.0.1:3306/openbenc_benches?&charset=utf8mb4"
 ```
 
 Follow the instructions in that file to add all the necessary API keys and other configuration variables.
