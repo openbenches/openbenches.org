@@ -99,7 +99,7 @@ class AppExtension extends AbstractExtension
 	var api_url = '$api_url';
 
 	// Set up tile layers
-	var Stadia_Outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+	var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
 		minZoom: 2,
 		maxNativeZoom: 19,
 		maxZoom: 22,
@@ -227,7 +227,7 @@ class AppExtension extends AbstractExtension
 				Thunderforest.addTo(map);
 				break;
 			case 3:
-				OpenStreetMap_Mapnik.addTo(map);
+				Stadia_Outdoors.addTo(map);
 				break;
 			case 4:
 				MapTiler.addTo(map);
@@ -237,8 +237,7 @@ class AppExtension extends AbstractExtension
 				break;
 			case 6:
 				//	Saturday
-				MapTiler.addTo(map);
-				//Stadia_Outdoors.addTo(map);
+				Stadia_Outdoors.addTo(map);
 		 }
 	
 		L.control.layers(baseMaps).addTo(map);
