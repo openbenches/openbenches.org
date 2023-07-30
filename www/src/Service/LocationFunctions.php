@@ -158,7 +158,7 @@ class LocationFunctions
 		} 	if (1 == $provider) {
 			$geocode_api_key = $_ENV['GEOAPIFY_API_KEY'];
 			// $location = urlencode($location);
-			$geocodeAPI = "https://api.geoapify.com/v1/geocode/reverse?lat={$latitude}&lon={$longitude}&apiKey={$geocode_api_key}";
+			$geocodeAPI = "https://api.geoapify.com/v1/geocode/reverse?lat={$latitude}&lon={$longitude}&apiKey={$geocode_api_key}&type=street";
 			$options = array(
 				'http'=>array(
 					'method'=>"GET",
@@ -170,15 +170,15 @@ class LocationFunctions
 			$locationData = json_decode($locationJSON);
 
 			try {
-				//	Pre-formated address from GeoAPIfy
-				$formatted_address = $locationData->features[0]->properties->formatted;
-				//	Postcode needs removing in order to reduce precision when searching
-				$postcode = $locationData->features[0]->properties->postcode ?? "";
-				//	Delete the postcode from the pre-formatted address
-				$formatted_address = str_replace($postcode, "", $formatted_address);
-				$formatted_explode = array_map('trim', explode(',', $formatted_address));
-				$formatted_explode = array_filter($formatted_explode);
-				$formatted_address = implode(", " , $formatted_explode);
+				$country = $locationData->features[0]->properties->country;
+				$state   = $locationData->features[0]->properties->state;
+				$county  = $locationData->features[0]->properties->county;
+				$city    = $locationData->features[0]->properties->city;
+				$suburb  = $locationData->features[0]->properties->suburb;
+				
+				$address_components = array($suburb, $city, $county, $state, $country);
+				$address_components = array_filter($address_components);
+				$formatted_address = implode(", " , $address_components);
 			} catch (Exception $e) {
 				$loc = var_export($locationData);
 				error_log("Caught $e - $loc");
@@ -200,15 +200,15 @@ class LocationFunctions
 			$locationData = json_decode($locationJSON);
 
 			try {
-				//	Pre-formated address from maps.co
-				$formatted_address = $locationData->display_name;
-				//	Postcode needs removing in order to reduce precision when searching
-				$postcode = $locationData->address->postcode;
-				//	Delete the postcode from the pre-formatted address
-				$formatted_address = str_replace($postcode, "", $formatted_address);
-				$formatted_explode = array_map('trim', explode(',', $formatted_address));
-				$formatted_explode = array_filter($formatted_explode);
-				$formatted_address = implode(", " , $formatted_explode);
+				$country = $locationData->address->country;
+				$state   = $locationData->address->state;
+				$county  = $locationData->address->county;
+				$city    = $locationData->address->city;
+				$suburb  = $locationData->address->suburb;
+
+				$address_components = array($suburb, $city, $county, $state, $country);
+				$address_components = array_filter($address_components);
+				$formatted_address = implode(", " , $address_components);
 			} catch (Exception $e) {
 				$loc = var_export($locationData);
 				error_log("Caught $e - $loc");
