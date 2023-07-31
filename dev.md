@@ -1,8 +1,9 @@
 # Local Docker Development
 
-set up your env.local
+This guide was set up using Windows 10, WSL2 and Docker Desktop.
 
-
-
-docker-compose up -d
-docker exec -it openbenchesorg-php-1 composer install
+# Setting up the development containers.
+```console
+foo@bar:~$ whoami
+foo
+```
