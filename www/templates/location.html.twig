@@ -9,8 +9,8 @@
 
 
 	<div id="map"></div>
-	{{ map_javascript( "/api/benches/?truncated=true&media=false", "", lat, lng, "14" ) }}
-	
+	{{ map_javascript( null, null, null, null, null, true, bb_n, bb_e, bb_s, bb_w) }}
+
 	{% if benches is defined %}
 	<div id="search-results">
 		<ol>

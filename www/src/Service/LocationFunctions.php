@@ -17,30 +17,29 @@ class LocationFunctions
 			//	Cache length in seconds
 			$item->expiresAfter(3600);
 
-			//	https://geocode.maps.co/search?q=Bath%20and%20North%20East%20Somerset,%20South%20West%20England,%20England,%20United%20Kingdom
-			$geocodeAPI = "https://geocode.maps.co/search?q={$address_string}";
+			//	https://api.stadiamaps.com/geocoding/v1/search?text=Great%20Bedwyn,%20United%20Kingdom&size=1&api_key=abc123
+			$geocode_api_key = $_ENV['STADIAMAPS_API_KEY'];
+			$geocodeAPI = "https://api.stadiamaps.com/geocoding/v1/search?text=" . urlencode($address_string) . "&size=1&api_key={$geocode_api_key}";
 			$options = array(
-				'http'=>array(
-					'method'=>"GET",
-					'header'=>"User-Agent: OpenBenches.org\r\n"
+				'http'=> array(
+					'method' => "GET"
 				)
 			);
 			$context = stream_context_create($options);
 			$locationJSON = file_get_contents($geocodeAPI, false, $context);
 			$locationData = json_decode($locationJSON);
 
-			if( isset( $locationData[0] ) ) {
-				$lat_ne = $locationData[0]->boundingbox[1];
-				$lng_ne = $locationData[0]->boundingbox[3];
-				$lat_sw = $locationData[0]->boundingbox[0];
-				$lng_sw = $locationData[0]->boundingbox[2];
+			if( isset( $locationData->bbox[0] ) ) {
 
-				$lat = $locationData[0]->lat;
-				$lng = $locationData[0]->lon;
+				//	https://docs.stadiamaps.com/geocoding-search-autocomplete/api-response-format/#standard-envelope
+				$bb_w = $locationData->bbox[0];
+				$bb_s = $locationData->bbox[1];
+				$bb_e = $locationData->bbox[2];
+				$bb_n = $locationData->bbox[3];
 
-				return [$lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng];
+				return [$bb_n, $bb_e, $bb_s, $bb_w];
 			} else {
-				return ["",      "",      "",      "",      "",   ""];
+				return [null,  null,  null, $locationJSON];
 			}
 	 });
 

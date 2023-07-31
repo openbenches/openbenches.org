@@ -88,11 +88,16 @@ class AppExtension extends AbstractExtension
 		return $value;
 	}
 
-	public function map_javascript( $api_url="", $api_query="", $lat = "16.3", $long="0", $zoom = "2", $draggable = "false" ) {
+	public function map_javascript( $api_url="", $api_query="", $lat = "16.3", $long = "0", $zoom = "2", $draggable = "false", $bb_n = null, $bb_e = null, $bb_s = null, $bb_w = null,  ) {
 		$esri_api     = $_ENV['ESRI_API_KEY'];
 		$thunder_api  = $_ENV['THUNDERFOREST_API_KEY'];
 		$maptiler_api = $_ENV['MAPTILER_API_KEY'];
 		$api_url .= $api_query;
+		if ( null == $lat ) {
+			$lat  = "16.3";
+			$long = "0";
+			$zoom = "2";
+		}
 		$mapJavaScript = <<<EOT
 <script>
 
@@ -251,6 +256,8 @@ class AppExtension extends AbstractExtension
 		//	View of the map
 		map.setView([{$lat}, {$long}], {$zoom});
 
+		//	Snap to bounding box if any
+		map.fitBounds([ [{$bb_n},{$bb_e}], [{$bb_s}, {$bb_w}] ]);
 	}
 	
 	//	Change URl bar to show current location (frontpage only)

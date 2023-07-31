@@ -23,7 +23,7 @@
 		{#{ map_javascript("/api/bench/", benchID, latitude, longitude, 16, true ) }#}
 		<script>
 			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+			L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png').addTo(map);
 			map.setView([{{ latitude }},{{ longitude }}], 16);
 			let url = '/api/bench/{{ benchID }}';
 			const response = fetch(url).then(response => response.json()).then(response => {
