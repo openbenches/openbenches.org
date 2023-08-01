@@ -28,17 +28,17 @@ A [PHP FPM](https://hub.docker.com/_/php/) container is built, based on the php:
 It installs Symfony and Composer, and copies the www project code to /var/www/symfony_docker
 
 ## Volume Mapping
-When instantiating the containers, custom volume mapping is used to mount parts of the project source to the containers/
+When instantiating the containers, custom volume mapping is used to mount parts of the project source to the containers.
 
 ### Nginx
-- www folder is mapped to /var/www/symfony_docker
-- An Nginx configuation file is mounted onto the Nginx container, setting up root directories, access and error log locations, and passing PHP requests through to the php container, on port 9000
+- ```www``` folder is mapped to ```/var/www/symfony_docker```
+- ```nginx/default.conf``` - an Nginx configuation file is mounted onto the Nginx container at ```/etc/nginx/conf.d/default.conf```, setting up root directories, access and error log locations, and passing PHP requests through to the php container, on port 9000
 
 ### PHP
-- www folder is mapped to /var/www/symfony_docker
-- docker_config/www/.env.docker is mapped to /var/www/.env.docker
-- docker_config/www/config/packages/cache.yaml is mapped to /var/www/symfony_docker/config/packages/cache.yaml as read only
-  - Configures the caching to use /tmp 
+- ```www``` folder is mapped to ```/var/www/symfony_docker```
+- ```docker_config/www/.env.docker``` is mapped to /var/www/.env.docker
+- ```docker_config/www/config/packages/cache.yaml``` is mapped to ```/var/www/symfony_docker/config/packages/cache.yaml``` as read only
+  - Configures the caching to use ```/tmp``` to store cache data.
 
 
 
