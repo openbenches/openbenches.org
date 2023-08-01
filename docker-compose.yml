@@ -20,6 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
+      - ./docker_config/www/.env.docker:/var/www/.env.local
       - ./www:/var/www/symfony_docker
       - ./docker_config/www/config/packages/cache.yaml:/var/www/symfony_docker/config/packages/cache.yaml:ro
   nginx:
