@@ -30,9 +30,9 @@ It installs Symfony and Composer, and copies the www project code to /var/www/sy
 ## Volume Mapping
 When instantiating the containers, custom volume mapping is used to mount parts of the project source to the containers/
 
-### NGINX
+### Nginx
 - www folder is mapped to /var/www/symfony_docker
-- An NGINX configuation file is mounted onto the NGINX container, setting up root directories, access and error log locations, and passing PHP requests through to the php container, on port 9000
+- An Nginx configuation file is mounted onto the Nginx container, setting up root directories, access and error log locations, and passing PHP requests through to the php container, on port 9000
 
 ### PHP
 - www folder is mapped to /var/www/symfony_docker
