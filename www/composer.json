@@ -12,20 +12,21 @@
         "doctrine/doctrine-bundle": "*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/migrations": "*",
+        "doctrine/orm": "*",
         "eleirbag89/mastodonbotphp": "^0.1.0",
         "ferrysyahrinal/twifer": "^2.2",
         "nyholm/psr7": "^1.8",
         "symfony/apache-pack": "^1.0",
-        "symfony/cache": "6.2.*",
-        "symfony/console": "6.2.*",
-        "symfony/dotenv": "6.2.*",
+        "symfony/cache": "6.3.*",
+        "symfony/console": "6.3.*",
+        "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "6.2.*",
-        "symfony/http-client": "6.2.*",
-        "symfony/mime": "6.2.*",
-        "symfony/runtime": "6.2.*",
-        "symfony/twig-bundle": "6.2.*",
-        "symfony/yaml": "6.2.*",
+        "symfony/framework-bundle": "6.3.*",
+        "symfony/http-client": "6.3.*",
+        "symfony/mime": "6.3.*",
+        "symfony/runtime": "6.3.*",
+        "symfony/twig-bundle": "6.3.*",
+        "symfony/yaml": "6.3.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^3.0"
     },
@@ -75,7 +76,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.2.*"
+            "require": "6.3.*"
         }
     }
 }
