@@ -15,15 +15,24 @@ This is a [mariadb](https://hub.docker.com/_/mariadb) instance, based on the def
 
 ![Warning displayed when trying to connect from MySQL WorkBench to MariaDB container](https://github.com/computamike/openbenches.org/assets/464876/e5801a05-8a3e-468f-9e7b-de663e61c7b8)
 
-As part of the container start up, the Database scripts are run, seeding the database with (at the time of writing 1700 benches)
+As part of the container start up, the Database scripts are run, seeding the database with (at the time of writing) 1664 benches.
 
 ### NGINX
 An Nginx proxy has been set up to serve static contant from the site.  It listens to port 80, and serves static content from the public folder - typically CSS, Fonts, images etc.
 
 Requests for PHP exection are passed through to the PHP FPM container
 
+### PHP FPM Container
+A [PHP FPM](https://hub.docker.com/_/php/) container is built, based on the php:8.2-fpm-bookworm container image - this script installs libmagickwand, zip, and sets up some PECL extensions.
 
+It installs Symfony and Composer, and copies the www project code to /var/www/symfony_docker
 
+## Volume Mapping
+When instantiating the containers, custom volume mapping is used to mount parts of the project source to the containers/
+
+### NGINX
+- www folder is mapped to /var/www/symfony_docker
+- An NGINX configuation file is mounted onto the NGINX container, setting up root directories, access and error logs
 
 
 # Setting up the development containers.
