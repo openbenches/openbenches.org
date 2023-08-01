@@ -609,3 +609,9 @@ td.count {
 	text-align:right;
 	font-family: monospace;
 }
+
+.leaflet-control-layers-selector{
+	opacity: 1;
+	width: 1em;
+	vertical-align: bottom;
+}

@@ -213,7 +213,7 @@ class AppExtension extends AbstractExtension
 		//	Add the tiles layers
 		var baseMaps = {
 			"Map View": Stadia_Outdoors,
-			"Mapnik": OpenStreetMap_Mapnik,
+			"Open Street Map": OpenStreetMap_Mapnik,
 			"Satellite View": ESRI_Satellite,
 			"Outdoors Map": Thunderforest,
 			"Street Map": MapTiler
