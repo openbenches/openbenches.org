@@ -32,7 +32,15 @@ When instantiating the containers, custom volume mapping is used to mount parts 
 
 ### NGINX
 - www folder is mapped to /var/www/symfony_docker
-- An NGINX configuation file is mounted onto the NGINX container, setting up root directories, access and error logs
+- An NGINX configuation file is mounted onto the NGINX container, setting up root directories, access and error log locations, and passing PHP requests through to the php container, on port 9000
+
+### PHP
+- www folder is mapped to /var/www/symfony_docker
+- docker_config/www/.env.docker is mapped to /var/www/.env.docker
+- docker_config/www/config/packages/cache.yaml is mapped to /var/www/symfony_docker/config/packages/cache.yaml as read only
+  - Configures the caching to use /tmp 
+
+
 
 
 # Setting up the development containers.
