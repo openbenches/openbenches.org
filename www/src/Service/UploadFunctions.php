@@ -19,7 +19,8 @@ class UploadFunctions
 		//	Get the address from the location
 		$locationFunctions = new LocationFunctions();
 		$address = $locationFunctions->getAddress($latitude, $longitude);
-
+		$address = html_entity_decode($address, ENT_QUOTES , "UTF-8");
+		
 		//	Trim errant whitespace from the end before inserting
 		$inscription = rtrim($inscription);
 
