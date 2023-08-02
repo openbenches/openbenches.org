@@ -250,6 +250,14 @@ A lot..." required></textarea>
 					$("#map-hidden").show();
 					$("#latlong-hidden").show();
 
+					var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+						minZoom: 2,
+						maxNativeZoom: 19,
+						maxZoom: 22,
+						attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+						id: 'stadia.outdoors'
+					});
+
 					var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 						minZoom: 2,
 						maxNativeZoom: 19,
@@ -266,6 +274,22 @@ A lot..." required></textarea>
 						id: 'esri.satellite'
 					});
 
+					var Thunderforest = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey={{ app.request.server.get('THUNDERFOREST_API_KEY') }}', {
+						minZoom: 2,
+						maxNativeZoom: 19,
+						maxZoom: 22,
+						attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
+						id: 'thunderforest'
+					});
+
+					var MapTiler = L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key={{ app.request.server.get('MAPTILER_API_KEY') }}', {
+						minZoom: 2,
+						maxNativeZoom: 19,
+						maxZoom: 22,
+						attribution: '© <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
+						id: 'maptiler'
+					});
+
 					if (map != null){
 						map.remove();
 					}
@@ -278,8 +302,11 @@ A lot..." required></textarea>
 					// Centre the map
 					map.setView([latitude, longitude], 19);
 					var baseMaps = {
-						"Mapnik": OpenStreetMap_Mapnik,
-						"Satellite View": ESRI_Satellite
+						"Map View": Stadia_Outdoors,
+						"Open Street Map": OpenStreetMap_Mapnik,
+						"Satellite View": ESRI_Satellite,
+						"Outdoors Map": Thunderforest,
+						"Street Map": MapTiler
 					};
 
 					OpenStreetMap_Mapnik.addTo(map);

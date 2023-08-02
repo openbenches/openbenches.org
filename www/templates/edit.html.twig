@@ -23,8 +23,57 @@
 		{#{ map_javascript("/api/bench/", benchID, latitude, longitude, 16, true ) }#}
 		<script>
 			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})
-			L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png').addTo(map);
+			var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+				minZoom: 2,
+				maxNativeZoom: 19,
+				maxZoom: 22,
+				attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+				id: 'stadia.outdoors'
+			});
+
+			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				minZoom: 2,
+				maxNativeZoom: 19,
+				maxZoom: 22,
+				attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				id: 'osm.mapnik'
+			});
+
+			var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token={{ app.request.server.get('ESRI_API_KEY') }}', {
+				minZoom: 2,
+				maxNativeZoom: 19,
+				maxZoom: 22,
+				attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
+				id: 'esri.satellite'
+			});
+
+			var Thunderforest = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey={{ app.request.server.get('THUNDERFOREST_API_KEY') }}', {
+				minZoom: 2,
+				maxNativeZoom: 19,
+				maxZoom: 22,
+				attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
+				id: 'thunderforest'
+			});
+
+			var MapTiler = L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key={{ app.request.server.get('MAPTILER_API_KEY') }}', {
+				minZoom: 2,
+				maxNativeZoom: 19,
+				maxZoom: 22,
+				attribution: '© <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
+				id: 'maptiler'
+			});
 			map.setView([{{ latitude }},{{ longitude }}], 16);
+			var baseMaps = {
+				"Map View": Stadia_Outdoors,
+				"Open Street Map": OpenStreetMap_Mapnik,
+				"Satellite View": ESRI_Satellite,
+				"Outdoors Map": Thunderforest,
+				"Street Map": MapTiler
+			};
+
+			OpenStreetMap_Mapnik.addTo(map);
+
+			L.control.layers(baseMaps).addTo(map);
 			let url = '/api/bench/{{ benchID }}';
 			const response = fetch(url).then(response => response.json()).then(response => {
 				var bench = response.features[0];

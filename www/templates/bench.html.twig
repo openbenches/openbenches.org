@@ -65,6 +65,8 @@
 
 	<div itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
 		<div id="map"></div>
+		{{ map_javascript( "/api/bench/", bench_id, latitude, longitude, 17, false ) }}
+
 
 		{% if addresses is defined %}
 		<address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
@@ -76,6 +78,7 @@
 		</address>
 		{% endif %}
 
+{#
 		<script>
 			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -85,7 +88,7 @@
 				L.geoJson(response).addTo(map);
 			})
 		</script>
-
+#}
 		<meta itemprop="latitude"  content="{{ longitude }}">
 		<meta itemprop="longitude" content="{{ latitude }}">
 	</div>
