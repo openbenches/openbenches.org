@@ -98,9 +98,9 @@ Now set up the database using the files in the database directory.
 
 ```
 cd /path/to/where/you/put/the/repo/openbenches/database
-mysql -u openbenches -pbadpassword -D openbenc_benches < openbenc_benches_database.sql 
-for f in openbenc_benches_table_*;do mysql -u openbenches -pbadpassword -D openbenc_benches < "${f}";done
-mysql -u openbenches -pbadpassword -D openbenc_benches < openbenc_benches_extra.sql 
+mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < openbenc_benches_database.sql 
+for f in openbenc_benches_table_*;do mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < "${f}";done
+mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < openbenc_benches_extra.sql 
 ```
 
 You should now be able to get some information about a bench from the database
