@@ -246,7 +246,7 @@ class AppExtension extends AbstractExtension
 				Stadia_Outdoors.addTo(map);
 		 }
 	
-		L.control.layers(baseMaps).addTo(map);
+		L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
 	
 		//	Cluster options
 		var markers = L.markerClusterGroup({

@@ -73,7 +73,7 @@
 
 			OpenStreetMap_Mapnik.addTo(map);
 
-			L.control.layers(baseMaps).addTo(map);
+			L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
 			let url = '/api/bench/{{ benchID }}';
 			const response = fetch(url).then(response => response.json()).then(response => {
 				var bench = response.features[0];

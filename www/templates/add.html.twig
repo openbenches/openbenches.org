@@ -311,7 +311,7 @@ A lot..." required></textarea>
 
 					OpenStreetMap_Mapnik.addTo(map);
 
-					L.control.layers(baseMaps).addTo(map);
+					L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
 
 					var marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
 
