@@ -14,4 +14,7 @@ crawl-delay: 100
 User-agent: dotbot
 Disallow:/location/
 
+User-agent: GPTBot
+Disallow: /
+
 sitemap: https://openbenches.org/sitemap.xml
