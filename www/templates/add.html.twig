@@ -282,14 +282,6 @@ A lot..." required></textarea>
 						id: 'thunderforest'
 					});
 
-					var MapTiler = L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key={{ app.request.server.get('MAPTILER_API_KEY') }}', {
-						minZoom: 2,
-						maxNativeZoom: 19,
-						maxZoom: 22,
-						attribution: '© <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
-						id: 'maptiler'
-					});
-
 					if (map != null){
 						map.remove();
 					}
@@ -305,8 +297,7 @@ A lot..." required></textarea>
 						"Map View": Stadia_Outdoors,
 						"Open Street Map": OpenStreetMap_Mapnik,
 						"Satellite View": ESRI_Satellite,
-						"Outdoors Map": Thunderforest,
-						"Street Map": MapTiler
+						"Outdoors Map": Thunderforest
 					};
 
 					OpenStreetMap_Mapnik.addTo(map);
