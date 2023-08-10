@@ -15,20 +15,5 @@ RUN cp /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 
 COPY ./www .
-
-# RUN composer install
-# RUN ./composer.phar require symfony/twig-pack
-# RUN ./composer.phar require symfony/twig-bundle
-# RUN ./composer.phar require doctrine/dbal
-# RUN ./composer.phar require symfony/cache
-# RUN ./composer.phar require symfony/apache-pack
-# RUN ./composer.phar require symfony/http-client
-# RUN ./composer.phar require symfony/mime
-
-
-
-
-# FROM ubuntu:latest
-# ARG DEBIAN_FRONTEND=noninteractive
-# RUN apt-get update 
-# RUN apt-get install -y git php-cli php-fpm php-pecl-imagick php-mbstring php-mysqlnd mariadb-server httpd mod_ssl
+#
+# TODO : Add a CA Server?

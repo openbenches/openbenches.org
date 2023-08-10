@@ -1,6 +1,9 @@
 version: "3.6"
+volumes:
+  logs:
 services:
   database:
+    container_name: database
     image: mariadb
     restart: always
     ports:
@@ -14,6 +17,7 @@ services:
       - ./database:/scripts:ro
       - ./db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh:ro
   php:
+    container_name: php
     depends_on:
       - database
     build:
@@ -22,7 +26,8 @@ services:
     volumes:
       - ./docker_config/www/.env.docker:/var/www/.env.local
       - ./www:/var/www/symfony_docker
-      - ./docker_config/www/config/packages/cache.yaml:/var/www/symfony_docker/config/packages/cache.yaml:ro
+      - logs:/var/www/symfony_docker/var
+      # - ./docker_config/www/config/packages/cache.yaml:/var/www/symfony_docker/config/packages/cache.yaml:ro
   nginx:
     container_name: nginx
     image: nginx:stable-alpine
