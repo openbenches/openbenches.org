@@ -20,12 +20,14 @@
 			{% elseif media.mediaType == "video" %}
 			<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 			{% else %}
-			<img src="{{ media.url }}"
-				  alt="{{ media.alt }}"
-				width="{{ media.width}}"
-			  height="{{ media.height }}"
-				class="proxy-image"
-			 loading="lazy">
+			<a href="{{ media.urlFull }}">
+				<img src="{{ media.url }}"
+					alt="{{ media.alt }}"
+					width="{{ media.width}}"
+				height="{{ media.height }}"
+					class="proxy-image"
+				loading="lazy">
+			</a>
 
 			<span class='caption'>
 				{% if media.importURL is not null %}
