@@ -44,16 +44,12 @@ When instantiating the containers, custom volume mapping is used to mount parts 
 
 
 # Setting up the development containers.
-```console
-foo@bar:~$ whoami
-foo
-```
-
-
 
 ```console
 $ docker-compose up -d
 ```
+
+
 
 
 ```console
@@ -67,3 +63,6 @@ set up your env.local
 
 docker-compose up -d
 docker exec -it openbenchesorg-php-1 composer install
+
+
+# 

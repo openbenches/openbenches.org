@@ -2,7 +2,8 @@ FROM php:8.2-fpm-bookworm
 
 RUN apt update \
     && apt-get install -y git libmagickwand-dev zip
-RUN pecl install imagick
+RUN pecl install imagick xdebug
+RUN docker-php-ext-enable xdebug
 RUN docker-php-ext-enable imagick
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 RUN docker-php-ext-enable pdo_mysql
