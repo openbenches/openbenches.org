@@ -23,9 +23,9 @@ An Nginx proxy has been set up to serve static contant from the site.  It listen
 Requests for PHP exection are passed through to the PHP FPM container
 
 ### PHP FPM Container
-A [PHP FPM](https://hub.docker.com/_/php/) container is built, based on the php:8.2-fpm-bookworm container image - this script installs libmagickwand, zip, and sets up some PECL extensions.
+A [PHP FPM](https://hub.docker.com/_/php/) container is built, based on the [php:8.2-fpm-bookworm](https://hub.docker.com/layers/library/php/8.2.10-fpm-bookworm/images/sha256-47b377aa55e11f9b6aa3d1e457857cf7c5e3a480760afaba8ff1bc129cc2e15f?context=explore) container image - this script installs libmagickwand, zip, and sets up some PECL extensions.
 
-It installs Symfony and Composer, and copies the www project code to /var/www/symfony_docker
+It installs (Composer)[https://getcomposer.org/], and copies the www project code to /var/www/symfony_docker
 
 ## Volume Mapping
 When instantiating the containers, custom volume mapping is used to mount parts of the project source to the containers.
@@ -44,25 +44,31 @@ When instantiating the containers, custom volume mapping is used to mount parts 
 
 
 # Setting up the development containers.
-
+Firstly instantiate the development containers with the command : 
 ```console
 $ docker-compose up -d
 ```
-
-
-
+Now to install the PHP dependencies, `composer install` needs to be run
 
 ```console
-$ docker exec -it openbenchesorg-php-1 composer install
+$ docker exec -it php composer install
 ```
 
+This will install the dependencies.
 
-set up your env.local
+# Setting up the .env file.
+To connecto the database, a connection string will be required.
 
+```
+DATABASE_URL="mysqli://openbenches:badpassword@database:3306/openbenc_benches?&charset=utf8mb4"
+```
+# Debugging using Xdebug
+Xdebug is automatically installed - however for typical operation it is switched off - there is a speed cost associated with running the Xdebug debugging system.
 
+To activate Xdebug - update the xdebug.ini, removing the leading ; from the line : 
 
-docker-compose up -d
-docker exec -it openbenchesorg-php-1 composer install
+```
+;zend_extension=xdebug
+```
 
-
-# 
+Restart the container by issueing 
