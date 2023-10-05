@@ -1,6 +1,0 @@
-FROM nginx
-RUN mkdir openssl && cd openssl
-RUN openssl genrsa -out domain.key 3072
-RUN openssl req -new -out openBenchesWebsite.csr -sha256 -key domain.key -subj "/O=OpenBenches/CN=localhost"
-RUN openssl x509 -req -in openBenchesWebsite.csr -days 365 -signkey domain.key -out nginx-selfsigned.crt -outform PEM
- 
