@@ -16,7 +16,7 @@ services:
       MARIADB_ROOT_PASSWORD: badpassword
     volumes:
       - ../database:/scripts:ro
-      - ../db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh:ro
+      - ./database/db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh:ro
   php:
     container_name: php
     expose:
