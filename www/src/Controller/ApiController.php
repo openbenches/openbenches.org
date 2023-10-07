@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -783,5 +784,72 @@ class ApiController extends AbstractController
 		});
 		
 		return new JsonResponse( $value );
+	}
+
+	#[Route("/api/benches.tsv", name: "api_all_benches_tsv")]
+	public function api_all_benches_tsv() {
+		$request = Request::createFromGlobals();
+
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_all_benches" );
+		$cache_name = "all_benches_tsv";
+
+		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+			//	Cache length in seconds
+			$item->expiresAfter(600); //	10 minutes
+
+			$request = Request::createFromGlobals();
+			
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
+			$conn = DriverManager::getConnection($connectionParams);
+			$queryBuilder = $conn->createQueryBuilder();
+
+			$queryBuilder
+				->select("benches.benchID", "benches.inscription", "benches.latitude", "benches.longitude")
+				->from("benches")
+				->where("benches.published = true AND benches.present = true");
+			$results = $queryBuilder->executeQuery();
+
+			//	Build TSV feature collection array
+		
+			//	Loop through the results to create an array of benches
+			$tsv = "id\tlongitude\tlatitude\tinscription\n";
+
+			while (($row = $results->fetchAssociative()) !== false) {
+
+				$tsv_id = $row["benchID"];
+				$tsv_longitude = $row["longitude"];
+				$tsv_latitude  = $row["latitude"];
+
+				//	Some inscriptions got stored with leading/trailing whitespace
+				$tsv_inscription=trim( $row["inscription"] );
+
+				// If displaying on map need to truncate inscriptions longer than
+				// 128 chars and add in <br> elements
+				$tsv_inscriptionTruncate = mb_substr( $tsv_inscription, 0, 64 );
+				if ( $tsv_inscriptionTruncate !== $tsv_inscription ) {
+					$tsv_inscription = $tsv_inscriptionTruncate . "…";
+				}
+
+				$tsv_inscription = str_replace(array("\r\n", "\r", "\n"), "<br />", $tsv_inscription);
+
+				//	Remove tabs from inscription
+				$tsv_inscription = trim( preg_replace( '/\t+/', '', $tsv_inscription ) );
+				
+				$tsv .= "{$tsv_id}\t{$tsv_longitude}\t{$tsv_latitude}\t{$tsv_inscription}\n";				
+			}
+
+			return trim($tsv);
+		});
+
+		$response = new Response(
+			'Content',
+			Response::HTTP_OK,
+			['content-type' => 'text/plain']
+		);
+
+		$response->setContent($value);
+
+		return $response;
 	}
 }

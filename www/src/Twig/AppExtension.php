@@ -88,15 +88,22 @@ class AppExtension extends AbstractExtension
 		return $value;
 	}
 
-	public function map_javascript( $api_url="", $api_query="", $lat = "16.3", $long="0", $zoom = "2", $draggable = "false" ) {
-		$esri_api    = $_ENV['ESRI_API_KEY'];
-		$thunder_api = $_ENV['THUNDERFOREST_API_KEY'];
-		$api_url .= $api_query;
+	public function map_javascript( $api="", $api_query="", $lat = "16.3", $long = "0", $zoom = "2", $draggable = false, $bb_n = null, $bb_e = null, $bb_s = null, $bb_w = null,  ) {
+		$esri_api     = $_ENV['ESRI_API_KEY'];
+		$thunder_api  = $_ENV['THUNDERFOREST_API_KEY'];
+		$api_url = $api . $api_query;
+		if ( null == $lat ) {
+			$lat  = "16.3";
+			$long = "0";
+			$zoom = "2";
+		}
 		$mapJavaScript = <<<EOT
 <script>
 
+	var api_url = '$api_url';
+
 	// Set up tile layers
-	var Stadia_Outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+	var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
 		minZoom: 2,
 		maxNativeZoom: 19,
 		maxZoom: 22,
@@ -142,10 +149,24 @@ class AppExtension extends AbstractExtension
 	
 	//	Load benches from API
 	async function load_benches() {
-		let url = '$api_url';
-		const response = await fetch(url)
-		var benches_json = await response.json();
-		return benches_json;
+		if (api_url == '') {
+			//	No search set - use TSV
+			let url = '/api/benches.tsv';
+			const response = await fetch(url)
+			var benches_text = await response.text();
+			var rows = benches_text.split(/\\n/);
+			var benches_json = {'features':[]};
+			for(let i = 1; i < rows.length; i++){
+				let cols = rows[i].split(/\\t/);
+				benches_json.features.push({'id':cols[0],'type':'Feature','properties':{'popupContent':cols[3]},'geometry':{'type':'Point','coordinates':[cols[1],cols[2]]}});
+			}
+			return benches_json;
+		} else {
+			let url = '$api_url';
+			const response = await fetch(url)
+			var benches_json = await response.json();
+			return benches_json;
+		}
 	}
 
 	async function main() {
@@ -161,56 +182,61 @@ class AppExtension extends AbstractExtension
 			//	Placeholder. Used to display images
 		});
 
-		//	Add pop-up to markers
+		//	Add pop-up to markers - if this isn't a single bench on display / edit
 		for (var i = 0; i < benches.features.length; i++) {
 			var bench = benches.features[i];
 			var lat = bench.geometry.coordinates[1];
 			var longt = bench.geometry.coordinates[0];
 			var benchID = bench.id;
 			var title = bench.properties.popupContent + "<br><a href='/bench/"+bench.id+"/'>View details</a>";
-		
-			marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: $draggable });
-		
-			marker.bindPopup(title);
-			markers.addLayer(marker);
-		}
-
-		//	If this is editable
-		if ( $draggable == true ) {
-			var coordinates = document.getElementById('coordinates');
-			var longitude   = document.getElementById('newLongitude');
-			var latitude    = document.getElementById('newLatitude');
-
-			marker.on('dragend', function(event){
-				newLat =  event.target._latlng.lat.toPrecision(7);
-				newLong = event.target._latlng.lng.toPrecision(7);
-				coordinates.value = newLat + ',' + newLong;
-				longitude.value   = newLong;
-				latitude.value    = newLat;
-			});
+			if(typeof lat !== "undefined" && typeof longt !== "undefined"){
+				//	Check for strange values in TSV
+				marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: "$draggable" });
+				if ( "$api" != "/api/bench/" ) {
+					marker.bindPopup(title);
+				}
+				markers.addLayer(marker);	
+			}
 		}
 
 		//	Add the clusters to the map
 		map.addLayer(markers);
-
 		
 		//	Add the tiles layers
 		var baseMaps = {
 			"Map View": Stadia_Outdoors,
-			"Mapnik": OpenStreetMap_Mapnik,
+			"Open Street Map": OpenStreetMap_Mapnik,
 			"Satellite View": ESRI_Satellite,
 			"Outdoors Map": Thunderforest
 		};
 	
 		// Rotate between mapping providers depending on date
-		var day = new Date().getDate();
-		if (day % 2 == 1) {
-			Stadia_Outdoors.addTo(map);
-		} else {
-			OpenStreetMap_Mapnik.addTo(map);
-		}
+		switch (new Date().getDay()) {
+			case 0:
+				//	Sunday
+				Stadia_Outdoors.addTo(map);
+				break;
+			case 1:
+				OpenStreetMap_Mapnik.addTo(map);
+				break;
+			case 2:
+				Thunderforest.addTo(map);
+				break;
+			case 3:
+				Stadia_Outdoors.addTo(map);
+				break;
+			case 4:
+				OpenStreetMap_Mapnik.addTo(map);
+				break;
+			case 5:
+				Thunderforest.addTo(map);
+				break;
+			case 6:
+				//	Saturday
+				Stadia_Outdoors.addTo(map);
+		 }
 	
-		L.control.layers(baseMaps).addTo(map);
+		L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
 	
 		//	Cluster options
 		var markers = L.markerClusterGroup({
@@ -221,6 +247,8 @@ class AppExtension extends AbstractExtension
 		//	View of the map
 		map.setView([{$lat}, {$long}], {$zoom});
 
+		//	Snap to bounding box if any
+		map.fitBounds([ [{$bb_n},{$bb_e}], [{$bb_s}, {$bb_w}] ]);
 	}
 	
 	//	Change URl bar to show current location (frontpage only)

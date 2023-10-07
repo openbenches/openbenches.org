@@ -48,18 +48,18 @@ class LocationController extends AbstractController
 		$locationFunctions = new LocationFunctions();
 		
 		//	Get the bounding box co-ordinates
-		list($lat_ne, $lng_ne, $lat_sw, $lng_sw, $lat, $lng) = $locationFunctions->getBoundingBox( $address_string );
+		list($bb_n, $bb_e, $bb_s, $bb_w) = $locationFunctions->getBoundingBox( $address_string );
 
-		if( $lat_ne == "" ) {
+		if( $bb_n == null ) {
 			//	Generate an HTTP 404 response
 			throw $this->createNotFoundException("Location not found");
 		}
 
 		//	Get how many benches are in the box
-		$benches_count   = $locationFunctions->getBoundingBoxCount($lat_ne, $lng_ne, $lat_sw, $lng_sw);
+		$benches_count   = $locationFunctions->getBoundingBoxCount($bb_n, $bb_e, $bb_s, $bb_w);
 		
 		//	Get the benches
-		$benches = $locationFunctions->getBoundingBoxBenches($lat_ne, $lng_ne, $lat_sw, $lng_sw, $first, $last);
+		$benches = $locationFunctions->getBoundingBoxBenches($bb_n, $bb_e, $bb_s, $bb_w, $first, $last);
 
 		//	Pagination for the UI
 		if( $get_page > 0 ) {
@@ -81,12 +81,10 @@ class LocationController extends AbstractController
 			"title"        => $address_string,
 			"count"        => $benches_count,
 			"benches"      => $benches,
-			"lat_ne"       => $lat_ne,
-			"lng_ne"       => $lng_ne,
-			"lat_sw"       => $lat_sw,
-			"lng_sw"       => $lng_sw,
-			"lat"          => $lat,
-			"lng"          => $lng,
+			"bb_n"         => $bb_n,
+			"bb_e"         => $bb_e,
+			"bb_s"         => $bb_s,
+			"bb_w"         => $bb_w,
 			"next_url"     => $next_url,
 			"previous_url" => $previous_url,
 		]);

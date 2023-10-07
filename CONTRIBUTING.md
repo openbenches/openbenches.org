@@ -98,9 +98,9 @@ Now set up the database using the files in the database directory.
 
 ```
 cd /path/to/where/you/put/the/repo/openbenches/database
-mysql -u openbenches -pbadpassword -D openbenc_benches < openbenc_benches_database.sql 
-for f in openbenc_benches_table_*;do mysql -u openbenches -pbadpassword -D openbenc_benches < "${f}";done
-mysql -u openbenches -pbadpassword -D openbenc_benches < openbenc_benches_extra.sql 
+mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < openbenc_benches_database.sql 
+for f in openbenc_benches_table_*;do mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < "${f}";done
+mysql -u openbenches -pbadpassword -D openbenc_benches --default-character-set=utf8mb4 < openbenc_benches_extra.sql 
 ```
 
 You should now be able to get some information about a bench from the database
@@ -117,7 +117,7 @@ Make a copy of `.env` called `.env.local`
 Open it and add the database variables:
 
 ```
-DATABASE_URL="mysqli://openbenches:badpassword@127.0.0.1:3306/openbenches_db?&charset=utf8mb4"
+DATABASE_URL="mysqli://openbenches:badpassword@127.0.0.1:3306/openbenc_benches?&charset=utf8mb4"
 ```
 
 Follow the instructions in that file to add all the necessary API keys and other configuration variables.

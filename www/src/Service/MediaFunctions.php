@@ -34,12 +34,18 @@ class MediaFunctions
 		if ( $_ENV["IMAGE_CACHE_PREFIX"] == "" ) {
 			return "//" . $_SERVER['SERVER_NAME'] . "/image/{$sha1}/";
 		}
+
+		if ( $size == null ) {
+			$quality = null;
+		} else {
+			$quality = 60;
+		}
 	
-		// //	https://images.weserv.nl/docs/
+		//	https://images.weserv.nl/docs/
 
 		return $_ENV["IMAGE_CACHE_PREFIX"] .  
 		       $_SERVER['SERVER_NAME'] . 
-		       "/image/{$sha1}/&w={$size}&q=" . $_ENV["IMAGE_CACHE_QUALITY"] . "&output=webp&il";
+		       "/image/{$sha1}/&w={$size}&q={$quality}&output=webp&il";
 	}
 
 	// public function getMediaLocation( $file ) {

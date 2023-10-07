@@ -22,6 +22,13 @@
 		<meta name="twitter:description" property="og:description" content="{{ block('title') }}">
 		{% endif %}
 
+		{% if block("oembed") is defined %}
+		<link rel="alternate"
+			type="application/json+oembed"
+			href="{{ app.request.schemeAndHttpHost }}/oembed?url={{ app.request.schemeAndHttpHost|url_encode }}%2F{{bench_id}}"
+			title="oEmbed" />
+		{% endif %}
+
 		<!-- Pinterest Specific https://developers.pinterest.com/docs/rich-pins/articles/? -->
 		<meta                            property="og:type"         content="place">
 
@@ -34,7 +41,7 @@
 		<meta                            property="fb:app_id"                content="{{ app.request.server.get("FACEBOOK_APP_ID") }}">
 
 		<link rel="stylesheet" href="/css/picnic.css?cache=2023-04-09T16:06">
-		<link rel="stylesheet" href="/css/style.css?cache=2023-07-16T12:09">
+		<link rel="stylesheet" href="/css/style.css?cache=2023-08-01T08:09">
 
 		<link rel="stylesheet" href="/js/leaflet.1.9.3/leaflet.css">
 		<script                 src="/js/leaflet.1.9.3/leaflet.js"></script>

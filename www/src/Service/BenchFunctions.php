@@ -75,7 +75,8 @@ class BenchFunctions
 			$media_array = array();
 			while ( ( $row = $results->fetchAssociative() ) !== false) {
 				$sha1 = $row["sha1"];
-				$image_url = $mediaFunctions->getProxyImageURL( $sha1 );
+				$image_url      = $mediaFunctions->getProxyImageURL( $sha1 );
+				$image_url_full = $mediaFunctions->getProxyImageURL( $sha1, null );
 	
 				//	Who took the photo?
 				$userProvider = $row["provider"];
@@ -129,6 +130,7 @@ class BenchFunctions
 				//	Add the details to the array
 				$media_array[$mediaID] = array(
 								 "url" => $image_url,
+						   "urlFull" => $image_url_full,
 						   "mediaID" => $mediaID,
 								"sha1" => $sha1,
 								 'alt' => $alt,
