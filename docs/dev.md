@@ -66,7 +66,7 @@ docker exec -it php composer install
 will install the dependencies.
 
 # Setting up the .env file.
-To connecto the database, a connection string will be required.
+To connect to the database, a connection string will be required. Containers are accessible via their container name - so the following connection configuration can be used.
 
 ```
 DATABASE_URL="mysqli://openbenches:badpassword@database:3306/openbenc_benches?&charset=utf8mb4"
