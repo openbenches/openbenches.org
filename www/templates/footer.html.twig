@@ -52,11 +52,11 @@ function geoFindMe() {
 if ("serviceWorker" in navigator) {
 	
 	// Register the service worker
-	navigator.serviceWorker.register("/sw.js?cache=2023-12-21T08:30", {
+	navigator.serviceWorker.register("/sw.js?cache=2023-12-21T08:31", {
 		scope: "./"
 	})
 	.then(function (reg) {
-		console.log("[PWA Builder] 2023-05-23 Service worker has been registered for scope: " + reg.scope);
+		console.log("[PWA Builder] 2023-12-21 Service worker has been registered for scope: " + reg.scope);
 	});
 
 }
