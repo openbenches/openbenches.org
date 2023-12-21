@@ -3,7 +3,7 @@
 const CACHE = "openbenches-offline-page";
 
 //	TODO replace with local copy
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
 const offlineFallbackPage = "/offline";
 
