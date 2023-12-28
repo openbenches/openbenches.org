@@ -1,0 +1,49 @@
+version: "3.6"
+name: openbenches
+volumes:
+  logs:
+services:
+  database:
+    container_name: database
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_DATABASE: openbenc_benches
+      MARIADB_USER: openbenches
+      MYSQL_PASSWORD: badpassword
+      MARIADB_ROOT_PASSWORD: badpassword
+    volumes:
+      - ../database:/scripts:ro
+      - ./database/db_setup.sh:/docker-entrypoint-initdb.d/db_setup.sh:ro
+  php:
+    container_name: php
+    expose:
+      - 9003
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: ./www/Dockerfile
+    volumes:
+      - ./www/.env.docker:/var/www/.env.local
+      - ../www:/var/www/symfony_docker
+      - logs:/var/www/symfony_docker/var
+      - ./www/php/xdebug/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./www/php/xdebug/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+  apache:
+    container_name: apache
+    build:
+      context: ./apache
+      dockerfile: dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ../www:/var/www/symfony_docker
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache/openbenches.conf:/usr/local/apache2/conf/extra/openbenches.conf
+    depends_on:
+      - php
+      - database

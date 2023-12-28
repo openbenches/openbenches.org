@@ -2,3 +2,7 @@
 config.php
 key.js
 .env.local
+
+# Cache/Dependencies
+www/var
+www/vendor

@@ -1,0 +1,3 @@
+FROM httpd
+COPY --chmod=0755  generate_ssl.sh .
+RUN sh generate_ssl.sh
