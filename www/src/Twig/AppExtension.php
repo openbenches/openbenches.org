@@ -214,7 +214,8 @@ class AppExtension extends AbstractExtension
 		switch (new Date().getDay()) {
 			case 0:
 				//	Sunday
-				Stadia_Outdoors.addTo(map);
+				// Stadia_Outdoors.addTo(map);
+				OpenStreetMap_Mapnik.addTo(map);
 				break;
 			case 1:
 				OpenStreetMap_Mapnik.addTo(map);
@@ -223,7 +224,8 @@ class AppExtension extends AbstractExtension
 				Thunderforest.addTo(map);
 				break;
 			case 3:
-				Stadia_Outdoors.addTo(map);
+				// Stadia_Outdoors.addTo(map);
+				OpenStreetMap_Mapnik.addTo(map);
 				break;
 			case 4:
 				OpenStreetMap_Mapnik.addTo(map);
@@ -233,7 +235,8 @@ class AppExtension extends AbstractExtension
 				break;
 			case 6:
 				//	Saturday
-				Stadia_Outdoors.addTo(map);
+				// Stadia_Outdoors.addTo(map);
+				OpenStreetMap_Mapnik.addTo(map);
 		 }
 	
 		L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);

@@ -15,7 +15,7 @@ class LocationFunctions
 		//	Cache name is the address string
 		$value = $cache->get($address_string, function (ItemInterface $item) use( $address_string) {
 			//	Cache length in seconds
-			$item->expiresAfter(3600);
+			$item->expiresAfter(3600000);
 
 			//	https://api.stadiamaps.com/geocoding/v1/search?text=Great%20Bedwyn,%20United%20Kingdom&size=1&api_key=abc123
 			$geocode_api_key = $_ENV['STADIAMAPS_API_KEY'];
