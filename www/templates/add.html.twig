@@ -223,7 +223,7 @@ A lot..." required></textarea>
 					if ( typeof gpsInfo == 'undefined' ) {
 						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
-					} else if ( gpsInfo.get("GPSLongitude") == null || isNaN( gpsInfo.get("GPSLongitude") ) ) {
+					} else if ( gpsInfo.get("GPSLongitude") == null ) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						return;
 					}
@@ -246,6 +246,12 @@ A lot..." required></textarea>
 						var longitude = (exifLong[0]*-1) + (( (exifLong[1]*-60) + (exifLong[2]*-1) ) / 3600);											} else {
 						var longitude = exifLong[0] + (( (exifLong[1]*60) + exifLong[2] ) / 3600);
 					}
+
+					if ( isNaN( latitude ) || isNaN( longitude ) ) {
+						alert("Warning! There was an error reading the photo's GPS tags.\nPlease check your camera's settings or add a different photo.");
+						return;
+					}
+
 					//	Show the map
 					$("#map-hidden").show();
 					$("#latlong-hidden").show();
