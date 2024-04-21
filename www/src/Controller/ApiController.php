@@ -178,6 +178,14 @@ class ApiController extends AbstractController
 			$cache_name .= "nomedia";
 		}
 
+		if ( (int)$request->query->get( "latest" ) > 0 ) {
+			$get_latest = true;
+			$cache_name .= "latest_" . (int)$request->query->get( "latest" );
+		} else {
+			$get_latest = false;
+			$cache_name .= "all";
+		}
+
 		$value = $cache->get( $cache_name, function (ItemInterface $item) {
 			//	Cache length in seconds
 			$item->expiresAfter(600); //	10 minutes
@@ -195,6 +203,14 @@ class ApiController extends AbstractController
 				$get_media = false;
 			}
 
+			if ( (int)$request->query->get( "latest" ) > 0 ) {
+				$orderBy = "DESC";
+				$limit   = (int)$request->query->get( "latest" );
+			} else {
+				$orderBy = "ASC";
+				$limit   = 0;
+			}
+
 			$mediaFunctions = new MediaFunctions();
 			$dsnParser = new DsnParser();
 			$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
@@ -204,6 +220,7 @@ class ApiController extends AbstractController
 			$queryBuilder
 				->select("benches.benchID", "benches.inscription", "benches.latitude", "benches.longitude", "benches.added", "media.sha1", "media.licence", "media.media_type", "media.importURL", "media.width", "media.height")
 				->from("benches")
+				->orderBy("benches.benchID", $orderBy)
 				->innerJoin("benches", "media", "media", "benches.benchID = media.benchID")
 				->where("benches.published = true AND benches.present = true");
 			$results = $queryBuilder->executeQuery();
@@ -294,6 +311,12 @@ class ApiController extends AbstractController
 					// Add feature to collection array
 					$benches_array[$row["benchID"]] = $feature;
 				}
+			}
+
+			//	Only get the results asked for
+			//	TODO: Do this more efficiently
+			if ( $limit > 0 ) {
+				$benches_array = array_slice( $benches_array, 0, $limit );
 			}
 
 			foreach( $benches_array as $bench ){

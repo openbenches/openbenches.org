@@ -94,6 +94,11 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 * By default, the API doesn't return media.
 * To get media, append `https://openbenches.org/api/benches?media=true`
 
+#### Latest
+* By default, the API returns *all* results
+* To get the latest 5 benches, append `&latest=5`
+* `https://openbenches.org/api/benches?latest=5`
+
 ### Tags
 * All available folksonomy tags
 	* `https://openbenches.org/api/tags`
