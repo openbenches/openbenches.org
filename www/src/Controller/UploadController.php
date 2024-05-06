@@ -107,9 +107,9 @@ class UploadController extends AbstractController
 				$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
 			}
 			//	Post to Twitter
-			if ( !empty($_ENV["OAUTH_CONSUMER_KEY"]) ){
-				$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
-			}
+			// if ( !empty($_ENV["OAUTH_CONSUMER_KEY"]) ){
+			// 	$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
+			// }
 
 			$response = new Response(
 				"{$benchID}",
