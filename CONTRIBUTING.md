@@ -37,6 +37,8 @@ If you want to use social login:
 ./composer.phar require auth0/symfony
 ```
 
+**You will need to [apply this Symfony patch](https://github.com/auth0/symfony/pull/190)**
+
 ### Social Media
 If you want to post to social media (Mastodon and Twitter):
 
