@@ -22,7 +22,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 class ApiController extends AbstractController
 {
 	#[Route("/api/bench/{bench_id}", name: "api_bench")]
-	public function api_bench(int $bench_id): JsonResponse {
+	public function api_bench(int $bench_id) {
 		$request = Request::createFromGlobals();
 		if ( $request->query->get("truncated") == "false") {
 			$get_truncated = false;
@@ -148,10 +148,36 @@ class ApiController extends AbstractController
 			);
 			# Add feature arrays to feature collection array
 			array_push($geojson["features"], $feature);
+			$response_ok = true; 
+		} else {
+			//	Was this redirected?
+			$sql = "SELECT `mergedID` FROM `merged_benches` WHERE `benchID` = ?";
+			$stmt = $conn->prepare($sql);
+			$stmt->bindValue(1, $bench_id);
+			$results = $stmt->executeQuery();
+			$results_array = $results->fetchAssociative();
+			if (false != $results_array) {
+				$mergedID = $results_array["mergedID"];
+
+				//	Redirect the API response
+				$redirect_url = "/api/bench/{$mergedID}?truncated=" . json_encode( $get_truncated ) . "&media=" . json_encode( $get_media );
+				return $this->redirect( $redirect_url, 301 );
+			} else {
+				//	Generate an HTTP 404 response
+				$response_ok = false; 
+				$geojson = array(
+					"type"		=> "FeatureCollection",
+					"features"  => array()
+				);
+				// throw $this->createNotFoundException( "The bench does not exist" );
+			}
 		}
 
 		//	Render the page
-		$response = new JsonResponse($geojson);	
+		$response = new JsonResponse( $geojson );	
+		if (!$response_ok) {
+			$response->setStatusCode(Response::HTTP_NOT_FOUND);
+		}
 		return $response;
 	}
 
