@@ -23,7 +23,7 @@ header("Content-Type: text/javascript");
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-//	Modified 2018, Terence Eden
+//	Modified 2024, Terence Eden
 
 'use strict';
 
@@ -100,6 +100,31 @@ function sendFileToCloudVision (content) {
 	}).done(displayJSON);
 	// uncomment the line below if you're doing testing without a Google Vision API key and want to fake successful detection of text
 	//setTimeout( function() { displayJSON(JSON.parse('{  "responses": [  { "fullTextAnnotation": { "text": "BUFFY ANNE SUMMERS\\n1981 - 2001\\nBELOVED SISTER\\nDEVOTED FRIEND\\nSHE SAVED THE WORLD\\nA LOT" } }] }')); }, 5000);
+}
+
+function sendURLToCloudVision (content) {
+	console.log("sending this url" + content);
+	// Strip out the file prefix when you convert to json.
+	var request = {
+		requests: [{
+			image: {
+				content: content
+			},
+			features: [{
+				type: 'TEXT_DETECTION'
+			}]
+		}]
+	};
+
+	$('#message').text('Scanning for text...');
+	console.log("posting " + request);
+	$.post({
+		url: CV_URL,
+		data: JSON.stringify(request),
+		contentType: 'application/json'
+	}).fail(function (jqXHR, textStatus, errorThrown) {
+		$('#message').text('ERRORS: ' + textStatus + ' ' + errorThrown);
+	}).done(displayJSON);
 }
 
 /**

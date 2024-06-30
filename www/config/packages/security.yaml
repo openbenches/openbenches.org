@@ -58,6 +58,13 @@ security:
             provider: auth0_provider
             custom_authenticators:
                 - auth0.authenticator
+        flickr:
+            pattern: ^/flickr
+            context: user
+            stateless: false
+            provider: auth0_provider
+            custom_authenticators:
+                - auth0.authenticator
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false

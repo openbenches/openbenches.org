@@ -89,7 +89,7 @@ class UploadFunctions
 	}
 
 
-	public function addMedia( $metadata, $media_type, $benchID, $userID ) : int {
+	public function addMedia( $metadata, $media_type, $benchID, $userID, $licence = "CC BY-SA 4.0", $importURL = null ) : int {
 		$mediaFunctions = new MediaFunctions();
 
 		$file = $metadata["tmp_name"];
@@ -115,7 +115,7 @@ class UploadFunctions
 		if ( !is_dir( $photo_path ) ) {
 			mkdir( $photo_path, 0777, true );
 		}
-		move_uploaded_file($file, $photo_full_path);
+		rename( $file, $photo_full_path );
 
 		//	Add the media to the database
 		$dsnParser = new DsnParser();
@@ -125,18 +125,20 @@ class UploadFunctions
 		$sql = "INSERT INTO `media`
 		(`mediaID`, `benchID`, `userID`, `sha1`, `licence`, `importURL`, `media_type`, `width`, `height`, `datetime`, `make`, `model`)
 		VALUES
-		(NULL, ?, ?, ?, 'CC BY-SA 4.0', null, ?, ?, ?, ?, ?, ?)";
+		(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		$stmt = $conn->prepare($sql);
-		$stmt->bindValue(1, $benchID);
-		$stmt->bindValue(2, $userID);
-		$stmt->bindValue(3, $sha1);
-		$stmt->bindValue(4, $media_type);
-		$stmt->bindValue(5, $metadata["width"]);
-		$stmt->bindValue(6, $metadata["height"]);
-		$stmt->bindValue(7, $metadata["datetime"]);
-		$stmt->bindValue(8, $metadata["make"]);
-		$stmt->bindValue(9, $metadata["model"]);
+		$stmt->bindValue( 1, $benchID);
+		$stmt->bindValue( 2, $userID);
+		$stmt->bindValue( 3, $sha1);
+		$stmt->bindValue( 4, $licence);
+		$stmt->bindValue( 5, $importURL);
+		$stmt->bindValue( 6, $media_type);
+		$stmt->bindValue( 7, $metadata["width"]);
+		$stmt->bindValue( 8, $metadata["height"]);
+		$stmt->bindValue( 9, $metadata["datetime"]);
+		$stmt->bindValue(10, $metadata["make"]);
+		$stmt->bindValue(11, $metadata["model"]);
 		
 		//	Run the query
 		$results = $stmt->executeQuery();

@@ -138,4 +138,56 @@ class UploadController extends AbstractController
 			return $this->redirect("/bench/{$duplicateID}");
 		}
 	}
+
+	#[Route("/flickrUpload", name: "flickrUpload")]
+	public function flickrUpload(Request $request) {
+
+		//	Only available to Admin users
+		//	Get user from Auth0
+		$user = $this->getUser();
+		if( isset( $user ) ) {
+			$username   = $user->getNickname();
+			$avatar     = $user->getPicture();
+			$provider   = explode("|", $user->getUserIdentifier())[0];
+			$providerID = explode("|", $user->getUserIdentifier())[1];	
+		} else {
+			die();
+		}
+
+		$userFunctions = new UserFunctions();
+		$userID = $userFunctions->addUser( $username, $provider, $providerID );
+
+		$admin = ( array_search( $userID, explode(",", $_ENV["ADMIN_USERIDS"])) !== false );
+
+		if ( false == $admin) { die(); }
+
+		//	TODO - fix hardcoding of Flickr Importer user ID
+		$userID = 1;
+
+		//	POST'd data
+		$inscription  = $request->request->get("inscription");
+		$latitude     = $request->request->get("lat");
+		$longitude    = $request->request->get("long");
+		$licence      = $request->request->get("licence");
+		$importURL    = $request->request->get("import");
+		$originalURL  = $request->request->get("original");
+		
+		//	Add the bench
+		$uploadFunctions = new UploadFunctions();
+		$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
+
+		//	Get the image
+		$filename = tempnam( sys_get_temp_dir(), "openbenches" );	//	https://www.php.net/manual/en/function.sys-get-temp-dir.php
+		$photo = file_put_contents( $filename, file_get_contents( $originalURL ));
+
+		//	Process and save the image
+		$mediaFunctions = new MediaFunctions();
+		$metadata = $mediaFunctions->getMediaMetadata( $filename );
+		$metadata["tmp_name"] = $filename;
+		$media_type1 = $request->request->get( "media_type1" );
+		$uploadFunctions->addMedia( $metadata, $media_type1, $benchID, $userID, $licence, $importURL );
+
+		//	Show the new bench
+		return $this->redirect("/bench/{$benchID}");
+	}
 }
