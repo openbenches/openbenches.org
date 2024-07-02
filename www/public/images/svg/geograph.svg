@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 219 219" width="219" height="219" xmlns="http://www.w3.org/2000/svg">
+<rect
+width="219" height="219"
+fill="#fff"/>
+  <defs>
+    <filter id="b" width="203" height="227" x="0" y="1" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dx="5" dy="5"/>
+      <feGaussianBlur stdDeviation="1.5"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+      <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_101_2"/>
+      <feBlend in="SourceGraphic" in2="effect1_dropShadow_101_2" result="shape"/>
+    </filter>
+    <clipPath id="a">
+      <path fill="#fff" d="M0 0h938v228H0z"/>
+    </clipPath>
+  </defs>
+  <g fill="#3AD271" filter="url(#b)" clip-path="url(#a)" transform="matrix(1, 0, 0, 1, 0, 3.552713678800501e-15)">
+    <g>
+      <path d="M75 200h20v20H75zm0-175h20v20H75zm0-24h20v20H75zm25 0h20v20h-20zM75 50h20v20H75zm25 0h20v20h-20zm0-24h20v20h-20zm0 49h20v20h-20zm0 50h20v20h-20zm0-25h20v20h-20zm0 50h20v20h-20zm0 25h20v20h-20zm25-100h20v20h-20zm0 50h20v20h-20zm0-25h20v20h-20zm0 50h20v20h-20zm0 25h20v20h-20zm25-50h20v20h-20zm0 25h20v20h-20zm0 25h20v20h-20zm25-25h20v20h-20zM75 175h20v20H75zm-25-74h20v20H50zm-25 0h20v20H25zm25 25h20v20H50zm-25 0h20v20H25zm25 25h20v20H50zm-25 0h20v20H25zm-25 0h20v20H0zm50 49h20v20H50zm75-174h20v20h-20z"/>
+    </g>
+  </g>
+</svg>
