@@ -18,9 +18,16 @@ class BenchController extends AbstractController
 	}
 
 	#[Route('/bench/{bench_id}', name: 'show_bench')]
-	public function show_bench(int $bench_id): Response {
+	public function show_bench($bench_id): Response {
+
+		if (!is_numeric( $bench_id )) {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "The bench ID must be an integer." );
+        }
+		$benchId = (int) $bench_id;
+
 		$benchFunctions = new BenchFunctions();
-		$bench = $benchFunctions->getBench($bench_id);
+		$bench = $benchFunctions->getBench( $bench_id );
 
 		if ( isset($bench["bench_id"]) ) {
 			return $this->render("bench.html.twig", [
@@ -43,7 +50,7 @@ class BenchController extends AbstractController
 		}
 		else {
 			//	Generate an HTTP 404 response
-			throw $this->createNotFoundException( "The bench does not exist" );
+			throw $this->createNotFoundException( "The bench does not exist." );
 		}
 	}
 }
