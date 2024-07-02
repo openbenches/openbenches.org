@@ -123,6 +123,7 @@ class UploadController extends AbstractController
 				Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
 				["content-type" => "text/html"]
 			);
+			return $response;
 		}
 	}
 
