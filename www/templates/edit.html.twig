@@ -9,7 +9,7 @@
 	<h3>
 	Welcome {{ provider|capitalize }} user {{ username }}
 	{% if avatar is not null %}
-		<img src="{{ avatar }}" width="20" />
+		<img src="{{ avatar }}" width="20">
 	{% endif %}
 	</h3>
 	<p>You can edit this bench's inscription, change location, or add more photos.</p>
@@ -95,10 +95,10 @@
 		</script>
 
 		<div style="clear:both;">
-			<input type="text"   id="coordinates"  value="{{ latitude }},{{ longitude }}" disabled="true" />
-			<input type="hidden" id="newLongitude" name="newLongitude" value="{{ longitude }}"/>
-			<input type="hidden" id="newLatitude"  name="newLatitude"  value="{{ latitude }}"/>
-			<input type="hidden" id="benchID"      name="benchID"      value="{{ benchID }}"/>
+			<input type="text"   id="coordinates"  value="{{ latitude }},{{ longitude }}" disabled>
+			<input type="hidden" id="newLongitude" name="newLongitude" value="{{ longitude }}">
+			<input type="hidden" id="newLatitude"  name="newLatitude"  value="{{ latitude }}">
+			<input type="hidden" id="benchID"      name="benchID"      value="{{ benchID }}">
 		</div>&nbsp;
 
 		<div>
@@ -133,20 +133,20 @@
 						width="{{ media.width}}"
 						height="{{ media.height }}"
 						class="proxy-image"
-						loading="lazy" />
+						loading="lazy">
 
 					<span class='caption'>
 						{% if media.importURL is not null %}
 						<a href="{{ media.importURL }}">
 							<img src="/images/cc/{{ media.licenceIcon }}"
 								class="cc-icon"
-									alt="{{ media.licence }}"/>
+								alt="{{ media.licence }}">
 						</a>
 						{% else %}
 						<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
 							<img src="/images/cc/{{ media.licenceIcon }}"
 								class="cc-icon"
-									alt="Creative Commons Attribution Share-Alike"/>
+								alt="Creative Commons Attribution Share-Alike">
 						</a>
 						{% endif %}
 						{{ media.formattedDate }}<br>
@@ -181,7 +181,7 @@
 						<small>Please make sure the inscription is legible and well framed.</small>
 					</span>
 				</div>
-				<input type="file" name="userfile1" id="photoFile1" accept="image/jpeg;capture=camera">
+				<input type="file" name="userfile1" id="photoFile1" accept="image/jpeg">
 			</div>
 			<div>
 				<label for="media_type1">This photo is a:</label>
@@ -204,7 +204,7 @@
 						📷 Optional photo of same bench
 					</span>
 				</div>
-				<input type="file" name="userfile2" id="photoFile2" accept="image/jpeg;capture=camera">
+				<input type="file" name="userfile2" id="photoFile2" accept="image/jpeg">
 			</div>
 			<div>
 				<label for="media_type2">This photo is a:</label>
@@ -227,7 +227,7 @@
 						📷 Optional photo of same bench
 					</span>
 				</div>
-				<input type="file" name="userfile3" id="photoFile3" accept="image/jpeg;capture=camera">
+				<input type="file" name="userfile3" id="photoFile3" accept="image/jpeg">
 			</div>
 			<div>
 				<label for="media_type3">This photo is a:</label>
@@ -250,7 +250,7 @@
 						📷 Optional photo of same bench
 					</span>
 				</div>
-				<input type="file" name="userfile4" id="photoFile4" accept="image/jpeg;capture=camera">
+				<input type="file" name="userfile4" id="photoFile4" accept="image/jpeg">
 			</div>
 			<div>
 				<label for="media_type4">This photo is a:</label>
@@ -277,7 +277,7 @@
 		
 		<br>&nbsp;
 		<div class="button-bar">
-			<input type="submit" name="submitButton" id="submitButton" class='button buttonColour' value="💾 Save Changes" />
+			<input type="submit" name="submitButton" id="submitButton" class='button buttonColour' value="💾 Save Changes">
 		</div>
 	</form>
 
@@ -290,7 +290,7 @@
 		} 
 	});
 	</script>
-	<script type="text/javascript">
+	<script>
 	var previewWidth = 800;
 
 	document.getElementById('photoFile1').onchange = function (e) {

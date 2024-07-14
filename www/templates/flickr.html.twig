@@ -8,7 +8,7 @@
 	{% if flickrID is defined %}
 	<h3>Flickr Image "{{ flickrID }}"</h3> 
 		<form action="/flickrUpload" method="post" autocomplete="off">
-			<a target='_blank' href='{{ original }}'><img id='flickrimg' src='data:image/jpeg;base64,{{ b64 }}' width='512'/></a><br>
+			<a target='_blank' href='{{ original }}'><img id='flickrimg' src='data:image/jpeg;base64,{{ b64 }}' width='512'></a><br>
 			<label for="flickrimg">This photo is a:</label>
 			<select name="media_type1" id="media_type1">
 				{% set selected = "inscription" %}
