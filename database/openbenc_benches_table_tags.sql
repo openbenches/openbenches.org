@@ -21,6 +21,7 @@ INSERT INTO `tags` (`tagID`, `tagText`) VALUES
 (18, 'beach'),
 (1, 'cat'),
 (17, 'colleague'),
+(45, 'composite'),
 (2, 'dog'),
 (13, 'emoji'),
 (42, 'famous'),
