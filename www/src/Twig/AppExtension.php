@@ -17,6 +17,7 @@ class AppExtension extends AbstractExtension
 	{
 		return [
 			new TwigFunction('number_of_benches', [$this, 'get_number_of_benches']),
+			new TwigFunction('number_of_benches_raw', [$this, 'get_number_of_benches_raw']),
 			new TwigFunction('cached_date',       [$this, 'get_date']),
 			new TwigFunction('map_javascript',    [$this, 'map_javascript']),
 			new TwigFunction('media_types',       [$this, 'get_media_types']),
@@ -40,6 +41,25 @@ class AppExtension extends AbstractExtension
 		});
 
 		return number_format($value);
+	}
+
+	public function get_number_of_benches_raw() {
+
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "count_raw_cache");
+
+		$value = $cache->get('number_of_benches_raw', function (ItemInterface $item) {
+			$item->expiresAfter(300);
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+
+			$conn = DriverManager::getConnection($connectionParams);
+
+			$count = $conn->fetchOne("SELECT COUNT(*) FROM `benches` WHERE `published` = true");
+
+			return $count;
+		});
+
+		return $value;
 	}
 
 	public function get_media_types() {

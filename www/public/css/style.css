@@ -619,3 +619,7 @@ td.count {
 	width: 1em;
 	vertical-align: bottom;
 }
+
+#counter {
+	font-variant-numeric: tabular-nums;
+}

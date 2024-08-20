@@ -61,3 +61,34 @@ if ("serviceWorker" in navigator) {
 
 }
 </script>
+<script>
+//	Animate Bench Counter
+if ( !window.matchMedia('(prefers-reduced-motion: reduce)').matches ) {
+	const counters = document.querySelectorAll('#counter');
+	counter.innerText = 0
+	value = 0
+	const speed = 50; // The lower the faster
+
+	counters.forEach(counter => {
+		const updateCount = () => {
+			const target = +counter.getAttribute('data-target');
+			const count = value;
+
+			const inc = target / speed;
+
+			// Check if target is reached
+			if (count < target) {
+				// Add inc to count and formatted output in counter
+				counter.innerText = Math.trunc(count + inc).toLocaleString('en-GB');
+				value = Math.trunc(count + inc)
+				// Call function every 100ms
+				setTimeout(updateCount, 100);
+			} else {
+				counter.innerText = target.toLocaleString('en-GB');
+			}
+		};
+
+		updateCount();
+	});
+}
+</script>
