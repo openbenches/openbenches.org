@@ -35,6 +35,12 @@ class ApiController extends AbstractController
 		} else {
 			$get_media = false;
 		}
+
+		if ( $request->query->get("created") == "false") {
+			$get_created = false;
+		} else {
+			$get_created = true;
+		}
 		
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV["DATABASE_URL"] );
@@ -141,11 +147,21 @@ class ApiController extends AbstractController
 				),
 				# Pass other attribute columns here
 				"properties" => array(
-					"created_at"   => date_format( date_create($added ), "c" ),
+					// "created_at"   => date_format( date_create($added ), "c" ),
 					"popupContent" => $inscription,
-					"media"        => $mediaFeature
+					// "media"        => $mediaFeature
 				),
 			);
+
+			//	Add other properties if requested
+			if ( $get_created == true ) {
+				$feature["properties"]["created_at"] = date_format( date_create($added ), "c" );
+			}
+
+			if ( $mediaFeature != null ) {
+				$feature["properties"]["media"] = $mediaFeature;
+			}
+
 			# Add feature arrays to feature collection array
 			array_push($geojson["features"], $feature);
 			$response_ok = true; 
@@ -210,6 +226,14 @@ class ApiController extends AbstractController
 		} else {
 			$get_latest = false;
 			$cache_name .= "all";
+		}
+
+		if ( $request->query->get("created") == "false") {
+			$get_created = false;
+			$cache_name .= "nocreated";
+		} else {
+			$get_created = true;
+			$cache_name .= "created";
 		}
 
 		$value = $cache->get( $cache_name, function (ItemInterface $item) {
@@ -324,15 +348,24 @@ class ApiController extends AbstractController
 							// Pass Longitude and Latitude Columns here
 							"coordinates" => array($row["longitude"], $row["latitude"])
 						),
-						// Pass other attribute columns here
+						# Pass other attribute columns here
 						"properties" => array(
-							"created_at"   => date_format( date_create($row["added"] ), "c" ),
+							// "created_at"   => date_format( date_create($added ), "c" ),
 							"popupContent" => $inscription,
-							"media" => array(),
+							// "media"        => $mediaFeature
 						),
 					);
-					//	Add all the media details to the response
-					array_push( $feature["properties"]["media"], $media_data);
+
+					//	Add other properties if requested
+					if ( $get_created == true ) {
+						$feature["properties"]["created_at"] = date_format( date_create($added ), "c" );
+					}
+
+					if ( $get_media == true ) {
+						//	Add all the media details to the response
+						array_push( $feature["properties"]["media"], $media_data);
+					}
+				
 
 					// Add feature to collection array
 					$benches_array[$row["benchID"]] = $feature;

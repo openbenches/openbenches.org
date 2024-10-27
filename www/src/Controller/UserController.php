@@ -13,6 +13,11 @@ use App\Service\BenchFunctions;
 
 class UserController extends AbstractController
 {
+	#[Route("/test", name: "test")]
+	public function test(): Response {
+		return $this->render("test.html.twig", []);
+	}
+
 	#[Route("/user", name: "no_user")]
 	public function no_user(): Response {
 		return $this->render("user.html.twig", [
