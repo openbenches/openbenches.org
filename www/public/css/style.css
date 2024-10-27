@@ -43,8 +43,9 @@ canvas {
 
 #map{
 	width: 100%;
-	height: 70%;
 	max-width: 100%;
+	height: 1000px;
+	max-height: 70vh;
 	z-index: 1;
 	margin-left: auto;
 	margin-right: auto;

@@ -108,7 +108,17 @@ class AppExtension extends AbstractExtension
 		return $value;
 	}
 
-	public function map_javascript( $api="", $api_query="", $lat = "16.3", $long = "0", $zoom = "2", $draggable = false, $bb_n = null, $bb_e = null, $bb_s = null, $bb_w = null,  ) {
+	public function map_javascript( 
+			$api ="", 
+			$api_query ="", 
+			$lat  = "16.3", 
+			$long =    "0",
+			$zoom = "2", 
+			$draggable = false, 
+			$bb_n = null, 
+			$bb_e = null, 
+			$bb_s = null, 
+			$bb_w = null,  ) {
 		$esri_api     = $_ENV['ESRI_API_KEY'];
 		$thunder_api  = $_ENV['THUNDERFOREST_API_KEY'];
 		$api_url = $api . $api_query;
