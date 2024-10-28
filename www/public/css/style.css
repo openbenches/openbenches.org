@@ -624,3 +624,7 @@ td.count {
 #counter {
 	font-variant-numeric: tabular-nums;
 }
+
+maplibregl-popup-content {
+	font-size: 1.5em;
+}

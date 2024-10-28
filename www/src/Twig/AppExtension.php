@@ -231,7 +231,7 @@ class AppExtension extends AbstractExtension
 				type: 'geojson',
 				data: benches_data,
 				cluster: true,
-				clusterMaxZoom: 15, // Max zoom to cluster points on
+				clusterMaxZoom: 17, // Max zoom to cluster points on
 				clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
 			});
 		}
@@ -318,16 +318,34 @@ class AppExtension extends AbstractExtension
 
 		//	Inspect a cluster on click
 		map.on('click', 'clusters', async (e) => {
-				const features = map.queryRenderedFeatures(e.point, {
-					layers: ['clusters']
-				});
-				const clusterId = features[0].properties.cluster_id;
-				const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
-				map.easeTo({
-					center: features[0].geometry.coordinates,
-					zoom
-				});
+			const features = map.queryRenderedFeatures(e.point, {
+				layers: ['clusters']
 			});
+			const clusterId = features[0].properties.cluster_id;
+			const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
+			console.log("Zoom " + zoom);
+			//	Items in the cluster
+			const leaves = await map.getSource('benches').getClusterLeaves(clusterId, 10, 0);
+			map.easeTo({
+				center: features[0].geometry.coordinates,
+				zoom
+			});
+
+			//	If at a high zoom the cluster hasn't split, the benches may have the exact same co-ordinates.
+			if ( zoom >= 17 ) {
+				//	Generate a pop-up with all the benches' information & links
+				var html = "<h3>Multiple Benches</h3><hr>";
+				leaves.forEach(function(leaf) {
+        			html +=	leaf.properties.popupContent;
+        			html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>openbenches.org/bench/" + leaf.id + "</a><hr>";
+				});
+
+				new maplibregl.Popup({closeButton: false})
+					.setLngLat( features[0].geometry.coordinates.slice() )
+					.setHTML( html )
+					.addTo(map);
+			}
+		});
 
 		// When a click event occurs on a feature in
 		// the unclustered-point layer, open a popup at
@@ -338,7 +356,7 @@ class AppExtension extends AbstractExtension
 		
 			inscription = e.features[0].properties.popupContent;
 			link = e.features[0].id
-			link = "https://openbenches.org/bench/" + link;
+			link = "openbenches.org/bench/" + link;
 
 			// Ensure that if the map is zoomed out such that
 			// multiple copies of the feature are visible, the
@@ -347,10 +365,9 @@ class AppExtension extends AbstractExtension
 				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
 			}
 
-			new maplibregl.Popup()
+			new maplibregl.Popup({closeButton: false})
 				.setLngLat(coordinates)
-				.setHTML( inscription + '<br><a href="' + link + '">' + link + '</a>'
-				)
+				.setHTML( inscription + '<br><a href="https://' + link + '">' + link + '</a>')
 				.addTo(map);
 		});
 
