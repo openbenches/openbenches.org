@@ -109,199 +109,319 @@ class AppExtension extends AbstractExtension
 	}
 
 	public function map_javascript( 
-			$api ="", 
-			$api_query ="", 
-			$lat  = "16.3", 
-			$long =    "0",
-			$zoom = "2", 
+			$api = "", 
+			$api_query = "", 
+			$lat  = "0", 
+			$long = "0",
+			$zoom = "0", 
 			$draggable = false, 
-			$bb_n = null, 
+			$bb_n = "_", 
 			$bb_e = null, 
 			$bb_s = null, 
 			$bb_w = null,  ) {
-		$esri_api     = $_ENV['ESRI_API_KEY'];
-		$thunder_api  = $_ENV['THUNDERFOREST_API_KEY'];
+		//	Get the layer key
+		$arcgis_key     = $_ENV['ARCGIS_KEY'];
+		//	What data is being requested?
 		$api_url = $api . $api_query;
 		if ( null == $lat ) {
-			$lat  = "16.3";
+			$lat  = "0";
 			$long = "0";
-			$zoom = "2";
+			$zoom = "0";
 		}
 		$mapJavaScript = <<<EOT
 <script>
 
-	var api_url = '$api_url';
-
-	// Set up tile layers
-	var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
-		minZoom: 2,
-		maxNativeZoom: 19,
-		maxZoom: 22,
-		attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-		id: 'stadia.outdoors'
-	});
-
-	var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		minZoom: 2,
-		maxNativeZoom: 19,
-		maxZoom: 22,
-		attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		id: 'osm.mapnik'
-	});
-
-	var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token=$esri_api', {
-		minZoom: 2,
-		maxNativeZoom: 19,
-		maxZoom: 22,
-		attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
-		id: 'esri.satellite'
-	});
-
-	var Thunderforest = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=$thunder_api', {
-		minZoom: 2,
-		maxNativeZoom: 19,
-		maxZoom: 22,
-		attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
-		id: 'thunderforest'
-	});
-
-	//	Settings for map		
-	var map = L.map('map', {
-		sleepNote: false, 
-		sleepOpacity: 1,
-		minZoom: 2,
-		maxZoom: 19,
-		worldCopyJump: true
-	})
+	//	API to be called
+	var api_url = "{$api_url}";
+	var lat  = {$lat};
+	var long = {$long};
+	var zoom = {$zoom};
 
 	//	Placeholder for last (or only) marker
 	var marker;
-	
+
+	//	Prevent world wrapping
+	const bounds = [
+		//	Crop off the Poles
+        [-179, -70], // Southwest coordinates
+        [ 180,  70] // Northeast coordinates
+    ];
+
+	 // Define the styles to switch between
+    const style1 = "https://tiles.openfreemap.org/styles/liberty";
+    const style2 = "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/osm/hybrid/?token={$arcgis_key}";
+
+	//	Initialise the map
+	const map = new maplibregl.Map({
+		container: 'map',
+		style: style1,
+		center: [long, lat], // world
+		zoom: zoom, // Lower numbers zoomed out
+		maxBounds: bounds, // Sets bounds as max
+		pitch: 5,	//	small amount of tilt
+	});
+
+	//	Disable map rotation using touch rotation gesture
+	map.touchZoomRotate.disableRotation();
+
+	//	Add zoom and rotation controls to the map.
+	map.addControl(
+		new maplibregl.NavigationControl({
+			visualizePitch: true,
+			showZoom: true,
+			showCompass: true
+		})
+	);
+
+	//	Add geolocations control to the map.
+	map.addControl(
+		new maplibregl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true
+			},
+		trackUserLocation: true,
+		showUserHeading: true
+	}));
+
 	//	Load benches from API
 	async function load_benches() {
 		if (api_url == '') {
-			//	No search set - use TSV
+			//	No search set - use TSV for speed
 			let url = '/api/benches.tsv';
 			const response = await fetch(url)
 			var benches_text = await response.text();
 			var rows = benches_text.split(/\\n/);
 			var benches_json = {'features':[]};
-			for(let i = 1; i < rows.length; i++){
+			//	Convert the TSV to GeoJSON
+			for( let i = 1; i < rows.length; i++ ){
 				let cols = rows[i].split(/\\t/);
-				benches_json.features.push({'id':cols[0],'type':'Feature','properties':{'popupContent':cols[3]},'geometry':{'type':'Point','coordinates':[cols[1],cols[2]]}});
+				benches_json.features.push(
+					{
+						'id':cols[0],
+						'type':'Feature',
+						'properties': {
+							'popupContent':cols[3]
+						},
+						'geometry': {
+							'type':'Point',
+							'coordinates':[cols[1],cols[2]]
+						}
+					}
+				);
 			}
 			return benches_json;
+		} else if (api_url == "_add_") {
+			return null;
 		} else {
-			let url = '$api_url';
+			let url = "{$api_url}";
 			const response = await fetch(url)
 			var benches_json = await response.json();
 			return benches_json;
 		}
 	}
 
-	async function main() {
-		var benches = await load_benches();
-
-		//	Set up clustering
-		var markers = L.markerClusterGroup({
-			maxClusterRadius: 29,
-			disableClusteringAtZoom: 17
-		});
-
-		markers.on('click', function (bench) {
-			//	Placeholder. Used to display images
-		});
-
-		//	Add pop-up to markers - if this isn't a single bench on display / edit
-		for (var i = 0; i < benches.features.length; i++) {
-			var bench = benches.features[i];
-			var lat = bench.geometry.coordinates[1];
-			var longt = bench.geometry.coordinates[0];
-			var benchID = bench.id;
-			var title = bench.properties.popupContent + "<br><a href='/bench/"+bench.id+"/'>View details</a>";
-			if(typeof lat !== "undefined" && typeof longt !== "undefined"){
-				//	Check for strange values in TSV
-				marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: "$draggable" });
-				if ( "$api" != "/api/bench/" ) {
-					marker.bindPopup(title);
-				}
-				markers.addLayer(marker);	
-			}
+	
+		//	Asynchronous function to add custom layers and sources
+    async function addCustomLayersAndSources() {
+		//	Get the data
+		var benches_data = await load_benches();
+		//	Load the GeoJSON
+		if (!map.getSource('benches')) {
+			map.addSource('benches', {
+				type: 'geojson',
+				data: benches_data,
+				cluster: true,
+				clusterMaxZoom: 15, // Max zoom to cluster points on
+				clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+			});
 		}
 
-		//	Add the clusters to the map
-		map.addLayer(markers);
+		//	Custom bench marker
+		if ( map.listImages().includes("openbench-icon") == false ) {
+			image = await map.loadImage('/public/images/icons/marker.png');
+			map.addImage('openbench-icon', image.data);
+		}
+
+		//	Add the clusters
+		if (!map.getLayer('clusters')) {
+			map.addLayer({
+				id: 'clusters',
+				type: 'circle',
+				source: 'benches',
+				filter: ['has', 'point_count'],
+				paint: {
+					// Use step expressions (https://maplibre.org/maplibre-style-spec/#expressions-step)
+					// with three steps to implement three types of circles:
+					//   * Blue, 20px circles when point count is less than 100
+					//   * Yellow, 30px circles when point count is between 100 and 750
+					//   * Pink, 40px circles when point count is greater than or equal to 750
+					'circle-color': [
+						'step',
+						['get', 'point_count'], '#51bbd655',
+						100,					'#f1f07555',
+						750,					'#f28cb155'
+					],
+					'circle-radius': [
+						'step',
+						['get', 'point_count'], 20,
+						100,					30,
+						750,					40
+					],
+					'circle-stroke-width': [
+						'step',
+						['get', 'point_count'], 1,
+						100,                    1,
+						750,                    1
+					],
+					'circle-stroke-color': [
+						'step',
+						['get', 'point_count'],	'#000',
+						100,                    '#000',
+						750,                    '#000'
+					],
+				}
+			});
+
+			//	Show number of benches in each cluster
+			map.addLayer({
+				id: 'cluster-count',
+				type: 'symbol',
+				source: 'benches',
+				filter: ['has', 'point_count'],
+				layout: {
+					'text-field': '{point_count_abbreviated}',
+					'text-font': ['Noto Sans Regular'],
+					'text-size': 25
+				}
+			});
+
+			//	Show individual benches
+			map.addLayer({
+				id: 'unclustered-point',
+				source: 'benches',
+				filter: ['!', ['has', 'point_count']],
+				//type: 'circle',
+				//paint: {
+				//	'circle-color': '#03ace9',
+				//	'circle-radius': 7,
+				//	'circle-stroke-width': 2,
+				//	'circle-stroke-color': '#000'
+				//}
+				type: 'symbol',
+				layout: {
+					"icon-overlap": "always",
+					'icon-image': 'openbench-icon',  // Use the PNG image
+					'icon-size': .1              // Adjust size if necessary
+				}
+			});
+		}
+
+		//	Inspect a cluster on click
+		map.on('click', 'clusters', async (e) => {
+				const features = map.queryRenderedFeatures(e.point, {
+					layers: ['clusters']
+				});
+				const clusterId = features[0].properties.cluster_id;
+				const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
+				map.easeTo({
+					center: features[0].geometry.coordinates,
+					zoom
+				});
+			});
+
+		// When a click event occurs on a feature in
+		// the unclustered-point layer, open a popup at
+		// the location of the feature, with
+		// description HTML from its properties.
+		map.on('click', 'unclustered-point', (e) => {
+			const coordinates = e.features[0].geometry.coordinates.slice();
 		
-		//	Add the tiles layers
-		var baseMaps = {
-			"Map View": Stadia_Outdoors,
-			"Open Street Map": OpenStreetMap_Mapnik,
-			"Satellite View": ESRI_Satellite,
-			"Outdoors Map": Thunderforest
-		};
-	
-		// Rotate between mapping providers depending on date
-		switch (new Date().getDay()) {
-			case 0:
-				//	Sunday
-				// Stadia_Outdoors.addTo(map);
-				OpenStreetMap_Mapnik.addTo(map);
-				break;
-			case 1:
-				OpenStreetMap_Mapnik.addTo(map);
-				break;
-			case 2:
-				Thunderforest.addTo(map);
-				break;
-			case 3:
-				// Stadia_Outdoors.addTo(map);
-				OpenStreetMap_Mapnik.addTo(map);
-				break;
-			case 4:
-				OpenStreetMap_Mapnik.addTo(map);
-				break;
-			case 5:
-				Thunderforest.addTo(map);
-				break;
-			case 6:
-				//	Saturday
-				// Stadia_Outdoors.addTo(map);
-				OpenStreetMap_Mapnik.addTo(map);
-		 }
-	
-		L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
-	
-		//	Cluster options
-		var markers = L.markerClusterGroup({
-			maxClusterRadius: 29,
-			disableClusteringAtZoom: 17
+			inscription = e.features[0].properties.popupContent;
+			link = e.features[0].id
+			link = "https://openbenches.org/bench/" + link;
+
+			// Ensure that if the map is zoomed out such that
+			// multiple copies of the feature are visible, the
+			// popup appears over the copy being pointed to.
+			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+			}
+
+			new maplibregl.Popup()
+				.setLngLat(coordinates)
+				.setHTML( inscription + '<br><a href="' + link + '">' + link + '</a>'
+				)
+				.addTo(map);
 		});
 
-		//	View of the map
-		map.setView([{$lat}, {$long}], {$zoom});
+		//	Pointer on clusters
+		map.on('mouseenter', 'clusters', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		map.on('mouseleave', 'clusters', () => {
+			map.getCanvas().style.cursor = '';
+		});
 
-		//	Snap to bounding box if any
-		map.fitBounds([ [{$bb_n},{$bb_e}], [{$bb_s}, {$bb_w}] ]);
-	}
-	
-	//	Change URl bar to show current location (frontpage only)
-	map.on("load", function () {
-		if (window.location.hash != "") {
-			if(window.location.hash.indexOf("/") > -1)
-			{
-				var hashArray = window.location.hash.substr(1).split("/");
-				if(hashArray.length >= 2)
-				{
-					var hashLat = hashArray[0];
-					var hashLng = hashArray[1];
-					var hashZoom = 16; if(hashArray[2] != void 0){hashZoom = hashArray[2];}
-					map.setView([hashLat, hashLng], hashZoom);
-				}
-			}
+		//	Pointer on individual points
+		map.on('mouseenter', 'unclustered-point', () => {
+			map.getCanvas().style.cursor = 'pointer';
+		});
+		map.on('mouseleave', 'unclustered-point', () => {
+			map.getCanvas().style.cursor = '';
+		});
+
+		// remove distracting POIs
+		if (map.getLayer("poi_r20")) {
+			map.removeLayer("poi_r20");
 		}
+		if (map.getLayer("poi_r1")) {
+			map.removeLayer("poi_r1");
+		}
+		if (map.getLayer("poi_transit")) {
+			map.removeLayer("poi_transit");
+		}
+	}
+
+	//	Start by drawing the map
+	map.on('load', async () => {
+		await addCustomLayersAndSources();
 	});
 
-	main();
+	//	If the style changes, redraw the map
+	map.on('styledata', async () => {
+		await addCustomLayersAndSources();
+	});
+
+	//	Add swap basemap button
+	function addStyleButton(map) {
+		class StyleButton {
+			onAdd(map) {
+				const div = document.createElement("div");
+				div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+				div.innerHTML = `<button id="toggle-style" class="maplibregl-ctrl-terrain" type="button" title="Change map style" aria-label="Change map style"><span class="maplibregl-ctrl-icon" aria-hidden="true"></span></button>`;
+				return div;
+			}
+		}
+		const styleButton = new StyleButton();
+		map.addControl(styleButton, "top-right");
+	}
+	addStyleButton(map);
+
+	// Variable to keep track of current style
+	let currentStyle = style1;
+
+	// Toggle style function
+	document.getElementById('toggle-style').addEventListener('click', () => {
+		currentStyle = currentStyle === style1 ? style2 : style1;
+		map.setStyle(currentStyle);
+	});
+
+	//	Set bounding box, if any
+	var bb_n = "{$bb_n}";
+	if ( bb_n !== "_" ) {
+			map.fitBounds( [ [ {$bb_w}, {$bb_s} ], [ {$bb_e},{$bb_n} ] ] );
+	}
+	
 </script>
 EOT;
 	

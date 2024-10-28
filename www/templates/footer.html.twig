@@ -6,7 +6,6 @@
 
 	<div class="footerIcons">
 		<a itemprop="sameAs" href="https://botsin.space/@openbenches" title="Mastodon"><img src="/images/svg/mastodon.svg" alt="Mastodon"></a>
-		<a itemprop="sameAs" href="https://twitter.com/openbenches" title="Twitter"><img src="/images/svg/twitter.svg" alt="Twitter"></a>
 		<a itemprop="sameAs" href="https://github.com/openbenches/openbenches.org" title="Github"><img src="/images/svg/github.svg" alt="GitHub"></a>
 	</div>
 	<a rel="license"
@@ -16,42 +15,6 @@
 	<a itemprop="founder" href="https://mymisanthropicmusings.org.uk/">Elizabeth Eden</a>.
 	<hr>A project by <a href="https://openideas.ltd.uk/">Open Ideas Ltd.</a>
 </footer>
-<script>
-function geoFindMe() {
-	var output = document.getElementById("gpsButton");
-
-	var gpsIcon = L.icon({
-		iconUrl: '/images/gps.png',
-		iconSize: [200, 200],
-	});
-
-	if (!navigator.geolocation){
-		output.innerHTML = "GPS is not supported by your device";
-		return;
-	}
-
-	function success(position) {
-		var latitude  = position.coords.latitude;
-		var longitude = position.coords.longitude;
-
-		output.innerHTML = '🔄 Update my location';
-		L.marker([latitude, longitude], {opacity:0.5, icon: gpsIcon, zIndexOffset: -100000}).addTo(map);
-		//map.setView([latitude, longitude], 15);
-		map.easeTo({
-			center: [longitude, latitude],
-			zoom: 15,
-		});
-	}
-
-	function error() {
-		output.innerHTML = "🚫 Unable to retrieve your location";
-	}
-
-	output.innerHTML = "🛰️ Locating…";
-
-	navigator.geolocation.getCurrentPosition(success, error);
-}
-</script>
 <script>
 if ("serviceWorker" in navigator) {
 	
