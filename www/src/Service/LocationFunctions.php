@@ -169,11 +169,11 @@ class LocationFunctions
 			$locationData = json_decode($locationJSON);
 
 			try {
-				$country = $locationData->features[0]->properties->country;
-				$state   = $locationData->features[0]->properties->state;
-				$county  = $locationData->features[0]->properties->county;
-				$city    = $locationData->features[0]->properties->city;
-				$suburb  = $locationData->features[0]->properties->suburb;
+				$country = $locationData->features[0]->properties->country ?? null;
+				$state   = $locationData->features[0]->properties->state   ?? null;
+				$county  = $locationData->features[0]->properties->county  ?? null;
+				$city    = $locationData->features[0]->properties->city    ?? null;
+				$suburb  = $locationData->features[0]->properties->suburb  ?? null;
 				
 				$address_components = array($suburb, $city, $county, $state, $country);
 				$address_components = array_filter($address_components);
@@ -186,8 +186,9 @@ class LocationFunctions
 			return $formatted_address;
 		} if (2 == $provider) {
 			//	https://geocode.maps.co/
-			// $location = urlencode($location);
-			$geocodeAPI = "https://geocode.maps.co/reverse?lat={$latitude}&lon={$longitude}";
+			$geocode_api_key = $_ENV['GEOCODE_API_KEY'];
+
+			$geocodeAPI = "https://geocode.maps.co/reverse?lat={$latitude}&lon={$longitude}&api_key={$geocode_api_key}";
 			$options = array(
 				'http'=>array(
 					'method'=>"GET",
@@ -199,11 +200,11 @@ class LocationFunctions
 			$locationData = json_decode($locationJSON);
 
 			try {
-				$country = $locationData->address->country;
-				$state   = $locationData->address->state;
-				$county  = $locationData->address->county;
-				$city    = $locationData->address->city;
-				$suburb  = $locationData->address->suburb;
+				$country = $locationData->address->country ?? null;
+				$state   = $locationData->address->state   ?? null;
+				$county  = $locationData->address->county  ?? null;
+				$city    = $locationData->address->city    ?? null;
+				$suburb  = $locationData->address->suburb  ?? null;
 
 				$address_components = array($suburb, $city, $county, $state, $country);
 				$address_components = array_filter($address_components);

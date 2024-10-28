@@ -20,76 +20,39 @@
 			<div id="map" ></div>
 		</div>
 
-		{#{ map_javascript("/api/bench/", benchID, latitude, longitude, 16, true ) }#}
+		{{ map_javascript("/api/bench/", benchID, latitude, longitude, 16, true ) }}
 		<script>
-			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})
-			var Stadia_Outdoors = L.tileLayer('https://tiles-eu.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
-				minZoom: 2,
-				maxNativeZoom: 19,
-				maxZoom: 22,
-				attribution: 'Map data © <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a> © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-				id: 'stadia.outdoors'
-			});
-
-			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				minZoom: 2,
-				maxNativeZoom: 19,
-				maxZoom: 22,
-				attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-				id: 'osm.mapnik'
-			});
-
-			var ESRI_Satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg?token={{ app.request.server.get('ESRI_API_KEY') }}', {
-				minZoom: 2,
-				maxNativeZoom: 19,
-				maxZoom: 22,
-				attribution: '© <a href="https://www.esri.com/">i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community</a>',
-				id: 'esri.satellite'
-			});
-
-			var Thunderforest = L.tileLayer('https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey={{ app.request.server.get('THUNDERFOREST_API_KEY') }}', {
-				minZoom: 2,
-				maxNativeZoom: 19,
-				maxZoom: 22,
-				attribution: '© <a href="https://www.thunderforest.com/">Thunderforest</a>',
-				id: 'thunderforest'
-			});
-
-			map.setView([{{ latitude }},{{ longitude }}], 16);
-			var baseMaps = {
-				"Map View": Stadia_Outdoors,
-				"Open Street Map": OpenStreetMap_Mapnik,
-				"Satellite View": ESRI_Satellite,
-				"Outdoors Map": Thunderforest
-			};
-
-			OpenStreetMap_Mapnik.addTo(map);
-
-			L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
 			let url = '/api/bench/{{ benchID }}';
 			const response = fetch(url).then(response => response.json()).then(response => {
 				var bench = response.features[0];
-				var lat = bench.geometry.coordinates[1];
-				var longt = bench.geometry.coordinates[0];
+				var latitude = bench.geometry.coordinates[1];
+				var longitude = bench.geometry.coordinates[0];
 				var benchID = bench.id;
+				//	Add a draggable marker
+				const marker = new maplibregl.Marker({draggable: true})
+					.setLngLat( [longitude, latitude] )
+					.addTo(map);
 
-				//	Create the draggable marker
-				marker = L.marker(new L.LatLng(lat, longt), {  benchID: benchID, draggable: true });
-				
-				//	What happens when it is dragged
-				var coordinates = document.getElementById('coordinates');
-				var longitude   = document.getElementById('newLongitude');
-				var latitude    = document.getElementById('newLatitude');
-
-				marker.on('dragend', function(event){
-					newLat =  event.target._latlng.lat.toPrecision(7);
-					newLong = event.target._latlng.lng.toPrecision(7);
-					coordinates.value = newLat + ',' + newLong;
-					longitude.value   = newLong;
-					latitude.value    = newLat;
+				// Centre the map
+				map.jumpTo({
+					center: [longitude.toFixed(7), latitude.toFixed(7)],
+					zoom: 19,
 				});
-			
-				map.addLayer(marker);
+
+				//	Show the co-ordinates
+				document.getElementById("coordinates").value  = latitude.toFixed(5) + ',' + longitude.toFixed(5);
+				document.getElementById("newLongitude").value = longitude.toFixed(5);
+				document.getElementById("newLatitude" ).value = latitude.toFixed(5);
+
+				//	Update when marker is dragged
+				function onDragEnd() {
+					const lngLat = marker.getLngLat();
+					document.getElementById("coordinates").value  = lngLat.lat.toFixed(5) + ',' + lngLat.lng.toFixed(5);
+					document.getElementById("newLongitude").value = lngLat.lng;
+					document.getElementById("newLatitude" ).value = lngLat.lat;
+				}
+				//	If the marker is dragged, update the coordinates
+				marker.on('dragend', onDragEnd);
 			})
 			
 		</script>
