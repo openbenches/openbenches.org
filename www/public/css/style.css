@@ -608,6 +608,7 @@ p {
 th.count {
 	text-align:right;
 	padding-right: .5em;
+	min-width: 50%;
 }
 
 td.count {
