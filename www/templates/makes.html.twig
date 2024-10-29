@@ -12,7 +12,7 @@
 		<table>
 			<thead>
 				<tr>
-					<th>Make</th><th class="count">Photos</th>
+					<th class="ascending">Make</th><th class="count">Photos</th>
 				</tr>
 			</thead>
     		<tbody>
@@ -25,6 +25,41 @@
 			</tbody>
 		</table>
 	</div>
+	<script>
+		document.querySelectorAll("th").forEach((header, index) => {
+			header.addEventListener("click", () => {
+				const table = header.closest("table");
+				const tbody = table.querySelector("tbody");
+				const rows = Array.from(tbody.querySelectorAll("tr"));
+				const isAscending = !header.classList.contains("ascending");
+
+				// Remove existing arrow classes from all headers
+				table.querySelectorAll("th").forEach(th => th.classList.remove("ascending", "descending"));
+				
+				// Toggle and add correct arrow class on the clicked header
+				header.classList.toggle("ascending", isAscending);
+				header.classList.toggle("descending", !isAscending);
+
+				rows.sort((rowA, rowB) => {
+				const cellA = rowA.cells[index].textContent.trim();
+				const cellB = rowB.cells[index].textContent.trim();
+
+				// Sorting logic: text for the first column, numeric for the second
+				if (index === 0) {
+					// First column: text sorting
+					return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+				} else {
+					// Second column: numeric sorting
+					const numA = parseFloat(cellA.replace(/[^0-9.-]+/g, ""));
+					const numB = parseFloat(cellB.replace(/[^0-9.-]+/g, ""));
+					return isAscending ? numA - numB : numB - numA;
+				}
+				});
+
+				rows.forEach(row => tbody.appendChild(row));
+			});
+		});
+	</script>
 	{% endif %}
 
 	{% include 'searchform.html.twig' %}

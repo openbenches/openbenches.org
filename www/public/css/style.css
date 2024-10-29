@@ -608,12 +608,21 @@ p {
 th.count {
 	text-align:right;
 	padding-right: .5em;
-	min-width: 50%;
+	min-width: fit-content%;
 }
 
 td.count {
 	text-align:right;
 	font-family: monospace;
+}
+
+th.ascending::after {
+	content: " ▲";
+	font-size: 0.8em;
+}
+th.descending::after {
+	content: " ▼";
+	font-size: 0.8em;
 }
 
 .leaflet-control-layers-selector{
