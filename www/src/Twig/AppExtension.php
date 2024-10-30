@@ -111,7 +111,7 @@ class AppExtension extends AbstractExtension
 	public function map_javascript( 
 			$api = "", 
 			$api_query = "", 
-			$lat  = "0", 
+			$lat  = "15", 
 			$long = "0",
 			$zoom = "0", 
 			$draggable = false, 

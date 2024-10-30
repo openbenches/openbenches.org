@@ -608,7 +608,7 @@ p {
 th.count {
 	text-align:right;
 	padding-right: .5em;
-	min-width: fit-content;
+	min-width: 6em;
 }
 
 td.count {
