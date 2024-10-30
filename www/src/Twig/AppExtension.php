@@ -162,8 +162,10 @@ class AppExtension extends AbstractExtension
 	});
 
 	//	If this is the default map, change the zoom
-	map.jumpTo( {center: [0, 12], zoom: 1} ); 
-
+	if ( zoom == 0 && lat == 0 & long ==0 ) {
+		map.jumpTo( {center: [0, 12], zoom: 1} ); 
+	}
+		
 	//	Disable map rotation using touch rotation gesture
 	map.touchZoomRotate.disableRotation();
 
