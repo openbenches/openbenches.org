@@ -111,7 +111,7 @@ class AppExtension extends AbstractExtension
 	public function map_javascript( 
 			$api = "", 
 			$api_query = "", 
-			$lat  = "15", 
+			$lat  = "0", 
 			$long = "0",
 			$zoom = "0", 
 			$draggable = false, 
@@ -143,9 +143,9 @@ class AppExtension extends AbstractExtension
 	//	Prevent world wrapping
 	const bounds = [
 		//	Crop off the Poles
-        [-179, -70], // Southwest coordinates
-        [ 180,  70] // Northeast coordinates
-    ];
+		[-179, -70], // Southwest coordinates
+		[ 180,  70] // Northeast coordinates
+	];
 
 	 // Define the styles to switch between
     const style1 = "https://tiles.openfreemap.org/styles/liberty";
@@ -160,6 +160,9 @@ class AppExtension extends AbstractExtension
 		maxBounds: bounds, // Sets bounds as max
 		pitch: 5,	//	small amount of tilt
 	});
+
+	//	If this is the default map, change the zoom
+	map.jumpTo( {center: [0, 12], zoom: 1} ); 
 
 	//	Disable map rotation using touch rotation gesture
 	map.touchZoomRotate.disableRotation();
