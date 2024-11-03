@@ -255,34 +255,34 @@ class AppExtension extends AbstractExtension
 				source: 'benches',
 				filter: ['has', 'point_count'],
 				paint: {
-					// Use step expressions (https://maplibre.org/maplibre-style-spec/#expressions-step)
+					// Use step expressions (https://maplibre.org/maplibre-style-spec/expressions/#step)
 					// with three steps to implement three types of circles:
 					//   * Blue, 20px circles when point count is less than 100
 					//   * Yellow, 30px circles when point count is between 100 and 750
 					//   * Pink, 40px circles when point count is greater than or equal to 750
 					'circle-color': [
-						'step',
-						['get', 'point_count'], '#51bbd655',
-						100,					'#f1f07555',
-						750,					'#f28cb155'
+						'step', ['get', 'point_count'],
+						     '#51bbd655',
+						100, '#f1f07555',
+						750, '#f28cb155'
 					],
 					'circle-radius': [
-						'step',
-						['get', 'point_count'], 20,
-						100,					30,
-						750,					40
+						'step', ['get', 'point_count'],
+						     20,
+						100, 30,
+						750, 40
 					],
 					'circle-stroke-width': [
-						'step',
-						['get', 'point_count'], 1,
-						100,                    1,
-						750,                    1
+						'step', ['get', 'point_count'],
+						     1,
+						100, 1,
+						750, 1
 					],
 					'circle-stroke-color': [
-						'step',
-						['get', 'point_count'],	'#000',
-						100,                    '#000',
-						750,                    '#000'
+						'step', ['get', 'point_count'],
+						     '#000',
+						100, '#000',
+						750, '#000'
 					],
 				}
 			});
@@ -305,13 +305,6 @@ class AppExtension extends AbstractExtension
 				id: 'unclustered-point',
 				source: 'benches',
 				filter: ['!', ['has', 'point_count']],
-				//type: 'circle',
-				//paint: {
-				//	'circle-color': '#03ace9',
-				//	'circle-radius': 7,
-				//	'circle-stroke-width': 2,
-				//	'circle-stroke-color': '#000'
-				//}
 				type: 'symbol',
 				layout: {
 					"icon-overlap": "always",
