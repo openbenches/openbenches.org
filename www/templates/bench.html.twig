@@ -4,7 +4,7 @@
 {% block     title %}{{ inscription|replace({'\r\n': " "})|slice(0, 49)|title|e("html") }}{% endblock %}
 {% block longitude %}{{ longitude }}{% endblock %}
 {% block  latitude %}{{ latitude }}{% endblock %}
-{% block   ogimage %}/image/{{ medias|first.sha1 }}{% endblock %}
+{% block   ogimage %}{{ app.request.schemeAndHttpHost }}/image/{{ medias|first.sha1 }}{% endblock %}
 {% block    oembed %}{{ bench_id }}{% endblock %}
 
 {% block body %}
