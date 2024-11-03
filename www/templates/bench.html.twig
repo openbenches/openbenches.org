@@ -57,12 +57,10 @@
 
 	{% if tags is not empty %}
 	<div id="taglist">
-		<ul>
 			Tags:
 			{% for tag in tags %}
 			<a class="tag" href="/tag/{{ tag }}/">#{{ tag|title }}</a>&nbsp;
 			{% endfor %}
-		</ul>
 	</div>
 	{% endif %}
 
