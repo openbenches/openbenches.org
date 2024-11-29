@@ -45,6 +45,8 @@ class BenchFunctions
 			$latitude    = $results_array["latitude"];
 			$longitude   = $results_array["longitude"];
 			$address     = $results_array["address"];
+			$timestamp   = $results_array["added"];
+
 
 			//	Format the address
 			$locations = explode("," , $address);
@@ -155,6 +157,7 @@ class BenchFunctions
 			//	Render the page
 			return [
 				"bench_id"    => $bench_id,
+				"timestamp"   => $timestamp,
 				"inscription" => $inscription,
 				"longitude"   => $longitude,
 				"latitude"    => $latitude,

@@ -5,6 +5,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\AcceptHeader;
+
 use App\Service\BenchFunctions;
 use App\Service\SearchFunctions;
 
@@ -28,6 +31,40 @@ class BenchController extends AbstractController
 
 		$benchFunctions = new BenchFunctions();
 		$bench = $benchFunctions->getBench( $bench_id );
+
+		//	Is this a request for HTML or something else?
+		$request = Request::createFromGlobals();
+		$acceptHeader = AcceptHeader::fromString($request->headers->get('Accept'));
+
+		//	ActivityPub request
+		if ( $acceptHeader->has("application/activity+json") || $acceptHeader->has("application/ld+json") ) {
+			//	Convert the timestamp
+			$timestamp = date(DATE_RFC3339, strtotime( $bench["timestamp"] ));
+
+			//	Construct the ActivityPub Note
+			//	`contentMap` is used to prevent unnecessary "translate this post" pop ups
+			$note = [
+				"@context"     => array(
+					"https://www.w3.org/ns/activitystreams"
+				),
+				"id"           => "https://openbenches.org/bench/{$benchId}",
+				"type"         => "Note",
+				"published"    => $timestamp,
+				"attributedTo" => "https://bot.openbenches.org/openbenches",
+				"inReplyTo"    => null,
+				"content"      => $bench["inscription"],
+				"contentMap"   => ["en" => $bench["inscription"]],
+				"to"           => ["https://www.w3.org/ns/activitystreams#Public"],
+				"cc"           => ["https://bot.openbenches.org/followers"],
+				"tag"          => null,
+				"attachment"   => null
+			];
+
+			//	Display the content and terminate
+			header("Content-Type: application/activity+json; charset=utf-8");
+			echo json_encode( $note );
+			die();
+		}
 
 		if ( isset($bench["bench_id"]) ) {
 			return $this->render("bench.html.twig", [
