@@ -115,6 +115,9 @@ class UserFunctions
 			case "linkedin" :
 				$userURL = "https://www.linkedin.com/search/results/all/?keywords={$name}";
 				break;
+			case "wordpress" :
+				$userURL = "https://wordpress.com/forums/users/{$name}";
+				break;
 			case "twitter" :
 				if ( !is_numeric($providerID) ) {
 					$userURL = "https://twitter.com/{$providerID}";
@@ -123,6 +126,8 @@ class UserFunctions
 					$userURL = "https://twitter.com/intent/user?user_id={$providerID}";
 					break;
 				}
+			default :
+				$userURL = "";
 		}
 		return $userURL;
 	}
