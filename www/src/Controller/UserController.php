@@ -35,6 +35,8 @@ class UserController extends AbstractController
 
 		//	Has the user sent a Mastodon server?
 		if (isset( $mastodon )) {
+			//	Lowercase it for better string matching
+			$mastodon = strtolower( $mastodon );
 			//  If so, extract the server's address
 			if ( filter_var( $mastodon, FILTER_VALIDATE_URL ) ) {
 				$server = parse_url( $mastodon, PHP_URL_HOST );
@@ -43,6 +45,7 @@ class UserController extends AbstractController
 			}
 		} else if ( isset( $server ) ) {
 			//	If a server has been sent, use that
+			$server = strtolower( $server );
 		} else {
 			//	Nothing sent. Display the regular login screen
 			return $this->render("mastodon_login.html.twig", []);
@@ -153,7 +156,7 @@ class UserController extends AbstractController
 		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["picture"]  = $content["avatar"];
 		
 		//	Redirect the newly logged in user to the add page
-		return $this->redirect( "/add/logged_in", 301 );
+		return $this->redirect( "/add", 301 );
 	}
 
 	#[Route("/user", name: "no_user")]
