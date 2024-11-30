@@ -85,6 +85,9 @@ class UserFunctions
 			case "wikipedia" :
 				$user_avatar = "/images/svg/wikipedia.svg";
 				break;
+			case "mastodon" :
+				$user_avatar = "/images/svg/mastodon.svg";
+				break;
 			default :
 				$user_avatar = null;
 		}
@@ -126,6 +129,9 @@ class UserFunctions
 					$userURL = "https://twitter.com/intent/user?user_id={$providerID}";
 					break;
 				}
+			case "mastodon" :
+				$userURL = "{$providerID}";
+				break;
 			default :
 				$userURL = "";
 		}
@@ -296,5 +302,45 @@ class UserFunctions
 		
 		//	Get the ID of the row which was just inserted
 		return $conn->lastInsertId();
+	}
+
+	public function getMastodonAppDetails( $domainName ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get user's name and details
+		$sql = "SELECT `domain_name`, `client_id`, `client_secret` 
+		        FROM `mastodon_apps`
+		        WHERE domain_name = ?
+		        LIMIT 0 , 1";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $domainName);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+		return $results_array;
+	}
+
+	public function addMastodonAppDetails( $domainName, $client_id, $client_secret ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Add the new app
+		$sql = "INSERT INTO `mastodon_apps`
+		(`domain_name`, `client_id`, `client_secret`)
+		VALUES
+		(?,             ?,           ?)";
+		
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $domainName);
+		$stmt->bindValue(2, $client_id);
+		$stmt->bindValue(3, $client_secret);
+		
+		//	Run the query
+		$results = $stmt->executeQuery();
+		
+		//	Get the ID of the row which was just inserted
+		return true;
 	}
 }

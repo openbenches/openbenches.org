@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpClient\HttpClient;
 
 use App\Service\MediaFunctions;
 use App\Service\UserFunctions;
@@ -16,6 +17,143 @@ class UserController extends AbstractController
 	#[Route("/test", name: "test")]
 	public function test(): Response {
 		return $this->render("test.html.twig", []);
+	}
+
+	#[Route("/mastodon_login", name: "mastodon_login")]
+	public function mastodon_login(): Response {
+		//	Any ?get requests
+		$request = Request::createFromGlobals();
+		$mastodon = $request->query->get("mastodon");
+		$server   = $request->query->get("server");
+		$code     = $request->query->get("code");
+
+		$userFunctions  = new UserFunctions();
+
+		//	For HTTP requests
+		$userAgent = "openbenches/0.1";
+		$domain = $_ENV["DOMAIN"];
+
+		//	Has the user sent a Mastodon server?
+		if (isset( $mastodon )) {
+			//  If so, extract the server's address
+			if ( filter_var( $mastodon, FILTER_VALIDATE_URL ) ) {
+				$server = parse_url( $mastodon, PHP_URL_HOST );
+			} else {
+				return $this->render("mastodon_login.html.twig", [ "error" => "No valid URl found." ]);
+			}
+		} else if ( isset( $server ) ) {
+			//	If a server has been sent, use that
+		} else {
+			//	Nothing sent. Display the regular login screen
+			return $this->render("mastodon_login.html.twig", []);
+		}
+
+		//	Get the credentials associated with this server
+		$credentials = $userFunctions->getMastodonAppDetails( $server );
+
+		if ( !isset( $code ) ) {
+			//	If there is no existing app. Create a new one
+			if ( !$credentials ) {
+				$client = HttpClient::create();
+				$response = $client->request("POST", "https://{$server}/api/v1/apps", [
+					"headers" => [
+						"User-Agent" => $userAgent,
+					],
+					"body" => [
+						'client_name'   => "Login to " . $_ENV["NAME"],
+						'redirect_uris' => "{$domain}mastodon_login?server={$server}&",
+						'scopes'        => "read:accounts",
+						'website'       => "{$domain}"
+					]
+				]);
+
+				//	If an error occurred
+				if ( 200 !== $response->getStatusCode() ) {
+					return $this->render("mastodon_login.html.twig", [ "error" => "Please check the domain and try again." ]);
+				}
+
+				//	Get the response
+				$content = $response->toArray();
+				$client_id     = $content["client_id"];
+				$client_secret = $content["client_secret"];
+				//	Create the app in the database
+				$userFunctions->addMastodonAppDetails( $server, $client_id, $client_secret );
+			}  else {
+				//	Use the stored app credentials
+				$client_id     = $credentials["client_id"];
+				$client_secret = $credentials["client_secret"];
+			}
+			
+			//	Redirect the user to the login URl on their provided server
+			$login_URl = "https://{$server}/oauth/authorize".
+			"?client_id={$client_id}" .
+			"&scope=read:accounts" .
+			"&redirect_uri={$domain}mastodon_login%3Fserver={$server}%26" .
+			"&response_type=code";
+
+			return $this->redirect( $login_URl, 301 );
+			die();
+		}
+
+		//	A code has been provided
+		//	Read the previously saved credentials for the server
+		$client_id     = $credentials["client_id"];
+		$client_secret = $credentials["client_secret"];
+
+		//	Get the Bearer token
+		$client = HttpClient::create();
+		$response = $client->request("POST", "https://{$server}/oauth/token", [
+			"headers" => [
+				"User-Agent" => $userAgent,
+			],
+			"body" => [
+				"client_id"     => $client_id,
+				"client_secret" => $client_secret,
+				"redirect_uri"  => "{$domain}mastodon_login?server={$server}&",
+				"grant_type"    => "authorization_code",
+				"code"          => $code,
+				"scope"         => "read:accounts"
+			]
+		]);
+
+		//	If an error occurred
+		if ( 200 !== $response->getStatusCode() ) {
+			return $this->render("mastodon_login.html.twig", [ "error" => "An error occurred fetching the Authorization code." ]);
+		}
+
+		//	Get the token
+		$content = $response->toArray();
+		$access_token = $content["access_token"];
+
+		//	Verify the user's credentials
+		$client = HttpClient::create();
+		$response = $client->request("GET", "https://{$server}/api/v1/accounts/verify_credentials", [
+			"headers" => [
+				"User-Agent"    => $userAgent,
+				"Authorization" => "Bearer {$access_token}"
+			]
+		]);
+
+		//	If an error occurred
+		if ( 200 !== $response->getStatusCode() ) {
+			return $this->render("mastodon_login.html.twig", [ "error" => "Your details could not be verified." ]);
+		}
+
+		//	Get the user's details
+		$content = $response->toArray();
+
+		//	Save the user to the database
+		$mastodon_username = $content["username"];
+		$mastodon_id       = $content["url"];
+		$userFunctions->addUser( $mastodon_username, "mastodon", $mastodon_id );
+	
+		//	Add the user to the session in a HORRIBLE hack
+		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["nickname"] = "@{$mastodon_username}@{$server}";
+		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["sub"]      = "mastodon|$mastodon_id";
+		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["picture"]  = $content["avatar"];
+		
+		//	Redirect the newly logged in user to the add page
+		return $this->redirect( "/add/logged_in", 301 );
 	}
 
 	#[Route("/user", name: "no_user")]

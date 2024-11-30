@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Log in with Mastodon{% endblock %}
+
+{% block body %}
+{% if error is defined %}
+		<h2>{{ error }}</h2>
+{% endif %}
+<form method="get"> 
+	<label for="mastodon">What is your Mastodon server?</label><br>
+	<input type="url" id="mastodon" name="mastodon" placeholder="https://example.social/" required><br>
+	<button>Authorise me!</button>
+</form>
+{% endblock %}
