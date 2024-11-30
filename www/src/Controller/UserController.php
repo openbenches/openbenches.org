@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 use App\Service\MediaFunctions;
 use App\Service\UserFunctions;
@@ -58,21 +59,27 @@ class UserController extends AbstractController
 			//	If there is no existing app. Create a new one
 			if ( !$credentials ) {
 				$client = HttpClient::create();
-				$response = $client->request("POST", "https://{$server}/api/v1/apps", [
-					"headers" => [
-						"User-Agent" => $userAgent,
-					],
-					"body" => [
-						'client_name'   => "Login to " . $_ENV["NAME"],
-						'redirect_uris' => "{$domain}mastodon_login?server={$server}&",
-						'scopes'        => "read:accounts",
-						'website'       => "{$domain}"
-					]
-				]);
-
-				//	If an error occurred
-				if ( 200 !== $response->getStatusCode() ) {
-					return $this->render("mastodon_login.html.twig", [ "error" => "Please check the domain and try again." ]);
+				
+				try {
+					$response = $client->request("POST", "https://{$server}/api/v1/apps", [
+						"headers" => [
+							"User-Agent" => $userAgent,
+						],
+						"body" => [
+							'client_name'   => "Login to " . $_ENV["NAME"],
+							'redirect_uris' => "{$domain}mastodon_login?server={$server}&",
+							'scopes'        => "read:accounts",
+							'website'       => "{$domain}"
+						]
+					]);
+	
+					//	If an error occurred
+					if ( 200 !== $response->getStatusCode() ) {
+						return $this->render("mastodon_login.html.twig", [ "error" => "Please check the domain and try again." ]);
+					}
+	
+				} catch (TransportExceptionInterface $e) {
+					return $this->render("mastodon_login.html.twig", [ "error" => "Something went wrong. Please check the domain and try again." ]);
 				}
 
 				//	Get the response
