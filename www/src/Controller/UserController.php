@@ -17,7 +17,8 @@ class UserController extends AbstractController
 {
 	#[Route("/test", name: "test")]
 	public function test(): Response {
-		return $this->render("test.html.twig", []);
+		$test = var_export($_SESSION, true);
+		return $this->render("test.html.twig", [ "test" => $test]);
 	}
 
 	#[Route("/mastodon_login", name: "mastodon_login")]
@@ -161,6 +162,9 @@ class UserController extends AbstractController
 		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["nickname"] = "@{$mastodon_username}@{$server}";
 		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["sub"]      = "mastodon|$mastodon_id";
 		$_SESSION["_sf2_attributes"]["auth0_session"]["user"]["picture"]  = $content["avatar"];
+
+		//	See if a small delay helps here
+		sleep(2);
 		
 		//	Redirect the newly logged in user to the add page
 		return $this->redirect( "/add", 301 );
