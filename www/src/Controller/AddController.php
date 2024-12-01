@@ -24,15 +24,17 @@ class AddController extends AbstractController
 			//	Use Auth0 to get user data
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
-			$provider   = explode("|", $user->getUserIdentifier())[0];
-			$providerID = explode("|", $user->getUserIdentifier())[1];	
+			$identifier = str_replace( "oauth2|", "", $user->getUserIdentifier() ); //	For Discord
+			$provider   = explode( "|", $identifier )[0];
+			$providerID = explode( "|", $identifier )[1];	
 		} else if ( isset( $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ) ) {
 			//	Hack to get Auth0 user data from the session
 			$user = $_SESSION["_sf2_attributes"]["auth0_session"]["user"];
 			$username   = $user["nickname"];
 			$avatar     = $user["picture"];
-			$provider   = explode("|", $user["sub"])[0];
-			$providerID = explode("|", $user["sub"])[1];
+			$identifier = str_replace( "oauth2|", "", $user["sub"] ); //	For Discord
+			$provider   = explode( "|", $identifier )[0];
+			$providerID = explode( "|", $identifier )[1];
 		} else {
 			$username   = null;
 			$avatar     = null;
