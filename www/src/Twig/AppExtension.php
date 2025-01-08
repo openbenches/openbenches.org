@@ -120,7 +120,7 @@ class AppExtension extends AbstractExtension
 			$bb_s = null, 
 			$bb_w = null,  ) {
 		//	Get the layer key
-		$arcgis_key     = $_ENV['ARCGIS_KEY'];
+		$arcgis_key = $_ENV['ARCGIS_KEY'];
 		//	What data is being requested?
 		$api_url = $api . $api_query;
 		if ( null == $lat ) {
@@ -147,9 +147,9 @@ class AppExtension extends AbstractExtension
 		[ 180,  70] // Northeast coordinates
 	];
 
-	 // Define the styles to switch between
-    const style1 = "https://tiles.openfreemap.org/styles/liberty";
-    const style2 = "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/osm/hybrid/?token={$arcgis_key}";
+	//	Define the styles to switch between
+	const style1 = "https://tiles.openfreemap.org/styles/liberty";
+	const style2 = "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/osm/hybrid/?token={$arcgis_key}";
 
 	//	Initialise the map
 	const map = new maplibregl.Map({
@@ -162,7 +162,7 @@ class AppExtension extends AbstractExtension
 	});
 
 	//	If this is the default map, change the zoom
-	if ( zoom == 0 && lat == 0 & long ==0 ) {
+	if ( zoom == 0 && lat == 0 & long == 0 ) {
 		map.jumpTo( {center: [0, 12], zoom: 1} ); 
 	}
 		
@@ -226,8 +226,8 @@ class AppExtension extends AbstractExtension
 	}
 
 	
-		//	Asynchronous function to add custom layers and sources
-    async function addCustomLayersAndSources() {
+	//	Asynchronous function to add custom layers and sources
+	async function addCustomLayersAndSources() {
 		//	Get the data
 		var benches_data = await load_benches();
 		//	Load the GeoJSON
@@ -334,8 +334,8 @@ class AppExtension extends AbstractExtension
 				//	Generate a pop-up with all the benches' information & links
 				var html = "<h3>Multiple Benches</h3><hr>";
 				leaves.forEach(function(leaf) {
-        			html +=	leaf.properties.popupContent;
-        			html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>openbenches.org/bench/" + leaf.id + "</a><hr>";
+					html +=	leaf.properties.popupContent;
+					html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>openbenches.org/bench/" + leaf.id + "</a><hr>";
 				});
 
 				new maplibregl.Popup({closeButton: false})
@@ -385,7 +385,7 @@ class AppExtension extends AbstractExtension
 			map.getCanvas().style.cursor = '';
 		});
 
-		// remove distracting POIs
+		//	Remove distracting POIs
 		if (map.getLayer("poi_r20")) {
 			map.removeLayer("poi_r20");
 		}
@@ -422,10 +422,10 @@ class AppExtension extends AbstractExtension
 	}
 	addStyleButton(map);
 
-	// Variable to keep track of current style
+	//	Variable to keep track of current style
 	let currentStyle = style1;
 
-	// Toggle style function
+	//	Toggle style function
 	document.getElementById('toggle-style').addEventListener('click', () => {
 		currentStyle = currentStyle === style1 ? style2 : style1;
 		map.setStyle(currentStyle);
@@ -434,7 +434,7 @@ class AppExtension extends AbstractExtension
 	//	Set bounding box, if any
 	var bb_n = "{$bb_n}";
 	if ( bb_n !== "_" ) {
-			map.fitBounds( [ [ {$bb_w}, {$bb_s} ], [ {$bb_e},{$bb_n} ] ] );
+		map.fitBounds( [ [ {$bb_w}, {$bb_s} ], [ {$bb_e},{$bb_n} ] ] );
 	}
 	
 </script>
