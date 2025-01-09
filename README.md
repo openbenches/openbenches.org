@@ -213,5 +213,6 @@ Everything we do builds on someone else's hard work.
 * Mastodon Library by [Eleirbag89/MastodonBotPHP](https://github.com/Eleirbag89/MastodonBotPHP) [MIT](https://github.com/Eleirbag89/MastodonBotPHP/blob/master/LICENSE)
 * Twitter integration by [Twifer](https://github.com/fsyhrnl/twifer) [MIT](https://github.com/fsyhrnl/twifer/blob/main/LICENSE).
 * Comments by [Commentics](https://commentics.com/) [GPL v3](https://github.com/commentics/commentics/blob/master/LICENSE.txt)
+* [Starfield Image by uncertaintysheep](https://commons.wikimedia.org/w/index.php?curid=57215205) CC BY-SA 2.0
 
 And thanks to the many contributors who have improved this codebase.

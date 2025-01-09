@@ -53,6 +53,7 @@ canvas {
 	border-bottom:1px solid #aaa;
 	overflow-wrap: normal;
 	word-break: normal !important;
+	background-image: url("/images/stars.webp");
 }
 
 iframe{

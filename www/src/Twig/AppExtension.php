@@ -151,6 +151,10 @@ class AppExtension extends AbstractExtension
 	const style1 = "https://tiles.openfreemap.org/styles/liberty";
 	const style2 = "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/osm/hybrid/?token={$arcgis_key}";
 
+	//	Define the projections to switch between
+	const projection1 = "globe";
+	const projection2 = "mercator";
+
 	maplibregl.setRTLTextPlugin(
 		"/js/maplibre-gl-5.0.0/mapbox-gl-rtl-text.js",
 		true // Lazy load the plugin
@@ -169,7 +173,7 @@ class AppExtension extends AbstractExtension
 
 	map.on('style.load', () => {
 		map.setProjection({
-			type: 'globe',
+			type: projection1,
 		});
 	});
 
@@ -441,6 +445,32 @@ class AppExtension extends AbstractExtension
 	document.getElementById('toggle-style').addEventListener('click', () => {
 		currentStyle = currentStyle === style1 ? style2 : style1;
 		map.setStyle(currentStyle);
+	});
+
+	//	Add swap Projection button
+	function addProjectionButton(map) {
+		class ProjectionButton {
+			onAdd(map) {
+				const div = document.createElement("div");
+				div.className = "maplibregl-ctrl maplibregl-ctrl-group";
+				div.innerHTML = `<button id="toggle-projection" class="maplibregl-ctrl-globe" type="button" title="Change map projection" aria-label="Change map projection"><span class="maplibregl-ctrl-icon" aria-hidden="true"></span></button>`;
+				return div;
+			}
+		}
+		const projectionButton = new ProjectionButton();
+		map.addControl(projectionButton, "top-right");
+	}
+	addProjectionButton(map);
+
+	//	Variable to keep track of current style
+	let currentProjection = projection1;
+
+	//	Toggle style function
+	document.getElementById('toggle-projection').addEventListener('click', () => {
+		currentProjection = currentProjection === projection1 ? projection2 : projection1;
+		map.setProjection({
+			type: currentProjection,
+		});
 	});
 
 	//	Set bounding box, if any
