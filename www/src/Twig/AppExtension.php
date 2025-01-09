@@ -259,7 +259,7 @@ class AppExtension extends AbstractExtension
 
 		//	Custom bench marker
 		if ( map.listImages().includes("openbench-icon") == false ) {
-			var image = await map.loadImage('/public/images/icons/marker.png');
+			var image = await map.loadImage('/images/icons/marker.png');
 			map.addImage('openbench-icon', image.data);
 		}
 
