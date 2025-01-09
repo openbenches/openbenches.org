@@ -140,7 +140,7 @@ class AppExtension extends AbstractExtension
 	//	Placeholder for last (or only) marker
 	var marker;
 
-	//	Prevent world wrapping
+	//	Prevent world wrapping on flat map
 	const bounds = [
 		//	Crop off the Poles
 		[-179, -70], // Southwest coordinates
@@ -151,6 +151,11 @@ class AppExtension extends AbstractExtension
 	const style1 = "https://tiles.openfreemap.org/styles/liberty";
 	const style2 = "https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/osm/hybrid/?token={$arcgis_key}";
 
+	maplibregl.setRTLTextPlugin(
+		"/js/maplibre-gl-5.0.0/mapbox-gl-rtl-text.js",
+		true // Lazy load the plugin
+	);
+
 	//	Initialise the map
 	const map = new maplibregl.Map({
 		container: 'map',
@@ -158,12 +163,19 @@ class AppExtension extends AbstractExtension
 		center: [long, lat], // world
 		zoom: zoom, // Lower numbers zoomed out
 		maxBounds: bounds, // Sets bounds as max
-		pitch: 5,	//	small amount of tilt
+		pitch: 0,	//	No initial of tilt
+		canvasContextAttributes: { antialias: true }
+	});
+
+	map.on('style.load', () => {
+		map.setProjection({
+			type: 'globe',
+		});
 	});
 
 	//	If this is the default map, change the zoom
 	if ( zoom == 0 && lat == 0 & long == 0 ) {
-		map.jumpTo( {center: [0, 12], zoom: 1} ); 
+		map.jumpTo( {center: [0, 12], zoom: 2} ); 
 	}
 		
 	//	Disable map rotation using touch rotation gesture
@@ -243,7 +255,7 @@ class AppExtension extends AbstractExtension
 
 		//	Custom bench marker
 		if ( map.listImages().includes("openbench-icon") == false ) {
-			image = await map.loadImage('/public/images/icons/marker.png');
+			var image = await map.loadImage('/public/images/icons/marker.png');
 			map.addImage('openbench-icon', image.data);
 		}
 
