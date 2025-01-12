@@ -358,6 +358,7 @@ a[rel*="license"] {
 
 .colophon {
 	list-style: none;
+	padding: 0;
 }
 
 .colophon-logo {

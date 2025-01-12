@@ -202,17 +202,13 @@ Everything we do builds on someone else's hard work.
 * All photos uploaded by users are [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 * [Benches from Bath](https://github.com/BathHacked/banes-geographic-data/blob/master/banes_park_seats_and_benches.geojson) are [OGL](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/) and Powered by [Bath: Hacked](https://www.bathhacked.org/).
 * Logo template by [Creative Mania](https://thenounproject.com/term/park/923893/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
-* Maps by [Leaflet](https://github.com/Leaflet/Leaflet) [BSD 2-clause "Simplified" License](https://opensource.org/licenses/BSD-2-Clause).
-* Cluster library by [Leaflet](https://github.com/Leaflet/Leaflet.markercluster) [MIT](https://github.com/Leaflet/Leaflet.markercluster/blob/master/MIT-LICENCE.txt).
-* GPS logo by [Chinnaking](https://thenounproject.com/term/gps/1050710/) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Panoramic Visualiser by [Pannellum](https://pannellum.org/) [MIT](https://opensource.org/licenses/MIT).
 * JavaScript EXIF reader & image preview by [JavaScript Load Image](https://github.com/blueimp/JavaScript-Load-Image/) ([MIT](https://github.com/blueimp/JavaScript-Load-Image/blob/master/LICENSE.txt)).
 * Login services provided by [Auth0.com's PHP library](https://github.com/auth0/symfony) [MIT](https://github.com/auth0/symfony/blob/main/LICENSE.txt).
 * CSS based on [PicniCSS](https://github.com/franciscop/picnic) [MIT](https://github.com/franciscop/picnic/blob/master/LICENSE) (chosen mostly because we like picnic benches!)
 * Animated OCR icon by [Loading.io](https://loading.io/spinner/magnify/-searching-for-loading-icon) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
-* Mastodon Library by [Eleirbag89/MastodonBotPHP](https://github.com/Eleirbag89/MastodonBotPHP) [MIT](https://github.com/Eleirbag89/MastodonBotPHP/blob/master/LICENSE)
-* Twitter integration by [Twifer](https://github.com/fsyhrnl/twifer) [MIT](https://github.com/fsyhrnl/twifer/blob/main/LICENSE).
 * Comments by [Commentics](https://commentics.com/) [GPL v3](https://github.com/commentics/commentics/blob/master/LICENSE.txt)
 * [Starfield Image by uncertaintysheep](https://commons.wikimedia.org/w/index.php?curid=57215205) CC BY-SA 2.0
+* See https://openbenches.org/colophon for more
 
 And thanks to the many contributors who have improved this codebase.
