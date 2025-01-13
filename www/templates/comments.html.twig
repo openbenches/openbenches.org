@@ -1,0 +1,28 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Comments{% endblock %}
+
+{% block body %}
+
+<h3>Recent Comments</h3> 
+
+	{% if comments is defined %}
+	<div id="search-results">
+		<ol>
+		{% for comment in comments %}
+			<li>
+				<a href="{{ comment.page_id|raw }}">
+					<div>
+						{{ comment.comment|raw }}<br>
+					</div>
+				</a>
+			</li>
+		{% endfor %}
+		</ol>
+	</div>
+	{% endif %}
+
+{% include 'searchform.html.twig' %}
+
+{% endblock %}
