@@ -107,6 +107,10 @@ fieldset {
 	text-align: left;
 }
 
+#search-results img {
+	max-width: 100%;
+}
+
 .text {
 	margin: .5em
 }
