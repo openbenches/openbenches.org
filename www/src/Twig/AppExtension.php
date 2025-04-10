@@ -351,7 +351,7 @@ class AppExtension extends AbstractExtension
 				var html = "<h3>Multiple Benches</h3><hr>";
 				leaves.forEach(function(leaf) {
 					html +=	leaf.properties.popupContent;
-					html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>openbenches.org/bench/" + leaf.id + "</a><hr>";
+					html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>View Bench (" + leaf.id + ")</a><hr>";
 				});
 
 				new maplibregl.Popup({closeButton: false})
@@ -369,8 +369,8 @@ class AppExtension extends AbstractExtension
 			const coordinates = e.features[0].geometry.coordinates.slice();
 		
 			inscription = e.features[0].properties.popupContent;
-			link = e.features[0].id
-			link = "openbenches.org/bench/" + link;
+			id = e.features[0].id;
+			link = "openbenches.org/bench/" + id;
 
 			// Ensure that if the map is zoomed out such that
 			// multiple copies of the feature are visible, the
@@ -381,7 +381,7 @@ class AppExtension extends AbstractExtension
 
 			new maplibregl.Popup({closeButton: false})
 				.setLngLat(coordinates)
-				.setHTML( inscription + '<br><a href="https://' + link + '">' + link + '</a>')
+				.setHTML( inscription + '<br><a class="button buttonColour" href="https://' + link + '">View Bench (' + id + ')</a>')
 				.addTo(map);
 		});
 
