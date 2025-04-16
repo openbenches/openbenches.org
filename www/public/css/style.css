@@ -249,7 +249,7 @@ hr {
 	background: rgba(0, 0, 0, 0.5);
 	padding: 0.4em;
 	font-size: 0.5em;
-	max-width: 590px;
+	max-width: 100%;
 	border-radius: 1em;
 	margin: auto;
 	position: absolute;
