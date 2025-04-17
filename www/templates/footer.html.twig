@@ -44,7 +44,7 @@ if ( !window.matchMedia('(prefers-reduced-motion: reduce)').matches ) {
 			const inc = target / speed;
 
 			// Check if target is reached
-			if (count < target) {
+			if ( count < ( target - inc ) ) {
 				// Add inc to count and formatted output in counter
 				counter.innerText = Math.trunc(count + inc).toLocaleString('en-GB');
 				value = Math.trunc(count + inc)
