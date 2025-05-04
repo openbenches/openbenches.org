@@ -131,27 +131,64 @@ class LocationFunctions
 		$locationJSON = file_get_contents($geocodeAPI, false, $context);
 		$locationData = json_decode($locationJSON);
 		
-		//	Construct the address
+		//	Construct the address from the Who's On First components.
 		//	https://github.com/whosonfirst/whosonfirst-placetypes#here-is-a-pretty-picture
 		$whosonfirst = $locationData->features[0]->properties->context->whosonfirst;
-
-		//	Not all places have neighbourhoods or boroughs
-		if( isset( $whosonfirst->neighbourhood ) ) { 
-			$neighbourhood = $whosonfirst->neighbourhood->name . ", ";
-		} else {
-			$neighbourhood = "";
+		
+		//	Convert to an array.
+		$address_parts_array = [];
+		foreach ( $whosonfirst as $key => $value ) {
+			$address_parts_array[$key] = $value->name;
 		}
-		if( isset( $whosonfirst->borough ) ) { 
-			$borough = $whosonfirst->borough->name . ", ";
-		} else {
-			$borough = "";
-		}
+		
+		//	Construct the address.
+		$address_parts = [];
 
-		$formatted_address = 
-			$neighbourhood .
-			$borough . 
-			$whosonfirst->region->name . ", " .
-			$whosonfirst->country->name;
+		//	Don't use "name" if this is a street or address.
+		if ( "poi" == $locationData->features[0]->properties->layer ) {
+			$adddress_name = $locationData->features[0]->properties->name;
+			if ( $adddress_name != "" ) {
+				$address_parts[] = $adddress_name;
+			}	
+		}
+		
+		//	Construct from smallest to biggest.
+		if ( array_key_exists( "neighbourhood", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["neighbourhood"];
+		}
+		if ( array_key_exists( "borough", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["borough"];
+		}
+		if ( array_key_exists( "locality", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["locality"];
+		}
+		
+		//	Avoid duplicating county information.
+		if ( array_key_exists( "macrocounty", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["macrocounty"];
+		} else if ( array_key_exists( "county", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["county"];
+		}
+		
+		if ( array_key_exists( "region", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["region"];
+		} 
+		
+		if ( array_key_exists( "macroregion", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["macroregion"];
+		}
+		
+		if ( array_key_exists( "country", $address_parts_array ) ) {
+				$address_parts[] = $address_parts_array["country"];
+		} 
+		
+		//	Remove duplicates.
+		$address_parts = array_unique( $address_parts );
+		//	Turn into a comma separate string.
+		$formatted_address = implode( ", ", $address_parts ); 
+		//	Ensure this is all Unicode.
+		$formatted_address = mb_convert_encoding( $formatted_address, "UTF-8", "auto" );
+	
 		return $formatted_address;
 
 		// //	Flip between different providers, because we're cheapskates!
