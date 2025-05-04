@@ -115,106 +115,144 @@ class LocationFunctions
 		return $benches_array;	
 	}
 
-	public function getAddress($latitude, $longitude): string {
-		//	Flip between different providers, because we're cheapskates!
-		$provider = random_int(1,2);
-
-		if (0 == $provider) {
+	public function getAddress( $latitude, $longitude ): string {
+		//	https://api.stadiamaps.com/geocoding/v2/reverse?point.lat=51.49634&point.lon=0.13308&api_key=zzzzz
+		$geocode_api_key = $_ENV['STADIAMAPS_API_KEY'];
+		$geocodeAPI = "https://api.stadiamaps.com/geocoding/v2/reverse" . 
+			"?point.lat=" . $latitude . 
+			"&point.lon=" . $longitude .
+			"&api_key={$geocode_api_key}";
+		$options = array(
+			'http'=> array(
+				'method' => "GET"
+			)
+		);
+		$context = stream_context_create($options);
+		$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		$locationData = json_decode($locationJSON);
 		
-			$geocode_api_key = $_ENV['OPENCAGE_API_KEY'];
+		//	Construct the address
+		//	https://github.com/whosonfirst/whosonfirst-placetypes#here-is-a-pretty-picture
+		$whosonfirst = $locationData->features[0]->properties->context->whosonfirst;
 
-			$reverseGeocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$latitude}%2C{$longitude}&no_annotations=1&key={$geocode_api_key}";
-			$options = array(
-				'http'=>array(
-					'method'=>"GET",
-					'header'=>"User-Agent: OpenBenches.org\r\n"
-				)
-			);
-
-			$context = stream_context_create($options);
-			$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
-			$locationData = json_decode($locationJSON);
-			try {
-				//	Pre-formated address from GeoCage
-				$formatted_address = $locationData->results[0]->formatted;
-				//	Separate components
-				$address_components = (array) $locationData->results[0]->components;
-				//	Postcode needs removing in order to reduce precision when searching
-				$postcode = $address_components["postcode"];
-				//	Delete the postcode from the pre-formatted address
-				$formatted_address = str_replace($postcode, "", $formatted_address);
-				$formatted_explode = array_map('trim', explode(',', $formatted_address));
-				$formatted_explode = array_filter($formatted_explode);
-				$formatted_address = implode(", " , $formatted_explode);
-
-			} catch (Exception $e) {
-				$loc = var_export($locationData);
-				error_log("Caught $e - $loc");
-				return "";
-			}
-
-			return $formatted_address;
-		} 	if (1 == $provider) {
-			$geocode_api_key = $_ENV['GEOAPIFY_API_KEY'];
-			// $location = urlencode($location);
-			$geocodeAPI = "https://api.geoapify.com/v1/geocode/reverse?lat={$latitude}&lon={$longitude}&apiKey={$geocode_api_key}&type=street";
-			$options = array(
-				'http'=>array(
-					'method'=>"GET",
-					'header'=>"User-Agent: OpenBenches.org\r\n"
-				)
-			);
-			$context = stream_context_create($options);
-			$locationJSON = file_get_contents($geocodeAPI, false, $context);
-			$locationData = json_decode($locationJSON);
-
-			try {
-				$country = $locationData->features[0]->properties->country ?? null;
-				$state   = $locationData->features[0]->properties->state   ?? null;
-				$county  = $locationData->features[0]->properties->county  ?? null;
-				$city    = $locationData->features[0]->properties->city    ?? null;
-				$suburb  = $locationData->features[0]->properties->suburb  ?? null;
-				
-				$address_components = array($suburb, $city, $county, $state, $country);
-				$address_components = array_filter($address_components);
-				$formatted_address = implode(", " , $address_components);
-			} catch (Exception $e) {
-				$loc = var_export($locationData);
-				error_log("Caught $e - $loc");
-				return "";
-			}
-			return $formatted_address;
-		} if (2 == $provider) {
-			//	https://geocode.maps.co/
-			$geocode_api_key = $_ENV['GEOCODE_API_KEY'];
-
-			$geocodeAPI = "https://geocode.maps.co/reverse?lat={$latitude}&lon={$longitude}&api_key={$geocode_api_key}";
-			$options = array(
-				'http'=>array(
-					'method'=>"GET",
-					'header'=>"User-Agent: OpenBenches.org\r\n"
-				)
-			);
-			$context = stream_context_create($options);
-			$locationJSON = file_get_contents($geocodeAPI, false, $context);
-			$locationData = json_decode($locationJSON);
-
-			try {
-				$country = $locationData->address->country ?? null;
-				$state   = $locationData->address->state   ?? null;
-				$county  = $locationData->address->county  ?? null;
-				$city    = $locationData->address->city    ?? null;
-				$suburb  = $locationData->address->suburb  ?? null;
-
-				$address_components = array($suburb, $city, $county, $state, $country);
-				$address_components = array_filter($address_components);
-				$formatted_address = implode(", " , $address_components);
-			} catch (Exception $e) {
-				$loc = var_export($locationData);
-				error_log("Caught $e - $loc");
-				return "";
-			}
-			return $formatted_address;
+		//	Not all places have neighbourhoods or boroughs
+		if( isset( $whosonfirst->neighbourhood ) ) { 
+			$neighbourhood = $whosonfirst->neighbourhood->name . ", ";
+		} else {
+			$neighbourhood = "";
 		}
+		if( isset( $whosonfirst->borough ) ) { 
+			$borough = $whosonfirst->borough->name . ", ";
+		} else {
+			$borough = "";
+		}
+
+		$formatted_address = 
+			$neighbourhood .
+			$borough . 
+			$whosonfirst->region->name . ", " .
+			$whosonfirst->country->name;
+		return $formatted_address;
+
+		// //	Flip between different providers, because we're cheapskates!
+		// $provider = random_int(1,2);
+
+		// // if (0 == $provider) {
+		
+		// // 	$geocode_api_key = $_ENV['OPENCAGE_API_KEY'];
+
+		// // 	$reverseGeocodeAPI = "https://api.opencagedata.com/geocode/v1/json?q={$latitude}%2C{$longitude}&no_annotations=1&key={$geocode_api_key}";
+		// // 	$options = array(
+		// // 		'http'=>array(
+		// // 			'method'=>"GET",
+		// // 			'header'=>"User-Agent: OpenBenches.org\r\n"
+		// // 		)
+		// // 	);
+
+		// // 	$context = stream_context_create($options);
+		// // 	$locationJSON = file_get_contents($reverseGeocodeAPI, false, $context);
+		// // 	$locationData = json_decode($locationJSON);
+		// // 	try {
+		// // 		//	Pre-formated address from GeoCage
+		// // 		$formatted_address = $locationData->results[0]->formatted;
+		// // 		//	Separate components
+		// // 		$address_components = (array) $locationData->results[0]->components;
+		// // 		//	Postcode needs removing in order to reduce precision when searching
+		// // 		$postcode = $address_components["postcode"];
+		// // 		//	Delete the postcode from the pre-formatted address
+		// // 		$formatted_address = str_replace($postcode, "", $formatted_address);
+		// // 		$formatted_explode = array_map('trim', explode(',', $formatted_address));
+		// // 		$formatted_explode = array_filter($formatted_explode);
+		// // 		$formatted_address = implode(", " , $formatted_explode);
+
+		// // 	} catch (Exception $e) {
+		// // 		$loc = var_export($locationData);
+		// // 		error_log("Caught $e - $loc");
+		// // 		return "";
+		// // 	}
+
+		// // 	return $formatted_address;
+		// // } 	if (1 == $provider) {
+		// // 	$geocode_api_key = $_ENV['GEOAPIFY_API_KEY'];
+		// // 	// $location = urlencode($location);
+		// // 	$geocodeAPI = "https://api.geoapify.com/v1/geocode/reverse?lat={$latitude}&lon={$longitude}&apiKey={$geocode_api_key}&type=street";
+		// // 	$options = array(
+		// // 		'http'=>array(
+		// // 			'method'=>"GET",
+		// // 			'header'=>"User-Agent: OpenBenches.org\r\n"
+		// // 		)
+		// // 	);
+		// // 	$context = stream_context_create($options);
+		// // 	$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		// // 	$locationData = json_decode($locationJSON);
+
+		// // 	try {
+		// // 		$country = $locationData->features[0]->properties->country ?? null;
+		// // 		$state   = $locationData->features[0]->properties->state   ?? null;
+		// // 		$county  = $locationData->features[0]->properties->county  ?? null;
+		// // 		$city    = $locationData->features[0]->properties->city    ?? null;
+		// // 		$suburb  = $locationData->features[0]->properties->suburb  ?? null;
+				
+		// // 		$address_components = array($suburb, $city, $county, $state, $country);
+		// // 		$address_components = array_filter($address_components);
+		// // 		$formatted_address = implode(", " , $address_components);
+		// // 	} catch (Exception $e) {
+		// // 		$loc = var_export($locationData);
+		// // 		error_log("Caught $e - $loc");
+		// // 		return "";
+		// // 	}
+		// // 	return $formatted_address;
+		// // } if (2 == $provider) {
+		// // 	//	https://geocode.maps.co/
+		// // 	$geocode_api_key = $_ENV['GEOCODE_API_KEY'];
+
+		// // 	$geocodeAPI = "https://geocode.maps.co/reverse?lat={$latitude}&lon={$longitude}&api_key={$geocode_api_key}";
+		// // 	$options = array(
+		// // 		'http'=>array(
+		// // 			'method'=>"GET",
+		// // 			'header'=>"User-Agent: OpenBenches.org\r\n"
+		// // 		)
+		// // 	);
+		// // 	$context = stream_context_create($options);
+		// // 	$locationJSON = file_get_contents($geocodeAPI, false, $context);
+		// // 	$locationData = json_decode($locationJSON);
+
+		// // 	try {
+		// // 		$country = $locationData->address->country ?? null;
+		// // 		$state   = $locationData->address->state   ?? null;
+		// // 		$county  = $locationData->address->county  ?? null;
+		// // 		$city    = $locationData->address->city    ?? null;
+		// // 		$suburb  = $locationData->address->suburb  ?? null;
+
+		// // 		$address_components = array($suburb, $city, $county, $state, $country);
+		// // 		$address_components = array_filter($address_components);
+		// // 		$formatted_address = implode(", " , $address_components);
+		// // 	} catch (Exception $e) {
+		// // 		$loc = var_export($locationData);
+		// // 		error_log("Caught $e - $loc");
+		// // 		return "";
+		// // 	}
+		// // 	return $formatted_address;
+		// // }
 	}
 }
