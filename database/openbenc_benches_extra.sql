@@ -24,6 +24,12 @@ ALTER TABLE `licences`
   ADD PRIMARY KEY (`shortName`);
 
 --
+-- Indexes for table `mastodon_apps`
+--
+ALTER TABLE `mastodon_apps`
+  ADD UNIQUE KEY `domain_name` (`domain_name`) USING HASH;
+
+--
 -- Indexes for table `media`
 --
 ALTER TABLE `media`
@@ -75,13 +81,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `benches`
 --
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33433;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37386;
 
 --
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79587;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89118;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -93,13 +99,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `tag_map`
 --
 ALTER TABLE `tag_map`
-  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20287;
+  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22685;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8836;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9560;
 
 --
 -- Constraints for dumped tables

@@ -5,7 +5,6 @@
 -- Table structure for table `tags`
 --
 
-DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `tagID` bigint(20) NOT NULL,
   `tagText` varchar(64) NOT NULL

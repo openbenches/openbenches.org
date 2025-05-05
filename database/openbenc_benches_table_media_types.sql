@@ -5,7 +5,6 @@
 -- Table structure for table `media_types`
 --
 
-DROP TABLE IF EXISTS `media_types`;
 CREATE TABLE `media_types` (
   `shortName` varchar(32) NOT NULL,
   `longName` varchar(512) NOT NULL,

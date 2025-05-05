@@ -5,7 +5,6 @@
 -- Table structure for table `licences`
 --
 
-DROP TABLE IF EXISTS `licences`;
 CREATE TABLE `licences` (
   `shortName` varchar(32) NOT NULL DEFAULT 'CC BY-SA 4.0',
   `longName` varchar(512) NOT NULL DEFAULT 'Creative Commons Attribution-ShareAlike 4.0 International',
