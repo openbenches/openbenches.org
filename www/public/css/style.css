@@ -579,6 +579,10 @@ ol.searchResults {
 	margin-left: 2em;
 }
 
+/* Prefix the address */
+address::before {
+	content: "Near:";
+}
 /* Show a comma after each address element except the last one */
 .address:not(:last-of-type)::after {
 	content: ",";
