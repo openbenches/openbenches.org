@@ -137,6 +137,9 @@ class AppExtension extends AbstractExtension
 	var long = {$long};
 	var zoom = {$zoom};
 
+	//	Cache for TSV
+	const cache = {};
+
 	//	Placeholder for last (or only) marker
 	var marker;
 
@@ -209,7 +212,14 @@ class AppExtension extends AbstractExtension
 		if (api_url == '') {
 			//	No search set - use TSV for speed
 			let url = '/api/benches.tsv';
-			const response = await fetch(url)
+
+			if (cache[url]) {
+				return cache[url];
+			}
+			
+			const req = new Request( url );
+
+			const response = await fetch( req )
 			var benches_text = await response.text();
 			var rows = benches_text.split(/\\n/);
 			var benches_json = {'features':[]};
@@ -230,6 +240,7 @@ class AppExtension extends AbstractExtension
 					}
 				);
 			}
+			cache[url] = benches_json;
 			return benches_json;
 		} else if (api_url == "_add_") {
 			return null;
@@ -337,7 +348,7 @@ class AppExtension extends AbstractExtension
 			});
 			const clusterId = features[0].properties.cluster_id;
 			const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
-			console.log("Zoom " + zoom);
+			// console.log("Zoom " + zoom);
 			//	Items in the cluster
 			const leaves = await map.getSource('benches').getClusterLeaves(clusterId, 10, 0);
 			map.easeTo({

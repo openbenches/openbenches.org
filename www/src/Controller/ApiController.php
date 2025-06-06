@@ -194,6 +194,7 @@ class ApiController extends AbstractController
 		if (!$response_ok) {
 			$response->setStatusCode(Response::HTTP_NOT_FOUND);
 		}
+
 		return $response;
 	}
 
@@ -931,6 +932,10 @@ class ApiController extends AbstractController
 		);
 
 		$response->setContent($value);
+		
+		//	Add a 10 minute cache to the API responses
+		$response->setPublic();
+		$response->setMaxAge( 600 );
 
 		return $response;
 	}
