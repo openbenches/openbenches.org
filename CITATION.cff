@@ -1,9 +1,16 @@
 cff-version: 1.2.0
-message: "If you use or reference this software, please cite it as below."
+title: OpenBenches
+message: >-
+  If you use or reference this dataset, please cite it as
+  below.
+type: dataset
 authors:
   - family-names: Eden
     given-names: Terence
-    orcid: https://orcid.org/0000-0002-9265-9069
-    alias: @edent
-    website: https://shkspr.mobi/blog/
+    orcid: 'https://orcid.org/0000-0002-9265-9069'
+repository-code: 'https://github.com/openbenches/openbenches.org'
+url: 'https://openbenches.org/'
+abstract: >-
+  OpenBenches.org - an open data repository for
+  crowd-sourced memorial benches.
 license: MIT
