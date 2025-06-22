@@ -174,13 +174,18 @@ class UserController extends AbstractController
 
 	#[Route("/user", name: "no_user")]
 	public function no_user(): Response {
-		return $this->render("user.html.twig", [
-			"user_id" => "NO USER",
-		]);
+		//	Generate an HTTP 404 response
+		throw $this->createNotFoundException( "The user does not exist." );
 	}
 
 	#[Route('/user/{user_id}', name: 'show_user')]
-	public function show_user(int $user_id): Response {
+	public function show_user( $user_id ): Response {
+
+		if ( !is_numeric( $user_id ) ) {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "The user does not exist." );
+		}
+
 		$request = Request::createFromGlobals();
 		//	/user/1234?page=2&count=5
 		$get_page      = $request->query->get("page");
