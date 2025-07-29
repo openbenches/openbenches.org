@@ -17,4 +17,4 @@ Disallow:/location/
 User-agent: GPTBot
 Disallow: /
 
-sitemap: https://openbenches.org/sitemap.xml
+Sitemap: https://openbenches.org/sitemap.xml
