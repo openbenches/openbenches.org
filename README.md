@@ -84,6 +84,9 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 	* Uses the Haversine formula
 * Benches near a location (GPX)
 	* `https://openbenches.org/api/nearest/gpx?latitude=46.67583&longitude=8.245239&distance=200`
+* Specify number of benches
+	* By default, a maximum of 20 results are returned.
+	* To change the number of results, use `&limit=`, for example `&limit=50` for up to 50 benches.
 
 #### Inscriptions
 * By default, the inscriptions are truncated to 128 characters.
