@@ -4,6 +4,8 @@
 
 https://OpenBenches.org/ - an open data repository for memorial benches.
 
+[![DOI](https://zenodo.org/badge/96925393.svg)](https://doi.org/10.5281/zenodo.16944303)
+
 ## Supporters
 
 You can [sponsor OpenBenches on GitHub](https://github.com/sponsors/openbenches/).
