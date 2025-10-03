@@ -78,6 +78,10 @@
 		</address>
 		{% endif %}
 
+		{% if osmID is not null %}
+		<a class="button buttonColour" href="https://www.openstreetmap.org/node/{{ osmID }}">🌍 View on OpenStreetMap</a>
+		{% endif %}
+
 {#
 		<script>
 			const map = L.map('map', {sleepNote: false, sleepOpacity: 1})

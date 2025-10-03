@@ -46,7 +46,7 @@ class BenchFunctions
 			$longitude   = $results_array["longitude"];
 			$address     = $results_array["address"];
 			$timestamp   = $results_array["added"];
-
+			$osmID       = $results_array["osmID"];
 
 			//	Format the address
 			$locations = explode("," , $address);
@@ -131,22 +131,22 @@ class BenchFunctions
 	
 				//	Add the details to the array
 				$media_array[$mediaID] = array(
-								 "url" => $image_url,
-						   "urlFull" => $image_url_full,
-						   "mediaID" => $mediaID,
-								"sha1" => $sha1,
-								 'alt' => $alt,
-							 "userID" => $userID,
-						  "userName" => $userName,
+					          "url" => $image_url,
+					      "urlFull" => $image_url_full,
+					      "mediaID" => $mediaID,
+					         "sha1" => $sha1,
+					          'alt' => $alt,
+					       "userID" => $userID,
+					     "userName" => $userName,
 					"formattedDate" => $formatted_date,
-								"make" => $make,
-							  "model" => $model,
-						 "mediaType" => $mediaType,
-							  "width" => 600,
-							 "height" => $newHeight,
-							"licence" => $licence,
+					         "make" => $make,
+					        "model" => $model,
+					    "mediaType" => $mediaType,
+					        "width" => 600,
+					       "height" => $newHeight,
+					      "licence" => $licence,
 					  "licenceIcon" => $licenceIcon,
-						 "importURL" => $importURL,				 
+						"importURL" => $importURL,				 
 				);
 			}
 
@@ -164,6 +164,7 @@ class BenchFunctions
 				"addresses"   => $address_array,
 				"medias"      => $media_array,
 				"tags"        => $tags_array,
+				"osmID"       => $osmID,
 			];
 		} else {
 			return array();

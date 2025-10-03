@@ -75,6 +75,7 @@ class BenchController extends AbstractController
 				"addresses"   => $bench["addresses"],
 				"medias"      => $bench["medias"],
 				"tags"        => $bench["tags"],
+				"osmID"       => $bench["osmID"],
 			]);
 		}
 
