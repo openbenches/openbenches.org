@@ -29,6 +29,10 @@ file = open("OSM.json", "w")
 file.write( json.dumps( json.loads( r.text ), indent=4) )
 file.close()
 
+#	OSM IDs can change. Benches can be removed. 
+#	Reset all existing entries, then import them again.
+print( "UPDATE `benches` SET `osmID` IS NULL WHERE 1" )
+
 #	Read each item.
 for element in data["elements"]:
 	#	Is this a node?
