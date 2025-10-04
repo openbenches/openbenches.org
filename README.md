@@ -138,6 +138,7 @@ Hopefully, the tables are self explanatory:
 * `published` set to FALSE if the bench has been deleted
 * `added` datetime of when the bench was uploaded to the site
 * `userID` foreign key
+* `osmID` the node ID from OpenStreetMap
 
 #### Users
 
@@ -214,6 +215,7 @@ Everything we do builds on someone else's hard work.
 * Animated OCR icon by [Loading.io](https://loading.io/spinner/magnify/-searching-for-loading-icon) [CC BY](http://creativecommons.org/licenses/by/3.0/us/).
 * Comments by [Commentics](https://commentics.com/) [GPL v3](https://github.com/commentics/commentics/blob/master/LICENSE.txt)
 * [Starfield Image by uncertaintysheep](https://commons.wikimedia.org/w/index.php?curid=57215205) CC BY-SA 2.0
+* osmID is from [OpenStreetMap](https://www.openstreetmap.org/) whose data is under the [ODbL](https://opendatacommons.org/licenses/odbl/)
 * See https://openbenches.org/colophon for more
 
 And thanks to the many contributors who have improved this codebase.
