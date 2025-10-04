@@ -2,3 +2,4 @@
 config.php
 key.js
 .env.local
+database/openbenc_benches_table_mastodon_apps.sql
