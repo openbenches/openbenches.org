@@ -1,3 +1,12 @@
+#Bad Bots
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} TikTokSpider [NC]
+RewriteRule .* - [F,L]
+
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} Bytespider [NC]
+RewriteRule .* - [F,L]
+
 Options -Indexes
 
 Header always set X-Robots-Tag "noimageai"
@@ -15,3 +24,13 @@ Header always set X-Robots-Tag "noai"
 
         RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
 </IfModule>
+
+#	https://www.inmotionhosting.com/support/website/force-hsts-using-htaccess/
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+#	https://scotthelme.co.uk/hardening-your-http-response-headers/
+Header always set Content-Security-Policy "upgrade-insecure-requests;"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+#	https://scotthelme.co.uk/a-new-security-header-referrer-policy/
+Header always set Referrer-Policy "no-referrer-when-downgrade"
+

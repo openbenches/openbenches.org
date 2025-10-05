@@ -80,6 +80,8 @@
 
 		{% if osmID is not null %}
 		<a class="button buttonColour" href="https://www.openstreetmap.org/node/{{ osmID }}">🌍 View on OpenStreetMap</a>
+		{% else %}
+		<!-- <a class="button buttonColour" href="https://mapcomplete.org/benches?z=20&lat={{ latitude }}&lon={{ longitude }}">🌍 Add to OpenStreetMap</a> -->
 		{% endif %}
 
 {#
