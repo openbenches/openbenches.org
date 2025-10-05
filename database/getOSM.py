@@ -31,7 +31,7 @@ file.close()
 
 #	OSM IDs can change. Benches can be removed. 
 #	Reset all existing entries, then import them again.
-print( "UPDATE `benches` SET `osmID` IS NULL WHERE 1" )
+print( "UPDATE `benches` SET `osmID` = NULL WHERE 1;" )
 
 #	Read each item.
 for element in data["elements"]:
@@ -50,3 +50,4 @@ for element in data["elements"]:
 	if benchID.isdigit():
 		#	Output the SQL syntax.
 		print( f"UPDATE `benches` SET `osmID` = '{osmID}' WHERE `benches`.`benchID` = {benchID}; ")
+		#	Some benches have duplicate nodes. Should we filter them out?

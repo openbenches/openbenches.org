@@ -2,7 +2,7 @@
     "version": 0.6,
     "generator": "Overpass API 0.7.62.8 e802775f",
     "osm3s": {
-        "timestamp_osm_base": "2025-10-04T08:13:00Z",
+        "timestamp_osm_base": "2025-10-05T20:13:46Z",
         "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
     },
     "elements": [
@@ -20,6 +20,26 @@
                 "material": "wood",
                 "openbenches:id": "39704",
                 "seats": "4"
+            }
+        },
+        {
+            "type": "node",
+            "id": 322425420,
+            "lat": -41.2676918,
+            "lon": 174.7567975,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "no",
+                "backrest": "yes",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/cc39e3abef1faadc7a56af28feff1c1fe7b427ae.jpg",
+                "image:0": "https://openbenches.org/image/980adadc30dfcc89bdc80d9654e0b15039232421.jpg",
+                "image:1": "https://openbenches.org/image/acc68379981427360992d3e2758753d5a20a227d.jpg",
+                "inscription": "IN MEMORY OF OUR BELOVED RO RO ROA ISOBEL IRONS 3-11-1938 ~ 12-7-2006 NO BETTER PLACE TO BE THAN HERE WITH FAMILY",
+                "material": "metal",
+                "memorial": "bench",
+                "openbenches:id": "34741",
+                "seats:separated": "no"
             }
         },
         {
@@ -2249,7 +2269,7 @@
                 "direction": "SW",
                 "mapillary": "165715165458918",
                 "material": "wood",
-                "openbenches:id": "X",
+                "openbenches:id": "26366",
                 "survey:date": "2018-04-21",
                 "two_sided": "no",
                 "wheelchair": "yes"
@@ -2839,6 +2859,27 @@
                 "inscription:url": "https://openbenches.org/bench/12701/",
                 "material": "wood",
                 "openbenches:id": "12701"
+            }
+        },
+        {
+            "type": "node",
+            "id": 7188915158,
+            "lat": -41.2674257,
+            "lon": 174.7566878,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "no",
+                "backrest": "yes",
+                "check_date": "2024-12-31",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/a518a9716926e9a022ee6489582fa7e6dff40407.jpg",
+                "image:0": "https://openbenches.org/image/e771549483a94bcd931a28cec5292c6fda6662a5.jpg",
+                "image:1": "https://openbenches.org/image/d65a2777fb79ff2e1dc9ee984e53ee47fe88c30e.jpg",
+                "inscription": "REST AN' BE THANKFU' A.W.N.",
+                "material": "wood",
+                "memorial": "bench",
+                "openbenches:id": "34740",
+                "seats:separated": "no"
             }
         },
         {
@@ -4386,8 +4427,8 @@
         {
             "type": "node",
             "id": 8949326706,
-            "lat": 51.4740324,
-            "lon": -0.0011774,
+            "lat": 51.4740295,
+            "lon": -0.0011725,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4398,8 +4439,8 @@
         {
             "type": "node",
             "id": 8949326707,
-            "lat": 51.4740082,
-            "lon": -0.0010157,
+            "lat": 51.4740047,
+            "lon": -0.0010164,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4410,7 +4451,7 @@
         {
             "type": "node",
             "id": 8949326708,
-            "lat": 51.4740325,
+            "lat": 51.4740299,
             "lon": -0.0013508,
             "tags": {
                 "amenity": "bench",
@@ -4422,8 +4463,8 @@
         {
             "type": "node",
             "id": 8949326709,
-            "lat": 51.4740124,
-            "lon": -0.0015135,
+            "lat": 51.4740104,
+            "lon": -0.0015142,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4434,8 +4475,8 @@
         {
             "type": "node",
             "id": 8949326710,
-            "lat": 51.473969,
-            "lon": -0.000867,
+            "lat": 51.473968,
+            "lon": -0.0008683,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4446,8 +4487,8 @@
         {
             "type": "node",
             "id": 8949326713,
-            "lat": 51.4732637,
-            "lon": -0.0007124,
+            "lat": 51.473267,
+            "lon": -0.0007095,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4458,8 +4499,8 @@
         {
             "type": "node",
             "id": 8949326714,
-            "lat": 51.4735597,
-            "lon": -0.0005415,
+            "lat": 51.4735542,
+            "lon": -0.0005386,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4470,8 +4511,8 @@
         {
             "type": "node",
             "id": 8949326715,
-            "lat": 51.4736679,
-            "lon": -0.0005553,
+            "lat": 51.4736722,
+            "lon": -0.000554,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -4993,6 +5034,27 @@
                 "amenity": "bench",
                 "inscription": "IN LOVING MEMORY OF JOHN AND JESSIE PLUMMER RUBE AND DORA DOUGLAS FROM CLIFF & MARILYN DOUGLAS",
                 "openbenches:id": "22489"
+            }
+        },
+        {
+            "type": "node",
+            "id": 9377897584,
+            "lat": 51.5921038,
+            "lon": -1.4525569,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "yes",
+                "backrest": "yes",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/5cf5d0c52c8090085408a828eaa9bf9a4e2aa49a.jpg",
+                "image:0": "https://openbenches.org/image/2d04a4e6a83c0f0ff5c3667e4cd70637ac0ec810.jpg",
+                "image:view": "https://openbenches.org/image/60a47610a8fd6bf0203cfae157bd801d86420235.jpg",
+                "inscription": "2000 TO COMMEMORATE THE MILLENNIUM LIMITED EDITION NO 1466/2000",
+                "material": "wood",
+                "memorial": "bench",
+                "openbenches:id": "15204",
+                "seats:separated": "no",
+                "two_sided": "no"
             }
         },
         {
@@ -9702,8 +9764,8 @@
         {
             "type": "node",
             "id": 11114483530,
-            "lat": 51.5647097,
-            "lon": -0.0779568,
+            "lat": 51.5647151,
+            "lon": -0.0780151,
             "tags": {
                 "amenity": "bench",
                 "backrest": "yes",
@@ -11324,6 +11386,27 @@
         },
         {
             "type": "node",
+            "id": 11478367244,
+            "lat": -41.2840441,
+            "lon": 174.766108,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "yes",
+                "backrest": "yes",
+                "colour": "green",
+                "direction": "261",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/2b85128f487bcbd2c3634011b5b4c21c1c939e78.jpg",
+                "image:0": "https://openbenches.org/image/9515c6c1a9587135942447a386446c99d03c23eb.jpg",
+                "inscription": "WILLIAM ARTHUR A LOVER OF TREES AND THESE GARDENS SONG WRITER. MUSICIAN (GLIDE, AUSTRALIA), SON AND BROTHER REMEMBERED WITH LOVE BY HIS FAMILY AND FRIENDS EVERYWHERE",
+                "material": "wood",
+                "memorial": "bench",
+                "openbenches:id": "3303",
+                "seats:separated": "no"
+            }
+        },
+        {
+            "type": "node",
             "id": 11483227867,
             "lat": 55.3991248,
             "lon": -3.7878403,
@@ -12832,6 +12915,27 @@
         },
         {
             "type": "node",
+            "id": 12195123707,
+            "lat": 51.5894586,
+            "lon": -1.4467168,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "no",
+                "backrest": "yes",
+                "direction": "340",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/2a97f5376c406c5616c0a5aa5ee1af312c7bd3d6.jpg",
+                "image:0": "https://openbenches.org/image/bb82abe83f09aa39f496d45ef22034d0ed2a3bd7.jpg",
+                "image:view": "https://openbenches.org/image/a4ca96b2e2557a2c82be7ef904c95891efd13d7b.jpg",
+                "inscription": "Donated by Graham Blyth of Challow Park 2015",
+                "memorial": "bench",
+                "openbenches:id": "15192",
+                "seats:separated": "no",
+                "two_sided": "no"
+            }
+        },
+        {
+            "type": "node",
             "id": 12270593201,
             "lat": 51.5106656,
             "lon": -0.1674677,
@@ -13399,6 +13503,24 @@
         },
         {
             "type": "node",
+            "id": 12569151126,
+            "lat": 51.4950303,
+            "lon": 0.0700418,
+            "tags": {
+                "amenity": "bench",
+                "backrest": "yes",
+                "direction": "191",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/8c2fbc214768cfcc5010dc007dbfa7fd4598a7df.jpg",
+                "image:0": "https://openbenches.org/image/a076581a6a4efc90209b0b030e3449e3407f892a.jpg",
+                "inscription": "\\\"Be still and fnd me in your heart.\\\" Sit a while and remember those taken to soon by COVID-19",
+                "memorial": "bench",
+                "openbenches:id": "23125",
+                "seats:separated": "no"
+            }
+        },
+        {
+            "type": "node",
             "id": 12579072424,
             "lat": 51.4939942,
             "lon": 0.0702869,
@@ -13406,8 +13528,15 @@
                 "amenity": "bench",
                 "armrest": "yes",
                 "backrest": "yes",
+                "colour": "brown",
+                "direction": "302",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/1898b38c4491d79e896cb806dc60e490fe1267ee.jpg",
+                "inscription": "IN LOVING MEMORY OF CHARLES W.V. MEARES AND MEMBERS OF THE MEARES FAMILY ASSOCIATED WITH THE ROYAL ARTILLERY AND ROYAL ARSENAL",
                 "material": "wood",
-                "openbenches:id": "36125"
+                "memorial": "bench",
+                "openbenches:id": "36125",
+                "seats:separated": "no"
             }
         },
         {
@@ -14693,6 +14822,27 @@
                 "openbenches:id": "32239",
                 "seats:separated": "no",
                 "two_sided": "no"
+            }
+        },
+        {
+            "type": "node",
+            "id": 13192382245,
+            "lat": 51.5862098,
+            "lon": -1.4290529,
+            "tags": {
+                "amenity": "bench",
+                "armrest": "no",
+                "historic": "memorial",
+                "image": "https://openbenches.org/image/8383c923527c7e871d5ad87fdf5800e7947c5e43.jpg",
+                "image:0": "https://openbenches.org/image/85722d6bd8d1bd6138e45bcf3531e25ff08ddffb.jpg",
+                "image:view": "https://openbenches.org/image/b4a572719e41cfb0136dd17e528f3168b76eb293.jpg",
+                "inscription": "FILIIS MATER MEMOR 1914 1918 TO THE MEMORY OF OLD ALFREDIANS WHO GAVE THEIR LIVES FOR THEIR COUNTRY IN THE GREAT WAR",
+                "material": "wood",
+                "memorial": "bench",
+                "openbenches:id": "26723",
+                "seats:separated": "no",
+                "subject:wikidata": "Q361",
+                "survey:date": "2022-08-18"
             }
         }
     ]
