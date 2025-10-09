@@ -11,7 +11,7 @@ use App\Service\UserFunctions;
 
 class LeaderboardController extends AbstractController
 {
-	#[Route('/leaderboard', name: 'leaderboard')]
+	#[Route(["/leaderboard", "/contributions", "/contributors"], name: 'leaderboard')]
 	public function leaderboard(): Response {
 		$userFunctions  = new UserFunctions();
 
