@@ -544,6 +544,7 @@ ol.searchResults {
 }
 #cmtx_iframe {
 	padding: 1em;
+	min-width: min(50em, 100%) !important;
 }
 
 @media (max-width: 768px) {
