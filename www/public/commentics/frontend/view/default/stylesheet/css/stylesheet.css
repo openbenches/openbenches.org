@@ -1,3 +1,14 @@
+@font-face {
+	font-family: 'varela_roundregular';
+	src: url('/fonts/varelaround-regular-webfont.woff2') format('woff2'),
+	     url('/fonts/varelaround-regular-webfont.woff')  format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+* {
+  font-family: 'varela_roundregular', sans-serif !important;;
+}
+
 /* Reset */
 .cmtx_container * {
   box-sizing: border-box;
