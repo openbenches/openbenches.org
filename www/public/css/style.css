@@ -8,6 +8,7 @@
 
 :root {
 	--bg: #e1ffe9;
+	--button-width: 15em;
 }
 
 body {
@@ -70,6 +71,7 @@ fieldset {
 
 .button-bar {
 	margin-bottom: 0.5em;
+	text-wrap: balance;
 }
 
 .button-form {
@@ -81,10 +83,10 @@ fieldset {
 }
 
 .searchbox {
-	display: flex;
+	/* display: flex; */
 	max-width: 1024px;
-	margin: auto;
-	align-items: center;
+	margin: 0 auto;
+	/* align-items: center; */
 }
 
 .searchbox_other {
@@ -97,8 +99,8 @@ fieldset {
 }
 
 .search {
-	max-width: 100%;
-	margin: .5em;
+	max-width: var(--button-width);
+	/* margin: .5em; */
 }
 
 #search-results, .text {
@@ -398,7 +400,7 @@ button:hover, .button:hover, [type="submit"]:hover, .dropimage:hover, button:foc
 }
 
 button, .button, [type="submit"], .dropimage {
-	width: 15em;
+	width: var(--button-width);
 }
 
 #idc-container {
