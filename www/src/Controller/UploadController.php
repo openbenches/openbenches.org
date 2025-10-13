@@ -105,15 +105,7 @@ class UploadController extends AbstractController
 			if ( !empty($_ENV["NOTIFICATION_EMAIL"]) ){
 				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name, $tags_array );
 			}
-			//	Post to Mastodon
-			if ( !empty($_ENV["MASTODON_ACCESS_TOKEN"]) ){
-				$uploadFunctions->mastodonPost( $benchID, $inscription, "CC BY-SA 4.0", $provider, $name );
-			}
-			//	Post to Twitter
-			// if ( !empty($_ENV["OAUTH_CONSUMER_KEY"]) ){
-			// 	$uploadFunctions->twitterPost( $benchID, $inscription, $latitude, $longitude, "CC BY-SA 4.0", $provider, $name );
-			// }
-
+			
 			$response = new Response(
 				"{$benchID}",
 				Response::HTTP_OK,

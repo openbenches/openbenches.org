@@ -39,18 +39,6 @@ If you want to use social login:
 
 **You will need to [apply this Symfony patch](https://github.com/auth0/symfony/pull/190)**
 
-### Social Media
-If you want to post to social media (Mastodon and Twitter):
-
-* Register for developer accounts on Twitter and Mastodon.
-* Add the keys to `.env.local`
-* Install the requirements:
-
-```
-./composer.phar require eleirbag89/mastodonbotphp
-./composer.phar require ferrysyahrinal/twifer
-```
-
 ## Getting a copy of the code on your computer
 
 * Create an account on https://GitHub.com/
