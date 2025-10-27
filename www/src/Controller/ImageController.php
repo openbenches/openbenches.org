@@ -4,8 +4,13 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpFoundation\Request;
+
+use App\Service\BenchFunctions;
+use App\Service\MediaFunctions;
 
 class ImageController extends AbstractController
 {
@@ -30,5 +35,19 @@ class ImageController extends AbstractController
 			//	Generate an HTTP 404 response
 			throw $this->createNotFoundException( "The image does not exist" );
 		}
+	}
+
+	//	Returns a thumbnail for a specific bench.
+	#[Route(["/thumb/{benchID}"], name: "get_thumb")]
+	public function get_thumb( int $benchID ): RedirectResponse {
+
+		//	Get the bench.
+		$benchFunctions = new BenchFunctions();
+		$bench = $benchFunctions->getBench($benchID);
+		$media_id = array_key_first( $bench["medias"] );
+		$proxyImageURl = $bench["medias"][$media_id]["url"];
+
+		//	Return a URl.
+		return $this->redirect( $proxyImageURl );
 	}
 }

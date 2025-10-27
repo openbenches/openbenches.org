@@ -29,7 +29,6 @@ class CommentsController extends AbstractController
 		$connectionParams = $dsnParser->parse( $commenticsDB );
 		$conn = DriverManager::getConnection($connectionParams);
 
-
 		$sql = "SELECT   p.url AS page_id, 
 					     c.comment
 				FROM     comments c
@@ -45,10 +44,12 @@ class CommentsController extends AbstractController
 		$results_array = $results->fetchAssociative();
 
 		while ( ( $row = $results->fetchAssociative() ) !== false) {
+			$bench_id = end( explode( separator:"/", string:$row["page_id"]) );
 			//	Add the details to the array
 			$comments_array[$row["page_id"]] = array(
 				"page_id"     => $row["page_id"],
 				"comment"     => $row["comment"],
+				"bench_id"    => $bench_id
 			);
 		}
 

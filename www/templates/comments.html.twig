@@ -13,6 +13,7 @@
 		{% for comment in comments %}
 			<li>
 				<a href="{{ comment.page_id|raw }}">
+					<img src="/thumb/{{ comment.bench_id|raw }}" class="search-thumb" loading="lazy" width="120" alt="">
 					<div>
 						{{ comment.comment|raw }}<br>
 					</div>
