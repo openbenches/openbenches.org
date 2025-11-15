@@ -304,6 +304,37 @@ class UserFunctions
 		return $conn->lastInsertId();
 	}
 
+	public function isUserBanned( $provider, $providerID ) {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Anon user check.
+		if ( $provider == null && $providerID == null ) {
+			$provider   = "anon";
+			$providerID = $_SERVER["REMOTE_ADDR"]; //	Their IP Address
+		}
+
+		//	Are they on the naughty list?
+		$queryBuilder = $conn->createQueryBuilder();
+		$queryBuilder
+			->select("reason")
+			->from("banned_users")
+			->where("provider = :provider AND providerID = :providerID")
+			->setParameter("provider",   $provider)
+			->setParameter("providerID", $providerID);
+		$results = $queryBuilder->executeQuery();
+		$results_array = $results->fetchAssociative();
+
+		if ( false == $results_array ) {
+			//	User isn't on banned list.
+			return false;
+		} else {
+			//	Why were they banned?
+			return $results_array["reason"];
+		}
+	}
+
 	public function getMastodonAppDetails( $domainName ) {
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );

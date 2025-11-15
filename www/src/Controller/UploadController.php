@@ -77,9 +77,10 @@ class UploadController extends AbstractController
 
 			$userID = $userFunctions->addUser( $username, $provider, $providerID );
 			
-			$user     = $userFunctions->getUserDetails( $userID );
-			$provider = $user["provider"];
-			$name     = $user["name"];
+			$user       = $userFunctions->getUserDetails( $userID );
+			$provider   = $user["provider"];
+			$providerID = $user["providerID"];
+			$name       = $user["name"];
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	

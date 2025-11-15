@@ -42,6 +42,18 @@ class AddController extends AbstractController
 			$providerID = null;
 		}
 
+		//	Check if user is banned.
+		$userFunctions = new UserFunctions();
+		$banned = $userFunctions->isUserBanned( $provider, $providerID );
+		if ( $banned ) {
+			$response = new Response(
+				"You are unable to contribute to OpenBenches.<br>Reason: {$banned}",
+				Response::HTTP_FORBIDDEN,
+				["content-type" => "text/html"]
+			);
+			return $response;
+		}
+
 		$tagsFunctions = new TagsFunctions();
 		$tags_array = $tagsFunctions->getTagsNames();
 
