@@ -4,6 +4,12 @@
 --
 
 --
+-- Indexes for table `banned_users`
+--
+ALTER TABLE `banned_users`
+  ADD PRIMARY KEY (`bannedID`);
+
+--
 -- Indexes for table `benches`
 --
 ALTER TABLE `benches`
@@ -78,16 +84,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `banned_users`
+--
+ALTER TABLE `banned_users`
+  MODIFY `bannedID` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `benches`
 --
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39993;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40515;
 
 --
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95095;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96263;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -99,13 +111,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `tag_map`
 --
 ALTER TABLE `tag_map`
-  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24524;
+  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24846;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10128;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10236;
 
 --
 -- Constraints for dumped tables
