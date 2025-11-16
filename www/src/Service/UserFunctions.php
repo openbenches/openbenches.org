@@ -305,6 +305,9 @@ class UserFunctions
 	}
 
 	public function isUserBanned( $provider, $providerID ) {
+		//	NOTE. Users can also be blocked in Auth0.
+		//	That prevents them being able to log in.
+		//	This check is necessary as anonymous users don't go through Auth0.
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
 		$conn = DriverManager::getConnection($connectionParams);
