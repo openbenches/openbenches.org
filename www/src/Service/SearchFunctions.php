@@ -170,9 +170,9 @@ class SearchFunctions
 			$queryBuilder
 				->select("MAX(benches.benchID)", "benches.benchID", "benches.inscription", "benches.address", "benches.latitude", "benches.longitude", "benches.added", "benches.userID", "users.name", "MIN(media.sha1)")
 				->from("benches")
+				->where("benches.published = 1")
 				->innerJoin('benches', 'media', 'media', 'benches.benchID = media.benchID')
 				->innerJoin('benches', 'users', 'users', 'benches.userID  = users.userID')
-				->where("benches.published = 1")
 				->orderBy("benches.benchID", 'DESC')
 				->groupBy("benches.benchID")
 				->setMaxResults( 100 );
