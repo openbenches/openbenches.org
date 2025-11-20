@@ -100,7 +100,7 @@
 	{% if osmID is not null %}
 	<a class="button buttonColour" href="https://www.openstreetmap.org/node/{{ osmID }}" target="_blank">🌍 View on OpenStreetMap</a>
 	{% else %}
-	<a class="button buttonColour" href="https://dev.mapcomplete.org/benches?z=20&lat={{ latitude }}&lon={{ longitude }}#openbenches/{{ bench_id }}" target="_blank">🌍 Add to OpenStreetMap</a>
+	<a class="button buttonColour" href="https://mapcomplete.org/benches?z=20&lat={{ latitude }}&lon={{ longitude }}#openbenches/{{ bench_id }}" target="_blank">🌍 Add to OpenStreetMap</a>
 	{% endif %}
 	<a href="/api/bench/{{ bench_id }}" class="button buttonColour">💾 GeoJSON</a>
 	<button class="button buttonColour" type="button" id="shareButton">📤 Share</button>
