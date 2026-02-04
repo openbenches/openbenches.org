@@ -132,6 +132,9 @@ class UserFunctions
 			case "mastodon" :
 				$userURL = "{$providerID}";
 				break;
+			case "openstreetmap" :
+				$userURL = "https://www.openstreetmap.org/user/{$name}";
+				break;
 			default :
 				$userURL = "";
 		}

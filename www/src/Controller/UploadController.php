@@ -53,27 +53,47 @@ class UploadController extends AbstractController
 			$uploadFunctions = new UploadFunctions();
 			$userFunctions   = new UserFunctions();
 
+			$username   = null;
+			$identifier = null;
+			$provider   = null;
+			$providerID = null;
+
 			//	Is the user authenticated?
 			$user = $this->getUser();
 			if( isset( $user ) ) {
 				//	Use Auth0 to get user data
 				$username   = $user->getNickname();
 				$avatar     = $user->getPicture();
-				$identifier = str_replace( "oauth2|", "", $user->getUserIdentifier() ); //	For Discord
-				$provider   = explode( "|", $identifier )[0];
-				$providerID = explode( "|", $identifier )[1];	
+				$identifier = $user->getUserIdentifier();
 			} else if ( isset( $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ) ) {
 				//	Hack to get Auth0 user data from the session
 				$user = $_SESSION["_sf2_attributes"]["auth0_session"]["user"];
 				$username   = $user["nickname"];
-				$identifier = str_replace( "oauth2|", "", $user["sub"] ); //	For Discord
-				$provider   = explode( "|", $identifier )[0];
-				$providerID = explode( "|", $identifier )[1];
-			} else {
-				$username   = null;
-				$provider   = null;
-				$providerID = null;
+				$identifier = $user["sub"] ;
+			} 
+
+			//	Some users have unusual User IDs from Auth0.
+			//	Discord: oauth2|discord|123456789
+			//	OSM:     oidc|openstreetmap-openid|12345
+			if ( str_starts_with( string haystack:$identifier, string needle:"oauth2|" ) ) {
+				$identifier = str_replace( 
+					search:"oauth2|", 
+					replace:"", 
+					subject:$identifier,
+					count:1
+				);
 			}
+			//	OSM Fix.
+			if ( str_starts_with( string haystack:$identifier, string needle:"oidc|" ) ) {
+				$identifier = str_replace( 
+					search:"oidc|", 
+					replace:"", 
+					subject:$identifier,
+					count:1
+				);
+			}
+			$provider   = explode( "|", $identifier )[0];
+			$providerID = explode( "|", $identifier )[1];
 
 			$userID = $userFunctions->addUser( $username, $provider, $providerID );
 			
