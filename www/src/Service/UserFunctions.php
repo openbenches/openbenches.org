@@ -88,6 +88,9 @@ class UserFunctions
 			case "mastodon" :
 				$user_avatar = "/images/svg/mastodon.svg";
 				break;
+			case "openstreetmap-openid" :
+				$user_avatar = "/images/svg/openstreetmap-openid.svg";
+				break;
 			default :
 				$user_avatar = null;
 		}

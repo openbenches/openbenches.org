@@ -41,7 +41,7 @@ class AddController extends AbstractController
 		//	Some users have unusual User IDs from Auth0.
 		//	Discord: oauth2|discord|123456789
 		//	OSM:     oidc|openstreetmap-openid|12345
-		if ( str_starts_with( string haystack:$identifier, string needle:"oauth2|" ) ) {
+		if ( str_starts_with( haystack:$identifier, needle:"oauth2|" ) ) {
 			$identifier = str_replace( 
 				search:"oauth2|", 
 				replace:"", 
@@ -50,7 +50,7 @@ class AddController extends AbstractController
 			);
 		}
 		//	OSM Fix.
-		if ( str_starts_with( string haystack:$identifier, string needle:"oidc|" ) ) {
+		if ( str_starts_with( haystack:$identifier, needle:"oidc|" ) ) {
 			$identifier = str_replace( 
 				search:"oidc|", 
 				replace:"", 
