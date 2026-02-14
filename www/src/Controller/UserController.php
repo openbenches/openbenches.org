@@ -43,7 +43,7 @@ class UserController extends AbstractController
 			$mastodon = strtolower( $mastodon );
 			//  If so, extract the server's address
 			if ( filter_var( $mastodon, FILTER_VALIDATE_URL ) ) {
-				$server = parse_url( $mastodon, PHP_URL_HOST );
+				$server = \Uri\Rfc3986\Uri::parse( $mastodon )->getHost();
 			} else {
 				return $this->render("mastodon_login.html.twig", [ "error" => "No valid URl found." ]);
 			}

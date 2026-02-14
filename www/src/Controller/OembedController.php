@@ -18,10 +18,10 @@ class OembedController extends AbstractController
 		$request = Request::createFromGlobals();
 		//	/oembed?url=http%3A%2F%2Fopenbenches.org%2Fbench%2F1234
 		$url = urldecode( $request->query->get("url") );
-		$parsed_url = parse_url( $url );
+		$parsed_url = \Uri\Rfc3986\Uri::parse( $url );
 
-		if ( $parsed_url["host"] == $_SERVER['SERVER_NAME']) {
-			$path_elements = array_filter( explode( "/", $parsed_url["path"])  );
+		if ( $parsed_url->getHost() == $_SERVER['SERVER_NAME']) {
+			$path_elements = array_filter( explode( "/", $parsed_url->getPath() ) );
 			$last_element = end($path_elements);
 			// var_dump($last_element);die();
 			if ( is_numeric($last_element) ) {

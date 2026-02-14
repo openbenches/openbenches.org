@@ -24,6 +24,7 @@ class AddController extends AbstractController
 		$avatar     = null;
 		$provider   = null;
 		$providerID = null;
+		$identifier = "|";
 
 		if( isset( $user ) ) {
 			//	Use Auth0 to get user data.
