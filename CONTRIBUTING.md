@@ -4,7 +4,7 @@ OpenBenches is written in PHP and uses the Symfony framework. The database is My
 
 ## Symfony
 
-* Install the latest version of Symfony from https://symfony.com/download
+* Install Symfony 6.4 from https://symfony.com/download
 * Follow the instructions on that site to set up a new project
 * Run the server with `symfony server:start`
 

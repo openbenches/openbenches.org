@@ -9,7 +9,7 @@
 
 	{% if username is not null %}
 		<h3>
-			Welcome {{ provider|capitalize }} user {{ username }}
+			Welcome {{ provider }} user {{ username }}
 			{% if avatar is not null %}
 				<img src="{{ avatar }}" width="20">
 			{% endif %}

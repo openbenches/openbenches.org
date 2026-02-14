@@ -240,6 +240,13 @@ class UserController extends AbstractController
 			} else {
 				$next_url = null;
 			}
+			
+			//	Auth0 hardcodes names of providers.
+			if ( "openstreetmap-openid" == $provider ) {
+				$provider = "OpenStreetMap";
+			} else {
+				$provider = ucfirst( $provider );
+			}
 
 			//	Render the page
 			return $this->render('user.html.twig', [

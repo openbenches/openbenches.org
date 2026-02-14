@@ -7,7 +7,7 @@
 {% block body %}
 <h3>Benches added or edited by 
 	{% if user_provider is defined %}
-		{{ user_provider|capitalize }} user
+		{{ user_provider }} user
 	{% endif %}
 	<a href="{{ user_external_url }}">
 	{% if avatar_url is not null %}

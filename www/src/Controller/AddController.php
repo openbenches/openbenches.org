@@ -46,8 +46,7 @@ class AddController extends AbstractController
 			$identifier = str_replace( 
 				search:"oauth2|", 
 				replace:"", 
-				subject:$identifier,
-				count:1
+				subject:$identifier
 			);
 		}
 		//	OSM Fix.
@@ -56,7 +55,6 @@ class AddController extends AbstractController
 				search:"oidc|", 
 				replace:"", 
 				subject:$identifier,
-				count:1
 			);
 		}
 		$provider   = explode( "|", $identifier )[0];
@@ -76,6 +74,13 @@ class AddController extends AbstractController
 
 		$tagsFunctions = new TagsFunctions();
 		$tags_array = $tagsFunctions->getTagsNames();
+
+		//	Auth0 hardcodes names of providers.
+		if ( "openstreetmap-openid" == $provider ) {
+			$provider = "OpenStreetMap";
+		} else {
+			$provider = ucfirst( $provider );
+		}
 
 		return $this->render('add.html.twig', [
 			"username"   => $username,

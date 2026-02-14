@@ -80,7 +80,6 @@ class UploadController extends AbstractController
 					search:"oauth2|", 
 					replace:"", 
 					subject:$identifier,
-					count:1
 				);
 			}
 			//	OSM Fix.
@@ -89,7 +88,6 @@ class UploadController extends AbstractController
 					search:"oidc|", 
 					replace:"", 
 					subject:$identifier,
-					count:1
 				);
 			}
 			$provider   = explode( "|", $identifier )[0];
