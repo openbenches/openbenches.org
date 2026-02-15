@@ -101,47 +101,34 @@ class UserFunctions
 
 		switch ( $provider ) {
 			case "github" :
-				$userURL = "https://edent.github.io/github_id/#{$providerID}";
-				break;
+				return "https://edent.github.io/github_id/#{$providerID}";
 			case "facebook" :
-				$userURL = "https://facebook.com/{$providerID}";
-				break;
+				return "https://facebook.com/{$providerID}";
 			case "flickr" :
-				$userURL = "https://www.flickr.com";
-				break;
+				return "https://www.flickr.com";
 			case "wikipedia" :
-				$userURL = "https://www.wikipedia.org/";
-				break;
+				return "https://www.wikipedia.org/";
 			case "readtheplaque" :
-				$userURL = "https://www.readtheplaque.com/";
-				break;
+				return "https://www.readtheplaque.com/";
 			case "geograph" :
-				$userURL = "https://www.geograph.org.uk/";
-				break;
+				return "https://www.geograph.org.uk/";
 			case "linkedin" :
-				$userURL = "https://www.linkedin.com/search/results/all/?keywords={$name}";
-				break;
+				return "https://www.linkedin.com/search/results/all/?keywords={$name}";
 			case "wordpress" :
-				$userURL = "https://wordpress.com/forums/users/{$name}";
-				break;
+				return "https://wordpress.com/forums/users/{$name}";
 			case "twitter" :
 				if ( !is_numeric($providerID) ) {
-					$userURL = "https://twitter.com/{$providerID}";
-					break;
+					return "https://twitter.com/{$providerID}";
 				} else {
-					$userURL = "https://twitter.com/intent/user?user_id={$providerID}";
-					break;
+					return "https://twitter.com/intent/user?user_id={$providerID}";
 				}
 			case "mastodon" :
-				$userURL = "{$providerID}";
-				break;
+				return "{$providerID}";
 			case "openstreetmap" :
-				$userURL = "https://www.openstreetmap.org/user/{$name}";
-				break;
+				return "https://www.openstreetmap.org/user/{$name}";
 			default :
-				$userURL = "";
+				return "";
 		}
-		return $userURL;
 	}
 
 	public function getUserBenches( $user_id, $start=0, $count=20 ): array {

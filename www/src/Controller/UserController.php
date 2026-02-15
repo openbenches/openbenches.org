@@ -105,7 +105,6 @@ class UserController extends AbstractController
 			"&response_type=code";
 
 			return $this->redirect( $login_URl, 301 );
-			die();
 		}
 
 		//	A code has been provided
@@ -265,10 +264,6 @@ class UserController extends AbstractController
 			//	Generate an HTTP 404 response
 			throw $this->createNotFoundException("The user does not exist");
 		}
-
-		return $this->render('user.html.twig', [
-			'user_id' => $user_id,
-		]);
 	}
 
 	#[Route('/user/{user_service}/{user_name}', name: 'show_service_user')]
@@ -346,9 +341,5 @@ class UserController extends AbstractController
 			//	Generate an HTTP 404 response
 			throw $this->createNotFoundException("The user does not exist");
 		}
-
-		return $this->render('user.html.twig', [
-			'user_id' => $user_id,
-		]);
 	}
 }

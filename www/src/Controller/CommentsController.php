@@ -43,8 +43,9 @@ class CommentsController extends AbstractController
 		$results = $stmt->executeQuery();
 		$results_array = $results->fetchAssociative();
 
+		$comments_array = array();
 		while ( ( $row = $results->fetchAssociative() ) !== false) {
-			$bench_id = end( explode( separator:"/", string:$row["page_id"]) );
+			$bench_id = array_last( explode( separator:"/", string:$row["page_id"]) );
 			//	Add the details to the array
 			$comments_array[$row["page_id"]] = array(
 				"page_id"     => $row["page_id"],

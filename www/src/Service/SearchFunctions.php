@@ -256,7 +256,15 @@ class SearchFunctions
 		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_nearest");
 		$cacheName = "nearest_{$latitude}_{$longitude}_{$distance}_{$limit}_{$truncated}_{$media}";
 
-		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) use( $latitude, $longitude, $distance, $limit, $truncated, $media ) {
+		$cachedResult = $cache->get(
+			$cacheName, 
+			function (ItemInterface $item) use( 
+				$latitude, 
+				$longitude, 
+				$distance, 
+				$limit, 
+				$truncated, 
+				$media ) {
 			$item->expiresAfter(300);
 			$dsnParser = new DsnParser();
 			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );

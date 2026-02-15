@@ -57,6 +57,9 @@ class EditController extends AbstractController
 				"uploadURL"   => "/update",
 				"admin"       => $admin,
 			]);
+		} else {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "The bench ID must be an integer." );
 		}
 	}
 
