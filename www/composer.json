@@ -10,7 +10,7 @@
         "auth0/symfony": "*",
         "doctrine/dbal": "*",
         "doctrine/doctrine-bundle": "*",
-        "doctrine/doctrine-migrations-bundle": "^3.0",
+        "doctrine/doctrine-migrations-bundle": "^3.7",
         "doctrine/migrations": "*",
         "doctrine/orm": "*",
         "nyholm/psr7": "^1.8",
