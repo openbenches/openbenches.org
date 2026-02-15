@@ -28,6 +28,7 @@ class AddController extends AbstractController
 
 		if( isset( $user ) ) {
 			//	Use Auth0 to get user data.
+			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
 			$identifier = $user->getUserIdentifier();
@@ -107,6 +108,7 @@ class AddController extends AbstractController
 		//	Get user from Auth0
 		$user = $this->getUser();
 		if( isset( $user ) ) {
+			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
 			$provider   = explode("|", $user->getUserIdentifier())[0];

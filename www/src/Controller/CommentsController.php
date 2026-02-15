@@ -23,7 +23,8 @@ class CommentsController extends AbstractController
 			]);
 		}
 
-		$commenticsDB="mysqli://" . CMTX_DB_USERNAME . ":" . CMTX_DB_PASSWORD . "@" . CMTX_DB_HOSTNAME . ":" . CMTX_DB_PORT . "/" . CMTX_DB_DATABASE . "?&charset=utf8mb4";
+		// @phpstan-ignore constant.notFound, constant.notFound, constant.notFound, constant.notFound, constant.notFound (In the separate commentics/config.php) 
+		$commenticsDB = "mysqli://" . CMTX_DB_USERNAME . ":" . CMTX_DB_PASSWORD . "@" . CMTX_DB_HOSTNAME . ":" . CMTX_DB_PORT . "/" . CMTX_DB_DATABASE . "?&charset=utf8mb4";
 
 		$dsnParser = new DsnParser();
 		$connectionParams = $dsnParser->parse( $commenticsDB );

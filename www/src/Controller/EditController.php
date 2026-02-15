@@ -21,6 +21,7 @@ class EditController extends AbstractController
 		//	Get user from Auth0
 		$user = $this->getUser();
 		if( isset( $user ) ) {
+			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
 			$provider   = explode("|", $user->getUserIdentifier())[0];
@@ -82,6 +83,7 @@ class EditController extends AbstractController
 			//	Get user from Auth0
 			$user = $this->getUser();
 			if( isset( $user ) ) {
+				/** @var \Auth0\Symfony\Models\User $user */
 				$username   = $user->getNickname();
 				$avatar     = $user->getPicture();
 				$provider   = explode("|", $user->getUserIdentifier())[0];
