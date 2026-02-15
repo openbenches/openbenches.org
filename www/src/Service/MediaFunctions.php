@@ -7,7 +7,7 @@ class MediaFunctions
 	public function getScaledHeight( $originalWidth, $originalHeight, $newWidth ): int {
 		$ratio  = $newWidth / $originalWidth;
 		$newHeight = round( $originalHeight * $ratio );
-		return $newHeight;
+		return (int)$newHeight;
 	}
 
 	public function getLicenseIcon( $shortName ): string {
@@ -137,21 +137,19 @@ class MediaFunctions
 					$lng_minutes_a = explode('/',$gpsLng[1]);
 					$lng_seconds_a = explode('/',$gpsLng[2]);
 
-					$lat_degrees = $lat_degrees_a[0] / $lat_degrees_a[1];
-					$lat_minutes = $lat_minutes_a[0] / $lat_minutes_a[1];
-					$lat_seconds = $lat_seconds_a[0] / $lat_seconds_a[1];
-					$lng_degrees = $lng_degrees_a[0] / $lng_degrees_a[1];
-					$lng_minutes = $lng_minutes_a[0] / $lng_minutes_a[1];
-					$lng_seconds = $lng_seconds_a[0] / $lng_seconds_a[1];
+					$lat_degrees = (int)$lat_degrees_a[0] / (int)$lat_degrees_a[1];
+					$lat_minutes = (int)$lat_minutes_a[0] / (int)$lat_minutes_a[1];
+					$lat_seconds = (int)$lat_seconds_a[0] / (int)$lat_seconds_a[1];
+					$lng_degrees = (int)$lng_degrees_a[0] / (int)$lng_degrees_a[1];
+					$lng_minutes = (int)$lng_minutes_a[0] / (int)$lng_minutes_a[1];
+					$lng_seconds = (int)$lng_seconds_a[0] / (int)$lng_seconds_a[1];
 
 					$lat = (float) $lat_degrees + ((($lat_minutes * 60) + ($lat_seconds)) / 3600);
 					$lng = (float) $lng_degrees + ((($lng_minutes * 60) + ($lng_seconds)) / 3600);
-					$lat = number_format($lat, 7);
-					$lng = number_format($lng, 7);
 
 					//If the latitude is South, make it negative.
 					//If the longitude is west, make it negative
-					$lat = $info['exif:GPSLatitudeRef'] == 'S' ? $lat * -1 : $lat;
+					$lat = $info['exif:GPSLatitudeRef']  == 'S' ? $lat * -1 : $lat;
 					$lng = $info['exif:GPSLongitudeRef'] == 'W' ? $lng * -1 : $lng;
 
 					//	Add the various metadata to an array
