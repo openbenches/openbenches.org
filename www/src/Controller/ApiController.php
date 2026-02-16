@@ -124,9 +124,7 @@ class ApiController extends AbstractController
 					$media_data["height"]      = $row["height"];
 
 					//	Add all the media details to the response
-					if (sizeof($media_data) > 0){
-						$media_array[$benchID][] = $media_data;
-					}
+					$media_array[$benchID][] = $media_data;
 				}
 			}
 			
@@ -303,6 +301,7 @@ class ApiController extends AbstractController
 					$media_data["height"]      = $row["height"];
 
 					//	Add all the media details to the response
+					// @phpstan-ignore offsetAccess.notFound
 					array_push( $benches_array[$row["benchID"]]["properties"]["media"], $media_data);				
 
 				} else {
@@ -358,12 +357,14 @@ class ApiController extends AbstractController
 					);
 
 					//	Add other properties if requested
+					// @phpstan-ignore variable.undefined
 					if ( $get_created == true ) {
-						$feature["properties"]["created_at"] = date_format( date_create($added ), "c" );
+						$feature["properties"]["created_at"] = date_format( date_create( $row["added"] ), "c" );
 					}
 
 					if ( $get_media == true ) {
 						//	Add all the media details to the response
+						// @phpstan-ignore offsetAccess.notFound
 						array_push( $feature["properties"]["media"], $media_data);
 					}
 				

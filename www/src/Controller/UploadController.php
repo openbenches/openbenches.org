@@ -32,21 +32,20 @@ class UploadController extends AbstractController
 			$tags_array = array();
 		}
 		
-		//	Get metadata about 1st image
-		if ( isset( $_FILES['userfile1']['tmp_name'] ) ) {
-			$mediaFunctions = new MediaFunctions();
-
-			$filename = $_FILES['userfile1']['tmp_name'];
-			$metadata = $mediaFunctions->getMediaMetadata( $filename );
-			$media_type1 = $request->request->get( "media_type1" );
-		} else {
+		//	If a file wasn't sent, return an error.
+		if ( !isset( $_FILES['userfile1']['tmp_name'] ) ) {
 			$response = new Response(
 				"No image found.<br><a href=\"/add\">Please reload this page and try a different photo</a>",
 				Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
 				['content-type' => 'text/html']
 			);
 		}
-		
+		//	Get metadata about 1st image.
+		$mediaFunctions = new MediaFunctions();
+		$filename = $_FILES['userfile1']['tmp_name'];
+		$metadata = $mediaFunctions->getMediaMetadata( $filename );
+		$media_type1 = $request->request->get( "media_type1" );
+
 		//	If there is a GPS tag on the photo
 		if ( isset( $metadata["latitude"] ) )
 		{
@@ -103,7 +102,7 @@ class UploadController extends AbstractController
 
 			$benchID = $uploadFunctions->addBench( $inscription, $latitude, $longitude, $userID );
 	
-			if ( isset( $tags_array ) ){
+			if ( !empty( $tags_array ) ){
 				$uploadFunctions->saveTags( $benchID, $tags_array );
 			}
 

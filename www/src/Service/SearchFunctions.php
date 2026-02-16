@@ -262,9 +262,7 @@ class SearchFunctions
 				$latitude, 
 				$longitude, 
 				$distance, 
-				$limit, 
-				$truncated, 
-				$media ) {
+				$limit ) {
 			$item->expiresAfter(300);
 			$dsnParser = new DsnParser();
 			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
