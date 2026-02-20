@@ -298,7 +298,7 @@ class UserController extends AbstractController
 
 		if (false != $results_array) {
 			$providerID = $results_array["providerID"];
-			$user_id     = $results_array["userID"];
+			$user_id    = $results_array["userID"];
 			$provider   = $user_service;
 			$name       = $user_name;
 

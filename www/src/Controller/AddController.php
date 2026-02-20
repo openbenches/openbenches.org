@@ -76,6 +76,11 @@ class AddController extends AbstractController
 		$tagsFunctions = new TagsFunctions();
 		$tags_array = $tagsFunctions->getTagsNames();
 
+		//	Auth0 doesn't return some avatars.
+		if ( "openstreetmap-openid" == $provider ) {
+			$avatar = $userFunctions->getUserAvatar( $provider, $providerID, $username );
+		}
+
 		//	Auth0 hardcodes names of providers.
 		if ( "openstreetmap-openid" == $provider ) {
 			$provider = "OpenStreetMap";
