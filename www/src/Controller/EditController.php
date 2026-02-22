@@ -159,7 +159,7 @@ class EditController extends AbstractController
 					"New Tags:\n"  . implode(",", $tags_array)       . "\n" .
 					"New Images: " . count($_FILES)                  . "\n" .
 					"Media Types: ". $mediaTypes                     . "\n" .   
-					"From {$provider} / {$username}"
+					"From {$provider} / {$username} / $userID"
 				);
 			} else {
 				//	Delete Bench

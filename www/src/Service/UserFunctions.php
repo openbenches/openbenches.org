@@ -124,7 +124,7 @@ class UserFunctions
 				}
 			case "mastodon" :
 				return "{$providerID}";
-			case "openstreetmap" :
+			case "openstreetmap-openid" :
 				return "https://www.openstreetmap.org/user/{$name}";
 			default :
 				return "";
