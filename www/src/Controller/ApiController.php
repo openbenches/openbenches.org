@@ -90,7 +90,7 @@ class ApiController extends AbstractController
 
 			//	Get Media
 			$media_array = array();
-			if ( "false" != $get_media ) {
+			if ( $get_media ) {
 				$sql = "SELECT media.benchID, media.sha1, media.importURL, media.licence, media.media_type, media.userID, media.width, media.height, media.mediaID, users.name, users.provider
 						FROM `media`
 						INNER JOIN `users` on media.userID = users.userID
@@ -227,12 +227,12 @@ class ApiController extends AbstractController
 			$cache_name .= "all";
 		}
 
-		if ( $request->query->get("created") == "false") {
-			$get_created = false;
-			$cache_name .= "nocreated";
-		} else {
+		if ( $request->query->get("created") == "true") {
 			$get_created = true;
 			$cache_name .= "created";
+		} else {
+			$get_created = false;
+			$cache_name .= "nocreated";
 		}
 
 		$value = $cache->get( $cache_name, function (ItemInterface $item) {
@@ -306,7 +306,7 @@ class ApiController extends AbstractController
 
 				} else {
 					//	Some inscriptions got stored with leading/trailing whitespace
-					$inscription=trim( $row["inscription"] );
+					$inscription = trim( $row["inscription"] );
 
 					// If displaying on map need to truncate inscriptions longer than
 					// 128 chars and add in <br> elements
@@ -339,6 +339,9 @@ class ApiController extends AbstractController
 						$media_data["height"]      = $row["height"];
 					}
 
+					//	Date bench was added to the site.
+					$added = $row["added"];
+
 					//	Create GeoJSON
 					$feature = array(
 						"id"       => $row["benchID"],
@@ -350,24 +353,22 @@ class ApiController extends AbstractController
 						),
 						# Pass other attribute columns here
 						"properties" => array(
-							// "created_at"   => date_format( date_create($added ), "c" ),
+							// "created_at"   => $added, //"2026",//date_format( date_create($added ), "c" ),
 							"popupContent" => $inscription,
-							// "media"        => $mediaFeature
 						),
 					);
 
 					//	Add other properties if requested
 					// @phpstan-ignore variable.undefined
 					if ( $get_created == true ) {
-						$feature["properties"]["created_at"] = date_format( date_create( $row["added"] ), "c" );
+						$feature["properties"]["created_at"] = date_format( date_create( $added ), "c" );
 					}
 
 					if ( $get_media == true ) {
 						//	Add all the media details to the response
-						// @phpstan-ignore offsetAccess.notFound
-						array_push( $feature["properties"]["media"], $media_data);
+						$feature["properties"]["media"] = array();
+						array_push( $feature["properties"]["media"], $media_data );
 					}
-				
 
 					// Add feature to collection array
 					$benches_array[$row["benchID"]] = $feature;

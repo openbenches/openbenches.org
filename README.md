@@ -104,6 +104,11 @@ You can get all the data, or partial data, from the API.  Data is returned in [g
 * To get the latest 5 benches, append `&latest=5`
 * `https://openbenches.org/api/benches?latest=5`
 
+#### Creation Date
+* By default, the API doesn't return *when* a bench was added to the site.
+* To get the created date, append `&created=true`
+* To get media, append `https://openbenches.org/api/benches?created=true`
+
 ### Tags
 * All available folksonomy tags
 	* `https://openbenches.org/api/tags`
