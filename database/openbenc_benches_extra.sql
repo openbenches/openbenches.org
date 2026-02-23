@@ -87,19 +87,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `banned_users`
 --
 ALTER TABLE `banned_users`
-  MODIFY `bannedID` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `bannedID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `benches`
 --
 ALTER TABLE `benches`
-  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40515;
+  MODIFY `benchID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41344;
 
 --
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96263;
+  MODIFY `mediaID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98018;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -111,13 +111,13 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `tag_map`
 --
 ALTER TABLE `tag_map`
-  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24846;
+  MODIFY `mapID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25499;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10236;
+  MODIFY `userID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10429;
 
 --
 -- Constraints for dumped tables
