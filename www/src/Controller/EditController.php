@@ -24,15 +24,66 @@ class EditController extends AbstractController
 			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
-			$provider   = explode("|", $user->getUserIdentifier())[0];
-			$providerID = explode("|", $user->getUserIdentifier())[1];	
+			$identifier = $user->getUserIdentifier();
 		} else {
 			die();
 		}
 
+		//	Some users have unusual User IDs from Auth0.
+		//	Discord: oauth2|discord|123456789
+		//	OSM:     oidc|openstreetmap-openid|12345
+		if ( str_starts_with( haystack:$identifier, needle:"oauth2|" ) ) {
+			$identifier = str_replace( 
+				search:"oauth2|", 
+				replace:"", 
+				subject:$identifier
+			);
+		}
+		//	OSM Fix.
+		if ( str_starts_with( haystack:$identifier, needle:"oidc|" ) ) {
+			$identifier = str_replace( 
+				search:"oidc|", 
+				replace:"", 
+				subject:$identifier,
+			);
+		}
+
+		$provider   = explode("|", $identifier)[0];
+		$providerID = explode("|", $identifier)[1];	
+		
+		//	Check if user is banned.
 		$userFunctions = new UserFunctions();
+		$banned = $userFunctions->isUserBanned( $provider, $providerID );
+		if ( $banned ) {
+			$response = new Response(
+				"You are unable to contribute to OpenBenches.<br>Reason: {$banned}",
+				Response::HTTP_FORBIDDEN,
+				["content-type" => "text/html"]
+			);
+			return $response;
+		}
+
+		//	Auth0 doesn't return some avatars.
+		if ( "openstreetmap-openid" == $provider ) {
+			$avatar = $userFunctions->getUserAvatar( $provider, $providerID, $username );
+		}
+
+		//	Auth0 hardcodes names of providers.
+		if ( "openstreetmap-openid" == $provider ) {
+			$provider = "OpenStreetMap";
+		} else {
+			$provider = ucfirst( $provider );
+		}
+
+		//	Get the user's ID.
 		$userID = $userFunctions->addUser( $username, $provider, $providerID );
 
+		$reputation = $userFunctions->getUserBenchCount( $userID );
+		if ( $reputation < 10 ) {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "Editing is only available to those who have added several benches." );
+		}
+		
 		$benchFunctions = new BenchFunctions();
 		$bench = $benchFunctions->getBench( $benchID );
 
