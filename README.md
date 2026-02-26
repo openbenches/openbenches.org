@@ -224,3 +224,7 @@ Everything we do builds on someone else's hard work.
 * See https://openbenches.org/colophon for more
 
 And thanks to the many contributors who have improved this codebase.
+
+## Testing
+
+This project is [tested with BrowserStack](https://www.browserstack.com/open-source).
