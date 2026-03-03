@@ -17,9 +17,9 @@ class LocationFunctions
 			//	Cache length in seconds
 			$item->expiresAfter(3600000);
 
-			//	https://api.stadiamaps.com/geocoding/v1/search?text=Great%20Bedwyn,%20United%20Kingdom&size=1&api_key=abc123
+			//	https://api-eu.stadiamaps.com/geocoding/v1/search?text=Great%20Bedwyn,%20United%20Kingdom&size=1&api_key=abc123
 			$geocode_api_key = $_ENV['STADIAMAPS_API_KEY'];
-			$geocodeAPI = "https://api.stadiamaps.com/geocoding/v1/search?text=" . urlencode($address_string) . "&size=1&api_key={$geocode_api_key}";
+			$geocodeAPI = "https://api-eu.stadiamaps.com/geocoding/v1/search?text=" . urlencode($address_string) . "&size=1&api_key={$geocode_api_key}";
 			$options = array(
 				'http'=> array(
 					'method' => "GET"
@@ -116,9 +116,9 @@ class LocationFunctions
 	}
 
 	public function getAddress( $latitude, $longitude ): string {
-		//	https://api.stadiamaps.com/geocoding/v2/reverse?point.lat=51.49634&point.lon=0.13308&api_key=zzzzz
+		//	https://api-eu.stadiamaps.com/geocoding/v2/reverse?point.lat=51.49634&point.lon=0.13308&api_key=zzzzz
 		$geocode_api_key = $_ENV['STADIAMAPS_API_KEY'];
-		$geocodeAPI = "https://api.stadiamaps.com/geocoding/v2/reverse" . 
+		$geocodeAPI = "https://api-eu.stadiamaps.com/geocoding/v2/reverse" . 
 			"?point.lat=" . $latitude . 
 			"&point.lon=" . $longitude .
 			"&api_key={$geocode_api_key}";
