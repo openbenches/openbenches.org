@@ -2,6 +2,11 @@ User-agent: *
 Disallow:/edit/
 Disallow:/api/
 Disallow:/admin/
+Disallow:/js/
+Disallow:/css/
+Disallow:/fonts/
+Disallow:/commentics/
+Disallow:/js/
 
 User-agent: AhrefsBot 
 Disallow:/location/
