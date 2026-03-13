@@ -68,13 +68,6 @@ class EditController extends AbstractController
 			$avatar = $userFunctions->getUserAvatar( $provider, $providerID, $username );
 		}
 
-		//	Auth0 hardcodes names of providers.
-		if ( "openstreetmap-openid" == $provider ) {
-			$provider = "OpenStreetMap";
-		} else {
-			$provider = ucfirst( $provider );
-		}
-
 		//	Get the user's ID.
 		$userID = $userFunctions->addUser( $username, $provider, $providerID );
 
@@ -92,6 +85,13 @@ class EditController extends AbstractController
 		$all_tags   = $tagsFunctions->getTagsNames();
 
 		$admin = ( array_search( $userID, explode(",", $_ENV["ADMIN_USERIDS"])) !== false );
+
+		//	Auth0 hardcodes names of providers.
+		if ( "openstreetmap-openid" == $provider ) {
+			$provider = "OpenStreetMap";
+		} else {
+			$provider = ucfirst( $provider );
+		}
 
 		if ( isset($bench["bench_id"]) ) {
 			return $this->render("edit.html.twig", [
