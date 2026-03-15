@@ -72,7 +72,11 @@
 		<address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
 			<span itemprop="description">
 			{% for address in addresses %}
+				{% if loop.index0 == 0 %}
+				<span class="address">{{ address.location }}</span>
+				{% else %}
 				<a class="address" href="{{ address.url }}/">{{ address.location }}</a>
+				{% endif %}
 			{% endfor %}
 			</span>
 		</address>

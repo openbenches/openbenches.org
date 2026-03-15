@@ -587,7 +587,7 @@ address::before {
 	content: "Near:";
 }
 /* Show a comma after each address element except the last one */
-.address:not(:last-of-type)::after {
+.address:not(:last-child)::after {
 	content: ",";
 }
 
