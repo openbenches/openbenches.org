@@ -222,8 +222,10 @@ class UserController extends AbstractController
 			$user_url      = $userFunctions->getUserURL( $provider, $providerID, $name );
 
 			//	Get the benches associated with this user
-			$benches_array = $userFunctions->getUserBenches( $user_id, $first, $last );
-			$benches_count = $userFunctions->getUserBenchCount( $user_id);
+			$benches_array   = $userFunctions->getUserBenches( $user_id, $first, $last );
+			$benches_count   = $userFunctions->getUserBenchCount( $user_id );
+			$countries_count = $userFunctions->getUserCountryCount( $user_id );
+			$media_count     = $userFunctions->getUserMediaCount( $user_id );
 
 			//	Pagination for the UI
 			if( $get_page > 0 ) {
@@ -249,15 +251,17 @@ class UserController extends AbstractController
 
 			//	Render the page
 			return $this->render('user.html.twig', [
-				"user_id" => $user_id,
-				"user_name"    => $name,
-				"avatar_url" => $avatar_url,
+				          "user_id" => $user_id,
+				        "user_name" => $name,
+				       "avatar_url" => $avatar_url,
 				"user_external_url" => $user_url,
-				"user_provider" => $provider,
-				"benches_count" => $benches_count,
-				"benches" => $benches_array,
-				"next_url" => $next_url,
-				"previous_url" => $previous_url,
+				    "user_provider" => $provider,
+				    "benches_count" => $benches_count,
+				  "countries_count" => $countries_count,
+				      "media_count" => $media_count,
+				          "benches" => $benches_array,
+				         "next_url" => $next_url,
+				     "previous_url" => $previous_url,
 				
 			]);
 		} else {

@@ -66,6 +66,56 @@ class UserFunctions
 		}
 	}
 
+	public function getUserCountryCount( $userID ): int {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get the last item from the comma separated address string.
+		//	Count how many uniques there are.
+		$sql = "SELECT COUNT(DISTINCT TRIM(SUBSTRING_INDEX(`address`, ',', -1)))
+				AS `unique`
+				FROM `benches`
+				WHERE `address` IS NOT NULL
+				AND `address` <> ''
+				AND `userID` = ?
+				AND `published` = true";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $userID);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+
+		if (false != $results_array) {
+			return $results_array["unique"];
+		} else {
+			return 0;
+		}
+	}
+
+	public function getUserMediaCount( $userID ): int {
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get the last item from the comma separated address string.
+		//	Count how many uniques there are.
+		$sql = "SELECT COUNT(m.mediaID) AS media_count
+				FROM media m
+				INNER JOIN benches b ON m.benchID = b.benchID
+				WHERE m.userID = ?
+				AND b.published = 1;";
+		$stmt = $conn->prepare($sql);
+		$stmt->bindValue(1, $userID);
+		$results = $stmt->executeQuery();
+		$results_array = $results->fetchAssociative();
+
+		if (false != $results_array) {
+			return $results_array["media_count"];
+		} else {
+			return 0;
+		}
+	}
+
 	public function getUserAvatar( $provider, $providerID, $name ) {
 		//	https://cloudinary.com/documentation/social_media_profile_pictures
 

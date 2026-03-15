@@ -5,14 +5,32 @@
 
 
 {% block body %}
-<h3>Benches added or edited by 
-	{% if user_provider is defined %}
+<h3>{% if user_provider is defined %}
 		{{ user_provider }} user
-	{% endif %}
+	{% endif %} 
 	<a href="{{ user_external_url }}">
-	{% if avatar_url is not null %}
-		<img src="{{ avatar_url }}" class="avatar" alt="" loading="lazy" width="32">
-	{% endif %} {{ user_name }}</a></h3> 
+		{% if avatar_url is not null %}
+			<img src="{{ avatar_url }}" class="avatar" alt="" loading="lazy" width="32">
+		{% endif %} {{ user_name }}</a>
+	has added or edited {{ benches_count|number_format }}
+	{% if benches_count > 1 %}
+		benches
+	{% else %}
+		bench
+	{% endif %}
+	and {{ media_count|number_format }}
+	{% if media_count > 1 %}
+		photos
+	{% else %}
+		photo
+	{% endif %}
+	from {{ countries_count|number_format }}
+	{% if countries_count > 1 %}
+		countries
+	{% else %}
+		country
+	{% endif %}
+</h3>
 
 	<div id="map"></div>
 	{{ map_javascript("/api/user/", user_id ) }}
