@@ -196,10 +196,13 @@ class EditController extends AbstractController
 				}
 	
 				$domain = $_ENV["DOMAIN"];
+
+				$diff = xdiff_string_diff( $oldBench["inscription"], $inscription, context:0 );
 	
 				mail($_ENV["NOTIFICATION_EMAIL"],
 					"Edit to Bench {$benchID} by {$username}",
 					"{$domain}bench/{$benchID}\n\n" .
+					"{$diff}"                                        . "\n" .
 					"Old Inscription:\n" . $oldBench["inscription"]  . "\n" .
 					"New Inscription:\n" . $inscription              . "\n" . 
 					"Old Lat:\n"   . $oldBench["latitude"]           . "\n" .
