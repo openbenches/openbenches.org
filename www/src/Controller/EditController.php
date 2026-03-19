@@ -198,7 +198,7 @@ class EditController extends AbstractController
 				$domain = $_ENV["DOMAIN"];
 	
 				mail($_ENV["NOTIFICATION_EMAIL"],
-					"Edit to Bench {$benchID}",
+					"Edit to Bench {$benchID} by {$username}",
 					"{$domain}bench/{$benchID}\n\n" .
 					"Old Inscription:\n" . $oldBench["inscription"]  . "\n" .
 					"New Inscription:\n" . $inscription              . "\n" . 
