@@ -220,7 +220,7 @@ class UploadFunctions
 		$domain = $_ENV["DOMAIN"];
 
 		mail($_ENV["NOTIFICATION_EMAIL"],
-			"Bench {$benchID}",
+			"Bench {$benchID} {$provider} / {$name}",
 			"Possible duplicates {$duplicate_count}\n" .
 			"{$inscription}\n" .
 			"Tags: "  . implode(",", $tags_array) . "\n" .
