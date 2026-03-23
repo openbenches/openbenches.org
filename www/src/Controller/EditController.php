@@ -197,7 +197,12 @@ class EditController extends AbstractController
 	
 				$domain = $_ENV["DOMAIN"];
 
-				$diff = xdiff_string_diff( $oldBench["inscription"], $inscription, context:0 );
+				//	Generate Diff.
+				//	Add newlines to surpress "\ No newline at end of file" warning.
+				$diff = xdiff_string_diff( 
+					$oldBench["inscription"] . "\n", 
+					$inscription             . "\n", 
+					context: 0 );
 	
 				mail($_ENV["NOTIFICATION_EMAIL"],
 					"Edit to Bench {$benchID} by {$username}",
