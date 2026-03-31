@@ -1,8 +1,8 @@
 # OpenBenches
 
-![A bench in a park, birds fly up above. In the background is a tree.](https://openbenches.org/images/icons/icon-72x72.png)
+<img src="https://openbenches.org/images/openbencheslogo.svg" alt="A bench in a park, birds fly up above. In the background is a tree." width=72>
 
-https://OpenBenches.org/ - an open data repository for memorial benches.
+https://OpenBenches.org/ is an open data repository for memorial benches.
 
 [![DOI](https://zenodo.org/badge/96925393.svg)](https://doi.org/10.5281/zenodo.16944303)
 
