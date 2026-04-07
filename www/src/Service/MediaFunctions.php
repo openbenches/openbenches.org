@@ -45,7 +45,7 @@ class MediaFunctions
 
 		return $_ENV["IMAGE_CACHE_PREFIX"] .  
 		       $_SERVER['SERVER_NAME'] . 
-		       "/image/{$sha1}/&w={$size}&q={$quality}&output=webp&il";
+		       "/image/{$sha1}/&w={$size}&q={$quality}&output=webp&il&default=1";
 	}
 
 	// public function getMediaLocation( $file ) {
