@@ -9,7 +9,7 @@
 
 	{% if username is not null %}
 		<h3>
-			Welcome {{ provider }} user {{ username }}
+			Welcome {{ provider|capitalize }} user {{ username }}
 			{% if avatar is not null %}
 				<img src="{{ avatar }}" width="20">
 			{% endif %}
@@ -18,7 +18,7 @@
 	{% if username is null %}
 		<a href="/add/logged_in" class="button buttonColour">👤 Sign in</a><br>or be <strong>anonymous</strong>.
 	{% endif %}
-
+<h2 id="android-instructions" style="display: none;"><a href="https://www.openbenches.org/blog/android-gps-problems/">No GPS tags detected in photo?<br>See the new Android instructions.</a></h2>
 <form id="fileform" action="{{ uploadURL }}" enctype="multipart/form-data" method="post" onsubmit="true;">
 		<div>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
 		<div id="ios"></div>
@@ -51,7 +51,6 @@
 				</select>
 			</div>
 		</div>
-
 
 		<div id="inscriptionBox">
 			<label for="inscription" id="message"></label><br>
@@ -185,6 +184,17 @@ A lot..." required></textarea>
 	</script>
 
 	<script>
+		function showAndroidInstructions() {
+			//	Show the instructions only to Android users.
+			let userAgent = navigator.userAgent.toLowerCase();
+			let Android = userAgent.indexOf("android") > -1;
+			if (Android) {
+				var androidInstructions = document.getElementById("android-instructions");
+				//	Display the instructions element.
+				androidInstructions.style.display = "block";
+			}
+		}
+
 		var previewWidth = 800;
 
 		document.getElementById("photoFile1").onchange = function (e) {
@@ -223,9 +233,11 @@ A lot..." required></textarea>
 
 					if ( typeof gpsInfo == 'undefined' ) {
 						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+						showAndroidInstructions();
 						return;
 					} else if ( gpsInfo.get("GPSLongitude") == null ) {
 						alert("Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
+						showAndroidInstructions();
 						return;
 					}
 					// upload the photo for text detection
@@ -250,6 +262,7 @@ A lot..." required></textarea>
 
 					if ( isNaN( latitude ) || isNaN( longitude ) ) {
 						alert("Warning! There was an error reading the photo's GPS tags.\nPlease check your camera's settings or add a different photo.");
+						showAndroidInstructions();
 						return;
 					}
 
@@ -421,4 +434,3 @@ A lot..." required></textarea>
 		}
 	</script>
 {% endblock %}
-
