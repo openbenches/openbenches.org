@@ -592,8 +592,8 @@ footer #cc-by-sa-logo {
 }
 
 /* Support Page. */
-.support a {
-	color: var(--black);
+#support h2 {
+	color: var(--white);
 }
 
 hr {
