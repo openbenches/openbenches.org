@@ -16,12 +16,8 @@ class LeaderboardController extends AbstractController
 		$userFunctions  = new UserFunctions();
 
 		$contributors = $userFunctions->getContributorsStatistics();
-		// $bench_users = $userFunctions->getLeaderboardBenches();
-		// $media_users = $userFunctions->getLeaderboardMedia();
 
 		return $this->render("leaderboard.html.twig", [
-			// "benches" => $bench_users,
-			// "media"   => $media_users,
 			"contributors" => $contributors
 		]);
 	}
