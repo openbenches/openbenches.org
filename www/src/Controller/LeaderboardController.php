@@ -11,7 +11,7 @@ use App\Service\UserFunctions;
 
 class LeaderboardController extends AbstractController
 {
-	#[Route(["/leaderboard", "/contributions", "/contributors"], name: 'leaderboard')]
+	#[Route(["/leaderboard", "/contributions", "/contributors"], name: "leaderboard")]
 	public function leaderboard(): Response {
 		$userFunctions  = new UserFunctions();
 
@@ -19,7 +19,7 @@ class LeaderboardController extends AbstractController
 		// $bench_users = $userFunctions->getLeaderboardBenches();
 		// $media_users = $userFunctions->getLeaderboardMedia();
 
-		return $this->render('leaderboard.html.twig', [
+		return $this->render("leaderboard.html.twig", [
 			// "benches" => $bench_users,
 			// "media"   => $media_users,
 			"contributors" => $contributors
