@@ -5,14 +5,16 @@
 
 
 {% block body %}
-<h3>Benches tagged "{{ tag }}"</h3> 
+	<h2>Benches tagged "{{ tag }}"</h2> 
 
 	<div id="map"></div>
 	{{ map_javascript( "/api/tag/", tag ) }}
-
+	<aside class="info">
+		Scroll and zoom on the map to find benches.
+	</aside>
 	{% if benches is defined %}
+	<h2>Total benches found: {{ benches_count }}.</h2>
 	<div id="search-results">
-		<h2>Total benches found: {{ benches_count }}.</h2>
 		<ol>
 		{% for bench in benches %}
 			<li>

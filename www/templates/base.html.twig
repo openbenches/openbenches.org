@@ -40,8 +40,7 @@
 		<meta                            property="og:rich_attachment"       content="true">
 		<meta                            property="fb:app_id"                content="{{ app.request.server.get("FACEBOOK_APP_ID") }}">
 
-		<link rel="stylesheet" href="/css/picnic.css?cache=2023-04-09T16:06">
-		<link rel="stylesheet" href="/css/style.css?cache=2025-05-05T10:11">
+		<link rel="stylesheet" href="/css/style.css?cache=2026-04-17T10:11{{ random(0, 100) }}">
 
 		<script src="/js/maplibre-gl-5.0.0/maplibre-gl.js"></script>
 		<link  href="/js/maplibre-gl-5.0.0/maplibre-gl.css" rel="stylesheet">
@@ -72,8 +71,9 @@
 			</h1>
 			<p itemprop="description">A map of <span id="counter" data-target="{{ number_of_benches_raw() }}">{{ number_of_benches() }}</span> memorial benches - added by people like you</p>
 			<p>
-				<!-- <a class="button buttonColour" href="/support/"><strong>🥰</strong> Support OpenBenches</a> -->
-				<a href="/add/" class="button buttonColour"><strong>+</strong> Add bench</a>
+				<a href="/add/"     class="button buttonColour" id="add"><span class="emoji">➕</span> Add bench</a>
+				<!-- <a href="/support/" class="button buttonColour"><span class="emoji">🥰</span> Support OpenBenches</a> -->
+
 			</p>
 		</hgroup>
 		{% block body %}{% endblock %}

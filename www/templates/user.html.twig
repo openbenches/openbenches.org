@@ -5,7 +5,7 @@
 
 
 {% block body %}
-<h3>{% if user_provider is defined %}
+<h2>{% if user_provider is defined %}
 		{{ user_provider }} user
 	{% endif %} 
 	<a href="{{ user_external_url }}">
@@ -30,16 +30,17 @@
 	{% else %}
 		country
 	{% endif %}
-</h3>
+</h2>
 
 	<div id="map"></div>
 	{{ map_javascript("/api/user/", user_id ) }}
-
-	<div id="benchImage"></div>
+	<aside class="info">
+		Scroll and zoom on the map to find benches.
+	</aside>
 
 	{% if benches is defined %}
+	<h2>Total benches found: {{ benches_count }}.</h2>
 	<div id="search-results">
-		<h2>Total benches found: {{ benches_count }}.</h2>
 		<ol>
 		{% for bench in benches %}
 			<li>

@@ -4,11 +4,17 @@
 
 {% block body %}
 {% if error is defined %}
-		<h2>{{ error }}</h2>
+	<h2>{{ error }}</h2>
 {% endif %}
-<form method="get"> 
-	<label for="mastodon">What is your Mastodon server?</label><br>
-	<input type="url" id="mastodon" name="mastodon" placeholder="https://example.social/" required><br>
-	<button>Authorise me!</button>
-</form>
+<script>
+	//	Hide the add button.
+	document.getElementById("add").style = "display:none;"
+</script>
+<div class="button-bar">
+	<form method="get"> 
+		<h2>What is your Mastodon server?</h2>
+		<input type="url" id="mastodon" name="mastodon" placeholder="https://example.social/" required class="search">
+		<button class="button buttonColour" type="button"><span class="emoji">🐘</span> Authorise me!</button>
+	</form>
+</div>
 {% endblock %}

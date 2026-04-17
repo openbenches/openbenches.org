@@ -15,12 +15,14 @@ class LeaderboardController extends AbstractController
 	public function leaderboard(): Response {
 		$userFunctions  = new UserFunctions();
 
-		$bench_users = $userFunctions->getLeaderboardBenches();
-		$media_users = $userFunctions->getLeaderboardMedia();
+		$contributors = $userFunctions->getContributorsStatistics();
+		// $bench_users = $userFunctions->getLeaderboardBenches();
+		// $media_users = $userFunctions->getLeaderboardMedia();
 
 		return $this->render('leaderboard.html.twig', [
-			"benches" => $bench_users,
-			"media"   => $media_users,
+			// "benches" => $bench_users,
+			// "media"   => $media_users,
+			"contributors" => $contributors
 		]);
 	}
 }

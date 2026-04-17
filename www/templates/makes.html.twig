@@ -5,10 +5,9 @@
 
 
 {% block body %}
-<h3>Cameras used to take bench photos</h3> 
-
 	{% if makes is defined %}
 	<div id="search-results">
+		<h2>Cameras used to take bench photos</h2> 
 		<table>
 			<thead>
 				<tr>
@@ -25,6 +24,7 @@
 			</tbody>
 		</table>
 	</div>
+	<aside><span class="emoji">📷</span></aside>
 	<script>
 		document.querySelectorAll("th").forEach((header, index) => {
 			header.addEventListener("click", () => {

@@ -6,7 +6,11 @@
 {% block body %}
 <h2>{{ inscription }}</h2>
 
-<img src="{{ url }}" class="proxy-image" alt="Photograph of a bench with a removed plaque" loading="lazy">
+<div itemprop="photo" class="main">
+	<img src="{{ url }}" class="proxy-image" alt="Photograph of a bench with a removed plaque." loading="lazy">
+</div>
+<span class="info"><span class="emoji">😕</span></span>
+
 {% include 'searchform.html.twig' %}
 
 {% endblock %}

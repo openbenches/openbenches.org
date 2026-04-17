@@ -132,7 +132,7 @@ function sendURLToCloudVision (content) {
  */
 function displayJSON (data) {
 	//  Tell visitor the automatic text detection finished
-	$('#message').text('Automatically detected text is shown below.\nPlease check and edit if needed.');
+	$('#message').text('');
 	//	Unhide the inscription box
 	$('#inscription').prop('disabled', false);
 	$('#buttonBar').show();

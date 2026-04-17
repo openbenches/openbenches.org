@@ -219,6 +219,66 @@ class UserFunctions
 		return $benches_array;
 	}
 
+	public function getContributorsStatistics(): array {
+		$cache = new FilesystemAdapter($_ENV["CACHE"] .  "cache_leaderboard" );
+		$cache_name = "leaderboard_benches";
+		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+			//	Cache length in seconds
+			$item->expiresAfter(60); //	1 minute
+			$userFunctions = new UserFunctions();
+
+			$dsnParser = new DsnParser();
+			$connectionParams = $dsnParser->parse( $_ENV['DATABASE_URL'] );
+			$conn = DriverManager::getConnection($connectionParams);
+
+			$benchSubquery = $conn->createQueryBuilder()
+				->select("userID", "COUNT(*) AS bench_count")
+				->from("benches")
+				->where("published = 1 AND present = 1")
+				->groupBy("userID")
+				->getSQL();
+
+			$mediaSubquery = $conn->createQueryBuilder()
+				->select("userID", "COUNT(*) AS media_count")
+				->from("media")
+				->groupBy("userID")
+				->getSQL();
+
+			$queryBuilder = $conn->createQueryBuilder();
+
+			$queryBuilder
+				->select(
+					"users.userID",
+					"users.name",
+					"users.provider",
+					"users.providerID",
+					"COALESCE(benches_sub.bench_count, 0) AS bench_count",
+					"COALESCE(media_sub.media_count, 0) AS media_count"
+				)
+				->from("users", "users")
+				->leftJoin("users", "($benchSubquery)", "benches_sub", "users.userID = benches_sub.userID")
+				->leftJoin("users", "($mediaSubquery)", "media_sub", "users.userID = media_sub.userID")
+				->where('users.provider != "anon"')
+				->orderBy("bench_count", "DESC");
+
+			$results = $queryBuilder->executeQuery();
+
+			$leaderboard_array = array();
+			while ( ( $row = $results->fetchAssociative() ) !== false) {
+				//	Add the details to the array
+				$leaderboard_array[$row["userID"]] = array(
+					"userID"       => $row["userID"],
+					"username"     => $row["name"],
+					"provider"     => $row["provider"],
+					"avatar"       => $userFunctions->getUserAvatar( $row["provider"], $row["providerID"], "" ),
+					"bench_count"  => $row["bench_count"],
+					"media_count"  => $row["media_count"]
+				);
+			}
+			return $leaderboard_array;
+		});
+		return $value;
+	}
 	public function getLeaderboardBenches(): array {
 
 		$cache = new FilesystemAdapter($_ENV["CACHE"] .  "cache_leaderboard" );
