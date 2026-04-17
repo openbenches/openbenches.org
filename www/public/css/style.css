@@ -23,7 +23,6 @@
 	--white:        #F0F0F0;	/* Soft white for contrast on the above. */
 	--black:        #040404;	/* Soft black for text & links. */ 
 	--black-border: #191E20DD;	/* Slightly softer black for borders. */
-	--background:   #FFDDBE;
 	--danger-zone:  #FF0000;
 
 	/* Borders. */
@@ -65,7 +64,6 @@ body {
 	margin: .25rem 0 0 0;
 	padding: 0;
 	text-align: center;
-	background-color: var(--background);
 	/* https://www.transparenttextures.com/tileable-wood-colored.html */
 	background-image: url("/images/textures/tileable-wood-colored.webp");
 }
