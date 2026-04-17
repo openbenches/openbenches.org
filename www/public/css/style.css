@@ -599,3 +599,17 @@ footer #cc-by-sa-logo {
 hr {
 	margin: 1rem;
 }
+
+/* Colophon Page. */
+.colophon {
+	list-style: none;
+	text-align: left;
+}
+.colophon li {
+	margin: 1rem 0;
+}
+.colophon-logo {
+	height: 3rem;
+	vertical-align: middle;
+	backdrop-filter: blur(1rem);
+}
