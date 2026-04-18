@@ -578,8 +578,28 @@ footer #cc-by-sa-logo {
 	overflow: hidden;
 }
 #cmtx_iframe {
-	padding: 1rem;
 	background: var(--white);
+}
+/* These are placed in Commentics' theme settings. */
+.cmtx_iframe_body {
+	margin: 1rem;
+}
+.cmtx_admin_button {
+	box-shadow: none;
+	cursor: pointer;
+}
+.cmtx_flag_area {
+	/* Remove flag button. Can also be removed in settings. */
+	display: none !important;
+}
+.cmtx_date {
+	color: #040404;	/* Can't use variables in theme. */
+}
+.cmtx_divider_section {
+	display: none;	/* Better spacing. */
+}
+.cmtx_comment_section:not(:last-of-type) {
+	border-bottom: 1px solid black;	/* Can't use variables in theme. */
 }
 
 /* User images. */
