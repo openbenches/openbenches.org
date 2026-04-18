@@ -223,6 +223,15 @@ img.proxy-image {
 	word-break: normal !important; /* For text. */
 	line-height: var(--line-height); /* For attribution. */
 }
+/* Cluster links. */
+.maplibregl-popup-content a {
+	color: var(--black);
+	background: var(--plaque-gold);
+	padding: .5em;
+}
+.maplibregl-popup-content hr {
+	margin: .5em 0;
+}
 
 /* Photo upload. */
 .photo-group {
