@@ -74,11 +74,10 @@ h1, h2, h3, h4, h5, h6 {
 	text-wrap: balance;
 	width: fit-content;	/* Prevent backdrop-filter extending to width of parent. */
 	max-width: min( var(--main-width), 100% );
-	margin: 0 auto;
+	margin: .5rem auto;
 	backdrop-filter: blur(.5rem);	/* Better clarity on background textures. */
 }
 h1 {
-	margin-bottom: .5rem;
 	font-size: var(--font-big);
 }
 h1 a {
@@ -86,7 +85,6 @@ h1 a {
 	text-decoration: none;
 }
 h2 {
-	margin-bottom: .5rem;
 	line-height: 2rem;
 	font-size: var(--font-big);
 }
@@ -209,8 +207,6 @@ img.proxy-image {
 	border-radius: var(--radius) var(--radius) 0 0; 
 	border-bottom: 0;
 	width: var(--main-width);
-	padding: 0.5rem;
-	padding-bottom: 1rem;
 	max-width: var(--max-width);
 	background-color:var(--grass-green);
 	/* https://www.transparenttextures.com/dark-stripes.html */
@@ -389,15 +385,6 @@ td.count {
 }
 td a {
 	vertical-align: middle;
-}
-caption {
-	/* Table caption. */
-	color: var(--black);
-	backdrop-filter: blur(.5rem);	/* Better clarity on background textures. */
-	font-size: var(--font-normal);
-	max-width: min(var(--main-width),100%);
-	width: fit-content;
-	margin: 0 auto;
 }
 
 /* Search. */
@@ -619,4 +606,13 @@ hr {
 	height: 3rem;
 	vertical-align: middle;
 	backdrop-filter: blur(1rem);
+}
+
+/* Panoramics for Pannellum. */
+iframe.pannellum {
+	max-width: var(--max-width);
+	border: none;
+	width: var(--main-width);
+	height: 70vh;
+	border-radius: var(--radius) var(--radius) 0 0;
 }

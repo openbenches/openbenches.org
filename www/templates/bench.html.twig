@@ -14,9 +14,9 @@
 		{% for media in medias %}
 		<div itemprop="photo" class="main">
 			{% if media.mediaType == "360" %}
-			<iframe width="600" height="400" allowfullscreen src="/js/pannellum/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true"></iframe>
+			<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true"></iframe>
 			{% elseif media.mediaType == "pano" %}
-			<iframe width="600" height="400" allowfullscreen src="/js/pannellum/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60&amp;autoLoad=true"></iframe>
+			<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60&amp;autoLoad=true"></iframe>
 			{% elseif media.mediaType == "video" %}
 			<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 			{% else %}
