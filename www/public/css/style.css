@@ -94,6 +94,9 @@ h2 {
 h2 a {
 	color: var(--black);
 }
+select {
+	max-width: var(--main-width);
+}
 
 /* General text. */
 p {
@@ -276,7 +279,7 @@ input[type="file"] {
 }
 textarea {
 	width: 96%; /* TODO Find better way to set this width. */
-	max-width: 100%;
+	max-width: 90%;
 	border-radius: var(--radius);
 	border: none;
 	margin: 1rem;
