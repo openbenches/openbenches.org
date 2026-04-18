@@ -93,7 +93,9 @@
 					height="{{ media.height }}"
 					class="proxy-image"
 					loading="lazy">
+			</div>
 
+			<div class="media-select">
 				<p class="caption">
 					{% if media.formattedDate != "" %}
 					<span class="emoji">🗓️</span> {{ media.formattedDate }}
@@ -115,22 +117,20 @@
 							class="cc-icon"
 							alt="Creative Commons Attribution Share-Alike"></a>
 					{% endif %}
-				</p>
-			</div>
+				</p><br>
 
-			<div class="media-select">
 				<label for="media_{{ media.mediaID }}">This photo is a:</label>
 				<select id="media_{{ media.mediaID }}" name="media_{{ media.mediaID }}">
-				{% set selected = "bench" %}
-				{% set media_types_array = media_types() %}
+				
 				{% for type in media_types_array %}
-					{% if type.shortName == selected %}
+					{% if type.shortName == media.mediaType %}
 					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
 					{% else %}
 					<option value="{{ type.shortName }}">{{ type.longName }}</option>
 					{% endif %}
 				{% endfor %}
-				</select>	
+				</select>
+				
 			</div>
 			{% endfor %}
 		{% endif %}
