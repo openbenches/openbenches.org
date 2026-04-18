@@ -95,7 +95,7 @@ h2 a {
 	color: var(--black);
 }
 select {
-	max-width: var(--main-width);
+	max-width: var(--max-width);
 }
 
 /* General text. */
@@ -286,6 +286,9 @@ textarea {
 	background-color: var(--white);
 	font-size: var(--font-normal);
 }
+#ocr-icon {
+	vertical-align: center;
+}
 
 /* Tags. */
 #tagInput {
@@ -325,6 +328,7 @@ textarea {
 }
 label {
 	display: inline-block;
+	line-height: var(--line-height);
 }
 
 /* Style the progress bar as per https://verpex.com/blog/how-to-style-a-progress-bar-using-css */
