@@ -4,30 +4,33 @@
 {% block title %}Contributors{% endblock %}
 
 {% block body %}
-<table>
-	<caption>All logged-in contributors to OpenBenches</caption>
-	<thead>
-		<tr>
-			<th>User</th><th class="ascending">Benches</th><th class="count">Photos</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for user in contributors %}
-		<tr>
-			<td class="name">
-				<a href="/user/{{ user.userID }}">
-					<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="{{ user.provider }}" loading="lazy" width="32"><img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32"></a>&nbsp;
-				<a href="/user/{{ user.userID }}">
-					{{ user.username }}
-				</a>
-			</td>
-			<td class="count">{{ user.bench_count|number_format }}</td>
-			<td class="count">{{ user.media_count|number_format }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
-<aside></aside>
+<div id="search-results">
+	<h2>All logged-in contributors to OpenBenches</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>User</th><th class="ascending">Benches</th><th class="count">Photos</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in contributors %}
+			<tr>
+				<td class="name">
+					<a href="/user/{{ user.userID }}">
+						<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="{{ user.provider }}" loading="lazy" width="32"><img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32"></a>&nbsp;
+					<a href="/user/{{ user.userID }}">
+						{{ user.username }}
+					</a>
+				</td>
+				<td class="count">{{ user.bench_count|number_format }}</td>
+				<td class="count">{{ user.media_count|number_format }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<aside><span class="emoji">📈</span></aside>
+
 <script>
 	document.querySelectorAll("th").forEach((header, index) => {
 		header.addEventListener("click", () => {

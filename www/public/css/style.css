@@ -64,6 +64,7 @@ body {
 	margin: .25rem 0 0 0;
 	padding: 0;
 	text-align: center;
+	background-color: var(--white);
 	/* https://www.transparenttextures.com/tileable-wood-colored.html */
 	background-image: url("/images/textures/tileable-wood-colored.webp");
 }
@@ -71,10 +72,10 @@ body {
 /* Headings. */
 h1, h2, h3, h4, h5, h6 {
 	text-wrap: balance;
-	width: var(--main-width);
-	max-width: 100%;
+	width: fit-content;	/* Prevent backdrop-filter extending to width of parent. */
+	max-width: min( var(--main-width), 100% );
 	margin: 0 auto;
-	backdrop-filter: blur(.1rem);	/* Better clarity on background textures. */
+	backdrop-filter: blur(.5rem);	/* Better clarity on background textures. */
 }
 h1 {
 	margin-bottom: .5rem;
@@ -303,7 +304,7 @@ textarea {
 	line-height: 1rem;
 }
 [type] + .toggle {
-  margin-right: 0;
+  margin: .25rem;
   width: auto;
   padding: .75rem;
 }
@@ -380,6 +381,9 @@ td.name {
 	text-align: left;
 	word-break: break-word;	/* Stop text overflow. */
 }
+.name a {
+	display: initial !important;	/* Don't flex on leaderboard. */
+}
 td.count {
 	text-align: right;
 }
@@ -389,8 +393,11 @@ td a {
 caption {
 	/* Table caption. */
 	color: var(--black);
-	backdrop-filter: blur(.1rem);	/* Better clarity on background textures. */
+	backdrop-filter: blur(.5rem);	/* Better clarity on background textures. */
 	font-size: var(--font-normal);
+	max-width: min(var(--main-width),100%);
+	width: fit-content;
+	margin: 0 auto;
 }
 
 /* Search. */
