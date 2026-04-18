@@ -569,13 +569,17 @@ footer #cc-by-sa-logo {
 	margin: 0 auto 1rem auto;
 	border: var(--border-width) solid var(--black-border);
 	border-radius: var(--radius);
-	background: var(--ground-brown);
+	background: var(--white);
 	color: var(--white);
 	width: var(--main-width);
 	padding: 0;
 	max-width: var(--max-width);
 	visibility: visible; 
 	overflow: hidden;
+}
+#cmtx_iframe {
+	padding: 1rem;
+	background: var(--white);
 }
 
 /* User images. */
