@@ -163,24 +163,17 @@ A lot..." required=""></textarea>
 			{% endfor %}
 			</select>	
 		</div>
-
-		<div id="progressInfo" style="display:none;">
-			<label for="progressBar">Upload progress:<br></label>
-			<progress id="progressBar" value="0" max="100"></progress>
-			<h3 id="status"></h3>
-			<p id="loaded_n_total"></p>
-		</div>
 	</form>
 
 	<div class="button-bar" id="buttonBar" style="display: none;">
-		<p>Please <a href="#inscriptionBox">check the inscription</a> before sharing.</p>
-		<button type="submit" name="submitButton" id="submitButton" class="button buttonColour"><span class="emoji">📷</span> Share Bench</button>
 		<div id="progressInfo" style="display:none;">
-			<label for="progressBar">Upload progress:<br></label>
-			<progress id="progressBar" value="25" max="100"></progress>
 			<h3 id="status"></h3>
+			<label   for="progressBar">Upload progress:<br></label>
+			<progress id="progressBar" value="0" max="100"></progress>
 			<p id="loaded_n_total"></p>
 		</div>
+		<p id="check">Please <a href="#inscriptionBox">check the inscription</a> before sharing.</p>
+		<button type="submit" name="submitButton" id="submitButton" class="button buttonColour"><span class="emoji">📷</span> Share Bench</button>
 	</div>
 
 	<div id="cc-small" class="main">
@@ -390,6 +383,8 @@ A lot..." required=""></textarea>
 		function uploadFile() {
 			//	Show the progress bar
 			$("#progressInfo").show();
+			$("#submitButton").hide();
+			$("#check").hide();
 			//	Prepare the data
 			var formdata = new FormData();
 			formdata.append("userfile1",    $("#photoFile1").prop("files")[0]);
