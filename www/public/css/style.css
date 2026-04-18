@@ -297,6 +297,9 @@ textarea {
 	font-size: var(--font-normal);
 	color: var(--white);
 }
+#tagInput label {
+	display: contents;
+}
 [type="checkbox"] {
 	opacity: 0;
 	width: 0;
