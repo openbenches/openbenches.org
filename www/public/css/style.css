@@ -67,6 +67,7 @@ body {
 	background-color: var(--white);
 	/* https://www.transparenttextures.com/tileable-wood-colored.html */
 	background-image: url("/images/textures/tileable-wood-colored.webp");
+	background-attachment: fixed;
 }
 body * {
 	/* For narrow viewports. */
