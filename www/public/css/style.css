@@ -524,6 +524,7 @@ button, .button, [type="submit"], .dropimage {
 	padding: .3rem .9rem;
 	font-family: inherit;	/* Reset for extra bolding on buttons. */
 	outline: 0.1rem var(--black-border) solid;
+	word-wrap: break-word;
 }
 
 .search {
