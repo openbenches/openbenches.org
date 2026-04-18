@@ -68,7 +68,10 @@ body {
 	/* https://www.transparenttextures.com/tileable-wood-colored.html */
 	background-image: url("/images/textures/tileable-wood-colored.webp");
 }
-
+body * {
+	/* For narrow viewports. */
+	word-wrap: break-word;
+}
 /* Headings. */
 h1, h2, h3, h4, h5, h6 {
 	text-wrap: balance;
@@ -481,9 +484,6 @@ address::before {
 #latlong::before {
 	content: "📍 ";
 }
-#latlong {
-	word-wrap: anywhere;
-}
 code {
 	font-size: var(--font-small);
 }
@@ -524,7 +524,6 @@ button, .button, [type="submit"], .dropimage {
 	padding: .3rem .9rem;
 	font-family: inherit;	/* Reset for extra bolding on buttons. */
 	outline: 0.1rem var(--black-border) solid;
-	word-wrap: break-word;
 }
 
 .search {
