@@ -210,11 +210,21 @@ class AppExtension extends AbstractExtension
 
 	//	Asynchronous function to add custom layers and sources
 	async function addCustomLayersAndSources() {
+		//	Which API is being called?
+		if (api_url == "") {
+			//	No search set - use default.
+			geoJSON_url = "/api/benches/";
+		} else if (api_url == "_add_") {
+			return null;
+		} else {
+			geoJSON_url = "{$api_url}";
+		}
+
 		//	Load the GeoJSON
 		if (!map.getSource("benches")) {
 			map.addSource("benches", {
 				type: "geojson",
-				data: "/api/benches/",
+				data: geoJSON_url,
 				cluster: true,
 				clusterMaxZoom: 17, // Max zoom to cluster points on
 				clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -303,7 +313,6 @@ class AppExtension extends AbstractExtension
 			});
 			const clusterId = features[0].properties.cluster_id;
 			const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
-			// console.log("Zoom " + zoom);
 			//	Items in the cluster
 			const leaves = await map.getSource('benches').getClusterLeaves(clusterId, 10, 0);
 			map.easeTo({

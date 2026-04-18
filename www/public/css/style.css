@@ -146,6 +146,9 @@ hgroup {
 	border-radius: 100%;
 	margin: 0 .5rem;
 }
+#counter {
+	font-variant-numeric: tabular-nums;	/* Prevent counter from jumping too much. */
+}
 
 /* Gold block. */
 #benchInscription, #taglist {
