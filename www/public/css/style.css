@@ -575,6 +575,11 @@ footer #cc-by-sa-logo {
 	/* https://pixabay.com/illustrations/grass-flowers-border-seamless-7318026/ */
 	background-image: url("/images/textures/grass.webp");
 	height: 200px;	/* Slightly smaller than the height of the image. */
+	position: relative;	/* Overlap with prevous element. */
+}
+/* Previous sibling selector. */
+div:has(+ #grass) {
+	margin-bottom: -2rem;
 }
 
 /* Comments. */
