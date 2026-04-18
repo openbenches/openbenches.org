@@ -516,6 +516,7 @@ input#inscription {
 
 button, .button, [type="submit"], .dropimage {
 	width: var(--button-width);
+	max-width: 90%;
 	padding: .3rem .9rem;
 	font-family: inherit;	/* Reset for extra bolding on buttons. */
 	outline: 0.1rem var(--black-border) solid;
@@ -523,6 +524,7 @@ button, .button, [type="submit"], .dropimage {
 
 .search {
 	width: var(--button-width);
+	max-width: 90%;
 	margin: .5rem;
 	padding: .4rem .9rem;	/* TODO: Better calculation of size to match buttons. */
 	outline: .1rem var(--black-border) solid;
