@@ -159,7 +159,7 @@ class AppExtension extends AbstractExtension
 	const projection2 = "mercator";
 
 	maplibregl.setRTLTextPlugin(
-		"/js/maplibre-gl-5.0.0/mapbox-gl-rtl-text.js",
+		"/js/maplibre-gl-5.23.0/mapbox-gl-rtl-text.js",
 		true // Lazy load the plugin
 	);
 
