@@ -5,7 +5,7 @@
 
 {% block body %}
 
-<h3>Recent Comments</h3> 
+<h2>Recent Comments</h2>
 
 	{% if comments is defined %}
 	<div id="search-results">
@@ -15,7 +15,7 @@
 				<a href="{{ comment.page_id|raw }}">
 					<img src="/thumb/{{ comment.bench_id|raw }}" class="search-thumb" loading="lazy" width="120" alt="">
 					<div>
-						{{ comment.comment|raw }}<br>
+						{{ comment.comment|striptags('<br><p>')|raw }}<br>
 					</div>
 				</a>
 			</li>
