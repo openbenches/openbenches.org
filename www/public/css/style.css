@@ -74,7 +74,7 @@ h1, h2, h3, h4, h5, h6 {
 	text-wrap: balance;
 	width: fit-content;	/* Prevent backdrop-filter extending to width of parent. */
 	max-width: min( var(--main-width), 100% );
-	margin: .5rem auto;
+	margin: .5rem auto 0 auto;	/* Little bit on top. Nothing on bottom to align with next box. */
 	backdrop-filter: blur(.5rem);	/* Better clarity on background textures. */
 }
 h1 {
