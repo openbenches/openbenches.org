@@ -63,7 +63,7 @@
 		{% endfor %}
 	{% endif %}
 
-	<div itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
+	<div>
 		<div id="map"></div>
 		{{ map_javascript( "/api/bench/", bench_id, latitude, longitude, 17, false ) }}
 {#
@@ -79,7 +79,8 @@
 #}
 	</div>
 	{% if addresses is defined %}
-		<address class="info" itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+	<div class="info">
+		<address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
 			<span itemprop="description">
 			{% for address in addresses %}
 				{% if loop.index0 == 0 %}
@@ -89,8 +90,12 @@
 				{% endif %}
 			{% endfor %}
 			</span>
-			<br><code id="latlong"><span itemprop="latitude" content="{{ longitude }}">{{ latitude }}</span>,<span itemprop="longitude" content="{{ longitude }}">{{ longitude }}</span></code>
 		</address>
+		<p itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
+			<code id="latlong"><span 
+				itemprop="latitude"  content="{{ latitude }}" >{{ latitude }}</span>,<span itemprop="longitude" content="{{ longitude }}">{{ longitude }}</span></code>
+		</p>
+	</div>
 	{% endif %}
 </div>
 

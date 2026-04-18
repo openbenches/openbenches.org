@@ -353,6 +353,7 @@ progress[value]::-moz-progress-bar {
 	color: var(--white);
 	font-size: var(--font-small);
 	line-height: var(--line-height);
+	padding: 1rem;
 }
 
 /*  Edit Page */
@@ -478,6 +479,9 @@ address::before {
 /* Map pin on geolocation. */
 #latlong::before {
 	content: "📍 ";
+}
+code {
+	font-size: var(--font-small);
 }
 
 /* Buttons. */
