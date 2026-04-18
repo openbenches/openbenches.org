@@ -197,6 +197,7 @@ img.proxy-image {
 	list-style: none;
 	margin: 0;
 	border-radius: 0 0 var(--radius) var(--radius);
+	padding-left: 0;
 }
 .info li {
 	display: inline-block;
@@ -479,6 +480,9 @@ address::before {
 /* Map pin on geolocation. */
 #latlong::before {
 	content: "📍 ";
+}
+#latlong {
+	word-wrap: anywhere;
 }
 code {
 	font-size: var(--font-small);
