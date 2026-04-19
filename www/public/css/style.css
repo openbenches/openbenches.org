@@ -26,11 +26,11 @@
 	--danger-zone:  #FF0000;
 
 	/* Borders. */
-	--border-width: .3rem;
-	--main-width:  calc( 800px );
+	--border-width:  0.3rem;
+	--main-width:   60rem;
 	--max-width:   100%;
 	--image-width: 600px;
-	--radius: 1rem;
+	--radius:        1rem;
 
 	/* Fonts. */
 	--line-height: 1.6rem;
@@ -202,7 +202,7 @@ img.proxy-image {
 /* Info box/ */
 .info ul {
 	list-style: none;
-	margin: 0;
+	margin: .5rem 0 0 0;
 	border-radius: 0 0 var(--radius) var(--radius);
 	padding-left: 0;
 }
@@ -235,10 +235,14 @@ img.proxy-image {
 	line-height: var(--line-height); /* For attribution. */
 }
 /* Cluster links. */
+.maplibregl-popup-content {
+	line-height: 1.2em;
+}
 .maplibregl-popup-content a {
 	color: var(--black);
 	background: var(--plaque-gold);
 	padding: .5em;
+	line-height: 3em;
 }
 .maplibregl-popup-content hr {
 	margin: .5em 0;
