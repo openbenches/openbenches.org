@@ -15,8 +15,8 @@
 	<h2 id="instructions">You can edit this bench's inscription, change location, or add more photos.</h2>
 	<form action="{{ uploadURL }}" enctype="multipart/form-data" method="post">
 		
-		<div id="map" class="main"></div>
-		<aside id="latlong-hidden">Drag pin if you need to adjust the bench's location.<br>
+		<div id="map" class="map"></div>
+		<aside id="latlong-hidden" class="map">Drag pin if you need to adjust the bench's location.<br>
 			<input type="text"   id="coordinates"  size="14"           value="" disabled>
 			<input type="hidden" id="newLongitude" name="newLongitude" value="">
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="">

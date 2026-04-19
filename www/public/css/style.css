@@ -233,10 +233,13 @@ img.proxy-image {
 	height: calc( var(--main-width) );
 	background: #000;
 	background-image: url("/images/textures/stars.webp");
-	max-height: 70vh;	/* Don't let map get too big to make scrolling easier. */
+	max-height: 60vh;	/* Don't let map get too big to make scrolling easier. */
 	z-index: 1;
 	word-break: normal !important; /* For text. */
 	line-height: var(--line-height); /* For attribution. */
+}
+.map {
+	min-width: 85%;	/* Wider map & info box on larger screens. */
 }
 /* Cluster links. */
 .maplibregl-popup-content {

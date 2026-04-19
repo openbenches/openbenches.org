@@ -64,7 +64,7 @@
 	{% endif %}
 
 	<div>
-		<div id="map"></div>
+		<div id="map" class="map"></div>
 		{{ map_javascript( "/api/bench/", bench_id, latitude, longitude, 17, false ) }}
 {#
 		<script>
@@ -79,7 +79,7 @@
 #}
 	</div>
 	{% if addresses is defined %}
-	<div class="info">
+	<div class="info map">
 		<address itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
 			<span itemprop="description">
 			{% for address in addresses %}

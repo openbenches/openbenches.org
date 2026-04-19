@@ -78,9 +78,9 @@ A lot..." required=""></textarea>
 		</div>
 		<aside class="tag-hidden" style="display: none;">Tags are optional but help people find similar benches.</aside>
 
-		<div id="map" class="main" style="display: none;"></div>
+		<div id="map" class="map" style="display: none;"></div>
 		{{ map_javascript("_add_") }}
-		<aside id="latlong-hidden" style="display: none;">Drag pin if you need to adjust the bench's location.<br>
+		<aside id="latlong-hidden" class="map" style="display: none;">Drag pin if you need to adjust the bench's location.<br>
 			<input type="text"   id="coordinates"  size="14"           value="" disabled>
 			<input type="hidden" id="newLongitude" name="newLongitude" value="">
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="">

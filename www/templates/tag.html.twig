@@ -7,9 +7,9 @@
 {% block body %}
 	<h2>Benches tagged "{{ tag }}"</h2> 
 
-	<div id="map"></div>
+	<div id="map" class="map"></div>
 	{{ map_javascript( "/api/tag/", tag ) }}
-	<aside class="info">
+	<aside class="info map">
 		Scroll and zoom on the map to find benches.
 	</aside>
 	{% if benches is defined %}
