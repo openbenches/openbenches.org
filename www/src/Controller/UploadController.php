@@ -53,7 +53,7 @@ class UploadController extends AbstractController
 			$userFunctions   = new UserFunctions();
 
 			$username   = null;
-			$identifier = null;
+			$identifier = "|";
 			$provider   = null;
 			$providerID = null;
 

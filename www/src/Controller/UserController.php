@@ -15,14 +15,6 @@ use App\Service\BenchFunctions;
 
 class UserController extends AbstractController
 {
-	#[Route("/test", name: "test")]
-	public function test(): Response {
-		$test = var_export($_SESSION, true);
-		return $this->render("test.html.twig", [ 
-		//	"test" => $test
-		]);
-	}
-
 	#[Route("/mastodon_login", name: "mastodon_login")]
 	public function mastodon_login(): Response {
 		//	Any ?get requests

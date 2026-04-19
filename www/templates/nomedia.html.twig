@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{# For inclusion in the base #}
+{% block title %}Benches with null media types{% endblock %}
+
+{% block body %}
+
+<h3>{{ count }} Benches with null media types</h3> 
+
+	{% if benches is defined %}
+	<div id="search-results">
+		<ol>
+		{% for bench in benches %}
+			<li>
+				<a href="/edit/{{ bench.benchID }}" target="_blank">{{ bench.benchID }}</a>
+			</li>
+		{% endfor %}
+		</ol>
+	</div>
+	{% endif %}
+
+{% endblock %}

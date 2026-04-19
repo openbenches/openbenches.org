@@ -8,23 +8,27 @@
 {% block body %}
 
 	{% if username is not null %}
-		<h3>
-			Welcome {{ provider|capitalize }} user {{ username }}
-			{% if avatar is not null %}
-				<img src="{{ avatar }}" width="20">
-			{% endif %}
-		</h3>
+	<h2>
+		Welcome {{ provider|capitalize }} user {{ username }}
+		{% if avatar is not null %}
+			<img src="{{ avatar }}" width="20" class="avatar">
+		{% endif %}
+	</h2>
 	{% endif %}
 	{% if username is null %}
-		<a href="/add/logged_in" class="button buttonColour">👤 Sign in</a><br>or be <strong>anonymous</strong>.
+	<div class="button-bar">
+		<a class="button buttonColour" href="/add/logged_in"><span class="emoji">👤</span> Sign in</a><p>or be anonymous.</pp>
+	</div>
 	{% endif %}
-<h2 id="android-instructions" style="display: none;"><a href="https://www.openbenches.org/blog/android-gps-problems/">No GPS tags detected in photo?<br>See the new Android instructions.</a></h2>
-<form id="fileform" action="{{ uploadURL }}" enctype="multipart/form-data" method="post" onsubmit="true;">
-		<div>Select a photo of the bench's inscription and we'll try to auto-detect the text.<br>
-		<div id="ios"></div>
-		</div>
 
-		<div id="photo1" class="photo-group">
+	<h2 id="android-instructions" style="display: none;"><a href="https://www.openbenches.org/blog/android-gps-problems/" target="_blank">No GPS tags detected in photo?<br>See the new Android instructions.</a></h2>
+
+	<h2 id="ios" style="display: none;"><a href="https://www.openbenches.org/blog/2023/05/iphone-instructions/" target="_blank">➡️ Instructions for Apple devices ⬅️</a></h2>
+
+	<h2 id="instructions">Select a photo of the bench's inscription and we'll try to auto-detect the text.</h2>
+
+	<form id="fileform" action="{{ uploadURL }}" enctype="multipart/form-data" method="post" onsubmit="true;">
+		<div id="photo1" class="photo-group main">
 			<div class="file_input_button">
 				<div id="photoPreview1" style="display: none;"></div>
 				<div id="upload-prompt1" class="upload-prompt">
@@ -36,9 +40,10 @@
 				</div>
 				<input type="file" name="userfile1" id="photoFile1" accept="image/jpeg;capture=camera">
 			</div>
-			<div>
-				<label for="media_type1">This photo is a:</label>
-				<select name="media_type1" id="media_type1">
+		</div>
+		<div class="media-select">
+			<label for="media_type1">This photo is a:</label>
+			<select name="media_type1" id="media_type1">
 				{% set selected = "inscription" %}
 				{% set media_types_array = media_types() %}
 				{% for type in media_types_array %}
@@ -48,39 +53,40 @@
 					<option value="{{ type.shortName }}">{{ type.longName }}</option>
 					{% endif %}
 				{% endfor %}
-				</select>
-			</div>
+			</select>
 		</div>
 
-		<div id="inscriptionBox">
-			<label for="inscription" id="message"></label><br>
-			<textarea id="inscription" name="inscription" disabled cols="40" rows="6" placeholder="In loving memory of
+		<div id="inscriptionBox" class="main">
+			<label for="inscription" id="message"></label>
+			<textarea id="inscription" name="inscription" disabled="" cols="40" rows="6" placeholder="In loving memory of
 Buffy Anne Summers
 She saved the world.
-A lot..." required></textarea>
+A lot..." required=""></textarea>
 		</div>
-		<div id="tagInput">
+		<aside>Please carefully check the memorial inscription.</aside>
+
+		<div id="tagInput" class="main tag-hidden" style="display: none;">
 		{% if tags_array is defined %}
 				<h2>Choose some suitable tags:</h2>
 				{% for tag in tags_array %}
 				<label>
 					<input type="checkbox" id="{{ tag }}" name="tags" value="{{ tag }}">
-					<span class="toggle pseudo button">{{ tag }}</span>
+					<span class="toggle button">{{ tag }}</span>
 				</label>
 				{% endfor %}
 		{% endif %}
 		</div>
-		<div id="map-hidden" style="clear:both;display: none;">
-			<h3>Drag pin if you need to adjust the bench's location</h3>
-			<div id="map"></div>
-			{{ map_javascript("_add_") }}
-		</div>
-		<div id="latlong-hidden" style="clear:both;display: none;">
-			<input type="text"   id="coordinates"                      value="" disabled>
+		<aside class="tag-hidden" style="display: none;">Tags are optional but help people find similar benches.</aside>
+
+		<div id="map" class="main" style="display: none;"></div>
+		{{ map_javascript("_add_") }}
+		<aside id="latlong-hidden" style="display: none;">Drag pin if you need to adjust the bench's location.<br>
+			<input type="text"   id="coordinates"  size="14"           value="" disabled>
 			<input type="hidden" id="newLongitude" name="newLongitude" value="">
 			<input type="hidden" id="newLatitude"  name="newLatitude"  value="">
-		</div>&nbsp;
-		<div id="photo2" class="photo-group" style="display: none;">
+		</aside>
+
+		<div id="photo2" class="photo-group main" style="display: none;">
 			<div class="file_input_button">
 				<div id="photoPreview2" style="display: none;"></div>
 				<div id="upload-prompt2" class="upload-prompt">
@@ -90,22 +96,23 @@ A lot..." required></textarea>
 				</div>
 				<input type="file" name="userfile2" id="photoFile2" accept="image/jpeg;capture=camera">
 			</div>
-			<div>
-				<label for="media_type2">This photo is a:</label>
-				<select name="media_type2" id="media_type2">
-				{% set selected = "bench" %}
-				{% set media_types_array = media_types() %}
-				{% for type in media_types_array %}
-					{% if type.shortName == selected %}
-					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
-					{% else %}
-					<option value="{{ type.shortName }}">{{ type.longName }}</option>
-					{% endif %}
-				{% endfor %}
-				</select>	
-			</div>
-		</div>&nbsp;
-		<div id="photo3" class="photo-group" style="display: none;">
+		</div>
+		<div class="media-select" id="media-select2" style="display: none;">
+			<label for="media_type2">This photo is a:</label>
+			<select name="media_type2" id="media_type2">
+			{% set selected = "bench" %}
+			{% set media_types_array = media_types() %}
+			{% for type in media_types_array %}
+				{% if type.shortName == selected %}
+				<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+				{% else %}
+				<option value="{{ type.shortName }}">{{ type.longName }}</option>
+				{% endif %}
+			{% endfor %}
+			</select>	
+		</div>
+
+		<div id="photo3" class="photo-group main" style="display: none;">
 			<div class="file_input_button">
 				<div id="photoPreview3" style="display: none;"></div>
 				<div id="upload-prompt3" class="upload-prompt">
@@ -115,22 +122,23 @@ A lot..." required></textarea>
 				</div>
 				<input type="file" name="userfile3" id="photoFile3" accept="image/jpeg;capture=camera">
 			</div>
-			<div>
-				<label for="media_type3">This photo is a:</label>
-				<select name="media_type3" id="media_type3">
-				{% set selected = "view" %}
-				{% set media_types_array = media_types() %}
-				{% for type in media_types_array %}
-					{% if type.shortName == selected %}
-					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
-					{% else %}
-					<option value="{{ type.shortName }}">{{ type.longName }}</option>
-					{% endif %}
-				{% endfor %}
-				</select>	
-			</div>
-		</div>&nbsp;
-		<div id="photo4" class="photo-group" style="display: none;">
+		</div>
+		<div class="media-select" id="media-select3" style="display: none;">
+			<label for="media_type3">This photo is a:</label>
+			<select name="media_type3" id="media_type3">
+			{% set selected = "view" %}
+			{% set media_types_array = media_types() %}
+			{% for type in media_types_array %}
+				{% if type.shortName == selected %}
+				<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+				{% else %}
+				<option value="{{ type.shortName }}">{{ type.longName }}</option>
+				{% endif %}
+			{% endfor %}
+			</select>	
+		</div>
+
+		<div id="photo4" class="photo-group main" style="display: none;">
 			<div class="file_input_button">
 				<div id="photoPreview4" style="display: none;"></div>
 				<div id="upload-prompt4" class="upload-prompt">
@@ -140,45 +148,46 @@ A lot..." required></textarea>
 				</div>
 				<input type="file" name="userfile4" id="photoFile4" accept="image/jpeg;capture=camera">
 			</div>
-			<div>
-				<label for="media_type4">This photo is a:</label>
-				<select name="media_type4" id="media_type4">
-				{% set selected = "pano" %}
-				{% set media_types_array = media_types() %}
-				{% for type in media_types_array %}
-					{% if type.shortName == selected %}
-					<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
-					{% else %}
-					<option value="{{ type.shortName }}">{{ type.longName }}</option>
-					{% endif %}
-				{% endfor %}
-				</select>	
-			</div>
-		</div>&nbsp;
-		<br>
+		</div>
+		<div class="media-select" id="media-select4" style="display: none;">
+			<label for="media_type4">This photo is a:</label>
+			<select name="media_type4" id="media_type4">
+			{% set selected = "pano" %}
+			{% set media_types_array = media_types() %}
+			{% for type in media_types_array %}
+				{% if type.shortName == selected %}
+				<option value="{{ type.shortName }}" selected="selected">{{ type.longName }}</option>
+				{% else %}
+				<option value="{{ type.shortName }}">{{ type.longName }}</option>
+				{% endif %}
+			{% endfor %}
+			</select>	
+		</div>
+	</form>
+
+	<div class="button-bar" id="buttonBar" style="display: none;">
 		<div id="progressInfo" style="display:none;">
-			<label for="progressBar">Upload progress:<br></label>
+			<label   for="progressBar">Upload progress:<br></label>
 			<progress id="progressBar" value="0" max="100"></progress>
 			<h3 id="status"></h3>
 			<p id="loaded_n_total"></p>
 		</div>
-	</form>
-	<div class="button-bar" id="buttonBar" style="display: none;">
-		Please <a href="#inscriptionBox">check the inscription</a> before sharing.<br>
-		<input class="button buttonColour" type="submit" name="submitButton" id="submitButton" value="📷 Share Bench">
+		<p id="check">Please <a href="#inscriptionBox">check the inscription</a> before sharing.</p>
+		<button type="submit" name="submitButton" id="submitButton" class="button buttonColour"><span class="emoji">📷</span> Share Bench</button>
 	</div>
-	<small id="cc-small">By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>.<br>
-		This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!<br>
-		See our <a href="/blog/privacy/">privacy policy</a> to understand how your photo's data is used.
-	</small>
-	<script src="/js/jquery.3.6.4/jquery-3.6.4.min.js"></script>
+
+	<div id="cc-small" class="main">
+		<p>By adding a bench, you agree that you own the copyright of the photo and that you are making it freely available under the <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license</a>. This means other people can use the photo and its data without having to ask permission, but they will have to give <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode#s3">appropriate credit</a>. Thanks!
+	</div>
+	<aside>See our <a href="/blog/privacy/">privacy policy</a> to understand how your photo's data is used.</aside>
+
+	<script src="/js/jquery-4.0.0/jquery-4.0.0.min.js"></script>
 	<script src="/js/vision/vision.js.php"></script>
 	<script src="/js/JavaScript-Load-Image-5.16.0/js/load-image.all.min.js"></script>
 	<script>
 	$(document).ready(function() {
 		if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-			$instructions = '<a href="https://www.openbenches.org/blog/2023/05/iphone-instructions/" target="_blank">➡️ Instructions for Apple devices ⬅️</a>.';
-			$('#ios').html($instructions);
+			$("#ios").show();
 		} 
 	});
 	</script>
@@ -217,21 +226,18 @@ A lot..." required></textarea>
 			);
 			if (!loadingImage) {}
 			$("#photo2").show();
+			$("#media-select2").show();
 			//	Check for GPS data
-			// console.log('EXIF Check');
 			var exifdata = loadImage.parseMetaData(
 				e.target.files[0],
 				function (data) {
-					// console.log('Original image head: ', data.imageHead);
-					// console.log('Exif data: ', data.exif);
 					if (!data.imageHead) {
 						return;
 					}
 
-					var gpsInfo = data.exif && data.exif.get('GPSInfo');
-					// console.log(gpsInfo);
+					var gpsInfo = data.exif && data.exif.get("GPSInfo");
 
-					if ( typeof gpsInfo == 'undefined' ) {
+					if ( typeof gpsInfo == "undefined" ) {
 						alert("EXIF Warning! No GPS tags detected in photo.\nPlease check your camera's settings or add a different photo.");
 						showAndroidInstructions();
 						return;
@@ -266,9 +272,10 @@ A lot..." required></textarea>
 						return;
 					}
 
-					//	Show the map
-					$("#map-hidden").show();
+					//	Show the map and tag selector.
+					$("#map").show();
 					$("#latlong-hidden").show();
+					$(".tag-hidden").show();
 
 					//	Add a draggable marker
 					const marker = new maplibregl.Marker({draggable: true})
@@ -282,19 +289,19 @@ A lot..." required></textarea>
 					});
 
 					//	Show the co-ordinates
-					document.getElementById("coordinates").value  = latitude.toFixed(5) + ',' + longitude.toFixed(5);
+					document.getElementById("coordinates").value  = latitude.toFixed(5) + "," + longitude.toFixed(5);
 					document.getElementById("newLongitude").value = longitude.toFixed(5);
 					document.getElementById("newLatitude" ).value = latitude.toFixed(5);
 
 					//	Update when marker is dragged
 					function onDragEnd() {
 						const lngLat = marker.getLngLat();
-						document.getElementById("coordinates").value  = lngLat.lat.toFixed(5) + ',' + lngLat.lng.toFixed(5);
+						document.getElementById("coordinates").value  = lngLat.lat.toFixed(5) + "," + lngLat.lng.toFixed(5);
 						document.getElementById("newLongitude").value = lngLat.lng;
 						document.getElementById("newLatitude" ).value = lngLat.lat;
 					}
 					//	If the marker is dragged, update the coordinates
-					marker.on('dragend', onDragEnd);
+					marker.on("dragend", onDragEnd);
 				}
 			);
 		};
@@ -318,6 +325,7 @@ A lot..." required></textarea>
 			if (!loadingImage) {}
 			//	Show the next upload box
 			document.getElementById("photo3").style.display = "block";
+			document.getElementById("media-select3").style.display = "block";
 		}
 		document.getElementById("photoFile3").onchange = function (e) {
 			var preview3 = document.getElementById("photoPreview3");
@@ -339,6 +347,7 @@ A lot..." required></textarea>
 			if (!loadingImage) {}
 			//	Show the next upload box
 			document.getElementById("photo4").style.display = "block";
+			document.getElementById("media-select4").style.display = "block";
 		}
 		document.getElementById("photoFile4").onchange = function (e) {
 			var preview4 = document.getElementById("photoPreview4");
@@ -360,7 +369,7 @@ A lot..." required></textarea>
 			if (!loadingImage) {}
 		}
 		//	Disable button once clicked & let user know that the media are being uploaded
-		$("#submitButton").on('click', function() {
+		$("#submitButton").on("click", function() {
 			if ( $("#inscription")[0].textLength > 0) {
 				$("#submitButton").prop( "disabled", true );
 				$("#submitButton").prop( "value",   "Uploading!" );
@@ -374,18 +383,20 @@ A lot..." required></textarea>
 		function uploadFile() {
 			//	Show the progress bar
 			$("#progressInfo").show();
+			$("#submitButton").hide();
+			$("#check").hide();
 			//	Prepare the data
 			var formdata = new FormData();
-			formdata.append("userfile1",    $("#photoFile1").prop('files')[0]);
+			formdata.append("userfile1",    $("#photoFile1").prop("files")[0]);
 			formdata.append("media_type1",  $("#media_type1").val());
 
-			formdata.append("userfile2",    $("#photoFile2").prop('files')[0]);
+			formdata.append("userfile2",    $("#photoFile2").prop("files")[0]);
 			formdata.append("media_type2",  $("#media_type2").val());
 
-			formdata.append("userfile3",    $("#photoFile3").prop('files')[0]);
+			formdata.append("userfile3",    $("#photoFile3").prop("files")[0]);
 			formdata.append("media_type3",  $("#media_type3").val());
 
-			formdata.append("userfile4",    $("#photoFile4").prop('files')[0]);
+			formdata.append("userfile4",    $("#photoFile4").prop("files")[0]);
 			formdata.append("media_type4",  $("#media_type4").val());
 
 			formdata.append("inscription",  $("#inscription").val());

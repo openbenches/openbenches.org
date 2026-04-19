@@ -19,8 +19,8 @@ class CameraController extends AbstractController
 		$results_array = $cameraFunctions->getMakes();
 
 		//	Render the page
-		return $this->render('makes.html.twig', [
-			'makes' => $results_array,
+		return $this->render("makes.html.twig", [
+			"makes" => $results_array,
 		]);
 	}
 
@@ -32,9 +32,9 @@ class CameraController extends AbstractController
 		$results_array = $cameraFunctions->getModels($make);
 
 		//	Render the page
-		return $this->render('models.html.twig', [
+		return $this->render("models.html.twig", [
 			"make"   => $make,
-			'models' => $results_array,
+			"models" => $results_array,
 		]);
 	}
 }

@@ -12,18 +12,9 @@ OpenBenches is written in PHP and uses the Symfony framework. The database is My
 
 Install the latest Composer from https://getcomposer.org/download/
 
-Install the following packages:
+`composer install --no-dev --optimize-autoloader`
 
-```
-./composer.phar require "twig/twig:^3.0"
-./composer.phar require symfony/twig-pack
-./composer.phar require symfony/twig-bundle
-./composer.phar require doctrine/dbal
-./composer.phar require symfony/cache
-./composer.phar require symfony/apache-pack
-./composer.phar require symfony/http-client
-./composer.phar require symfony/mime
-```
+`php bin/console cache:clear --env=prod` (or `dev`)
 
 ### Auth0
 If you want to use social login:
@@ -52,7 +43,7 @@ You should now have a copy of the OpenBenches code on your computer which you ca
 
 Install the following packages:
 
-`git php-cli php-fpm php-pecl-imagick php-mbstring php-mysqlnd mariadb-server httpd mod_ssl`
+`git php-cli php-fpm php-pecl-imagick php-mbstring php-mysqlnd php-xml php-curl mariadb-server httpd mod_ssl`
 
 N.B. if you are not using Fedora some of the required packages may be called something else.
 

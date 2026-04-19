@@ -4,34 +4,69 @@
 {% block title %}Contributors{% endblock %}
 
 {% block body %}
-<div id="leaderboard-results">
-	<div id="leaderboard-benches">
-		<h3 class="leaderboard-title">Most added and edited benches</h3> 
-		<ol class="leaderboard-list">
-		{% for user in benches %}
-			<li>
-				<a href="/user/{{ user.userID }}">
-					<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="{{ user.provider }}" loading="lazy" width="32">
-					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32">{{ user.username }}
-				</a> {{ user.count|number_format }}
-			</li>
-		{% endfor %}
-		</ol>
-	</div>
-	<div id="leaderboard-media">
-		<h3 class="leaderboard-title">Most added photos</h3>
-		<ol class="leaderboard-list">
-		{% for user in media %}
-			<li>
-				<a href="/user/{{ user.userID }}">
-					<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="{{ user.provider }}" loading="lazy" width="32">
-					<img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32">{{ user.username }}
-				</a> {{ user.count|number_format }}
-			</li>
-		{% endfor %}
-		</ol>
-	</div>
+<div id="search-results">
+	<h2>All logged-in contributors to OpenBenches</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>User</th><th class="ascending">Benches</th><th class="count">Photos</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in contributors %}
+			<tr>
+				<td class="name">
+					<a href="/user/{{ user.userID }}">
+						<img src="/images/svg/{{ user.provider }}.svg"  class="avatar" alt="{{ user.provider }}" loading="lazy" width="32"><img src="{{ user.avatar }}" class="avatar" alt="" loading="lazy" width="32"></a>&nbsp;
+					<a href="/user/{{ user.userID }}">
+						{{ user.username }}
+					</a>
+				</td>
+				<td class="count">{{ user.bench_count|number_format }}</td>
+				<td class="count">{{ user.media_count|number_format }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
+<aside><span class="emoji">📈</span></aside>
+
+<script>
+	document.querySelectorAll("th").forEach((header, index) => {
+		header.addEventListener("click", () => {
+			const table = header.closest("table");
+			const tbody = table.querySelector("tbody");
+			const rows = Array.from(tbody.querySelectorAll("tr"));
+			const isAscending = !header.classList.contains("ascending");
+
+			// Remove existing arrow classes from all headers
+			table.querySelectorAll("th").forEach(th => th.classList.remove("ascending", "descending"));
+			
+			// Toggle and add correct arrow class on the clicked header
+			header.classList.toggle("ascending", isAscending);
+			header.classList.toggle("descending", !isAscending);
+
+			rows.sort((rowA, rowB) => {
+			const cellA = rowA.cells[index].textContent.trim();
+			const cellB = rowB.cells[index].textContent.trim();
+
+			// Sorting logic: text for the first column, numeric for the second
+			if (index === 0) {
+				// First column: text sorting
+				return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+			} else {
+				// Second column: numeric sorting
+				const numA = parseFloat(cellA.replace(/[^0-9.-]+/g, ""));
+				const numB = parseFloat(cellB.replace(/[^0-9.-]+/g, ""));
+				return isAscending ? numA - numB : numB - numA;
+			}
+			});
+
+			rows.forEach(row => tbody.appendChild(row));
+		});
+	});
+</script>
+
 {% include 'searchform.html.twig' %}
 
 {% endblock %}

@@ -159,7 +159,7 @@ class AppExtension extends AbstractExtension
 	const projection2 = "mercator";
 
 	maplibregl.setRTLTextPlugin(
-		"/js/maplibre-gl-5.0.0/mapbox-gl-rtl-text.js",
+		"/js/maplibre-gl-5.23.0/mapbox-gl-rtl-text.js",
 		true // Lazy load the plugin
 	);
 
@@ -167,10 +167,11 @@ class AppExtension extends AbstractExtension
 	const map = new maplibregl.Map({
 		container: 'map',
 		style: style1,
-		center: [long, lat], // world
-		zoom: zoom, // Lower numbers zoomed out
-		maxBounds: bounds, // Sets bounds as max
-		pitch: 0,	//	No initial of tilt
+		center: [long, lat], //	World.
+		zoom: zoom,	//	Lower numbers zoomed out.
+		maxBounds: bounds,	//	Sets bounds as max.
+		pitch: 0,	//	No initial degree of tilt.
+		fadeDuration: 0, // this is in order for the text and circles to move "as-one"
 		canvasContextAttributes: { antialias: true }
 	});
 
@@ -207,61 +208,23 @@ class AppExtension extends AbstractExtension
 		showUserHeading: true
 	}));
 
-	//	Load benches from API
-	async function load_benches() {
-		if (api_url == '') {
-			//	No search set - use TSV for speed
-			let url = '/api/benches.tsv';
-
-			if (cache[url]) {
-				return cache[url];
-			}
-			
-			const req = new Request( url );
-
-			const response = await fetch( req )
-			var benches_text = await response.text();
-			var rows = benches_text.split(/\\n/);
-			var benches_json = {'features':[]};
-			//	Convert the TSV to GeoJSON
-			for( let i = 1; i < rows.length; i++ ){
-				let cols = rows[i].split(/\\t/);
-				benches_json.features.push(
-					{
-						'id':cols[0],
-						'type':'Feature',
-						'properties': {
-							'popupContent':cols[3]
-						},
-						'geometry': {
-							'type':'Point',
-							'coordinates':[cols[1],cols[2]]
-						}
-					}
-				);
-			}
-			cache[url] = benches_json;
-			return benches_json;
+	//	Asynchronous function to add custom layers and sources
+	async function addCustomLayersAndSources() {
+		//	Which API is being called?
+		if (api_url == "") {
+			//	No search set - use default.
+			geoJSON_url = "/api/benches/";
 		} else if (api_url == "_add_") {
 			return null;
 		} else {
-			let url = "{$api_url}";
-			const response = await fetch(url)
-			var benches_json = await response.json();
-			return benches_json;
+			geoJSON_url = "{$api_url}";
 		}
-	}
 
-	
-	//	Asynchronous function to add custom layers and sources
-	async function addCustomLayersAndSources() {
-		//	Get the data
-		var benches_data = await load_benches();
 		//	Load the GeoJSON
-		if (!map.getSource('benches')) {
-			map.addSource('benches', {
-				type: 'geojson',
-				data: benches_data,
+		if (!map.getSource("benches")) {
+			map.addSource("benches", {
+				type: "geojson",
+				data: geoJSON_url,
 				cluster: true,
 				clusterMaxZoom: 17, // Max zoom to cluster points on
 				clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
@@ -271,7 +234,9 @@ class AppExtension extends AbstractExtension
 		//	Custom bench marker
 		if ( map.listImages().includes("openbench-icon") == false ) {
 			var image = await map.loadImage('/images/icons/marker.png');
-			map.addImage('openbench-icon', image.data);
+			if (!map.hasImage('openbench-icon')) {
+				map.addImage('openbench-icon', image.data);
+			}
 		}
 
 		//	Add the clusters
@@ -348,7 +313,6 @@ class AppExtension extends AbstractExtension
 			});
 			const clusterId = features[0].properties.cluster_id;
 			const zoom = await map.getSource('benches').getClusterExpansionZoom(clusterId);
-			// console.log("Zoom " + zoom);
 			//	Items in the cluster
 			const leaves = await map.getSource('benches').getClusterLeaves(clusterId, 10, 0);
 			map.easeTo({

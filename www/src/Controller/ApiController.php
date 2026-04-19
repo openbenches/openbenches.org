@@ -235,7 +235,7 @@ class ApiController extends AbstractController
 			$cache_name .= "nocreated";
 		}
 
-		$value = $cache->get( $cache_name, function (ItemInterface $item) {
+		$value = $cache->get( $cache_name, function (ItemInterface $item) use ($cache_name) {
 			//	Cache length in seconds
 			$item->expiresAfter(600); //	10 minutes
 
@@ -309,9 +309,9 @@ class ApiController extends AbstractController
 					$inscription = trim( $row["inscription"] );
 
 					// If displaying on map need to truncate inscriptions longer than
-					// 128 chars and add in <br> elements
+					// 64 chars and add in <br> elements
 					if ( true == $get_truncated ) {
-						$inscriptionTruncate = mb_substr( $inscription, 0, 128 );
+						$inscriptionTruncate = mb_substr( $inscription, 0, 64 );
 						if ( $inscriptionTruncate !== $inscription ) {
 							$inscription = $inscriptionTruncate . "…";
 						}
@@ -349,7 +349,10 @@ class ApiController extends AbstractController
 						"geometry" => array(
 							"type" => "Point",
 							// Pass Longitude and Latitude Columns here
-							"coordinates" => array($row["longitude"], $row["latitude"])
+							"coordinates" => [ 
+								round( $row["longitude"], 4 ), 
+								round( $row["latitude"],  4 ) 
+							]
 						),
 						# Pass other attribute columns here
 						"properties" => array(
@@ -359,7 +362,13 @@ class ApiController extends AbstractController
 					);
 
 					//	Add other properties if requested
-					// @phpstan-ignore variable.undefined
+					if ( $request->query->get("created") == "true") {
+						$get_created = true;
+						$cache_name .= "created";
+					} else {
+						$get_created = false;
+						$cache_name .= "nocreated";
+					}
 					if ( $get_created == true ) {
 						$feature["properties"]["created_at"] = date_format( date_create( $added ), "c" );
 					}

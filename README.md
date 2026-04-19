@@ -119,7 +119,7 @@ This is a Symfony PHP and MySQL website. No need for node, complicated deploys, 
 
 ### Requirements
 
-* PHP 8 or greater.
+* PHP 8.5 or greater.
 * MySQL 5.5 or greater with innodb.
 * ImageMagick 6.9.4-10 or greater.
 
@@ -224,7 +224,3 @@ Everything we do builds on someone else's hard work.
 * See https://openbenches.org/colophon for more
 
 And thanks to the many contributors who have improved this codebase.
-
-## Testing
-
-This project is [tested with BrowserStack](https://www.browserstack.com/open-source).
