@@ -113,16 +113,16 @@
 {% endif %}
 
 <div class="button-bar">
-	<a href="/add" class="button buttonColour"><span class="emoji">➕</span> Add new bench</a>
-	<a href="/edit/{{ bench_id }}" class="button buttonColour"><span class="emoji">✏️</span> Edit</a>
+	<a href="/add" class="button"><span class="emoji">➕</span> Add new bench</a>
+	<a href="/edit/{{ bench_id }}" class="button"><span class="emoji">✏️</span> Edit</a>
 	{% if osmID is not null %}
-	<a class="button buttonColour" href="https://www.openstreetmap.org/node/{{ osmID }}" target="_blank"><span class="emoji">🌍</span> View on OpenStreetMap</a>
+	<a class="button" href="https://www.openstreetmap.org/node/{{ osmID }}" target="_blank"><span class="emoji">🌍</span> View on OpenStreetMap</a>
 	{% else %}
-	<a class="button buttonColour" href="https://mapcomplete.org/benches?z=20&lat={{ latitude }}&lon={{ longitude }}#openbenches/{{ bench_id }}" target="_blank"><span class="emoji">🌍</span> Add to OpenStreetMap</a>
+	<a class="button" href="https://mapcomplete.org/benches?z=20&lat={{ latitude }}&lon={{ longitude }}#openbenches/{{ bench_id }}" target="_blank"><span class="emoji">🌍</span> Add to OpenStreetMap</a>
 	{% endif %}
-	<a href="/api/bench/{{ bench_id }}" class="button buttonColour"><span class="emoji">💾</span> GeoJSON</a>
-	<button class="button buttonColour" type="button" id="shareButton"><span class="emoji">📤</span> Share</button>
-	<a href="https://www.openbenches.org/blog/complaints-and-reports/" class="button buttonColour"><span class="emoji">⚠️</span> Report</a>
+	<a href="/api/bench/{{ bench_id }}" class="button"><span class="emoji">💾</span> GeoJSON</a>
+	<button class="button" type="button" id="shareButton"><span class="emoji">📤</span> Share</button>
+	<a href="https://www.openbenches.org/blog/complaints-and-reports/" class="button"><span class="emoji">⚠️</span> Report</a>
 </div>
 
 <script>

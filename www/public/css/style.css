@@ -115,6 +115,7 @@ canvas {
 	background: var(--plaque-gold);
 	color: var(--black);
 	font-weight: bold;
+	font-size: var(--font-normal);
 	cursor: pointer;
 	border-radius: .2em;
 	display: inline-block;

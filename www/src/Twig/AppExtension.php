@@ -356,7 +356,7 @@ class AppExtension extends AbstractExtension
 
 			new maplibregl.Popup({closeButton: false})
 				.setLngLat(coordinates)
-				.setHTML( inscription + '<br><a class="button buttonColour" href="https://' + link + '">View Bench (' + id + ')</a>')
+				.setHTML( inscription + '<br><a class="button" href="https://' + link + '">View Bench (' + id + ')</a>')
 				.addTo(map);
 		});
 
