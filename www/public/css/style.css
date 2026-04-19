@@ -27,7 +27,7 @@
 
 	/* Borders. */
 	--border-width:  0.3rem;
-	--main-width:   60rem;
+	--main-width:   70rem;	/* Check @media queries. They can't use variables. */
 	--max-width:   100%;
 	--image-width: 600px;
 	--radius:        1rem;
@@ -240,7 +240,8 @@ img.proxy-image {
 	line-height: var(--line-height); /* For attribution. */
 }
 .map {
-	width: calc( var(--main-width) * 1.5) !important;	/* Wider map & info box on larger screens. */
+	/* Wider map & info box on larger screens. */
+	/* width: calc( var(--main-width) * 1.5) !important; */
 }
 /* Cluster links. */
 .maplibregl-popup-content {
@@ -684,33 +685,37 @@ hr {
 
 /* Panoramics for Pannellum. */
 iframe.pannellum {
-	max-width: var(--max-width);
-	border: none;
 	width: var(--main-width);
+	max-width:  var(--max-width);
 	height: 70vh;
+	max-height: var(--max-width);
+	border: none;
 	border-radius: var(--radius) var(--radius) 0 0;
 }
 
 /* Multi Column Gallery. */
 .gallery {
-	/* Automatically adjusts number of columns based on width. */
-	column-width: calc( var(--main-width) / 2);
-	column-gap: 1rem;
-	margin: 0 auto;
-	width: calc( var(--main-width) * 1.5);	/* Same width as map. */
 	max-width: 100%;
 }
 .media {
-	width: calc( var(--main-width) * .75);	/* TODO: Don't hardcode this ratio. */
+	width: calc( (var(--main-width) * .5 ) - .5rem );	/* Half the width less the margin. */
+	margin: .5rem;
 	height: auto;	/* Maintain aspect ratio. */
 	display: inline-block;
-	break-inside: avoid;
 	max-width: 100%;
+}
+/* If the viewport turns this to a single column, reset images to full width. */
+@media (max-width: 72rem) {
+	/* Hardcoded - should be `calc( var(--main-width) + 2rem)` Media Queries can't use variables. */
+	.media {
+		width: var(--main-width);
+		margin: 0;	/* Remove margin. */
+	}
 }
 /* Single item displays full width. */
 .gallery:has(> .media:nth-child(1):last-child) {
-	column-width: var(--main-width);
 	.media {
 		width: var(--main-width);
+		margin: 0;	/* Remove margin. */
 	}
 }
