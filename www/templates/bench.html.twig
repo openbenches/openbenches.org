@@ -11,56 +11,60 @@
 <div itemscope="" itemtype="http://schema.org/Place">
 	<h2 id="benchInscription" itemprop="description">{{ inscription|nl2br }}</h2>
 	{% if medias is defined %}
+	<div class="gallery">
 		{% for media in medias %}
-		<div itemprop="photo" class="main">
-			{% if media.mediaType == "360" %}
-			<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true"></iframe>
-			{% elseif media.mediaType == "pano" %}
-			<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60&amp;autoLoad=true"></iframe>
-			{% elseif media.mediaType == "video" %}
-			<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
-			{% else %}
-			<a href="{{ media.urlFull }}">
-				<img src="{{ media.url }}"
-					alt="{{ media.alt }}"
-					width="{{ media.width}}"
-					height="{{ media.height }}"
-					class="proxy-image"
-					loading="lazy">
-			</a>
-			{% endif %}
-		</div>
-		<span class="info">
-			<ul>
-				{% if media.formattedDate != "" %}
-				<li><time><span class="emoji">🗓️</span> {{ media.formattedDate }}</time></li>
-				{% endif %}
-				{% if media.make != "" %}
-				<li><span class="emoji">📷</span> <a href="/cameras/{{ media.make }}">{{ media.make }}</a> {{ media.model }}</li>
-				{% endif %}
-				{% if media.userName != "" %}
-				<li><span class="emoji">😎</span> <a href='/user/{{ media.userID }}'>{{ media.userName }}</a></li>
-				{% endif %}
-				{% if media.importURL is not null %}
-				<li>
-					<a rel="license" href="{{ media.importURL }}" target="_blank">
-						<img src="/images/cc/{{ media.licenceIcon }}"
-							class="cc-icon"
-							alt="{{ media.licence }}">
-					</a>
-				</li>
+		<div class="media">
+			<div itemprop="photo" class="main">
+				{% if media.mediaType == "360" %}
+				<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true"></iframe>
+				{% elseif media.mediaType == "pano" %}
+				<iframe class="pannellum" allowfullscreen src="/js/pannellum-2.5.7/pannellum.htm#panorama=/media/{{ media.sha1 }}&amp;autoRotate=-2&amp;autoLoad=true&amp;haov=360&amp;vaov=60&amp;autoLoad=true"></iframe>
+				{% elseif media.mediaType == "video" %}
+				<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 				{% else %}
-				<li>
-					<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
-						<img src="/images/cc/{{ media.licenceIcon }}"
-							class="cc-icon"
-						alt="Creative Commons Attribution Share-Alike">
-					</a>
-				</li>
-				{% endif %}			
-			</ul>
-		</span>
+				<a href="{{ media.urlFull }}">
+					<img src="{{ media.url }}"
+						alt="{{ media.alt }}"
+						width="{{ media.width}}"
+						height="{{ media.height }}"
+						class="proxy-image"
+						loading="lazy">
+				</a>
+				{% endif %}
+			</div>
+			<span class="info">
+				<ul>
+					{% if media.formattedDate != "" %}
+					<li><time><span class="emoji">🗓️</span> {{ media.formattedDate }}</time></li>
+					{% endif %}
+					{% if media.make != "" %}
+					<li><span class="emoji">📷</span> <a href="/cameras/{{ media.make }}">{{ media.make }}</a> {{ media.model }}</li>
+					{% endif %}
+					{% if media.userName != "" %}
+					<li><span class="emoji">😎</span> <a href='/user/{{ media.userID }}'>{{ media.userName }}</a></li>
+					{% endif %}
+					{% if media.importURL is not null %}
+					<li>
+						<a rel="license" href="{{ media.importURL }}" target="_blank">
+							<img src="/images/cc/{{ media.licenceIcon }}"
+								class="cc-icon"
+								alt="{{ media.licence }}">
+						</a>
+					</li>
+					{% else %}
+					<li>
+						<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+							<img src="/images/cc/{{ media.licenceIcon }}"
+								class="cc-icon"
+							alt="Creative Commons Attribution Share-Alike">
+						</a>
+					</li>
+					{% endif %}
+				</ul>
+			</span>
+		</div>
 		{% endfor %}
+	</div>
 	{% endif %}
 
 	<div>
