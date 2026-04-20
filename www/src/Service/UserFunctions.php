@@ -138,6 +138,15 @@ class UserFunctions
 			case "mastodon" :
 				$user_avatar = "/images/svg/mastodon.svg";
 				break;
+			case "linkedin" :
+				$user_avatar = "/images/svg/linkedin.svg";
+				break;
+			case "discord" :
+				$user_avatar = "/images/svg/discord.svg";
+				break;
+			case "geograph" :
+				$user_avatar = "/images/svg/geograph.svg";
+				break;
 			case "openstreetmap-openid" :
 				$user_avatar = "https://unavatar.io/openstreetmap/{$providerID}";
 				break;
