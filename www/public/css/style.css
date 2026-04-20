@@ -245,13 +245,8 @@ img.proxy-image {
 }
 /* Cluster links. */
 .maplibregl-popup-content {
+	font-size: var(--font-normal);
 	line-height: 1.2em;
-}
-.maplibregl-popup-content a {
-	color: var(--black);
-	background: var(--plaque-gold);
-	padding: .5em;
-	line-height: 3em;
 }
 .maplibregl-popup-content hr {
 	margin: .5em 0;

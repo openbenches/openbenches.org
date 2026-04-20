@@ -326,7 +326,7 @@ class AppExtension extends AbstractExtension
 				var html = "<h3>Multiple Benches</h3><hr>";
 				leaves.forEach(function(leaf) {
 					html +=	leaf.properties.popupContent;
-					html +=	"<br><a href='https://openbenches.org/bench/" +	leaf.id	+ "'>View Bench (" + leaf.id + ")</a><hr>";
+					html +=	"<br><a class='button' href='https://openbenches.org/bench/" +	leaf.id	+ "'>View Bench (" + leaf.id + ")</a><hr>";
 				});
 
 				new maplibregl.Popup({closeButton: false})
