@@ -13,10 +13,12 @@ use App\Service\UserFunctions;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 
+use Auth0\SDK\Auth0;
+
 class AddController extends AbstractController
 {
 	#[Route(["/add", "/add/logged_in"], name: 'add')]
-	public function add(): Response {
+	public function add(Request $request): Response {
 
 		$user = $this->getUser();
 
@@ -26,8 +28,26 @@ class AddController extends AbstractController
 		$providerID = null;
 		$identifier = "|";
 
-		if( isset( $user ) ) {
-			//	Use Auth0 to get user data.
+		$authHeader = $request->headers->get("Authorization");
+
+		if ($authHeader && str_starts_with($authHeader, "Bearer ")) {
+			// API Token Path
+			try {
+				$token = substr($authHeader, 7);
+				$auth0 = new Auth0([
+					"domain"   => $_ENV["AUTH0_DOMAIN"],
+					"clientId" => $_ENV["AUTH0_CLIENT_ID"],
+				]);
+				
+				$decoded    = $auth0->decode($token);
+				$username   = $decoded["nickname"] ?? null;
+				$avatar     = $decoded["picture"] ?? null;
+				$identifier = $decoded["sub"] ?? null;
+			} catch (\Exception $e) {
+				return new Response("Unauthorized", 401);
+			}
+		} elseif ($user = $this->getUser()) {
+			// Session User Path
 			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();
 			$avatar     = $user->getPicture();
@@ -170,6 +190,7 @@ class AddController extends AbstractController
 			$large = $size->{"source"};
 			$b64 = base64_encode( file_get_contents( $large ) );
 
+			//	https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html
 			switch ($license) {
 				case 0:
 					$license = "All Rights Reserved";
@@ -198,22 +219,43 @@ class AddController extends AbstractController
 				case 8:
 					$license = "USG";
 					break;
-				case 14:
+				case 9:
+					$license = "Public Domain Dedication (CC0)";
+					break;
+				case 10:
+					$license = "Public Domain Mark";
+					break;
+				case 11:
+					$license = "CC BY 4.0";
+					break;
+				case 12:
 					$license = "CC BY-SA 4.0";
+					break;
+				case 13:
+					$license = "CC BY-ND 4.0";
+					break;
+				case 14:
+					$license = "CC BY-NC 4.0";
+					break;
+				case 15:
+					$license = "CC BY-NC-SA 4.0";
+					break;
+				case 16:
+					$license = "CC BY-NC-ND 4.0";
 					break;
 			}
 
 			//	Render the page
 			return $this->render('flickr.html.twig', [
-				"flickrID"       => $flickrID,
-				"licence" => $license,
-				"b64" => $b64,
-				"lat" => $lat,
-				"long"=>  $long,
+				   "flickrID" => $flickrID,
+				    "licence" => $license,
+				        "b64" => $b64,
+				        "lat" => $lat,
+				       "long" =>  $long,
 				"inscription" => $inscription,
-				"original" => $original,
-				"large" => $large,
-				"import" => $import
+				   "original" => $original,
+				      "large" => $large,
+				     "import" => $import
 			]);
 		}
 		//	Render the default page
