@@ -198,6 +198,9 @@ class AddController extends AbstractController
 				case 8:
 					$license = "USG";
 					break;
+				case 14:
+					$license = "CC BY-SA 4.0";
+					break;
 			}
 
 			//	Render the page

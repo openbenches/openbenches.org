@@ -6,9 +6,12 @@
 
 {% block body %}
 	{% if flickrID is defined %}
-	<h3>Flickr Image "{{ flickrID }}"</h3> 
-		<form action="/flickrUpload" method="post" autocomplete="off">
-			<a target='_blank' href='{{ original }}'><img id='flickrimg' src='data:image/jpeg;base64,{{ b64 }}' width='512'></a><br>
+	<h2>Flickr Image "{{ flickrID }}"</h2> 
+	<form action="/flickrUpload" method="post" autocomplete="off">
+		<div class="main">
+			<a target='_blank' href='{{ original }}'><img class="proxy-image" id='flickrimg' src='data:image/jpeg;base64,{{ b64 }}'></a>
+		</div>
+		<div class="media-select">
 			<label for="flickrimg">This photo is a:</label>
 			<select name="media_type1" id="media_type1">
 				{% set selected = "inscription" %}
@@ -20,17 +23,25 @@
 					<option value="{{ type.shortName }}">{{ type.longName }}</option>
 					{% endif %}
 				{% endfor %}
-			</select><br>
+			</select>
+		</div>
+		<div id="inscriptionBox" class="main">
+			<label for="inscription" id="message"></label>
+			<textarea id="inscription" name="inscription" cols="40" rows="6" required="">{{ inscription }}</textarea>
+		</div>
+		<aside class="info">
 			<a class='button' onclick='sendURLToCloudVision("{{ b64 }}")'>Detect Text</a><br>
-			<textarea name="inscription" id="inscription" cols='70' rows='6'>{{ inscription }}</textarea><br>
+		</aside>
+		<div class="button-bar">
 			<label for="inscription" id="message"></label><br>
 			<input type="text" name="original" size="60" value="{{ original }}"><br>
 			<input type="text" name="lat"      size="60" value="{{ lat }}">     <br>
 			<input type="text" name="long"     size="60" value="{{ long }}">    <br>
 			<input type="text" name="licence"  size="60" value="{{ licence }}"> <br>
 			<input type="text" name="import"   size="60" value="{{ import }}">  <br>
-			<input type="submit" value="Import Bench from Flickr">
-		</form>
+			<input type="submit" class="button" value="Import Bench from Flickr">
+		</div>
+	</form>
 	{% endif %}
 <script src="/js/jquery-4.0.0/jquery-4.0.0.min.js"></script>
 <script src="/js/vision/vision.js.php"></script>
