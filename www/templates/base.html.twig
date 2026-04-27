@@ -72,6 +72,9 @@
 			<p>
 				<a href="/add/"     class="button" id="add"><span class="emoji">➕</span> Add bench</a>
 				<!-- <a href="/support/" class="button"><span class="emoji">🥰</span> Support OpenBenches</a> -->
+				{% if username is defined and username is not null %}
+				<a href="/logout"   class="button" id="logout"><span class="emoji">🔚</span> Log out</a>
+				{% endif %}
 			</p>
 		</hgroup>
 		{% block body %}{% endblock %}
