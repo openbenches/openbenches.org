@@ -10,11 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\TagsFunctions;
 use App\Service\UserFunctions;
 
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Tools\DsnParser;
-
-use Auth0\SDK\Auth0;
-
 class AddController extends AbstractController
 {
 	#[Route(["/add", "/add/logged_in"], name: 'add')]
@@ -28,25 +23,7 @@ class AddController extends AbstractController
 		$providerID = null;
 		$identifier = "|";
 
-		$authHeader = $request->headers->get("Authorization");
-
-		if ($authHeader && str_starts_with($authHeader, "Bearer ")) {
-			// API Token Path
-			try {
-				$token = substr($authHeader, 7);
-				$auth0 = new Auth0([
-					"domain"   => $_ENV["AUTH0_DOMAIN"],
-					"clientId" => $_ENV["AUTH0_CLIENT_ID"],
-				]);
-				
-				$decoded    = $auth0->decode($token);
-				$username   = $decoded["nickname"] ?? null;
-				$avatar     = $decoded["picture"] ?? null;
-				$identifier = $decoded["sub"] ?? null;
-			} catch (\Exception $e) {
-				return new Response("Unauthorized", 401);
-			}
-		} elseif ($user = $this->getUser()) {
+		if ($user = $this->getUser()) {
 			// Session User Path
 			/** @var \Auth0\Symfony\Models\User $user */
 			$username   = $user->getNickname();

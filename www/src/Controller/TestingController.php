@@ -9,16 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Service\MediaFunctions;
-use App\Service\UserFunctions;
-use App\Service\SearchFunctions;
-use App\Service\TagsFunctions;
-
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
 
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
+use Auth0\SDK\Auth0;
 
 class TestingController extends AbstractController
 {
@@ -28,16 +25,16 @@ class TestingController extends AbstractController
 		     }
 	
 	public function test_date() {
-	$cache = new FilesystemAdapter("testdate_cache");
-	$value = $cache->get('cached_date', function (ItemInterface $item) {
-		$item->expiresAfter(5);
-		$date = date("Y-m-d H:i:s");
+		$cache = new FilesystemAdapter("testdate_cache");
+		$value = $cache->get('cached_date', function (ItemInterface $item) {
+			$item->expiresAfter(5);
+			$date = date("Y-m-d H:i:s");
 
-		return $date;
-	});
+			return $date;
+		});
 
-	return $value;
-}
+		return $value;
+	}
 
 	#[Route(['/private',"/private/anon"], name: 'private')]
 	public function private(Request $request): Response {
@@ -47,6 +44,69 @@ class TestingController extends AbstractController
 			'<html><body><pre>' . 
 			print_r($user, true) .
 			'</pre> Cache time '. $this->test_date() .' <a href="/logout">Logout</a></body></html>'
+	  );
+	}
+
+	#[Route(["/auth0test"], name: "auth0test")]
+	public function auth0test(Request $request): Response {
+		$authHeader = $request->headers->get("Auth0-Authorization");
+
+		if ($authHeader) {
+			// API Token Path
+			try {
+				$token = substr($authHeader, 7);
+				$auth0 = new Auth0([
+					"domain"   => $_ENV["AUTH0_DOMAIN"],
+					"clientId" => $_ENV["AUTH0_CLIENT_ID"],
+				]);
+				
+				$decoded    = $auth0->decode($token);
+			} catch (\Exception $e) {
+				$decoded = "Couldn't use that token - {$authHeader}";
+			}
+		} else {
+			$decoded = "No Auth0-Authorization found.";
+		}
+
+		return new Response(
+			'<html><body><pre>' . 
+			print_r($decoded, true) .
+			'</pre> Cache time '. $this->test_date() .' <a href="/logout">Logout</a></body></html>'
+	  );
+	}
+
+	#[Route(["/auth0test1"], name: "auth0test1")]
+	public function auth0test1(Request $request): Response {
+			$authHeader = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlFrVXdSRFl4UlVFelEwRTVRalExUkRJMVFUaERNRU0wTURZM05qTkRPVFE0UXpNek9ERTFOdyJ9.e__9.ZgnZxOOtfczLewlm_agK6mJMYetVTZrHlBlu5qzXbADlhvZB8RraVuFKmFutLZLibMQxz_RY0oh4hRufVWDHJ0kuocW38kRHztDg7R5KOfvJEM46WW49xvhLhKprzkx9WXDDlpCRNL0QbBK2U0F1VjmRpTp1Q5cHEd8PBsa4rGAhfqudXp5JrC2Lm5e7ji0AQ_s7HJhy59b9mTb3tMqHGsrWDZS915zHPYEQtSvg5o9sSx1tCRfsyL6kdsdkaTffQjJDUrT5hpIQ-2_9tGuqioJjP4c0edQ85TaK9UnSxfzMQ8gYez963kbo_Iv1fJyaTVwXR-AVvwK-CeGJAFrheQ";
+		// API Token Path
+		try {
+			$token = $authHeader;
+			$auth0 = new Auth0([
+				"domain"       => $_ENV["AUTH0_DOMAIN"],
+				"clientId"     => $_ENV["AUTH0_ANDROID_CLIENT_ID"],
+				"clientSecret" => $_ENV["AUTH0_ANDROID_CLIENT_SECRET"],
+				"cookieSecret" => "_"	//	Dummy value.
+			]);
+
+			$decoded = $auth0->decode(
+				token: $token,
+				tokenType: \Auth0\SDK\Token::TYPE_ID_TOKEN,
+			);
+			
+			// $decoded    = $auth0->decode($token);
+		} catch (\Exception $e) {
+			$decoded = "Couldn't use that token - {$authHeader}\n\n {$e}";
+		}
+	
+		// $claims = $decoded->toArray();
+
+		// $username   = $claims["given_name"];
+		// $identifier = $claims["sub"];
+
+		return new Response(
+			'<html><body><pre>'.
+			print_r($decoded, true) .
+			'</pre> Cache time '. $this->test_date()
 	  );
 	}
 
@@ -85,58 +145,5 @@ class TestingController extends AbstractController
 			"count"         => sizeof($benches_array),
 			"benches"       => $benches_array,
 		]);
-	}
-
-	#[Route(["/admin/upsidedown"], name: 'upsidedown')]
-	public function upsidedown(Request $request) {
-
-		// echo "f3bb6a0513d91551ea227a874368a60c3cd751db"; die();
-		try {
-			$imagick = new \Imagick(realpath("/home/openbenc/public_html/public/photos/f/3/f3bb6a0513d91551ea227a874368a60c3cd751db.jpg"));
-		} catch (Exception $e) {
-			$refer = $_SERVER["HTTP_REFERER"];
-			echo "Image error! {$imagePath} - from {$refer} - {$e}";
-			$imagick->clear();
-		}
-	
-		//	Some phones (mostly iPhones) have rotated images
-		//	Use the EXIF to correct
-		//	http://php.net/manual/en/imagick.getimageorientation.php#111448
-		$orientation = $imagick->getImageOrientation();
-	
-		switch($orientation) {
-			case \imagick::ORIENTATION_BOTTOMRIGHT:
-				$imagick->rotateimage("#000", 180); // rotate 180 degrees
-			break;
-	
-			case \imagick::ORIENTATION_RIGHTTOP:
-				$imagick->rotateimage("#000", 90); // rotate 90 degrees CW
-			break;
-	
-			case \imagick::ORIENTATION_LEFTBOTTOM:
-				$imagick->rotateimage("#000", -90); // rotate 90 degrees CCW
-			break;
-		}
-	
-		try {
-			//	Set the orientation - otherwise it will appear rotated on some browsers
-			$imagick->setImageOrientation(\imagick::ORIENTATION_TOPLEFT);
-	
-			//	Set the quality
-			$imagick->setImageCompressionQuality(85);
-	
-			//	Progressive image for slower connections
-			$imagick->setInterlaceScheme(\imagick::INTERLACE_PLANE);
-		} catch (Exception $e) {
-			$refer = $_SERVER["HTTP_REFERER"];
-			echo "Image error! {$imagePath} - from {$refer} - size={$size} {$e}";
-			$imagick->clear();
-		}
-		
-		//	Send the image to the browser
-		header("Content-Type: image/jpeg");
-		ob_clean();	//	http://codeblog.vurdalakov.net/2013/01/solution-php-echo-function-or-print.html
-		echo $imagick->getImageBlob();
-		$imagick->clear();
 	}
 }

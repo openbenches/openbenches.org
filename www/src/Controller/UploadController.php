@@ -12,6 +12,7 @@ use App\Service\UserFunctions;
 use App\Service\UploadFunctions;
 use App\Service\BenchFunctions;
 
+use Auth0\SDK\Auth0;
 
 class UploadController extends AbstractController
 {
@@ -58,19 +59,42 @@ class UploadController extends AbstractController
 			$providerID = null;
 
 			//	Is the user authenticated?
-			$user = $this->getUser();
-			if( isset( $user ) ) {
-				//	Use Auth0 to get user data
+			$authHeader = $request->headers->get("Auth0-Authorization");
+			if ($authHeader) {
+				// API Token Path
+				try {
+					$token = $authHeader;
+					$auth0 = new Auth0([
+						"domain"       => $_ENV["AUTH0_DOMAIN"],
+						"clientId"     => $_ENV["AUTH0_ANDROID_CLIENT_ID"],
+						"clientSecret" => $_ENV["AUTH0_ANDROID_CLIENT_SECRET"],
+						"cookieSecret" => "_"	//	Dummy value.
+					]);
+
+					$decoded = $auth0->decode(
+						token: $token,
+						tokenType: \Auth0\SDK\Token::TYPE_ID_TOKEN,
+					);
+
+					$claims = $decoded->toArray();
+
+					$username   = $claims["nickname"];
+					$identifier = $claims["sub"];
+
+				} catch (\Exception $e) {
+					return new Response("Unauthorized", 401);
+				}
+			} elseif ($user = $this->getUser()) {
+				// Session User Path
 				/** @var \Auth0\Symfony\Models\User $user */
 				$username   = $user->getNickname();
-				$avatar     = $user->getPicture();
 				$identifier = $user->getUserIdentifier();
 			} else if ( isset( $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ) ) {
 				//	Hack to get Auth0 user data from the session
 				$user = $_SESSION["_sf2_attributes"]["auth0_session"]["user"];
 				$username   = $user["nickname"];
-				$identifier = $user["sub"] ;
-			} 
+				$identifier = $user["sub"]; //	For Discord
+			}
 
 			//	Some users have unusual User IDs from Auth0.
 			//	Discord: oauth2|discord|123456789
