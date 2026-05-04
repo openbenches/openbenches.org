@@ -67,7 +67,8 @@ class BenchFunctions
 			FROM media
 			INNER JOIN users ON media.userID = users.userID
 			LEFT JOIN media_types on media.media_type = media_types.shortname
-			WHERE benchID = ?";
+			WHERE benchID = ?
+			GROUP BY sha1";	//	Prevents duplicates images in case of merge.
 	
 			$stmt = $conn->prepare($sql);
 			$stmt->bindValue(1, $bench_id);
