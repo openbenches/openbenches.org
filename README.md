@@ -15,6 +15,7 @@ We'd like to thank the following sponsors for their generosity:
 * [decoded.legal](https://decoded.legal/)
 * [Richard Leyton](https://leyton.org/)
 * [Ben Smith](https://bensmith.uk/)
+* [TeknikGeek](https://www.teknikgeek.se/)
 
 ## Contributing
 
