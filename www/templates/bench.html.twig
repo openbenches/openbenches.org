@@ -169,7 +169,9 @@
 
 {% include 'searchform.html.twig' %}
 
-<script src="/commentics/embed.js"></script>
-<div id="commentics"></div>
+<!-- Commentics -->
+<div id="comments" class="button-bar">
+	{{ comments|raw }}
+</div>
 
 {% endblock %}

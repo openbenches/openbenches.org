@@ -23,6 +23,7 @@ class BenchController extends AbstractController
 	#[Route('/bench/{bench_id}', name: 'show_bench')]
 	public function show_bench($bench_id): Response {
 
+		//	Bench IDs are always numbers.
 		if (!is_numeric( $bench_id )) {
 			//	Generate an HTTP 404 response
 			throw $this->createNotFoundException( "The bench ID must be an integer." );
@@ -36,7 +37,7 @@ class BenchController extends AbstractController
 		$request = Request::createFromGlobals();
 		$acceptHeader = AcceptHeader::fromString($request->headers->get('Accept'));
 
-		//	ActivityPub request
+		//	ActivityPub request.
 		if ( $acceptHeader->has("application/activity+json") || $acceptHeader->has("application/ld+json") ) {
 			//	Convert the timestamp
 			$timestamp = date(DATE_RFC3339, strtotime( $bench["timestamp"] ));
@@ -66,6 +67,10 @@ class BenchController extends AbstractController
 			die();
 		}
 
+		//	Get the comments.
+		$comments = $benchFunctions->getCommentsHTML( $bench_id );	
+		
+		//	Pass everything to Twig.
 		if ( isset($bench["bench_id"]) ) {
 			return $this->render("bench.html.twig", [
 				"bench_id"    => $bench["bench_id"],
@@ -76,6 +81,7 @@ class BenchController extends AbstractController
 				"medias"      => $bench["medias"],
 				"tags"        => $bench["tags"],
 				"osmID"       => $bench["osmID"],
+				"comments"    => $comments,
 			]);
 		}
 

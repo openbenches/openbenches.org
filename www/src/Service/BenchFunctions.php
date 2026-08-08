@@ -225,4 +225,124 @@ class BenchFunctions
 			return "";
 		}
 	}
+
+	public function getComments( $bench_id ): array {
+
+		//	Load up the config.
+		$commenticsConfig = $_SERVER["DOCUMENT_ROOT"] . "/public/commentics/config.php";
+
+		if ( file_exists( $commenticsConfig ) ) {
+			require_once $commenticsConfig;
+		} else {
+			return [];
+		}
+
+		// @phpstan-ignore constant.notFound, constant.notFound, constant.notFound, constant.notFound, constant.notFound (In the separate commentics/config.php) 
+		$commenticsDB = "mysqli://" . CMTX_DB_USERNAME . ":" . CMTX_DB_PASSWORD . "@" . CMTX_DB_HOSTNAME . ":" . CMTX_DB_PORT . "/" . CMTX_DB_DATABASE . "?&charset=utf8mb4";
+
+		$dsnParser = new DsnParser();
+		$connectionParams = $dsnParser->parse( $commenticsDB );
+		$conn = DriverManager::getConnection($connectionParams);
+
+		//	Get all the comments for this page.
+		$sql = "SELECT 
+					pages.identifier AS page_url,
+					comments.comment,
+					comments.date_added,
+					comments.id,
+					users.name
+				FROM 
+					comments
+				INNER JOIN 
+					pages ON comments.page_id = pages.id
+				INNER JOIN 
+					users ON comments.user_id = users.id
+				WHERE 
+					comments.is_approved = 1
+				AND
+					pages.identifier = 'openbenches.org/bench/{$bench_id}'
+				ORDER BY 
+					comments.date_added DESC 
+				LIMIT 1000;";
+
+		$stmt = $conn->prepare($sql);
+		$results = $stmt->executeQuery();
+
+		$comments_array = array();
+		while ( ( $row = $results->fetchAssociative() ) !== false) {
+			//	Add the details to the array.
+			$comments_array[] = array(
+				"id"         => $row["id"],
+				"comment"    => $row["comment"],
+				"date_added" => $row["date_added"],
+				"name"       => $row["name"],
+			);
+		}
+
+		return $comments_array;
+	}
+
+	public function getCommentsHTML( int $bench_id ): string {
+		//	Define the Commentics variables.
+		$cmtx_identifier = "openbenches.org/bench/" . $bench_id;
+		// $cmtx_reference  = $bench["inscription"];
+
+		//	Capture the HTML output. This is a *very* ugly hack!
+		ob_start();
+		require( $_SERVER["DOCUMENT_ROOT"] . "/public/commentics/frontend/index.php");
+		$comments_html = ob_get_clean();
+
+		//	Sanitise the HTML and prepare for manipulation.
+		// @phpstan-ignore staticMethod.notFound
+		$dom = \Dom\HTMLDocument::createFromString( $comments_html, LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED , "UTF-8" );
+		
+		//	Elements to remove.
+
+		//	Reply link.
+		$reply = $dom->querySelector( ".cmtx_reply_area" );
+		if ( $reply ) { $reply->parentNode->removeChild( $reply ); }
+
+		//	Preview button.
+		$preview = $dom->querySelector( ".cmtx_preview_button_container" );
+		if ( $preview ) { $preview->parentNode->removeChild( $preview ); }
+
+		//	Modal Nodes.
+		$bullet = $dom->querySelector( "#cmtx_bullet_modal" );
+		if ( $bullet ) { $bullet->parentNode->removeChild( $bullet ); }
+		$numeric = $dom->querySelector( "#cmtx_numeric_modal" ); 
+		if ( $numeric ) { $numeric->parentNode->removeChild($numeric); }
+		$link = $dom->querySelector( "#cmtx_link_modal" );
+		if ( $link ) { $link->parentNode->removeChild( $link ); }
+		$email = $dom->querySelector( "#cmtx_email_modal" );
+		if ( $email ) { $email->parentNode->removeChild( $email ); }
+		$image = $dom->querySelector( "#cmtx_image_modal" );
+		if ( $image ) { $image->parentNode->removeChild( $image ); }
+		$youtube = $dom->querySelector( "#cmtx_youtube_modal" );
+		if ( $youtube ) { $youtube->parentNode->removeChild( $youtube ); }
+		$privacy = $dom->querySelector( "#cmtx_privacy_modal" );
+		if ( $privacy ) { $privacy->parentNode->removeChild( $privacy ); }
+		$terms = $dom->querySelector( "#cmtx_terms_modal" );
+		if ( $terms ) { $terms->parentNode->removeChild( $terms ); }
+		$lightbox = $dom->querySelector( "#cmtx_lightbox_modal" );
+		if ( $lightbox ) { $lightbox->parentNode->removeChild( $lightbox ); }
+
+		//	Others.
+		$required = $dom->querySelector( ".cmtx_required_text" );
+		if ( $required ) { $required->parentNode->removeChild( $required ); }
+		
+		// CSS.
+		$links = $dom->getElementsByTagName( "link" );
+		foreach ( $links as $css ) {
+			$css->parentNode->removeChild( $css );
+		}
+
+		//	Elements to improve.
+
+		//	Make button more buttony.
+		$button = $dom->querySelector( "#cmtx_submit_button" );
+		$button->setAttribute("class", "button");
+
+		//	Send back the comment form and any comments.
+		return $dom->saveHTML();
+	}
 }

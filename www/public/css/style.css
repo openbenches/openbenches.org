@@ -20,6 +20,7 @@
 	--sky-blue:     #7EB1C8;
 	--grass-green:  #070;
 	--ground-brown: #8c5015;
+	--blush-pink:   #EC9797;
 	--white:        #F0F0F0;	/* Soft white for contrast on the above. */
 	--black:        #040404;	/* Soft black for text & links. */ 
 	--black-border: #191E20DD;	/* Slightly softer black for borders. */
@@ -634,6 +635,63 @@ div:has(+ #grass) {
 }
 .cmtx_comment_section:not(:last-of-type) {
 	border-bottom: 1px solid black;	/* Can't use variables in theme. */
+}
+
+/* Native Comments */
+
+#comments {
+	background-color: var(--blush-pink);
+	text-align: left;
+}
+
+.cmtx_comment_section {
+	padding: 1rem 0;
+}
+
+#comments time {
+	font-size: var(--font-small);
+}
+
+.cmtx_comments_heading, .cmtx_form_heading {
+	font-size: var(--font-big);
+}
+
+#cmtx_comment {
+	width: 100%;
+	max-width: 100%;
+	margin: 1rem 0;
+	border-radius: .2em;
+	padding: .4rem .9rem;
+	outline: .1rem var(--black-border) solid;
+}
+
+.cmtx_user_area {
+	font-style: italic;
+}
+
+.cmtx_says {
+	margin-left: .5rem;
+}
+
+.cmtx_honeypot, #cmtx_counter {
+	display: none !important;
+}
+
+.cmtx_name_container, #cmtx_comments_container, .cmtx_comment_group, .cmtx_message {
+	margin: .5rem;
+}
+
+#cmtx_name {
+	width: var(--button-width);
+	max-width: 96%;
+	padding: .4rem .9rem;
+	outline: .1rem var(--black-border) solid;
+	border-radius: .2em;
+	background: var(--white);
+}
+
+.cmtx_error {
+	color: darkred;
 }
 
 /* User images. */
