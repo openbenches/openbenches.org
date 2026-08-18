@@ -41,7 +41,7 @@ class CameraFunctions
 	public function getModels($make) {
 		
 		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_models");
-		$cacheName = "model";
+		$cacheName = "model.$make";
 
 		$cachedResult = $cache->get($cacheName, function (ItemInterface $item) use( $make ) {
 			$item->expiresAfter(300);
