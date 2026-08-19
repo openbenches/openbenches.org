@@ -285,7 +285,6 @@ class BenchFunctions
 	public function getCommentsHTML( int $bench_id ): string {
 		//	Define the Commentics variables.
 		$cmtx_identifier = "openbenches.org/bench/" . $bench_id;
-		// $cmtx_reference  = $bench["inscription"];
 
 		//	Capture the HTML output. This is a *very* ugly hack!
 		ob_start();

@@ -167,6 +167,26 @@ class UploadController extends AbstractController
 
 	#[Route("/merge", name: "merge")]
 	public function merge(Request $request) {
+
+		//	Only available to Admin users
+		//	Get user from Auth0
+		$user = $this->getUser();
+		if( isset( $user ) ) {
+			/** @var \Auth0\Symfony\Models\User $user */
+			$username   = $user->getNickname();
+			$provider   = explode("|", $user->getUserIdentifier())[0];
+			$providerID = explode("|", $user->getUserIdentifier())[1];	
+		} else {
+			die();
+		}
+
+		$userFunctions = new UserFunctions();
+		$userID = $userFunctions->addUser( $username, $provider, $providerID );
+
+		$admin = ( array_search( $userID, explode(",", $_ENV["ADMIN_USERIDS"])) !== false );
+
+		if ( false == $admin) { die(); }
+
 		//	POST'd data
 		$originalID  = $request->request->get("originalID");
 		$duplicateID = $request->request->get("duplicateID");
@@ -175,6 +195,13 @@ class UploadController extends AbstractController
 
 			$uploadFunctions->mergeBenches($originalID, $duplicateID);
 			return $this->redirect("/bench/{$duplicateID}");
+		} else {
+			//	Show blank merge form
+			return $this->render( "soundex.html.twig", [
+				"benches"       => array( "", "" ),
+				"soundex"       => "Merge",
+				"benches_count" => 2,
+			]);
 		}
 	}
 

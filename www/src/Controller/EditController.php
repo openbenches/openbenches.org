@@ -232,7 +232,6 @@ class EditController extends AbstractController
 						"From {$provider} / {$username}"
 					);
 				}
-
 			}
 
 			$response = new Response(
