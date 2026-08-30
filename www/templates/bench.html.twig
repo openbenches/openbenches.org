@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {# For inclusion in the base #}
-{% block     title %}{{ inscription|replace({'\r\n': " "})|slice(0, 49)|title|e("html") }}{% endblock %}
+{% block     title %}{{ inscription|replace({'\n': " "})|trim|slice(0, 49)|title|e("html") }}{% endblock %}
 {% block longitude %}{{ longitude }}{% endblock %}
 {% block  latitude %}{{ latitude }}{% endblock %}
 {% block   ogimage %}{{ app.request.schemeAndHttpHost }}/image/{{ medias|first.sha1 }}{% endblock %}
@@ -9,7 +9,7 @@
 
 {% block body %}
 <div itemscope="" itemtype="http://schema.org/Place">
-	<h2 id="benchInscription" itemprop="description">{{ inscription|nl2br }}</h2>
+	<h2 id="benchInscription" itemprop="description">{{ inscription|trim|nl2br }}</h2>
 	{% if medias is defined %}
 	<div class="gallery">
 		{% for media in medias %}

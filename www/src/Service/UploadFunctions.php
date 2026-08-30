@@ -21,8 +21,8 @@ class UploadFunctions
 		$address = $locationFunctions->getAddress($latitude, $longitude);
 		$address = html_entity_decode($address, ENT_QUOTES , "UTF-8");
 		
-		//	Trim errant whitespace from the end before inserting
-		$inscription = rtrim($inscription);
+		//	Trim errant whitespace before inserting
+		$inscription = trim($inscription);
 
 		$sql = "INSERT INTO `benches`
 		       (`benchID`,`latitude`,`longitude`,`address`, `inscription`,`description`,`present`,`published`, `added`,  `userID`)
