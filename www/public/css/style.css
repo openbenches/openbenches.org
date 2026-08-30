@@ -427,6 +427,7 @@ td a {
 /* Search. */
 #search-results {
 	display: inline-block;
+	word-break: break-word;
 }
 #search-results h2 {
 	color: var(--white);
