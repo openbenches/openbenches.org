@@ -288,6 +288,8 @@ class BenchFunctions
 
 		//	Capture the HTML output. This is a *very* ugly hack!
 		ob_start();
+		//	Unset the referrer to prevent Commentics throwing a wobbly.
+		$_SERVER["HTTP_REFERER"] = null;
 		require( $_SERVER["DOCUMENT_ROOT"] . "/public/commentics/frontend/index.php");
 		$comments_html = ob_get_clean();
 
