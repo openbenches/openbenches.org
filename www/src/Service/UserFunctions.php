@@ -136,7 +136,12 @@ class UserFunctions
 				$user_avatar = "/images/svg/wikipedia.svg";
 				break;
 			case "mastodon" :
-				$user_avatar = "/images/svg/mastodon.svg";
+				//	Change https://example.com/@user to @user@example.com
+				$id_parts = explode( "@", $providerID );
+				$mastodon_server = str_replace( "https://", "", $id_parts[0]     );
+				$mastodon_server = str_replace( "/",        "", $mastodon_server );
+				$mastodon_name   = $id_parts[1];
+				$user_avatar = "https://unavatar.io/mastodon/@{$mastodon_name}@{$mastodon_server}";
 				break;
 			case "linkedin" :
 				$user_avatar = "/images/svg/linkedin.svg";
