@@ -27,6 +27,8 @@ class UploadController extends AbstractController
 
 		$tags        = $request->request->get( "tags" );
 
+		$emailText   = "Via web";
+
 		if ( $tags != "" ) {
 			$tags_array = explode(",", $tags);
 		} else {
@@ -80,6 +82,8 @@ class UploadController extends AbstractController
 
 					$username   = $claims["nickname"];
 					$identifier = $claims["sub"];
+
+					$emailText   = "Via API";
 
 				} catch (\Exception $e) {
 					return new Response("Unauthorized", 401);
@@ -146,7 +150,7 @@ class UploadController extends AbstractController
 
 			//	Send admin email
 			if ( !empty($_ENV["NOTIFICATION_EMAIL"]) ){
-				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name, $tags_array );
+				$uploadFunctions->emailAdmin( $benchID, $inscription, $provider, $name, $tags_array, $emailText );
 			}
 			
 			$response = new Response(

@@ -213,7 +213,7 @@ class UploadFunctions
 		$stmt->executeQuery();
 	}
 
-	public function emailAdmin( $benchID, $inscription, $provider, $name, $tags_array ) {
+	public function emailAdmin( $benchID, $inscription, $provider, $name, $tags_array, $text ) {
 		$benchFunctions = new BenchFunctions();
 		$duplicate_count = $benchFunctions->getDuplicateCount( $inscription );
 		$soundex         = $benchFunctions->getSoundex( $inscription );
@@ -226,7 +226,8 @@ class UploadFunctions
 			"Tags: "  . implode(",", $tags_array) . "\n" .
 			"{$domain}bench/{$benchID}\n\n" .
 			"Duplicates: {$domain}soundex/?soundex={$soundex}\n" .
-			"From {$provider} / {$name}"
+			"From {$provider} / {$name}\n" .
+			"{$text}"
 		);
 	}
 }

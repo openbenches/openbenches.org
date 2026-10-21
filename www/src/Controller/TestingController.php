@@ -20,7 +20,6 @@ use Auth0\SDK\Auth0;
 class TestingController extends AbstractController
 {
 	public function __construct(
-		         Security $security,
 		     ) {
 		     }
 	
@@ -39,10 +38,19 @@ class TestingController extends AbstractController
 	#[Route(['/private',"/private/anon"], name: 'private')]
 	public function private(Request $request): Response {
 		$user = $this->getUser() ?? $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ?? array();
+	
+		//	Get protected properties of users.
+		//	The "audience" is the client ID.
+		//	https://support.auth0.com/center/s/article/value-of-the-audience-attribute-in-access-token-requests-and-its-significance
+		$reflection = new \ReflectionClass( $user );
+		$property = $reflection->getProperty( "data" );
+		$property->setAccessible( true );
+		$data = $property->getValue( $user );
+		$audience = $data["aud"];
 
 		return new Response(
 			'<html><body><pre>' . 
-			print_r($user, true) .
+			print_r( $user, true ) .
 			'</pre> Cache time '. $this->test_date() .' <a href="/logout">Logout</a></body></html>'
 	  );
 	}
