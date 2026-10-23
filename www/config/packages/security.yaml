@@ -37,13 +37,6 @@ security:
             provider: auth0_provider
             custom_authenticators:
                 - auth0.authenticator
-        update:
-            pattern: ^/update
-            context: user
-            stateless: false
-            provider: auth0_provider
-            custom_authenticators:
-                - auth0.authenticator
         soundex:
             pattern: ^/soundex
             context: user
