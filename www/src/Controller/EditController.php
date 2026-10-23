@@ -13,6 +13,8 @@ use App\Service\UserFunctions;
 use App\Service\TagsFunctions;
 use App\Service\UploadFunctions;
 
+use Auth0\SDK\Auth0;
+
 class EditController extends AbstractController
 {
 	#[Route('/edit/{benchID}', name: 'edit')]
@@ -128,26 +130,86 @@ class EditController extends AbstractController
 			$delete      = $request->request->get( "delete" );
 			//	Ensure booleanness of delete
 			$delete      = filter_var( $delete, FILTER_VALIDATE_BOOLEAN );
-		
+
+			$emailText = "Via web";
+			$username   = null;
+			$identifier = "|";
+			$provider   = null;
+			$providerID = null;
+
 			//	Is the user authenticated?
-			$user = $this->getUser();
-			//	Get user from Auth0
-			$user = $this->getUser();
-			if( isset( $user ) ) {
+			$userFunctions   = new UserFunctions();
+			$authHeader = $request->headers->get("Auth0-Authorization");
+			if ($authHeader) {
+				// API Token Path
+				try {
+					$token = $authHeader;
+					$auth0 = new Auth0([
+						"domain"       => $_ENV["AUTH0_DOMAIN"],
+						"clientId"     => $_ENV["AUTH0_ANDROID_CLIENT_ID"],
+						"clientSecret" => $_ENV["AUTH0_ANDROID_CLIENT_SECRET"],
+						"cookieSecret" => "_"	//	Dummy value.
+					]);
+
+					$decoded = $auth0->decode(
+						token: $token,
+						tokenType: \Auth0\SDK\Token::TYPE_ID_TOKEN,
+					);
+
+					$claims = $decoded->toArray();
+
+					$username   = $claims["nickname"];
+					$identifier = $claims["sub"];
+
+					$emailText   = "Via API";
+
+				} catch (\Exception $e) {
+					return new Response("Unauthorized", 401);
+				}
+			} elseif ($user = $this->getUser()) {
+				// Session User Path
 				/** @var \Auth0\Symfony\Models\User $user */
 				$username   = $user->getNickname();
-				$avatar     = $user->getPicture();
-				$provider   = explode("|", $user->getUserIdentifier())[0];
-				$providerID = explode("|", $user->getUserIdentifier())[1];	
-			} else {
-				die();
+				$identifier = $user->getUserIdentifier();
+			} else if ( isset( $_SESSION["_sf2_attributes"]["auth0_session"]["user"] ) ) {
+				//	Hack to get Auth0 user data from the session
+				$user = $_SESSION["_sf2_attributes"]["auth0_session"]["user"];
+				$username   = $user["nickname"];
+				$identifier = $user["sub"]; //	For Discord
 			}
 
-			$benchFunctions = new BenchFunctions();
+			//	Some users have unusual User IDs from Auth0.
+			//	Discord: oauth2|discord|123456789
+			//	OSM:     oidc|openstreetmap-openid|12345
+			if ( str_starts_with( haystack:$identifier, needle:"oauth2|" ) ) {
+				$identifier = str_replace( 
+					search:"oauth2|", 
+					replace:"", 
+					subject:$identifier,
+				);
+			}
+			//	OSM Fix.
+			if ( str_starts_with( haystack:$identifier, needle:"oidc|" ) ) {
+				$identifier = str_replace( 
+					search:"oidc|", 
+					replace:"", 
+					subject:$identifier,
+				);
+			}
+			$provider   = explode( "|", $identifier )[0];
+			$providerID = explode( "|", $identifier )[1];
 
-			$userFunctions = new UserFunctions();
 			$userID = $userFunctions->addUser( $username, $provider, $providerID );
+			
+			$user       = $userFunctions->getUserDetails( $userID );
+			$provider   = $user["provider"];
+			$providerID = $user["providerID"];
+			$name       = $user["name"];
+
+			//	Are they an admin?
 			$admin = ( array_search( $userID, explode(",", $_ENV["ADMIN_USERIDS"])) !== false );
+
+			$benchFunctions = new BenchFunctions();
 
 			if ( !$delete ) {
 				if ( $tags != "" ) {
@@ -209,7 +271,7 @@ class EditController extends AbstractController
 					"{$domain}bench/{$benchID}\n\n" .
 					"{$diff}"                                        . "\n" .
 					"Old Inscription:\n" . $oldBench["inscription"]  . "\n" .
-					"New Inscription:\n" . $inscription              . "\n" . 
+					"New Inscription:\n" . $inscription              . "\n" .
 					"Old Lat:\n"   . $oldBench["latitude"]           . "\n" .
 					"New Lat:\n"   . $latitude                       . "\n" .
 					"Old Long:\n"  . $oldBench["longitude"]          . "\n" .
@@ -217,8 +279,9 @@ class EditController extends AbstractController
 					"Old Tags:\n"  . implode(",", $oldBench["tags"]) . "\n" .
 					"New Tags:\n"  . implode(",", $tags_array)       . "\n" .
 					"New Images: " . count($_FILES)                  . "\n" .
-					"Media Types: ". $mediaTypes                     . "\n" .   
-					"From {$provider} / {$username} / $userID"
+					"Media Types: ". $mediaTypes                     . "\n" .
+					"From {$provider} / {$username} / $userID"       . "\n" .
+					$emailText
 				);
 			} else {
 				//	Delete Bench
