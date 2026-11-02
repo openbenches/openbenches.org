@@ -32,6 +32,7 @@ Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: *
+Disallow:/quantum/
 Disallow:/edit/
 Disallow:/api/
 Disallow:/admin/

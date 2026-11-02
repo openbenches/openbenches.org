@@ -773,3 +773,9 @@ iframe.pannellum {
 		margin: 0;	/* Remove margin. */
 	}
 }
+
+/* IYKYK	*/
+#quantum {
+	display: none !important;
+	cursor:  none !important;
+}
