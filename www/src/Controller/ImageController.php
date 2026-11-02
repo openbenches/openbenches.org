@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use App\Service\BenchFunctions;
 use App\Service\MediaFunctions;
@@ -17,6 +18,13 @@ class ImageController extends AbstractController
 	                                           // Old oEmbed sizing
 	#[Route(["/image/{sha1}", "/media/{sha1}", "/image/{sha1}/{size}"], name: 'show_media')]
 	public function show_media( string $sha1 ): BinaryFileResponse {
+
+		//	Forbid direct access to the images.
+		//	Hope this reduces the bandwidth eaten up by bots.
+		if (empty($_SERVER["HTTP_REFERER"])) {
+			throw new HttpException( 402, "Bot requests must send payment." );
+		}
+
 		//	Files are stored according to their hash
 		//	So "abc123" is stored as "/a/b/abc123.jpg"
 		$directory = substr( $sha1, 0, 1);
