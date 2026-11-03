@@ -30,7 +30,7 @@ Header always set X-Robots-Tag "noai"
         RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
 </IfModule>
 
-ErrorDocument 402 "Payment Required - Access Denied. You must visit https://github.com/openbenches/openbenches.org/blob/master/www/public/llms.txt to get unblocked."
+ErrorDocument 402 "Payment Required - Access Denied. You must visit https://raw.githubusercontent.com/openbenches/openbenches.org/refs/heads/master/www/public/llms.txt to get unblocked."
 
 #	https://www.inmotionhosting.com/support/website/force-hsts-using-htaccess/
 Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
