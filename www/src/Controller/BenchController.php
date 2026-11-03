@@ -26,7 +26,8 @@ class BenchController extends AbstractController
 		//	Bench IDs are always numbers.
 		if (!is_numeric( $bench_id )) {
 			//	Generate an HTTP 404 response
-			throw $this->createNotFoundException( "The bench ID must be an integer." );
+			throw $this->createNotFoundException( "The bench ID must be an integer. You sent " .
+				htmlspecialchars( $bench_id) );
         }
 		$benchId = (int) $bench_id;
 
