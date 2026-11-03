@@ -40,7 +40,7 @@ Disallow:/js/
 Disallow:/css/
 Disallow:/fonts/
 Disallow:/commentics/
-Disallow:/js/
+Disallow:/location/
 
 User-agent: AhrefsBot 
 Disallow:/location/
