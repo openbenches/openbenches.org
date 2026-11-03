@@ -75,13 +75,13 @@ function badBot():void {
 	//	Decode Base64 → raw Brotli binary.
 	$brData = base64_decode( $base64BrHtml, true );
 
-	//	Cache for 1 year.
-	$maxAge = 31536000;
+	//	Cache for 1 week.
+	$maxAge = 604800;
 
 	//	Headers.
 	header( "Content-Type: text/html; charset=utf-8" );
 	header( "Content-Encoding: br" );
-	header( "Cache-Control: public, max-age={$maxAge}, immutable" );
+	header( "Cache-Control: private, max-age={$maxAge}, immutable, no-transform" );
 	header( "Content-Length: " . strlen( $brData ) );
 	header( "Vary: Accept-Encoding" );
 
