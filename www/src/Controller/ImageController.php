@@ -51,7 +51,14 @@ class ImageController extends AbstractController
 
 		//	Get the bench.
 		$benchFunctions = new BenchFunctions();
-		$bench = $benchFunctions->getBench($benchID);
+		$bench = $benchFunctions->getBench( $benchID );
+
+		//	If the bench ID is invalid, return an error.
+		if ( is_null( $bench["medias"] ) ) {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "The image does not exist" );
+		}
+
 		$media_id = array_key_first( $bench["medias"] );
 		$proxyImageURl = $bench["medias"][$media_id]["url"];
 
