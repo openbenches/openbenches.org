@@ -1,5 +1,13 @@
 #Bad Bots
 RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} snapscout [NC]
+RewriteRule .* - [F,L]
+
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} img2dataset [NC]
+RewriteRule .* - [F,L]
+
+RewriteEngine On
 RewriteCond %{HTTP_USER_AGENT} TikTokSpider [NC]
 RewriteRule .* - [F,L]
 
