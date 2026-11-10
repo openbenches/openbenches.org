@@ -3,40 +3,45 @@
 //	Instant ban for bots which request this page which is specifically blocked.
 //	Inspired by https://perishablepress.com/blackhole-bad-bots/
 
+require_once( posix_getpwuid( posix_getuid() )["dir"] . "/IP_Block/blocker.php" );
+
 //	What's their IP?
 $IP = get_client_ip();
 
 //	User Agent
 $UA = isset( $_SERVER["HTTP_USER_AGENT"] ) ? $_SERVER["HTTP_USER_AGENT"] : "";
 
-//	Get the existing .htaccess file.
-$htaccess_file = "../../.htaccess";
-$htaccess = file_get_contents( $htaccess_file );
+blockIP( IP:$IP, UA:$UA, site:"OpenBenches" );
 
-//	Split by newline.
-$htaccess_lines = explode( separator: "\n", string: $htaccess );
 
-//	Where's our start block?
-$start = "###	BLOCKED IPs";
-$end   = "###	/BLOCKED IPs";
+// //	Get the existing .htaccess file.
+// $htaccess_file = "../../.htaccess";
+// $htaccess = file_get_contents( $htaccess_file );
 
-//	End if the .htaccess doesn't have the block?
-if ( !in_array( needle: $start, haystack: $htaccess_lines ) ) { die(); }
+// //	Split by newline.
+// $htaccess_lines = explode( separator: "\n", string: $htaccess );
 
-//	This is where to start from.
-$start_block = array_search( needle: $start, haystack: $htaccess_lines );
+// //	Where's our start block?
+// $start = "###	BLOCKED IPs";
+// $end   = "###	/BLOCKED IPs";
 
-//	Add the line after the start block.
-//	Include a date.
-$htaccess_lines[ $start_block ] = $start . "\n" . 
-	"\t#\t" . date( "c" ) . "\t{$UA}\n" . 
-	"\tRewriteCond %{REMOTE_ADDR} \"={$IP}\" [OR]";
+// //	End if the .htaccess doesn't have the block?
+// if ( !in_array( needle: $start, haystack: $htaccess_lines ) ) { die(); }
 
-//	Turn the array back to a string.
-$newHtaccess = implode( separator: "\n", array: $htaccess_lines );
+// //	This is where to start from.
+// $start_block = array_search( needle: $start, haystack: $htaccess_lines );
 
-//	Save the new .htaccess file.
-file_put_contents( filename: $htaccess_file, data: $newHtaccess );
+// //	Add the line after the start block.
+// //	Include a date.
+// $htaccess_lines[ $start_block ] = $start . "\n" . 
+// 	"\t#\t" . date( "c" ) . "\t{$UA}\n" . 
+// 	"\tRewriteCond %{REMOTE_ADDR} \"={$IP}\" [OR]";
+
+// //	Turn the array back to a string.
+// $newHtaccess = implode( separator: "\n", array: $htaccess_lines );
+
+// //	Save the new .htaccess file.
+// file_put_contents( filename: $htaccess_file, data: $newHtaccess );
 
 //	Bye bye bot!
 badBot();
