@@ -774,6 +774,11 @@ iframe.pannellum {
 	}
 }
 
+/*	Keyboard Navigation */
+*:focus {
+	outline: .25em solid var(--danger-zone);
+}
+
 /* IYKYK	*/
 #quantum {
 	display: none !important;
