@@ -13,36 +13,6 @@ $UA = isset( $_SERVER["HTTP_USER_AGENT"] ) ? $_SERVER["HTTP_USER_AGENT"] : "";
 
 blockIP( IP:$IP, UA:$UA, site:"OpenBenches" );
 
-
-// //	Get the existing .htaccess file.
-// $htaccess_file = "../../.htaccess";
-// $htaccess = file_get_contents( $htaccess_file );
-
-// //	Split by newline.
-// $htaccess_lines = explode( separator: "\n", string: $htaccess );
-
-// //	Where's our start block?
-// $start = "###	BLOCKED IPs";
-// $end   = "###	/BLOCKED IPs";
-
-// //	End if the .htaccess doesn't have the block?
-// if ( !in_array( needle: $start, haystack: $htaccess_lines ) ) { die(); }
-
-// //	This is where to start from.
-// $start_block = array_search( needle: $start, haystack: $htaccess_lines );
-
-// //	Add the line after the start block.
-// //	Include a date.
-// $htaccess_lines[ $start_block ] = $start . "\n" . 
-// 	"\t#\t" . date( "c" ) . "\t{$UA}\n" . 
-// 	"\tRewriteCond %{REMOTE_ADDR} \"={$IP}\" [OR]";
-
-// //	Turn the array back to a string.
-// $newHtaccess = implode( separator: "\n", array: $htaccess_lines );
-
-// //	Save the new .htaccess file.
-// file_put_contents( filename: $htaccess_file, data: $newHtaccess );
-
 //	Bye bye bot!
 badBot();
 
@@ -50,11 +20,7 @@ function get_client_ip():string
 {
 	//	Adapted from https://github.com/ibericode/koko-analytics/blob/main/src/Resources/functions/collect.php
 
-	//	X-Forwarded-For sometimes contains a comma-separated list of IP addresses
-	//	@see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
-	$ips = empty( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ?
-		[] :
-		\array_map( "trim", \explode( ",", $_SERVER["HTTP_X_FORWARDED_FOR"] ) );
+	$ips = [];
 
 	//	Always add REMOTE_ADDR and HTTP_CLIENT_IP to list of ip addresses, if set
 	foreach ( ["REMOTE_ADDR", "HTTP_CLIENT_IP"] as $key ) {

@@ -1,5 +1,9 @@
 #Bad Bots
 RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} fetcher [NC]
+RewriteRule .* - [F,L]
+
+RewriteEngine On
 RewriteCond %{HTTP_USER_AGENT} snapscout [NC]
 RewriteRule .* - [F,L]
 
