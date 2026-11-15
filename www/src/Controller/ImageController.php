@@ -48,6 +48,86 @@ class ImageController extends AbstractController
 		}
 	}
 
+	//	Returns an OGP thumbnail for a specific bench.
+	#[Route(["/ogp/{benchID}"], name: "get_ogp")]
+	public function get_ogp( int $benchID ): Response {
+
+		//	Get the bench.
+		$benchFunctions = new BenchFunctions();
+		$bench = $benchFunctions->getBench( $benchID );
+
+		//	If the bench ID is invalid, return an error.
+		if ( is_null( $bench["medias"] ) ) {
+			//	Generate an HTTP 404 response
+			throw $this->createNotFoundException( "The image does not exist" );
+		}
+
+		//	Get the first image.
+		$media_id = array_key_first( $bench["medias"] );
+
+		//	Get its sha1.
+		$sha1 = $bench["medias"][$media_id]["sha1"];
+
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_ogp");
+		$cacheKey = $sha1;
+
+		$jpegBinary = $cache->get( $cacheKey, function (ItemInterface $item) use( $sha1 ): string {
+			$item->expiresAfter( 3600000 );
+		
+			//	Files are stored according to their hash
+			//	So "abc123" is stored as "/a/b/abc123.jpg"
+			$directory = substr( $sha1, 0, 1);
+			$subdirectory = substr( $sha1, 1, 1);
+			$photo_path = "photos/" . $directory . "/" . $subdirectory . "/";
+
+			//	Sometimes, broken clients send `/media/abc123.jpg`
+			//	This makes sure any errant file extension is stripped off.
+			$sha1  = explode( ".", $sha1 )[0];
+
+			$photo_full_path = $photo_path . $sha1 . ".jpg";
+
+			//	Load the image.
+			$image = imagecreatefromjpeg( $photo_full_path );
+
+			//	Is this rotated?
+			$exif_data = exif_read_data( $photo_full_path );
+			$exif_orientation = $exif_data["Orientation"];
+
+			//	Rotate if necessary.
+			switch ( $exif_orientation ) {
+				case 3:
+					$image = imagerotate( $image, 180, 0 );
+					break;
+				case 6:
+					$image = imagerotate( $image, -90, 0 );
+					break;
+				case 8:
+					$image = imagerotate( $image,  90, 0 );
+					break;
+				default:
+					$rotate = 0;
+			}
+
+			$image = imagescale( $image, 800 );
+		
+			//	Generate the JPG with default quality.
+			ob_start();
+			imagejpeg( $image, null, -1 );
+			$avifBinary = ob_get_clean();
+		
+			//	Clean up.
+			imagedestroy( $image   );
+			
+			//	Return the image.
+			return $avifBinary;
+		});
+		
+		//	Send to browser with correct MIME.
+		return new Response( $jpegBinary, 200, [
+			"Content-Type" => "image/jpeg",
+		]);
+	}
+
 	//	Returns a thumbnail for a specific bench.
 	#[Route(["/thumb/{benchID}"], name: "get_thumb")]
 	public function get_thumb( int $benchID ): Response {
