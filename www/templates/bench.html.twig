@@ -22,7 +22,7 @@
 				{% elseif media.mediaType == "video" %}
 				<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 				{% else %}
-				<a href="{{ media.urlFull }}">
+				<a href="{{ media.urlFull }}" class="image-link">
 					<img src="{{ media.url }}"
 						alt="{{ media.alt }}"
 						width="{{ media.width }}"

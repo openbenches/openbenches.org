@@ -88,6 +88,7 @@ h1 {
 h1 a {
 	color: var(--black);
 	text-decoration: none;
+	display: inline-block;
 }
 h2 {
 	line-height: 2rem;
@@ -175,6 +176,10 @@ hgroup {
 }
 
 /* Bench images. */
+.image-link {
+	display: inline-block;
+	border-radius: var(--radius) var(--radius) 0 0;
+}
 img.proxy-image {
 	border-radius: var(--radius) var(--radius) 0 0;
 	margin: 0 0 -1rem 0;
@@ -583,6 +588,9 @@ footer .footerIcons img {
 	width:  3rem;
 	height: 3rem;
 	margin: .25rem;
+}
+.footerIcons a, footer > a {
+	display: inline-block;
 }
 footer #cc-by-sa-logo {
 	height: var(--font-big);
