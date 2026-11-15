@@ -461,7 +461,9 @@ td a {
 	margin-right: 1rem;
 	flex-shrink: 0;
 	border-radius: var(--radius);
-	width: calc( var(--max-width) / 4);
+	width: 14rem;
+	max-height: 7rem;
+	object-fit: cover;
 }
 /* Pagination buttons. */
 .moreResults {

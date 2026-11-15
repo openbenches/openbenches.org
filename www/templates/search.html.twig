@@ -22,7 +22,7 @@
 		{% for bench in benches %}
 			<li>
 				<a href="/bench/{{ bench.benchID }}">
-					<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" alt="">
+					<img src="/thumb/{{ bench.benchID }}" class="search-thumb" loading="lazy" width="120" alt="">
 					<div>
 						{{ bench.inscription }}<br>
 						<address><small>{{ bench.address }}</small></address>

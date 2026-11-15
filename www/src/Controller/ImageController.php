@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
 use App\Service\BenchFunctions;
 use App\Service\MediaFunctions;
 
@@ -47,7 +50,7 @@ class ImageController extends AbstractController
 
 	//	Returns a thumbnail for a specific bench.
 	#[Route(["/thumb/{benchID}"], name: "get_thumb")]
-	public function get_thumb( int $benchID ): RedirectResponse {
+	public function get_thumb( int $benchID ): Response {
 
 		//	Get the bench.
 		$benchFunctions = new BenchFunctions();
@@ -59,10 +62,66 @@ class ImageController extends AbstractController
 			throw $this->createNotFoundException( "The image does not exist" );
 		}
 
+		//	Get the first image.
 		$media_id = array_key_first( $bench["medias"] );
-		$proxyImageURl = $bench["medias"][$media_id]["url"];
 
-		//	Return a URl.
-		return $this->redirect( $proxyImageURl );
+		//	Get its sha1.
+		$sha1 = $bench["medias"][$media_id]["sha1"];
+
+		//	Redirect but keep the same URl.
+		return $this->forward("App\Controller\ImageController::avif_media", [
+			"sha1" => $sha1,
+			"size" => 600,
+		]);
+	}
+
+	#[Route(["/avif/{sha1}", "/avif/{sha1}/{size}"], name: "avif_media")]
+	public function avif_media( string $sha1, int $size = 0 ): Response {
+
+		if ( $size > 4096 ) {
+			$size = 4096;
+		}
+
+		$cache = new FilesystemAdapter($_ENV["CACHE"] . "cache_avif");
+		$cacheKey = $sha1 . $size;
+
+		$avifBinary = $cache->get( $cacheKey, function (ItemInterface $item) use( $sha1, $size ): string {
+			$item->expiresAfter( 3600000 );
+		
+			//	Files are stored according to their hash
+			//	So "abc123" is stored as "/a/b/abc123.jpg"
+			$directory = substr( $sha1, 0, 1);
+			$subdirectory = substr( $sha1, 1, 1);
+			$photo_path = "photos/" . $directory . "/" . $subdirectory . "/";
+
+			//	Sometimes, broken clients send `/media/abc123.jpg`
+			//	This makes sure any errant file extension is stripped off.
+			$sha1  = explode( ".", $sha1 )[0];
+
+			$photo_full_path = $photo_path . $sha1 . ".jpg";
+
+			//	Load the image.
+			$image = imagecreatefromjpeg( $photo_full_path );
+
+			if ( $size > 0 ) {
+				$image = imagescale( $image, $size );
+			}
+		
+			//	Generate the AVIF with default quality.
+			ob_start();
+			imageavif( $image, null, -1 );
+			$avifBinary = ob_get_clean();
+		
+			//	Clean up.
+			imagedestroy( $image   );
+			
+			//	Return the image.
+			return $avifBinary;
+		});
+		
+		//	Send to browser with correct MIME.
+		return new Response( $avifBinary, 200, [
+			"Content-Type" => "image/avif",
+		]);
 	}
 }
