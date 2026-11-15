@@ -22,13 +22,17 @@
 				{% elseif media.mediaType == "video" %}
 				<video src="/media/{{ media.sha1 }}" width="600" controls loop></video>
 				{% else %}
-				<a href="{{ media.urlFull }}" class="image-link">
-					<img src="{{ media.url }}"
-						alt="{{ media.alt }}"
-						width="{{ media.width }}"
-						height="{{ media.height }}"
-						class="proxy-image"
-						loading="lazy">
+				<a href="/avif/{{ media.sha1 }}" class="image-link">
+					<picture>
+						<source type="image/avif" srcset="/avif/{{ media.sha1 }}/800">
+						<img
+							src="{{ media.url }}" 
+							alt="{{ media.alt }}"
+							width="{{ media.width }}"
+							height="{{ media.height }}"
+							class="proxy-image"
+							loading="lazy">
+					</picture>
 				</a>
 				{% endif %}
 			</div>

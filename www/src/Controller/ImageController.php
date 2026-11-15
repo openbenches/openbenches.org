@@ -18,7 +18,7 @@ use App\Service\MediaFunctions;
 
 class ImageController extends AbstractController
 {
-	                                           // Old oEmbed sizing
+											// Old oEmbed sizing
 	#[Route(["/image/{sha1}", "/media/{sha1}", "/image/{sha1}/{size}"], name: 'show_media')]
 	public function show_media( string $sha1 ): BinaryFileResponse {
 
@@ -103,6 +103,26 @@ class ImageController extends AbstractController
 			//	Load the image.
 			$image = imagecreatefromjpeg( $photo_full_path );
 
+			//	Is this rotated?
+			$exif_data = exif_read_data( $photo_full_path );
+			$exif_orientation = $exif_data["Orientation"];
+
+			//	Rotate if necessary.
+			switch ( $exif_orientation ) {
+				case 3:
+					$image = imagerotate( $image, 180, 0 );
+					break;
+				case 6:
+					$image = imagerotate( $image, -90, 0 );
+					break;
+				case 8:
+					$image = imagerotate( $image,  90, 0 );
+					break;
+				default:
+					$rotate = 0;
+			}
+
+			//	To resize or not to resize?
 			if ( $size > 0 ) {
 				$image = imagescale( $image, $size );
 			}

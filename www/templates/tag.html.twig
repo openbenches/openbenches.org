@@ -19,7 +19,13 @@
 		{% for bench in benches %}
 			<li>
 				<a href="/bench/{{ bench.benchID }}">
-					<img src="/thumb/{{ bench.benchID }}" class="search-thumb" loading="lazy" width="120" alt="">
+					<picture>
+						<source type="image/avif" srcset="/thumb/{{ bench.benchID }}">
+						<picture>
+							<source type="image/avif" srcset="/thumb/{{ bench.benchID }}">
+							<img src="{{ bench.image }}" class="search-thumb" loading="lazy" width="120" alt="">
+						</picture>
+					</picture>
 					<div>
 						{{ bench.inscription }}<br>
 						<address><small>{{ bench.address }}</small></address>
