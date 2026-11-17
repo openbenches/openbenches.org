@@ -25,6 +25,19 @@ Header always set X-Robots-Tag "noimageai"
 Header always set X-Robots-Tag "noai"
 
 <IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    #   Naughty bots who ignore robots.txt
+    RewriteCond %{HTTP_USER_AGENT}  (Baidu|Semrush|ElevenlabsCrawler|DotBot) [NC]
+
+    #   Mustn't try to access these paths
+    RewriteCond %{REQUEST_URI} ^/(api|edit) [NC]
+
+    #   Slap them with a payment request.
+    RewriteRule ^ - [R=402,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
         RewriteEngine On
         RewriteBase /
 
