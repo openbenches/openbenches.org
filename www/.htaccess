@@ -1,6 +1,6 @@
 #Bad Bots
 RewriteEngine On
-RewriteCond %{HTTP_USER_AGENT} fetcher [NC]
+RewriteCond %{HTTP_USER_AGENT} ElevenlabsCrawler [NC]
 RewriteRule .* - [F,L]
 
 RewriteEngine On
