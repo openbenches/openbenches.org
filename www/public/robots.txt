@@ -114,6 +114,7 @@ User-agent: Diffbot
 User-agent: DuckAssistBot
 User-agent: Echobot Bot
 User-agent: EchoboxBot
+User-agent: ElevenlabsCrawler
 User-agent: ExaBot
 User-agent: ExaSearchBot
 User-agent: FacebookBot
